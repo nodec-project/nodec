@@ -1,43 +1,31 @@
 #ifndef NODEC__NODEC_OBJECT_HPP_
 #define NODEC__NODEC_OBJECT_HPP_
 
+#include <string>
 #include <memory>
 
 namespace nodec {
 
 	class NodecObject {
-
-	};
-
-	class NodecObjectReference {
 	public:
 		/**
-		* @brief Default constructor
+		* @brief Create a new NodecObject with specified name.
 		*/
-		//NodecObjectReference();
+		NodecObject(const std::string& name);
 
 		/**
-		* @brief Constructor with the provied pointer to manage
+		* @brief Destructor.
 		*/
-		explicit NodecObjectReference(NodecObject* obj);
+		virtual ~NodecObject();
 
-		/**
-		* @brief Copy constructor
-		*/
-		//NodecObjectReference(const NodecObjectReference& ref);
-
-		/**
-		* @brief the destructor
-		*/
-		~NodecObjectReference();
-
-	private:
-		NodecObject* obj;
-
-		class ReferenceCounter;
-		std::shared_ptr<ReferenceCounter> reference_counter;
+	public:
+		//! object name.
+		std::string name;
 	};
 
+
+	template<class NodecObjectType>
+	using NodecObjectHolder = std::unique_ptr<NodecObjectType>;
 }
 
 #endif
