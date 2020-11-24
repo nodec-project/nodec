@@ -25,7 +25,10 @@ namespace nodec {
 
 
 	template<class NodecObjectType>
-	using NodecObjectHolder = std::unique_ptr<NodecObjectType>;
+	using NodecObjectHolder = std::shared_ptr<NodecObjectType>;
+
+	template<class NodecObjectType>
+	using NodecObjectReference = std::weak_ptr<NodecObjectType>;
 }
 
 #endif

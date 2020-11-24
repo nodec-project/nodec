@@ -17,6 +17,7 @@ public:
 	}
 
 	NodecObjectHolder<ChildObject> child;
+	NodecObjectReference<ChildObject> ref_child;
 };
 
 class RootObject : public NodecObject {
