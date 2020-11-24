@@ -6,22 +6,22 @@
 
 namespace nodec {
 
-	class NodecException : public std::exception
-	{
-	public:
-		NodecException(std::string message, const char* file, size_t line) noexcept;
-		NodecException(const char* file, size_t line) noexcept;
-		const char* what() const noexcept final;
-		
-	protected:
-		std::string type = "NodecException";
-	    std::string file;
-	    size_t line;
-	    std::string message;
+    class NodecException : public std::exception
+    {
+    public:
+        NodecException(std::string message, const char* file, size_t line) noexcept;
+        NodecException(const char* file, size_t line) noexcept;
+        const char* what() const noexcept final;
 
-	private:
-		mutable std::string what_buffer;
-	};
+    protected:
+        std::string type = "NodecException";
+        std::string file;
+        size_t line;
+        std::string message;
+
+    private:
+        mutable std::string what_buffer;
+    };
 
 }
 
