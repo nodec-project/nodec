@@ -1,11 +1,12 @@
 #include <iostream>
 #include <sstream>
 
-#include <nodec/stdlib/nodec_exception.hpp>
+#include <nodec/nodec_exception.hpp>
 
-using namespace nodec::stdlib;
+using namespace nodec;
 
-class TestNodecException : public NodecException {
+class TestNodecException : public NodecException
+{
 public:
     TestNodecException(int error_code, const char* file, size_t line) noexcept
         :
@@ -22,20 +23,25 @@ public:
 private:
     int error_code;
 };
-int main() {
-    try {
+int main()
+{
+    try
+    {
         throw TestNodecException(1, __FILE__, __LINE__);
         throw NodecException("test", __FILE__, __LINE__);
         throw std::runtime_error("Test Runtime Exception");
         throw 1;
     }
-    catch (const NodecException& e) {
+    catch (const NodecException& e)
+    {
         std::cout << e.what() << std::endl;
     }
-    catch (const std::exception& e) {
+    catch (const std::exception& e)
+    {
         std::cout << "Standard Exception: " << e.what() << std::endl;
     }
-    catch (...) {
+    catch (...)
+    {
         std::cout << "No detail available" << std::endl;
     }
     return 0;
