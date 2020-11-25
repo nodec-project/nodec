@@ -1,9 +1,9 @@
 #include <iostream>
 #include <sstream>
 
-#include <nodec/nodec_exception.hpp>
+#include <nodec/stdlib/nodec_exception.hpp>
 
-using namespace nodec;
+using namespace nodec::stdlib;
 
 class TestNodecException : public NodecException {
 public:
