@@ -13,12 +13,12 @@ public:
         NodecException(file, line),
         error_code(error_code)
     {
-        type = "TestNodecException";
         std::ostringstream oss;
-        oss << "Are you OK?" << std::endl
+        oss << "Are you OK? ですか?" << std::endl
             << "error code: " << error_code << std::endl;
         message = oss.str();
     }
+    const char* type() const noexcept override { return "TestNodecException"; }
 
 private:
     int error_code;
@@ -34,7 +34,7 @@ int main()
     }
     catch (const NodecException& e)
     {
-        std::cout << e.what() << std::endl;
+        std::wcout << e.what() << std::endl;
     }
     catch (const std::exception& e)
     {

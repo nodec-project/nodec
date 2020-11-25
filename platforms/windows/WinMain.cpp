@@ -1,3 +1,4 @@
+#include <nodec/nodec_exception.hpp>
 
 #include <Windows.h>
 
@@ -7,5 +8,13 @@ int CALLBACK WinMain(
     LPSTR     lpCmdLine,
     int       nCmdShow)
 {
+    try
+    {
 
+    }
+    catch (const nodec::NodecException& e)
+    {
+        //MessageBox(nullptr, e.what(), )
+    }
+    
 }

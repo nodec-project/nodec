@@ -3,12 +3,6 @@
 
 namespace nodec
 {
-    NodecException::NodecException(const char* file, size_t line) noexcept
-        :
-        file(file),
-        line(line)
-    {
-    }
 
     NodecException::NodecException(std::string message, const char* file, size_t line) noexcept
         :
@@ -18,6 +12,14 @@ namespace nodec
     {
     }
 
+    NodecException::NodecException(const char* file, size_t line) noexcept
+        :
+        file(file),
+        line(line)
+    {
+    }
+
+
     const char* NodecException::what() const noexcept
     {
         if (!what_buffer.empty())
@@ -26,7 +28,7 @@ namespace nodec
         }
 
         std::ostringstream oss;
-        oss << type << ":" << message << std::endl
+        oss << type() << ":" << message << std::endl
             << "[File] " << file << std::endl
             << "[Line] " << line;
         what_buffer = oss.str();

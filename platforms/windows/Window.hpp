@@ -1,12 +1,29 @@
 #pragma once
 #include <Windows.h>
 
-class Window {
+#include <nodec/nodec_exception.hpp>
+
+class Window
+{
+public:
+    class Exception : public nodec::NodecException
+    {
+        using NodecException::NodecException;
+    public:
+        static std::string TranslateErrorCode(HRESULT hr) noexcept;
+    };
+
+    class HrException : public Exception
+    {
+
+    };
+
 private:
     /**
-    * @brief Singleton class.
+    * @brief Singleton class. Manage registration/cleanup of window class.
     */
-    class WindowClass {
+    class WindowClass
+    {
     public:
         static const TCHAR* GetName();
         static HINSTANCE GetInstance();
