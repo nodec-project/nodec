@@ -30,7 +30,35 @@ namespace nodec
             const char* type() { return "BufferRangeError"; }
         };
 
-        std::string utf8to16(const std::string& string);
+        /**
+        * @brief Convert UTF-8 string to UTF-16 string.
+        */
+        std::string utf8to16(const std::string& string, bool strict = true);
+
+        /**
+        * @brief Convert UTF-16 string to UTF-8 string.
+        */
+        std::string utf16to8(const std::string& string, bool strict = true);
+
+        /**
+        * @brief Convert UTF-16 string to UTF-32 string.
+        */
+        std::string utf16to32(const std::string& string, bool strict = true);
+
+        /**
+        * @brief Convert UTF-32 string to UTF-16 string.
+        */
+        std::string utf32to16(const std::string& string, bool strict = true);
+
+        /**
+        * @brief Convert UTF-8 string to UTF-32 string.
+        */
+        std::string utf8to32(const std::string& string, bool strict = true);
+
+        /**
+        * @brief Convert UTF-32 string to UTF-8 string.
+        */
+        std::string utf32to8(const std::string& string, bool strict = true);
     }
 }
 
