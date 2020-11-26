@@ -102,7 +102,7 @@ namespace nodec
                 constexpr uint32_t replacement = 0x0000FFFD;
                 if (strict)
                 {
-                    throw IllegalCharacterError(__FILE__, __LINE__);
+                    throw IllegalCharacterException(__FILE__, __LINE__);
                 }
                 return replacement;
 
@@ -143,7 +143,7 @@ namespace nodec
                 {
                     if (begin + 1 > end)
                     {
-                        throw BufferRangeError(__FILE__, __LINE__);
+                        throw BufferRangeException(__FILE__, __LINE__);
                     }
 
                     c -= base;
@@ -190,7 +190,7 @@ namespace nodec
                 // check range
                 if (begin + bytes > end)
                 {
-                    throw BufferRangeError(__FILE__, __LINE__);
+                    throw BufferRangeException(__FILE__, __LINE__);
                 }
 
                 // write to buffer
@@ -263,7 +263,7 @@ namespace nodec
                 if (begin + bytes >= end)
                 {
                     // source buffer, check whether or not we have space to replace
-                    throw IllegalCharacterError(__FILE__, __LINE__);
+                    throw IllegalCharacterException(__FILE__, __LINE__);
                 }
 
                 // get our UTF-32 character
