@@ -28,7 +28,7 @@ namespace nodec
         }
 
         std::ostringstream oss;
-        oss << type() << ":" << message << std::endl
+        oss << type() << ": " << message << std::endl
             << "[File] " << file << std::endl
             << "[Line] " << line;
         what_buffer = oss.str();
