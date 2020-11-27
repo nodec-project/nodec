@@ -15,7 +15,7 @@ Window::WindowClass::WindowClass()
     WNDCLASSEX wc = { 0 };
     wc.cbSize = sizeof(wc);
     wc.style = CS_OWNDC;
-    wc.lpfnWndProc = DefWindowProc;
+    wc.lpfnWndProc = HandleMsgSetup;
     wc.cbClsExtra = 0;
     wc.cbWndExtra = 0;
     wc.hInstance = GetInstance();
@@ -81,11 +81,53 @@ Window::~Window()
 {
     DestroyWindow(hWnd);
 }
-LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+
+LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
-    return 0;
+    // use create parameter passed in from CreateWindow() to store window class pointer at WinAPI side.
+    if (msg == WM_NCCREATE)
+    {
+        // extract ptr to window class from creation data.
+        const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
+        Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
+        // set WinAPI-managed user data to store ptr to window instance.
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pWnd));
+        // set message proc to normal (non-setup) handler now that setup is finished.
+        // @note:
+        //  Why don't call the handler directly like this?
+        //  >> SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(pWnd->HandleMsg);
+        //  
+        //  It's not possible. member function include the this pointer.
+        //  Cannot reference to member func using only member function pointer. 
+        SetWindowLongPtr(hWnd, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(&Window::HandleMsgThunk));
+        // forward message to window instance handler
+        return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
+    }
+    // if we get a message before the WM_NCREATE message, handle with default handler.
+    return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+{
+    // retrieve ptr to window instance
+    //  pointer is const, value not const
+    Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    // forward message to window instance handler
+    return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
+}
+
+LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
+{
+    switch (msg)
+    {
+        // We don't want the DefProc to handle this message because
+        // we want our destructor to destoroy the window, so return 0 instead of break.
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
+    }
+    return DefWindowProc(hWnd, msg, wParam, lParam);
+}
 
 /**
 * <https://docs.microsoft.com/en-us/windows/win32/seccrypto/retrieving-error-messages>
