@@ -3,6 +3,7 @@
 #include <Windows.h>
 #include <exception>
 
+#include "Window.hpp"
 #include "Utils.hpp"
 
 
@@ -14,7 +15,7 @@ int CALLBACK WinMain(
 {
     try
     {
-
+        Window window(1280, 720, L"TEST");
     }
     catch (const nodec::NodecException& e)
     {

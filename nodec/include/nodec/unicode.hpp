@@ -18,7 +18,7 @@ namespace nodec
             {
             };
 
-            const char* type() { return "IllegalCharacterException"; }
+            const char* type() const noexcept override { return "IllegalCharacterException"; }
         };
 
         class BufferRangeException : public NodecException
@@ -28,7 +28,7 @@ namespace nodec
                 :NodecException("Cannot add characters to buffer, output is too small.", file, line)
             {
             };
-            const char* type() { return "BufferRangeException"; }
+            const char* type() const noexcept override { return "BufferRangeException"; }
         };
 
         /**
