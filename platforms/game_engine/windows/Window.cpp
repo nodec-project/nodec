@@ -129,6 +129,29 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
+bool Window::ProcessMessages(int& exit_code) noexcept
+{
+    MSG msg;
+
+    // while queue has message, remove and dispatch them (but do not block on empty queue)
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+    {
+        if (msg.message == WM_QUIT)
+        {
+            exit_code = (int)msg.wParam;
+            // signals quit
+            return false;
+        }
+
+        // TranslateMessage will post auxiliary WM_CHAR messages from key msgs
+        TranslateMessage(&msg);
+        DispatchMessage(&msg);
+    }
+
+    // return true when not quitting app
+    return true;
+}
+
 /**
 * <https://docs.microsoft.com/en-us/windows/win32/seccrypto/retrieving-error-messages>
 */

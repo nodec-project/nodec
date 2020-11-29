@@ -15,7 +15,20 @@ int CALLBACK WinMain(
 {
     try
     {
+
         Window window(1280, 720, L"TEST");
+
+        while (true)
+        {
+            int exit_code;
+            // process all messages pending, but to not block for new messages
+            if (!Window::ProcessMessages(exit_code))
+            {
+                return exit_code;
+            }
+
+        }
+
     }
     catch (const nodec::NodecException& e)
     {

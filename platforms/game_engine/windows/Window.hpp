@@ -3,6 +3,7 @@
 
 #include <nodec/nodec_exception.hpp>
 
+
 class Window
 {
 public:
@@ -49,11 +50,13 @@ public:
     ~Window();
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
+    static bool ProcessMessages(int& exit_code) noexcept;
 
 private:
     static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
     static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
     LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+
 private:
     int width;
     int height;
