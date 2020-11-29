@@ -6,7 +6,7 @@ namespace nodec
     class ModuleInterface
     {
 
-    };   
+    };
 }
 
 #endif

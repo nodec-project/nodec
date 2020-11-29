@@ -16,7 +16,7 @@ public:
     //virtual int get_value() const = 0;
 protected:
     static int static_value;
-    int value; // << BAD!; cannot change This value in derived class(module).
+    int value; // << BAD!; cannot change This value in derived class(module). << WRONG
 };
 
 #endif

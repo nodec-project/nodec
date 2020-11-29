@@ -1,2 +1,1 @@
-// New Source File
-
+#include <nodec/input.hpp>
