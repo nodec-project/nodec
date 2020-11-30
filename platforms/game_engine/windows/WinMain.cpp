@@ -3,8 +3,11 @@
 #include <Windows.h>
 #include <exception>
 
+#include <nodec_modules/input/keyboard_module.hpp>
+
 #include "Window.hpp"
 #include "Utils.hpp"
+
 
 
 int CALLBACK WinMain(
@@ -15,9 +18,11 @@ int CALLBACK WinMain(
 {
     try
     {
+        nodec_modules::input::KeyboardModule keyboard_module;
 
         Window window(1280, 720, L"TEST");
 
+        window.SetTitle("ほげってる");
         while (true)
         {
             int exit_code;

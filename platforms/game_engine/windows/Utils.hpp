@@ -29,7 +29,7 @@ private:
 /**
 * <https://docs.microsoft.com/ja-jp/windows/win32/api/stringapiset/nf-stringapiset-multibytetowidechar?redirectedfrom=MSDN>
 */
-std::wstring TryMultiByteToWideChar(const char* multiByteStr)
+inline std::wstring TryMultiByteToWideChar(const char* multiByteStr)
 {
     std::wstring wideCharStr;
     int64_t convertResult = MultiByteToWideChar(CP_UTF8, 0, multiByteStr, (int)strlen(multiByteStr), nullptr, 0);

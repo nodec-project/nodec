@@ -1,7 +1,9 @@
 #include "Window.hpp"
+#include "Utils.hpp"
 
 #include <nodec/unicode.hpp>
 
+#include <string>
 #include <sstream>
 
 // === Window Class ====
@@ -80,6 +82,15 @@ Window::Window(int width, int height, const wchar_t* name)
 Window::~Window()
 {
     DestroyWindow(hWnd);
+}
+
+void Window::SetTitle(const std::string& title)
+{
+    auto wide_title = TryMultiByteToWideChar(title.c_str());
+    if (SetWindowText(hWnd, wide_title.c_str()) == 0)
+    {
+        throw HrException(GetLastError(), __FILE__, __LINE__);
+    }
 }
 
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept

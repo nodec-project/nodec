@@ -5,7 +5,12 @@ namespace nodec
 {
     class ModuleInterface
     {
-
+    public:
+        ModuleInterface() = default;
+        virtual ~ModuleInterface() {};
+        
+        ModuleInterface(const ModuleInterface&) = delete;
+        ModuleInterface& operator=(const ModuleInterface&) = delete;
     };
 }
 

@@ -50,7 +50,10 @@ public:
     ~Window();
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;
+
+public:
     static bool ProcessMessages(int& exit_code) noexcept;
+    void SetTitle(const std::string& title);
 
 private:
     static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;

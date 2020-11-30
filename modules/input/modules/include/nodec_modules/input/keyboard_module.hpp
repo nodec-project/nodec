@@ -9,7 +9,9 @@ namespace nodec_modules
     {
         class KeyboardModule : public Keyboard
         {
-
+        public:
+            void HandleKeyDown();
+            void HandleKeyUp();
         };
     }
 }
