@@ -9,6 +9,8 @@ namespace nodec_modules
     {
         class MouseModule : public Mouse
         {
+        public:
+            MouseModule();
 
         };
     }

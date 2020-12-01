@@ -1,12 +1,15 @@
+#include "Window.hpp"
+#include "Utils.hpp"
+
 #include <nodec/nodec_exception.hpp>
+
+#include <nodec_modules/game_engine/game_engine_module.hpp>
 
 #include <Windows.h>
 #include <exception>
 
-#include <nodec_modules/input/keyboard_module.hpp>
 
-#include "Window.hpp"
-#include "Utils.hpp"
+void on_boot();
 
 
 
@@ -18,11 +21,17 @@ int CALLBACK WinMain(
 {
     try
     {
-        nodec_modules::input::KeyboardModule keyboard_module("KeyboardModule");
+        nodec_modules::game_engine::GameEngineModule game_engine_module;
+        
+        Window window(1280, 720, L"TEST", &game_engine_module);
 
-        Window window(1280, 720, L"TEST");
-
+        //game_engine_module.keyboard().test = 10;
+        //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
+        //game_engine_module.keyboard_module().test = 100;
+        //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
+        
         window.SetTitle("ほげってる");
+
         while (true)
         {
             int exit_code;

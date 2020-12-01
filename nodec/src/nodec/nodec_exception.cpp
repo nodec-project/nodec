@@ -1,4 +1,5 @@
 #include <nodec/nodec_exception.hpp>
+
 #include <sstream>
 
 namespace nodec

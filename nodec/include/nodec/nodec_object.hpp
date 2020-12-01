@@ -22,11 +22,10 @@ namespace nodec
          */
         virtual ~NodecObject();
 
-        const char* name() const noexcept;
 
-    protected:
+    public:
         //! object name.
-        std::string name_;
+        std::string name;
 
     private:
         NODEC_DISABLE_COPY(NodecObject);

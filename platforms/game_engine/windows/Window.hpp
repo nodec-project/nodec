@@ -1,7 +1,11 @@
 #pragma once
-#include <Windows.h>
 
 #include <nodec/nodec_exception.hpp>
+#include <nodec/macros.hpp>
+
+#include <nodec_modules/game_engine/game_engine_module.hpp>
+
+#include <Windows.h>
 
 
 class Window
@@ -38,18 +42,16 @@ private:
     private:
         WindowClass();
         ~WindowClass();
-        WindowClass(const WindowClass&) = delete;
-        WindowClass& operator=(const WindowClass&) = delete;
         static constexpr const wchar_t* wndClassName = L"Nodec Engine Window";
         static WindowClass wndClass;
         HINSTANCE hInst;
+
+        NODEC_DISABLE_COPY(WindowClass);
     };
 
 public:
-    Window(int width, int height, const wchar_t* name);
+    Window(int width, int height, const wchar_t* name, nodec_modules::game_engine::GameEngineModule* game_engine_module);
     ~Window();
-    Window(const Window&) = delete;
-    Window& operator=(const Window&) = delete;
 
 public:
     static bool ProcessMessages(int& exit_code) noexcept;
@@ -64,4 +66,8 @@ private:
     int width;
     int height;
     HWND hWnd;
+    nodec_modules::game_engine::GameEngineModule* game_engine_module;
+
+
+    NODEC_DISABLE_COPY(Window);
 };

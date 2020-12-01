@@ -3,6 +3,8 @@
 
 #include <nodec_modules/input/keyboard.hpp>
 
+#include <bitset>
+
 namespace nodec_modules
 {
     namespace input
@@ -10,11 +12,20 @@ namespace nodec_modules
         class KeyboardModule : public Keyboard
         {
         public:
-            using Keyboard::Keyboard;
+            KeyboardModule();
 
         public:
-            void HandleKeyDown();
-            void HandleKeyUp();
+            void flush();
+
+        public:
+            void handle_key_down();
+            void handle_key_up();
+            void handle_text_input();
+
+        private:
+            static constexpr unsigned int num_keys = 256;
+            std::bitset<num_keys> key_states;
+            std::bitset<num_keys> key_states_prev;
         };
     }
 }

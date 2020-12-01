@@ -29,17 +29,17 @@ public:
 
     ~SampleObject() override
     {
-        std::cout << name() << ".destructor was called." << std::endl;
+        std::cout << name << ".destructor was called." << std::endl;
     }
 
     void OnEvent(std::string test_string, int i)
     {
-        std::cout << name() << ".OnEvent() was called. test_string=" << test_string << "; i=" << i << std::endl;
+        std::cout << name << ".OnEvent() was called. test_string=" << test_string << "; i=" << i << std::endl;
     }
 
     void OnEventWithException(std::string test_string, int i)
     {
-        std::cout << name() << ".OnEventWithException() was called. test_string=" << test_string << "; i=" << i << std::endl;
+        std::cout << name << ".OnEventWithException() was called. test_string=" << test_string << "; i=" << i << std::endl;
         throw nodec::NodecException("Unhandled Exception", __FILE__, __LINE__);
     }
 

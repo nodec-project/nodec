@@ -1,10 +1,15 @@
+
 #include "Window.hpp"
 #include "Utils.hpp"
+
+#include <nodec_modules/game_engine/game_engine_module.hpp>
 
 #include <nodec/unicode.hpp>
 
 #include <string>
 #include <sstream>
+
+
 
 // === Window Class ====
 
@@ -48,10 +53,11 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 
 // END Window Class ===
 
-Window::Window(int width, int height, const wchar_t* name)
+Window::Window(int width, int height, const wchar_t* name, nodec_modules::game_engine::GameEngineModule* game_engine_module)
     :
     width(width),
-    height(height)
+    height(height),
+    game_engine_module(game_engine_module)
 {
     RECT wr;
     wr.left = 100;

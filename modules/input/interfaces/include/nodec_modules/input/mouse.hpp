@@ -9,6 +9,8 @@ namespace nodec_modules
     {
         class Mouse : public nodec::ModuleInterface
         {
+        public:
+            using ModuleInterface::ModuleInterface;
 
         };
     }
