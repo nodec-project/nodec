@@ -19,6 +19,7 @@ public:
 class SampleObject : public nodec::NodecObject
 {
 public:
+
     SampleObject(std::string name)
         :
         NodecObject(name)
@@ -28,17 +29,17 @@ public:
 
     ~SampleObject() override
     {
-        std::cout << name << ".destructor was called." << std::endl;
+        std::cout << name() << ".destructor was called." << std::endl;
     }
 
     void OnEvent(std::string test_string, int i)
     {
-        std::cout << name << ".OnEvent() was called. test_string=" << test_string << "; i=" << i << std::endl;
+        std::cout << name() << ".OnEvent() was called. test_string=" << test_string << "; i=" << i << std::endl;
     }
 
     void OnEventWithException(std::string test_string, int i)
     {
-        std::cout << name << ".OnEventWithException() was called. test_string=" << test_string << "; i=" << i << std::endl;
+        std::cout << name() << ".OnEventWithException() was called. test_string=" << test_string << "; i=" << i << std::endl;
         throw nodec::NodecException("Unhandled Exception", __FILE__, __LINE__);
     }
 
@@ -61,15 +62,13 @@ int main()
     
     std::cout << "--- START ---" << std::endl;
 
-    
     nodec::event::Event<int, int> int_int_event;
     nodec::event::Event<std::string, int> string_int_event;
 
-
     {
-        auto sample_object = std::make_shared<SampleObject>("sample1");
+        auto sample_object = nodec::make_nodec_object<SampleObject>("sample1");
         {
-            sample_object->child = std::make_shared<SampleObject>("sample-child");
+            sample_object->child = nodec::make_nodec_object<SampleObject>("sample-child");
             nodec::NodecObjectReference<SampleObject> sample_child_object = sample_object->child;
             auto sample_child_object_callback = std::make_shared<nodec::event::MemeberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEvent);
             auto sample_child_object_callback_with_exception = std::make_shared<nodec::event::MemeberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEventWithException);

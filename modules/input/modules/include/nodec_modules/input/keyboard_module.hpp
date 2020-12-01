@@ -10,6 +10,9 @@ namespace nodec_modules
         class KeyboardModule : public Keyboard
         {
         public:
+            using Keyboard::Keyboard;
+
+        public:
             void HandleKeyDown();
             void HandleKeyUp();
         };

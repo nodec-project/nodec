@@ -18,7 +18,7 @@ int CALLBACK WinMain(
 {
     try
     {
-        nodec_modules::input::KeyboardModule keyboard_module;
+        nodec_modules::input::KeyboardModule keyboard_module("KeyboardModule");
 
         Window window(1280, 720, L"TEST");
 

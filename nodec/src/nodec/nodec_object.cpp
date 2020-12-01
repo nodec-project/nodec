@@ -5,8 +5,12 @@
 namespace nodec
 {
 
-    NodecObject::NodecObject(const std::string& name) : name(name) {}
+    NodecObject::NodecObject(const std::string& name) : name_(name) {}
 
     NodecObject::~NodecObject() {}
 
+    const char* NodecObject::name() const noexcept
+    {
+        return name_.c_str();
+    }
 }

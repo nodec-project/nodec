@@ -1,16 +1,14 @@
 #ifndef NODEC__MODULE_INTERFACE_HPP_
 #define NODEC__MODULE_INTERFACE_HPP_
 
+#include <nodec/nodec_object.hpp>
+
 namespace nodec
 {
-    class ModuleInterface
+    class ModuleInterface : public NodecObject
     {
     public:
-        ModuleInterface() = default;
-        virtual ~ModuleInterface() {};
-        
-        ModuleInterface(const ModuleInterface&) = delete;
-        ModuleInterface& operator=(const ModuleInterface&) = delete;
+        using NodecObject::NodecObject;
     };
 }
 

@@ -1,6 +1,8 @@
 #ifndef NODEC__NODEC_OBJECT_HPP_
 #define NODEC__NODEC_OBJECT_HPP_
 
+#include <nodec/macros.hpp>
+
 #include <memory>
 #include <string>
 
@@ -20,9 +22,15 @@ namespace nodec
          */
         virtual ~NodecObject();
 
-    public:
+        const char* name() const noexcept;
+
+    protected:
         //! object name.
-        std::string name;
+        std::string name_;
+
+    private:
+        NODEC_DISABLE_COPY(NodecObject);
+
     };
 
     template <class NodecObjectType>
@@ -30,6 +38,12 @@ namespace nodec
 
     template <class NodecObjectType>
     using NodecObjectReference = std::weak_ptr<NodecObjectType>;
+
+    template <class NodecObjectType, typename... Args>
+    inline NodecObjectHolder<NodecObjectType> make_nodec_object(Args&& ... args)
+    {
+        return std::make_shared<NodecObjectType>(std::forward<Args>(args) ...);
+    }
 }
 
 #endif
