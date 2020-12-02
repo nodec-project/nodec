@@ -13,7 +13,6 @@
     __VA_ARGS__(const __VA_ARGS__ &) = delete;              \
     __VA_ARGS__ & operator= (const __VA_ARGS__ &) = delete;
 
-#endif
 
 #define __NODEC_SHARED_PTR_ALIAS(...)                        \
   using SharedPtr = std::shared_ptr<__VA_ARGS__>;            \
@@ -33,3 +32,5 @@
 #define NODEC_SHARED_PTR_DEFINITIONS(...)     \
   __NODEC_SHARED_PTR_ALIAS(__VA_ARGS__)       \
   __NODEC_MAKE_SHARED_DEFINITION(__VA_ARGS__)
+
+#endif
