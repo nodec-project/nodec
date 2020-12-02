@@ -70,8 +70,8 @@ int main()
         {
             sample_object->child = nodec::make_nodec_object<SampleObject>("sample-child");
             nodec::NodecObjectReference<SampleObject> sample_child_object = sample_object->child;
-            auto sample_child_object_callback = std::make_shared<nodec::event::MemeberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEvent);
-            auto sample_child_object_callback_with_exception = std::make_shared<nodec::event::MemeberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEventWithException);
+            auto sample_child_object_callback = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEvent);
+            auto sample_child_object_callback_with_exception = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEventWithException);
             string_int_event += sample_child_object_callback;
             string_int_event += sample_child_object_callback_with_exception;
             string_int_event.invoke("Now lets go", 3000);
@@ -80,7 +80,7 @@ int main()
 
         auto static_int_callback = std::make_shared<nodec::event::StaticCallback<int, int>>(static_func_int);
         auto static_int_callback_sub = std::make_shared<nodec::event::StaticCallback<int, int>>(static_func_int);
-        auto sample_object_callback = std::make_shared<nodec::event::MemeberCallback<SampleObject, std::string, int>>(sample_object, &SampleObject::OnEvent);
+        auto sample_object_callback = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object, &SampleObject::OnEvent);
 
         std::cout << "--- 1 ---" << std::endl;
         static_int_callback->invoke(0, 1);

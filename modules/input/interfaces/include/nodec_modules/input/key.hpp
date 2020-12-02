@@ -1,5 +1,5 @@
-#ifndef NODEC__KEY_CODE_HPP_
-#define NODEC__KEY_CODE_HPP_
+#ifndef NODEC_MODULES__INPUT__KEY_HPP_
+#define NODEC_MODULES__INPUT__KEY_HPP_
 
 namespace nodec
 {

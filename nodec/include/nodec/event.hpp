@@ -118,6 +118,7 @@ namespace nodec
         class StaticCallback : public detail::Callback<A...>
         {
         public:
+            NODEC_SHARED_PTR_DEFINITIONS(StaticCallback);
 
             template<class _Fx>
             StaticCallback(_Fx&& func) :
@@ -137,11 +138,13 @@ namespace nodec
         };
 
         template<typename T, typename... A>
-        class MemeberCallback : public detail::Callback<A...>
+        class MemberCallback : public detail::Callback<A...>
         {
         public:
+            NODEC_SHARED_PTR_DEFINITIONS(MemberCallback);
+
             template<class _Fx>
-            MemeberCallback(std::shared_ptr<T> obj, _Fx&& func) :
+            MemberCallback(std::shared_ptr<T> obj, _Fx&& func) :
                 detail::Callback<A...>(obj.get(), func)
             {
                 // shared_ptr obj was copied, it is availble in this scope.
@@ -178,7 +181,7 @@ namespace nodec
         *   --- Example ---
         *   // Make the shared_ptr of static callback which can take (int, int) arguments.
         *   auto static_int_int_callback = std::make_shared<StaticCallback<int, int>>(static_int_int_func);
-        * 
+        *
         *   // Create event of Callback(int, int) type.
         *   Event<int, int> int_int_event;
         *
