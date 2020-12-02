@@ -69,7 +69,7 @@ Window::Window(int width, int height, const wchar_t* name, nodec_modules::game_e
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }
 
-    // create window & get hWnd
+    // create window & get hWnd.
     hWnd = CreateWindow(
         WindowClass::GetName(), name,
         WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU,
@@ -78,11 +78,18 @@ Window::Window(int width, int height, const wchar_t* name, nodec_modules::game_e
         nullptr, nullptr, WindowClass::GetInstance(), this
     );
 
+    // create for error.
     if (hWnd == nullptr)
     {
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }
+
+    // newly created windows start off as hidden.
     ShowWindow(hWnd, SW_SHOWDEFAULT);
+
+    // create graphics object
+    pGfx = std::make_unique<Graphics>(hWnd, width, height);
+
 }
 
 Window::~Window()
@@ -97,6 +104,15 @@ void Window::SetTitle(const std::string& title)
     {
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }
+}
+
+Graphics& Window::Gfx()
+{
+    if (!pGfx)
+    {
+        throw NoGfxException(__FILE__, __LINE__);
+    }
+    return *pGfx;
 }
 
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
@@ -142,6 +158,65 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     case WM_CLOSE:
         PostQuitMessage(0);
         return 0;
+
+        // when window loses funcs to prevent input
+    case WM_KILLFOCUS:
+        //SetTitle("A");
+        break;
+
+        // on window to foreground/background
+    case WM_ACTIVATE:
+        if (wParam & WA_ACTIVE)
+        {
+            // active by keyboard not mouse
+            //SetTitle("b");
+
+        }
+        else
+        {
+            // active by mouse
+            //SetTitle("c");
+        }
+        break;
+
+        // --- KEYBOARD MESSAGE ---
+    case WM_KEYDOWN:
+        // syskey commands need to be handled to track ALT key (VK_MENU) and F10
+    case WM_SYSKEYDOWN:
+        // filter autorepeat
+        if (!(lParam & 0x40000000))
+        {
+            /*char ch = static_cast<char>(wParam);
+            SetTitle(std::string{ ch });*/
+        }
+        break;
+
+    case WM_KEYUP:
+    case WM_SYSKEYUP:
+        break;
+
+    case WM_CHAR:
+        break;
+        // END KEYBOARD MESSAGE ---
+
+        // --- MOUSE MESSAGE ---
+    case WM_MOUSEMOVE:
+        break;
+    case WM_LBUTTONDOWN:
+        //SetTitle("hoge");
+        break;
+    case WM_RBUTTONDOWN:
+        break;
+    case WM_LBUTTONUP:
+        break;
+    case WM_RBUTTONUP:
+        break;
+    case WM_MOUSEWHEEL:
+        //SetTitle("FD");
+        break;
+
+        // END MOUSE MESSAGE ---
+
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }

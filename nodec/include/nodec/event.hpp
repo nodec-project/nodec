@@ -2,6 +2,7 @@
 #define NODEC__EVENT_HPP_
 
 #include <nodec/nodec_exception.hpp>
+#include <nodec/macros.hpp>
 
 #include <functional>
 #include <type_traits>
@@ -21,7 +22,7 @@ namespace nodec
         public:
 
             ObjectHasBeenDeletedException(const char* file, size_t line) :
-                NodecException("The owner of callback func has been deleted.", file, line)
+                NodecException("The owner object of callback func has been deleted.", file, line)
             {
 
             }
@@ -57,11 +58,7 @@ namespace nodec
                     //std::cout << typeid(Callback<A...>).name();
                 }
 
-                Callback(const Callback&) = delete;
-                Callback& operator= (const Callback&) = delete;
-
                 constexpr size_t hash() const noexcept { return hash_; }
-
                 virtual void invoke(A... args) {};
 
                 /*
@@ -110,6 +107,8 @@ namespace nodec
                     // argment 1 is blank.  
                     this->func = std::function<void(A...)>(std::bind(func, placeholder_template<Is>()...));
                 }
+
+                NODEC_DISABLE_COPY(Callback);
 
             };
 
@@ -174,7 +173,16 @@ namespace nodec
 
         };
 
-
+        /**
+        * @detail
+        *   --- Example ---
+        *   // Make the shared_ptr of static callback which can take (int, int) arguments.
+        *   auto static_int_int_callback = std::make_shared<StaticCallback<int, int>>(static_int_int_func);
+        * 
+        *   // Create event of Callback(int, int) type.
+        *   Event<int, int> int_int_event;
+        *
+        */
         template<typename... A>
         class Event
         {
@@ -182,8 +190,6 @@ namespace nodec
             using CallbackSharedPtr = std::shared_ptr<detail::Callback<A...>>;
 
             Event() = default;
-            Event(const Event&) = delete;
-            Event& operator= (const Event&) = delete;
 
             void hook(CallbackSharedPtr cb)
             {
@@ -297,6 +303,8 @@ namespace nodec
         private:
             std::mutex safety_lock;
             std::unordered_map<size_t, CallbackSharedPtr> callbacks;
+
+            NODEC_DISABLE_COPY(Event);
         };
     }
 }
