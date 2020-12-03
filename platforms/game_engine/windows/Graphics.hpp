@@ -36,17 +36,20 @@ public:
     Graphics(HWND hWnd, int width, int height);
     ~Graphics();
 
+    void BeginFrame() noexcept;
     void EndFrame();
+
+    void DrawTestTriangle();
 
 private:
     UINT width;
     UINT height;
 
     DxgiInfoLogger infoLogger;
-
     Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
     Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
     
 private:
     NODEC_DISABLE_COPY(Graphics);

@@ -54,7 +54,7 @@ void DxgiInfoLogger::Dump(nodec::logging::Level log_level)
 
     oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
         << "=== Messages ===\n";
-    do
+    for(; next < end; ++next)
     {
         HRESULT hr;
         SIZE_T messageLength;
@@ -77,8 +77,7 @@ void DxgiInfoLogger::Dump(nodec::logging::Level log_level)
             continue;
         }
         oss << pMessage->pDescription << "\n";
-    } while (++next < end);
-
+    }
     oss << "END Messages ===\n";
 
     nodec::logging::log(log_level, oss.str(), __FILE__, __LINE__);

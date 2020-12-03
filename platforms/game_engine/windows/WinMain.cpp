@@ -52,6 +52,8 @@ int CALLBACK WinMain(
                 // if ProcessMessages() returns false, means we're quiting so break
                 break;
             }
+            window.Gfx().BeginFrame();
+            window.Gfx().DrawTestTriangle();
             window.Gfx().EndFrame();
         }
 
