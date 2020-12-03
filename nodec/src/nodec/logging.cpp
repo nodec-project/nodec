@@ -72,8 +72,8 @@ namespace nodec
                 return;
             }
 
-            // while Handler objects are dispatching the appropriate log messages (based on the log messagesÅf severity) 
-            // to the handlerÅfs specified destination, lock the event to invoke.
+            // while Handler objects are dispatching the appropriate log messages (based on the log messages' severity) 
+            // to the handler's specified destination, lock the event to invoke.
             io_lock_.lock();
             record_handlers.invoke(record);
             io_lock_.unlock();

@@ -63,7 +63,7 @@ namespace nodec
 
         /**
         * @detail
-        *   WARNING: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. Åedisk space lowÅf). 
+        *   WARNING: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. 'disk space low'). 
         *       The software is still working as expected.
         */
         void warn(std::string message, const char* file, size_t line);

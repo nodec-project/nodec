@@ -1,7 +1,7 @@
 #ifndef NODEC_MODULES__INPUT__KEYBOARD_MODULE_HPP_
 #define NODEC_MODULES__INPUT__KEYBOARD_MODULE_HPP_
 
-#include <nodec_modules/input/keyboard.hpp>
+#include "interfaces/keyboard.hpp"
 
 #include <bitset>
 
@@ -9,7 +9,7 @@ namespace nodec_modules
 {
     namespace input
     {
-        class KeyboardModule : public Keyboard
+        class KeyboardModule : public interfaces::Keyboard
         {
         public:
             KeyboardModule();

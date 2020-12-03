@@ -8,10 +8,17 @@ namespace nodec_modules
             GameEngine("nodec_modules::game_engine::GameEngineModule")
         {
             keyboard_module_ = nodec::make_nodec_object<input::KeyboardModule>();
-            keyboard_ = keyboard_module_;
-
             mouse_module_ = nodec::make_nodec_object<input::MouseModule>();
-            mouse_ = mouse_module_;
+        }
+
+        input::interfaces::Keyboard& GameEngineModule::keyboard() const noexcept
+        {
+            return (*keyboard_module_);
+        }
+
+        input::interfaces::Mouse& GameEngineModule::mouse() const noexcept
+        {
+            return (*mouse_module_);
         }
 
         input::KeyboardModule& GameEngineModule::keyboard_module() const noexcept
