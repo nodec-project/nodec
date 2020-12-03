@@ -80,6 +80,10 @@ namespace nodec
         */
         void fatal(std::string message, const char* file, size_t line);
 
+        /**
+        * @brief Logs a message with level.
+        */
+        void log(Level level, std::string message, const char* file, size_t line);
     }
 }
 

@@ -43,17 +43,20 @@ int CALLBACK WinMain(
         
         window.SetTitle("ほげってる");
 
+        int exit_code;
         while (true)
         {
-            int exit_code;
             // process all messages pending, but to not block for new messages
             if (!Window::ProcessMessages(exit_code))
             {
-                return exit_code;
+                // if ProcessMessages() returns false, means we're quiting so break
+                break;
             }
-
+            window.Gfx().EndFrame();
         }
 
+        nodec::logging::info("=== Program END ===", __FILE__, __LINE__);
+        return exit_code;
     }
     catch (const nodec::NodecException& e)
     {
@@ -98,6 +101,6 @@ int CALLBACK WinMain(
         MessageBox(nullptr, L"Unknow Error Occurs. No details available.", L"UnkownErrorException", MB_OK | MB_ICONEXCLAMATION);
     }
     
-
+    nodec::logging::warn("=== Unexpected Program End ===", __FILE__, __LINE__);
     return -1;
 }

@@ -24,13 +24,16 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     sd.BufferCount = 1;
     sd.OutputWindow = hWnd;
     sd.Windowed = TRUE;
-    sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
     sd.Flags = 0;
 
 
     UINT swapCreateFlags = 0u;
+    swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
+
     // for checking results of d3d functions.
     HRESULT hr;
+    infoLogger.SetLatest();
 
     // create device and front/back buffers, and swap chain and rendering context.
     if (FAILED(hr = D3D11CreateDeviceAndSwapChain(
@@ -48,9 +51,11 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
         &pContext
     )))
     {
+        infoLogger.Dump(nodec::logging::Level::Fatal);
         throw HrException(hr, __FILE__, __LINE__);
     }
-    pSwap->Present(1u, 0u);
+
+    // gain access to texture subresource in swap chain (back buffer)
 }
 
 Graphics::~Graphics()
@@ -58,6 +63,23 @@ Graphics::~Graphics()
 
 }
 
+void Graphics::EndFrame()
+{
+    HRESULT hr;
+    infoLogger.SetLatest();
+    if (FAILED(hr = pSwap->Present(1u, 0u)))
+    {
+        infoLogger.Dump(nodec::logging::Level::Fatal);
+        if (hr == DXGI_ERROR_DEVICE_REMOVED)
+        {
+            throw DeviceRemovedException(pDevice->GetDeviceRemovedReason(), __FILE__, __LINE__);
+        }
+        else
+        {
+            throw HrException(hr, __FILE__, __LINE__);
+        }
+    }
+}
 // === Exception ===
 Graphics::HrException::HrException(HRESULT hr, const char* file, size_t line) noexcept:
     Exception(file, line)
@@ -65,9 +87,10 @@ Graphics::HrException::HrException(HRESULT hr, const char* file, size_t line) no
 
     std::ostringstream oss;
     oss << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
-        << " (" << (unsigned long)hr << ")" << std::endl
-        << "[Description] " << "" << std::endl;
+        << " (" << (unsigned long)hr << ")" << std::endl;
 
     message = oss.str();
 }
+
+
 // End Exception ===

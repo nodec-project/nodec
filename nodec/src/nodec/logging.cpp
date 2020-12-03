@@ -24,6 +24,7 @@ namespace nodec
         std::string default_formatter(const LogRecord& record) noexcept
         {
             std::ostringstream oss;
+            oss << "[" << record.file << " line " << record.line << "]\n";
             switch (record.level)
             {
             case nodec::logging::Level::Unset:
@@ -49,9 +50,7 @@ namespace nodec
                 break;
             }
 
-            oss << record.message << std::endl
-                << "[File] " << record.file << std::endl
-                << "[Line] " << record.line << std::endl;
+            oss << record.message << "\n";
 
             return oss.str();
         }
@@ -104,6 +103,11 @@ namespace nodec
         void fatal(std::string message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ Level::Fatal, message, file, line });
+        }
+
+        void log(Level level, std::string message, const char* file, size_t line)
+        {
+            log_generic_(LogRecord{ level, message, file, line });
         }
 
     }
