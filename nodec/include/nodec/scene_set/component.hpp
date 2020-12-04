@@ -1,0 +1,1 @@
+#ifndef NODEC__SCENE__

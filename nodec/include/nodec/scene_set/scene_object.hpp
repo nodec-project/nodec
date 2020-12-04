@@ -1,0 +1,5 @@
+#ifndef NODEC__SCENE_SET__SCENE_OBJECT_HPP_
+#define NODEC__SCENE_SET__SCENE_OBJECT_HPP_
+
+
+#endif
