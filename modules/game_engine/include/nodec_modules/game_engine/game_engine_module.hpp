@@ -25,8 +25,8 @@ namespace nodec_modules
             input::MouseModule& mouse_module() const noexcept;
 
         protected:
-            nodec::NodecObjectHolder<input::KeyboardModule> keyboard_module_;
-            nodec::NodecObjectHolder<input::MouseModule> mouse_module_;
+            nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
+            nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
         };
     }
 }

@@ -9,12 +9,11 @@ namespace nodec
     class Vector2
     {
     public:
-        static const Vector2<T> zero;
-        static const Vector2<T> one;
-        static const Vector2<T> up;
-        static const Vector2<T> down;
-        static const Vector2<T> right;
-        static const Vector2<T> left;
+        union
+        {
+            struct { T x, y; };
+            T v[2];
+        };
 
     public:
         Vector2();
@@ -27,8 +26,13 @@ namespace nodec
 
 
     public:
-        T x;
-        T y;
+        static const Vector2<T> zero;
+        static const Vector2<T> one;
+        static const Vector2<T> up;
+        static const Vector2<T> down;
+        static const Vector2<T> right;
+        static const Vector2<T> left;
+
     };
 
 

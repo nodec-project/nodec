@@ -5,7 +5,7 @@ namespace nodec_modules
 {
     namespace input
     {
-        enum class KeyCode
+        enum class Key
         {
             None,
             Space = 0x20, // ' '

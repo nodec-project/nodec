@@ -12,11 +12,21 @@ namespace nodec
     class NodecObject
     {
     public:
+        template<typename T>
+        using Holder = std::shared_ptr<T>;
+
+        template<typename T>
+        using Reference = std::weak_ptr<T>;
+
+    public:
         /**
          * @brief Create a new NodecObject with specified name.
+         * @detail 
+         *  This MUST NOT be called directory, see `instanciate()` instead.
          */
         NodecObject(const std::string& name);
 
+    public:
         /**
          * @brief Destructor.
          */
@@ -27,22 +37,27 @@ namespace nodec
         //! object name.
         std::string name;
 
+
+        uint64_t id();
+
+    private:
+        uint64_t id_;
+
     private:
         NODEC_DISABLE_COPY(NodecObject);
 
+    public:
+        template<typename T, typename... Args>
+        static Holder<T> instanciate(Args&&... args)
+        {
+            static_assert(std::is_base_of<NodecObject, T>::value, "T must be derived from NodecObject.");
+
+            //auto obj = std::shared_ptr<T>(new T());
+            return std::make_shared<T>(std::forward<Args>(args)...);
+        }
+
     };
 
-    template <class NodecObjectType>
-    using NodecObjectHolder = std::shared_ptr<NodecObjectType>;
-
-    template <class NodecObjectType>
-    using NodecObjectReference = std::weak_ptr<NodecObjectType>;
-
-    template <class NodecObjectType, typename... Args>
-    inline NodecObjectHolder<NodecObjectType> make_nodec_object(Args&& ... args)
-    {
-        return std::make_shared<NodecObjectType>(std::forward<Args>(args) ...);
-    }
 }
 
 #endif
