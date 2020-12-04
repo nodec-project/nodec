@@ -24,7 +24,6 @@ namespace nodec
         explicit Vector2(const Vector2<U>& vector);
 
         void set(T x, T y);
-        void normalize();
 
 
     public:
