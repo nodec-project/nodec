@@ -12,6 +12,9 @@ namespace nodec
         name(name),
         id_(0)
     {
+        // using just incremental id
+        // id space size is 2^64 (huge big).
+        // even if 1 object was created per second, it will take about 583,344,214,028 years to use all ids.
         static uint64_t id_counter = 0;
 
         id_ = id_counter;

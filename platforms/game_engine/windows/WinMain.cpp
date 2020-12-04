@@ -13,7 +13,7 @@
 #include <fstream>
 
 
-void on_boot();
+void on_boot(nodec_modules::game_engine::interfaces::GameEngine& engine);
 
 
 int CALLBACK WinMain(
@@ -33,6 +33,7 @@ int CALLBACK WinMain(
 
         nodec::logging::info("=== Program Start ===", __FILE__, __LINE__);
         nodec_modules::game_engine::GameEngineModule game_engine_module;
+        on_boot(game_engine_module);
         
         Window window(1280, 720, L"TEST", &game_engine_module);
 
