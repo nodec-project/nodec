@@ -12,6 +12,8 @@ namespace nodec
 
         }
 
+        Component::~Component() {}
+
         SceneObject& Component::scene_object() const noexcept
         {
             return (*p_scene_object);

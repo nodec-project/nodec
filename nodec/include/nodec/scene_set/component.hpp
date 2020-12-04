@@ -19,6 +19,8 @@ namespace nodec
         public:
             Component(SceneObject* owner);
 
+            virtual ~Component();
+
         public:
             SceneObject& scene_object() const noexcept;
             
