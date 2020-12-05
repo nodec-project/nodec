@@ -47,6 +47,7 @@ namespace nodec
 
     using Vector2f = Vector2<float>;
     using Vector2i = Vector2<int>;
+    using Vector2d = Vector2<double>;
 
 
     template<typename T>
@@ -56,7 +57,7 @@ namespace nodec
     const Vector2<T> Vector2<T>::one(1, 1);
 
     template<typename T>
-    const Vector2<T> Vector2<T>::up(1, 0);
+    const Vector2<T> Vector2<T>::up(0, 1);
 
     template<typename T>
     const Vector2<T> Vector2<T>::down(0, -1);
@@ -68,8 +69,7 @@ namespace nodec
     const Vector2<T> Vector2<T>::left(-1, 0);
 
     template<typename T>
-    inline Vector2<T>::Vector2()
-        :
+    inline Vector2<T>::Vector2():
         x(0),
         y(0)
     {
@@ -77,8 +77,7 @@ namespace nodec
     }
 
     template<typename T>
-    inline Vector2<T>::Vector2(T x, T y)
-        :
+    inline Vector2<T>::Vector2(T x, T y):
         x(x),
         y(y)
     {
