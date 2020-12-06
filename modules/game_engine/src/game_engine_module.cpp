@@ -16,7 +16,7 @@ namespace nodec_modules
             engine_time_stopwatch_.reset();
             engine_time_stopwatch_.start();
 
-            nodec::logging::info_stream(__FILE__, __LINE__) 
+            nodec::logging::InfoStream(__FILE__, __LINE__) 
                 << "[nodec_modules::game_engine::GameEngineModule] >>>\n"
                 << "Successfully start up.\n"
                 << "engine_time: " << std::chrono::duration<float>(engine_time_stopwatch_.lap()).count() << "[s]"

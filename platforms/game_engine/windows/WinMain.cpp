@@ -47,7 +47,7 @@ int CALLBACK WinMain(
         
         window.SetTitle("ほげってる");
 
-        nodec::logging::info_stream(__FILE__, __LINE__) 
+        nodec::logging::InfoStream(__FILE__, __LINE__) 
             << "=== Booting Finished ===\n" 
             << "engine_time: " << game_engine_module.engine_time() <<"[s]" 
             << std::flush;

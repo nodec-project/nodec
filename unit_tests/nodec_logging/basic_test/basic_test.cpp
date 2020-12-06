@@ -7,6 +7,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 
 
 class Logger 
@@ -84,8 +85,22 @@ int main()
     //nodec::logging::formatter = ;
 
     std::cout << "--- 6 ---" << std::endl;
-    nodec::logging::debug_stream(__FILE__, __LINE__) << "Debug" << std::endl;
-    nodec::logging::fatal_stream(__FILE__, __LINE__) << "Fatal\n"
+    nodec::logging::DebugStream(__FILE__, __LINE__) << "Debug" << std::endl;
+    nodec::logging::FatalStream(__FILE__, __LINE__) << "Fatal\n"
         << "OKOK\n" 
         << "No problem!" << std::flush;;
+
+    std::cout << "--- 7 ---" << std::endl;
+    {
+        nodec::logging::ErrorStream error_stream(__FILE__, __LINE__);
+        error_stream << "ERROR";
+        error_stream << nodec::logging::Level::Debug;
+    }
+    nodec::logging::InfoStream(__FILE__, __LINE__) << "info" << std::flush << std::flush;
+
+    //std::ostringstream() << "A" << nodec::logging::Level::Debug;
+
+    //oss << "TEST";
+    //oss << nodec::logging::Level::Debug << "A";
+    //nodec::logging::InfoStream(__FILE__, __LINE__) << "A" << nodec::logging::Level::Debug;
 }

@@ -43,9 +43,9 @@ namespace nodec
 
 
         /**
-        * @brief Sets the threshold for this logger to level. 
-        *   Logging messages which are less severe than level will be ignored; 
-        *   logging messages which have severity level or higher will be emitted 
+        * @brief Sets the threshold for this logger to level.
+        *   Logging messages which are less severe than level will be ignored;
+        *   logging messages which have severity level or higher will be emitted
         *   by whichever handler or handlers service this logger
         */
         void set_level(Level level);
@@ -64,7 +64,7 @@ namespace nodec
 
         /**
         * @detail
-        *   WARNING: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. 'disk space low'). 
+        *   WARNING: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. 'disk space low').
         *       The software is still working as expected.
         */
         void warn(const std::string& message, const char* file, size_t line);
@@ -86,12 +86,51 @@ namespace nodec
         */
         void log(Level level, const std::string& message, const char* file, size_t line);
 
+        namespace detail
+        {
+            class LogStreamBufferGeneric;
+        }
 
-        std::ostream& debug_stream(const char* file, size_t line);
-        std::ostream& info_stream(const char* file, size_t line);
-        std::ostream& warn_stream(const char* file, size_t line);
-        std::ostream& error_stream(const char* file, size_t line);
-        std::ostream& fatal_stream(const char* file, size_t line);
+        class LogStream : public std::ostream
+        {
+            
+        public:
+            LogStream(Level level, const char* file, size_t line);
+            ~LogStream();
+        private:
+            detail::LogStreamBufferGeneric* buffer;
+        };
+
+        class DebugStream : public LogStream
+        {
+        public:
+            DebugStream(const char* file, size_t line);
+        };
+
+        class InfoStream : public LogStream
+        {
+        public:
+            InfoStream(const char* file, size_t line);
+        };
+
+        class WarnStream : public LogStream
+        {
+        public:
+            WarnStream(const char* file, size_t line);
+        };
+
+        class ErrorStream : public LogStream
+        {
+        public:
+            ErrorStream(const char* file, size_t line);
+        };
+
+        class FatalStream : public LogStream
+        {
+        public:
+            FatalStream(const char* file, size_t line);
+        };
+
     }
 }
 

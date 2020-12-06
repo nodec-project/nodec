@@ -29,8 +29,8 @@ void InitLogging(nodec::logging::Level level)
     nodec::logging::set_level(level);
     nodec::logging::record_handlers += handler;
 
-    nodec::logging::info_stream(__FILE__, __LINE__)
-        << "[Logging] >>>\n"
+    nodec::logging::InfoStream info_stream(__FILE__, __LINE__);
+    info_stream << "[Logging] >>>\n"
         << "Logging successfully initiallized.\n"
         << "log_level: " << level
         << std::flush;
