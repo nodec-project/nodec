@@ -11,6 +11,7 @@ namespace nodec_rendering = nodec_modules::rendering::interfaces;
 void on_frame_update(nodec_rendering::Rendering& rendering)
 {
     //nodec::logging::debug("frame update", __FILE__, __LINE__);
+    nodec::logging::debug_stream(__FILE__, __LINE__) << rendering.frame_delta_time() << std::flush;
 }
 
 void on_boot(nodec_game_engine::GameEngine& engine)

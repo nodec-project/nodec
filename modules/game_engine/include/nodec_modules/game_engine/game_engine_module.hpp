@@ -22,15 +22,18 @@ namespace nodec_modules
             input::interfaces::Keyboard& keyboard() const noexcept override;
             input::interfaces::Mouse& mouse() const noexcept override;
             rendering::interfaces::Rendering& rendering() const noexcept override;
+            float engine_time() const noexcept override;
 
             input::KeyboardModule& keyboard_module() const noexcept;
             input::MouseModule& mouse_module() const noexcept;
             rendering::RenderingModule& rendering_module() const noexcept;
+            nodec::Stopwatch<std::chrono::steady_clock>& engine_time_stopwatch() noexcept;
 
         protected:
             nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
             nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
             nodec::NodecObject::Holder<rendering::RenderingModule> rendering_module_;
+            nodec::Stopwatch<std::chrono::steady_clock> engine_time_stopwatch_;
         };
     }
 }

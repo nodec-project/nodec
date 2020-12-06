@@ -1,5 +1,7 @@
 #include <nodec_modules/game_engine/game_engine_module.hpp>
 
+#include <nodec/logging.hpp>
+
 namespace nodec_modules
 {
     namespace game_engine
@@ -10,6 +12,15 @@ namespace nodec_modules
             keyboard_module_ = nodec::NodecObject::instanciate<input::KeyboardModule>();
             mouse_module_ = nodec::NodecObject::instanciate<input::MouseModule>();
             rendering_module_ = nodec::NodecObject::instanciate<rendering::RenderingModule>();
+
+            engine_time_stopwatch_.reset();
+            engine_time_stopwatch_.start();
+
+            nodec::logging::info_stream(__FILE__, __LINE__) 
+                << "[nodec_modules::game_engine::GameEngineModule] >>>\n"
+                << "Successfully start up.\n"
+                << "engine_time: " << std::chrono::duration<float>(engine_time_stopwatch_.lap()).count() << "[s]"
+                << std::flush;
         }
 
         // === interface ===
@@ -26,6 +37,12 @@ namespace nodec_modules
         rendering::interfaces::Rendering& GameEngineModule::rendering() const noexcept
         {
             return (*rendering_module_);
+        }
+
+
+        float GameEngineModule::engine_time() const noexcept 
+        {
+            return std::chrono::duration<float>(engine_time_stopwatch_.elapsed()).count();
         }
 
         // End interface ===
@@ -46,7 +63,11 @@ namespace nodec_modules
             return (*rendering_module_);
         }
 
-        
+
+        nodec::Stopwatch<std::chrono::steady_clock>& GameEngineModule::engine_time_stopwatch()  noexcept
+        {
+            return (engine_time_stopwatch_);
+        }
 
     }
 }

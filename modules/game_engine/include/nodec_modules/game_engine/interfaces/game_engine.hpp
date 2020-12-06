@@ -6,6 +6,7 @@
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
 #include <nodec/module_interface.hpp>
+#include <nodec/stopwatch.hpp>
 
 #include <string>
 
@@ -24,6 +25,7 @@ namespace nodec_modules
                 virtual input::interfaces::Keyboard& keyboard() const noexcept = 0;
                 virtual input::interfaces::Mouse& mouse() const noexcept = 0;
                 virtual rendering::interfaces::Rendering& rendering() const noexcept = 0;
+                virtual float engine_time() const noexcept = 0;
 
             };
         }

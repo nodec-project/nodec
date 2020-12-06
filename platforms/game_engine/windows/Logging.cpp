@@ -29,9 +29,11 @@ void InitLogging(nodec::logging::Level level)
     nodec::logging::set_level(level);
     nodec::logging::record_handlers += handler;
 
-    std::ostringstream oss;
-    oss << ">>> Logging initialized complete <<<" << "\n"
-        << "log level: " << level;
-    nodec::logging::info(oss.str(), __FILE__, __LINE__);
+    nodec::logging::info_stream(__FILE__, __LINE__)
+        << "[Logging] >>>\n"
+        << "Logging successfully initiallized.\n"
+        << "log_level: " << level
+        << std::flush;
+
     initialized = true;
 }

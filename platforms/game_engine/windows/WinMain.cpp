@@ -30,8 +30,11 @@ int CALLBACK WinMain(
 #else
         InitLogging(nodec::logging::Level::Info);
 #endif
-
         nodec::logging::info("=== Program Start ===", __FILE__, __LINE__);
+
+
+        nodec::logging::info("=== Booting ===", __FILE__, __LINE__);
+
         nodec_modules::game_engine::GameEngineModule game_engine_module;
         on_boot(game_engine_module);
         
@@ -44,6 +47,13 @@ int CALLBACK WinMain(
         
         window.SetTitle("ほげってる");
 
+        nodec::logging::info_stream(__FILE__, __LINE__) 
+            << "=== Booting Finished ===\n" 
+            << "engine_time: " << game_engine_module.engine_time() <<"[s]" 
+            << std::flush;
+
+        game_engine_module.engine_time_stopwatch().lap();
+
         int exit_code;
         while (true)
         {
@@ -55,11 +65,14 @@ int CALLBACK WinMain(
             }
             window.Gfx().BeginFrame();
             window.Gfx().DrawTestTriangle();
-            game_engine_module.rendering().on_frame_update.invoke(game_engine_module.rendering());
+
+            game_engine_module.rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module.engine_time_stopwatch().lap()).count();
+            game_engine_module.rendering_module().on_frame_update.invoke(game_engine_module.rendering());
+            
             window.Gfx().EndFrame();
         }
 
-        nodec::logging::info("=== Program END ===", __FILE__, __LINE__);
+        nodec::logging::info("=== Program End ===", __FILE__, __LINE__);
         return exit_code;
     }
     catch (const nodec::NodecException& e)

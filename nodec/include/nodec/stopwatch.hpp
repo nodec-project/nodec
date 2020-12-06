@@ -1,6 +1,7 @@
 #ifndef NODEC__STOPWATCH_HPP_
 #define NODEC__STOPWATCH_HPP_
 
+
 #include <chrono>
 
 namespace nodec
@@ -9,34 +10,82 @@ namespace nodec
     class Stopwatch
     {
     public:
-        Stopwatch() {}
+        Stopwatch() :
+            is_running_(false)
+        {
+        }
+
         ~Stopwatch() {}
 
     public:
-        void start();
-        void stop();
-        void reset();
-        void restart();
-        float lap();
-        bool is_running();
 
-    public:
-        float current_time()
+        bool is_running() const noexcept { return is_running_; }
+
+        void start()
         {
-            is_running_ = true;
-            auto current_time_ = stop_time;
             if (is_running_)
             {
-                std::chrono::nanoseconds nanos = ClockT::now().time_since_epoch();
-                
+                return;
             }
-            return 0.0f;
+            start_time = ClockT::now();
+            checkpoint_time = ClockT::now();
+            is_running_ = true;
+        }
+
+        void stop()
+        {
+            //std::chrono::system_clock::
+            if (!is_running_)
+            {
+                return;
+            }
+            stop_time = ClockT::now();
+            is_running_ = false;
+        }
+
+        void reset()
+        {
+            stop();
+            start_time = ClockT::time_point();
+            stop_time = ClockT::time_point();
+            checkpoint_time = ClockT::time_point();
+        }
+
+        void restart()
+        {
+            reset();
+            start();
+        }
+
+        typename ClockT::duration lap()
+        {
+            auto current_time_ = current_time();
+            auto lap_time = current_time_ - checkpoint_time;
+            checkpoint_time = current_time_;
+            return lap_time;
+        }
+
+        typename ClockT::duration elapsed() const 
+        {
+            return current_time() - start_time;
         }
 
     private:
-        float start_time;
-        float stop_time;
-        float checkpoint_time;
+        std::chrono::time_point<ClockT> current_time() const 
+        {
+            std::chrono::steady_clock::now();
+            auto current_time_ = stop_time;
+            if (is_running_)
+            {
+                current_time_ = ClockT::now();
+            }
+            return current_time_;
+        }
+
+    private:
+        std::chrono::time_point<ClockT> start_time;
+        std::chrono::time_point<ClockT> stop_time;
+        std::chrono::time_point<ClockT> checkpoint_time;
         bool is_running_;
 
     };

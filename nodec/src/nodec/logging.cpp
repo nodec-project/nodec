@@ -63,7 +63,7 @@ namespace nodec
         std::function <std::string(const LogRecord&)> formatter = default_formatter;
         nodec::event::Event<const LogRecord&> record_handlers;
 
-        static void log_generic_(const LogRecord& record)
+        static void log_generic(const LogRecord& record)
         {
             if (record.level < current_level_)
             {
@@ -81,32 +81,32 @@ namespace nodec
 
         void debug(const std::string& message, const char* file, size_t line)
         {
-            log_generic_(LogRecord{ Level::Debug, message, file, line });
+            log_generic(LogRecord{ Level::Debug, message, file, line });
         }
 
         void info(const std::string& message, const char* file, size_t line)
         {
-            log_generic_(LogRecord{ Level::Info, message, file, line });
+            log_generic(LogRecord{ Level::Info, message, file, line });
         }
 
         void warn(const std::string& message, const char* file, size_t line)
         {
-            log_generic_(LogRecord{ Level::Warn, message, file, line });
+            log_generic(LogRecord{ Level::Warn, message, file, line });
         }
 
         void error(const std::string& message, const char* file, size_t line)
         {
-            log_generic_(LogRecord{ Level::Error, message, file, line });
+            log_generic(LogRecord{ Level::Error, message, file, line });
         }
 
         void fatal(const std::string& message, const char* file, size_t line)
         {
-            log_generic_(LogRecord{ Level::Fatal, message, file, line });
+            log_generic(LogRecord{ Level::Fatal, message, file, line });
         }
 
         void log(Level level, const std::string& message, const char* file, size_t line)
         {
-            log_generic_(LogRecord{ level, message, file, line });
+            log_generic(LogRecord{ level, message, file, line });
         }
 
         class LogStreamBufferGeneric : public std::streambuf
@@ -135,7 +135,7 @@ namespace nodec
             }
             int sync() override
             {
-                log_generic_(LogRecord{ level, message, file, line });
+                log_generic(LogRecord{ level, message, file, line });
                 message.clear();
                 return 0; // not -1: means it ok.
             }
@@ -158,6 +158,7 @@ namespace nodec
         static std::ostream error_stream_(&error_stream_buffer_);
         static std::ostream fatal_stream_(&fatal_stream_buffer_);
 
+        
         std::ostream& debug_stream(const char* file, size_t line)
         {
             debug_stream_buffer_.set(file, line);
