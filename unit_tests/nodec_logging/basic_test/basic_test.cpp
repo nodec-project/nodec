@@ -82,4 +82,10 @@ int main()
     nodec::logging::set_level(nodec::logging::Level::Info);
     sub_func();
     //nodec::logging::formatter = ;
+
+    std::cout << "--- 6 ---" << std::endl;
+    nodec::logging::debug_stream(__FILE__, __LINE__) << "Debug" << std::endl;
+    nodec::logging::fatal_stream(__FILE__, __LINE__) << "Fatal\n"
+        << "OKOK\n" 
+        << "No problem!" << std::flush;;
 }

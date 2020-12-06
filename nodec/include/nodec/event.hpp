@@ -15,6 +15,16 @@
 
 namespace nodec
 {
+    /**
+    * @detail
+    *   --- Example ---
+    *   // Make the shared_ptr of static callback which can take (int, int) arguments.
+    *   auto static_int_int_callback = StaticCallback<int, int>::make_shared(static_int_int_func);
+    *
+    *   // Create event of Callback(int, int) type.
+    *   Event<int, int> int_int_event;
+    *
+    */
     namespace event
     {
         class ObjectHasBeenDeletedException : public NodecException
@@ -176,16 +186,7 @@ namespace nodec
 
         };
 
-        /**
-        * @detail
-        *   --- Example ---
-        *   // Make the shared_ptr of static callback which can take (int, int) arguments.
-        *   auto static_int_int_callback = std::make_shared<StaticCallback<int, int>>(static_int_int_func);
-        *
-        *   // Create event of Callback(int, int) type.
-        *   Event<int, int> int_int_event;
-        *
-        */
+
         template<typename... A>
         class Event
         {

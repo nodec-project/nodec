@@ -55,6 +55,7 @@ int CALLBACK WinMain(
             }
             window.Gfx().BeginFrame();
             window.Gfx().DrawTestTriangle();
+            game_engine_module.rendering().on_frame_update.invoke(game_engine_module.rendering());
             window.Gfx().EndFrame();
         }
 

@@ -11,7 +11,7 @@ namespace nodec
         static std::mutex io_lock_;
         static Level current_level_ = Level::Debug;
 
-        LogRecord::LogRecord(Level level, std::string message, const char* file, size_t line) :
+        LogRecord::LogRecord(Level level, const std::string& message, const char* file, size_t line) :
             level(level),
             message(message),
             file(file),
@@ -79,35 +79,109 @@ namespace nodec
         }
 
 
-
-        void debug(std::string message, const char* file, size_t line)
+        void debug(const std::string& message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ Level::Debug, message, file, line });
         }
 
-        void info(std::string message, const char* file, size_t line)
+        void info(const std::string& message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ Level::Info, message, file, line });
         }
 
-        void warn(std::string message, const char* file, size_t line)
+        void warn(const std::string& message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ Level::Warn, message, file, line });
         }
 
-        void error(std::string message, const char* file, size_t line)
+        void error(const std::string& message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ Level::Error, message, file, line });
         }
 
-        void fatal(std::string message, const char* file, size_t line)
+        void fatal(const std::string& message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ Level::Fatal, message, file, line });
         }
 
-        void log(Level level, std::string message, const char* file, size_t line)
+        void log(Level level, const std::string& message, const char* file, size_t line)
         {
             log_generic_(LogRecord{ level, message, file, line });
+        }
+
+        class LogStreamBufferGeneric : public std::streambuf
+        {
+            using Base = std::streambuf;
+        public:
+            LogStreamBufferGeneric(const Level level) :
+                level(level),
+                file(nullptr),
+                line(0)
+            {
+
+            }
+        public:
+            void set(const char* _file, size_t _line)
+            {
+                file = _file;
+                line = _line;
+            }
+
+        public:
+            int overflow(int ch) override
+            {
+                message += ch;
+                return ch;
+            }
+            int sync() override
+            {
+                log_generic_(LogRecord{ level, message, file, line });
+                message.clear();
+                return 0; // not -1: means it ok.
+            }
+        private:
+            std::string message;
+            Level level;
+            const char* file;
+            size_t line;
+        };
+
+        static LogStreamBufferGeneric debug_stream_buffer_(Level::Debug);
+        static LogStreamBufferGeneric info_stream_buffer_(Level::Info);
+        static LogStreamBufferGeneric warn_stream_buffer_(Level::Warn);
+        static LogStreamBufferGeneric error_stream_buffer_(Level::Error);
+        static LogStreamBufferGeneric fatal_stream_buffer_(Level::Fatal);
+
+        static std::ostream debug_stream_(&debug_stream_buffer_);
+        static std::ostream info_stream_(&info_stream_buffer_);
+        static std::ostream warn_stream_(&warn_stream_buffer_);
+        static std::ostream error_stream_(&error_stream_buffer_);
+        static std::ostream fatal_stream_(&fatal_stream_buffer_);
+
+        std::ostream& debug_stream(const char* file, size_t line)
+        {
+            debug_stream_buffer_.set(file, line);
+            return debug_stream_;
+        }
+        std::ostream& info_stream(const char* file, size_t line)
+        {
+            info_stream_buffer_.set(file, line);
+            return info_stream_;
+        }
+        std::ostream& warn_stream(const char* file, size_t line)
+        {
+            warn_stream_buffer_.set(file, line);
+            return warn_stream_;
+        }
+        std::ostream& error_stream(const char* file, size_t line)
+        {
+            error_stream_buffer_.set(file, line);
+            return error_stream_;
+        }
+        std::ostream& fatal_stream(const char* file, size_t line)
+        {
+            fatal_stream_buffer_.set(file, line);
+            return fatal_stream_;
         }
 
     }

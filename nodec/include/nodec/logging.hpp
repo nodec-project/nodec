@@ -5,6 +5,7 @@
 
 #include <functional>
 #include <string>
+#include <ostream>
 
 namespace nodec
 {
@@ -22,7 +23,7 @@ namespace nodec
 
         struct LogRecord
         {
-            LogRecord(Level level, std::string message, const char* file, size_t line);
+            LogRecord(Level level, const std::string& message, const char* file, size_t line);
             Level level;
             std::string message;
             const char* file;
@@ -53,37 +54,44 @@ namespace nodec
         * @detail
         *   DEBUG: Detailed information, typically of interest only when diagnosing problems.
         */
-        void debug(std::string message, const char* file, size_t line);
+        void debug(const std::string& message, const char* file, size_t line);
 
         /**
         * @detail
         *   INFO: Confirmation that things are working as expected.
         */
-        void info(std::string message, const char* file, size_t line);
+        void info(const std::string& message, const char* file, size_t line);
 
         /**
         * @detail
         *   WARNING: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. 'disk space low'). 
         *       The software is still working as expected.
         */
-        void warn(std::string message, const char* file, size_t line);
+        void warn(const std::string& message, const char* file, size_t line);
 
         /**
         * @detail
         *   ERROR: Due to a more serious problem, the software has not been able to perform some function.
         */
-        void error(std::string message, const char* file, size_t line);
+        void error(const std::string& message, const char* file, size_t line);
 
         /**
         * @detail
         *   FATAL: A serious error, indicating that the program itself may be unable to continue running.
         */
-        void fatal(std::string message, const char* file, size_t line);
+        void fatal(const std::string& message, const char* file, size_t line);
 
         /**
         * @brief Logs a message with level.
         */
-        void log(Level level, std::string message, const char* file, size_t line);
+        void log(Level level, const std::string& message, const char* file, size_t line);
+
+
+        std::ostream& debug_stream(const char* file, size_t line);
+        std::ostream& info_stream(const char* file, size_t line);
+        std::ostream& warn_stream(const char* file, size_t line);
+        std::ostream& error_stream(const char* file, size_t line);
+        std::ostream& fatal_stream(const char* file, size_t line);
     }
 }
 

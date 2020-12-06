@@ -5,6 +5,7 @@
 
 #include <nodec_modules/input/keyboard_module.hpp>
 #include <nodec_modules/input/mouse_module.hpp>
+#include <nodec_modules/rendering/rendering_module.hpp>
 
 #include <string>
 
@@ -20,13 +21,16 @@ namespace nodec_modules
         public:
             input::interfaces::Keyboard& keyboard() const noexcept override;
             input::interfaces::Mouse& mouse() const noexcept override;
+            rendering::interfaces::Rendering& rendering() const noexcept override;
 
             input::KeyboardModule& keyboard_module() const noexcept;
             input::MouseModule& mouse_module() const noexcept;
+            rendering::RenderingModule& rendering_module() const noexcept;
 
         protected:
             nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
             nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
+            nodec::NodecObject::Holder<rendering::RenderingModule> rendering_module_;
         };
     }
 }

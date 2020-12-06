@@ -3,6 +3,7 @@
 
 #include <nodec_modules/input/interfaces/keyboard.hpp>
 #include <nodec_modules/input/interfaces/mouse.hpp>
+#include <nodec_modules/rendering/interfaces/rendering.hpp>
 
 #include <nodec/module_interface.hpp>
 
@@ -22,6 +23,7 @@ namespace nodec_modules
             public:
                 virtual input::interfaces::Keyboard& keyboard() const noexcept = 0;
                 virtual input::interfaces::Mouse& mouse() const noexcept = 0;
+                virtual rendering::interfaces::Rendering& rendering() const noexcept = 0;
 
             };
         }
