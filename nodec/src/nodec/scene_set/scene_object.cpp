@@ -27,5 +27,11 @@ namespace nodec
             return (*p_transform);
         }
 
+
+        NodecObject::Reference<SceneObject> SceneObject::parent()
+        {
+            return parent_;
+        }
+
     }
 }
