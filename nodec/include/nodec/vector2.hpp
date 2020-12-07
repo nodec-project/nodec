@@ -5,6 +5,10 @@
 
 namespace nodec
 {
+    /**
+    * 2-dimentional vector
+    * give just container and basic operation
+    */
     template <typename T>
     class Vector2
     {

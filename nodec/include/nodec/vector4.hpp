@@ -5,6 +5,10 @@
 
 namespace nodec
 {
+    /**
+    * 4-dimentional vector
+    * give just container and basic operation
+    */
     template<typename T>
     class Vector4
     {
@@ -12,7 +16,7 @@ namespace nodec
         union
         {
             struct { T x, y, z, w; };
-            float v[4];
+            T v[4];
         };
     public:
         Vector4();
@@ -66,7 +70,7 @@ namespace nodec
         x(static_cast<T>(vector.x)),
         y(static_cast<T>(vector.y)),
         z(static_cast<T>(vector.z)),
-        w(static_cast<T>(vector.w)),
+        w(static_cast<T>(vector.w))
     {
 
     }

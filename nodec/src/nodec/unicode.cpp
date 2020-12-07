@@ -97,7 +97,7 @@ namespace nodec
             {
                 /**
                 * Specials is a short Unicode block allocated at the very end of the Basic Multilingual Plane, at U+FFF0–FFFF.
-                * U+FFFD � REPLACEMENT CHARACTER used to replace an unknown, unrecognized or unrepresentable character
+                * U+FFFD REPLACEMENT CHARACTER used to replace an unknown, unrecognized or unrepresentable character
                 */
                 constexpr uint32_t replacement = 0x0000FFFD;
                 if (strict)

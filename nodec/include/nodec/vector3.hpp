@@ -5,6 +5,10 @@
 
 namespace nodec
 {
+    /**
+    * 3-dimentional vector
+    * give just container and basic operation
+    */
     template<typename T>
     class Vector3
     {
@@ -12,7 +16,7 @@ namespace nodec
         union
         {
             struct { T x, y, z; };
-            float v[3];
+            T v[3];
         };
     public:
         Vector3();
@@ -32,6 +36,7 @@ namespace nodec
         static const Vector3<T> left;
         static const Vector3<T> one;
         static const Vector3<T> zero;
+
     };
 
 

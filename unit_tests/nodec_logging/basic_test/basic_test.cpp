@@ -102,5 +102,5 @@ int main()
 
     //oss << "TEST";
     //oss << nodec::logging::Level::Debug << "A";
-    //nodec::logging::InfoStream(__FILE__, __LINE__) << "A" << nodec::logging::Level::Debug;
+    //nodec::logging::InfoStream(__FILE__, __LINE__) << nodec::logging::Level::Debug;
 }
