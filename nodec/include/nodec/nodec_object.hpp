@@ -18,6 +18,8 @@ namespace nodec
         template<typename T>
         using Reference = std::weak_ptr<T>;
 
+        using ID = uint64_t;
+
     public:
         /**
          * @brief Create a new NodecObject with specified name.
@@ -38,10 +40,10 @@ namespace nodec
         std::string name;
 
 
-        uint64_t id();
+        ID id();
 
     private:
-        uint64_t id_;
+        ID id_;
 
     private:
         NODEC_DISABLE_COPY(NodecObject);

@@ -79,6 +79,11 @@ namespace nodec
             //! transform component is always attached to the object.
             //! We don't need to worry about the life period of this component.
             Transform* p_transform;
+
+
+            SceneObject* p_parent;
+
+            std::unordered_map<NodecObject::ID, NodecObject::Holder<SceneObject>> children;
         };
 
     }

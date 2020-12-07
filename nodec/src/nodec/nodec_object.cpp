@@ -15,7 +15,7 @@ namespace nodec
         // using just incremental id
         // id space size is 2^64 (huge big).
         // even if 1 object was created per second, it will take about 583,344,214,028 years to use all ids.
-        static uint64_t id_counter = 0;
+        static ID id_counter = 0;
 
         id_ = id_counter;
         if (++id_counter < id_)
@@ -32,6 +32,6 @@ namespace nodec
         //std::cout << "in base destructor." << std::endl;
     }
 
-    uint64_t NodecObject::id() { return id_; }
+    NodecObject::ID NodecObject::id() { return id_; }
 
 }
