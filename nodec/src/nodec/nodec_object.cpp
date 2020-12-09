@@ -27,11 +27,10 @@ namespace nodec
         //std::cout << "in base contructor. " << std::endl;
     }
 
-    NodecObject::~NodecObject()
-    {
-        //std::cout << "in base destructor." << std::endl;
-    }
 
-    NodecObject::ID NodecObject::id() { return id_; }
+    NodecObject::~NodecObject() {}
+
+    NodecObject::ID
+        NodecObject::id() const noexcept { return id_; }
 
 }

@@ -36,6 +36,7 @@ int main()
                 std::cout << com->name << std::endl;
                 std::cout << com->id() << std::endl;
             }
+            
         }
 
         std::cout << "--- 2 ---" << std::endl;
@@ -53,12 +54,30 @@ int main()
 
         logging::debug("--- 3 ---", __FILE__, __LINE__);
         {
-            
+            auto child_1_ref = root_object->append_child(NodecObject::instanciate<SceneObject>("child_1"));
+            if (auto child_1 = child_1_ref.lock())
+            {
+                logging::DebugStream(__FILE__, __LINE__) << child_1->name << std::flush;
+                logging::DebugStream(__FILE__, __LINE__) << child_1->parent().lock()->name << std::flush;
+            }
+
+            auto child_2 = NodecObject::instanciate<SceneObject>("child_2");
+            //root_object->remove_child(*child_2); // Error
+            if (auto child_2 = child_1_ref.lock())
+            {
+                auto removed = root_object->remove_child(*child_2);
+                logging::DebugStream(__FILE__, __LINE__) << removed->name << std::flush;
+            }
+            //throw std::runtime_error("test");
         }
     }
     catch (const NodecException& e)
     {
-        std::cout << e.what() << std::endl;
+        logging::fatal(e.what(), __FILE__, __LINE__);
+    }
+    catch (const std::exception& e)
+    {
+        logging::FatalStream(__FILE__, __LINE__) << e.what();
     }
     return 0;
 }

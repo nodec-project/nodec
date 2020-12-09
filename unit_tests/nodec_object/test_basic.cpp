@@ -27,7 +27,8 @@ class RootObject : public NodecObject
 {
 public:
     RootObject() :
-        NodecObject("root")
+        NodecObject("root"),
+        value(0)
     {
 
     }
@@ -39,20 +40,31 @@ public:
     //    std::cout << "constructor in " << name << std::endl;
     //}
 
+    void test(int val)
+    {
+        auto shared = shared_from(this);
+        if (shared)
+        {
+            shared->value = val;
+        }
+    }
+
     ~RootObject()
     {
         std::cout << "destructor in " << name << std::endl;
     }
-
+    int value;
     NodecObject::Holder<ChildObject> child_a;
     NodecObject::Holder<ChildObject> child_b;
 };
 
 int main()
 {
+
+    auto root_object = nodec::NodecObject::instanciate<RootObject>();
+    std::cout << root_object->id() << std::endl;
+
     {
-        auto root_object = nodec::NodecObject::instanciate<RootObject>();
-        std::cout << root_object->id() << std::endl;
 
         root_object->child_a = nodec::NodecObject::instanciate<ChildObject>("child_a");
         std::cout << root_object->child_a->id() << std::endl;
@@ -70,6 +82,15 @@ int main()
         //std::cin.get();
     }
 
+    std::cout << "--- 2 ---" << std::endl;
+    {
+        std::cout << root_object->child_a->id() << std::endl;
+
+        std::cout << root_object->value << std::endl;
+        root_object->test(100);
+        std::cout << root_object->value << std::endl;
+
+    }
     std::cin.get();
 
     return 0;

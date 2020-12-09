@@ -28,10 +28,15 @@ namespace nodec
 
         public:
             Transform& transform() const noexcept;
+
+
             NodecObject::Reference<SceneObject> parent();
 
+
             NodecObject::Reference<SceneObject> append_child(NodecObject::Holder<SceneObject> child);
-            NodecObject::Holder<SceneObject> remove_child(const SceneObject& child);
+
+
+            NodecObject::Holder<SceneObject> remove_child(SceneObject& child);
 
         public:
             template<typename T>
