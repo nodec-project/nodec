@@ -1,12 +1,19 @@
 //#include <nodec_modules/input/keyboard.hpp>
 #include <nodec_modules/game_engine/interfaces/game_engine.hpp>
+
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
+#include <nodec_modules/rendering/interfaces/renderer.hpp>
+#include <nodec_modules/rendering/interfaces/mesh.hpp>
+
+#include <nodec/scene_set/scene_object.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/event.hpp>
 
 namespace nodec_game_engine = nodec_modules::game_engine::interfaces;
 namespace nodec_rendering = nodec_modules::rendering::interfaces;
+
+nodec_game_engine::GameEngine* p_engine;
 
 void on_frame_update(nodec_rendering::Rendering& rendering)
 {
@@ -22,4 +29,11 @@ void on_boot(nodec_game_engine::GameEngine& engine)
     auto on_frame_update_callback = nodec::event::StaticCallback<nodec_rendering::Rendering&>::make_shared(&on_frame_update);
     engine.rendering().on_frame_update += on_frame_update_callback;
 
+    auto root_object = nodec::NodecObject::instanciate<nodec::scene_set::SceneObject>("root_object");
+    
+    nodec::logging::DebugStream(__FILE__, __LINE__) << root_object->name << std::flush;
+
+    root_object->add_component<nodec_rendering::Renderer>();
+
+    p_engine = &engine;
 }

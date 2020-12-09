@@ -32,13 +32,15 @@ int CALLBACK WinMain(
 #endif
         nodec::logging::info("=== Program Start ===", __FILE__, __LINE__);
 
+        auto game_engine_module = nodec::NodecObject::instanciate<nodec_modules::game_engine::GameEngineModule>();
+        Window window(1280, 720, L"TEST", game_engine_module.get());
 
         nodec::logging::info("=== Booting ===", __FILE__, __LINE__);
 
-        nodec_modules::game_engine::GameEngineModule game_engine_module;
-        on_boot(game_engine_module);
+        on_boot(*game_engine_module);
+
+
         
-        Window window(1280, 720, L"TEST", &game_engine_module);
 
         //game_engine_module.keyboard().test = 10;
         //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
@@ -49,10 +51,10 @@ int CALLBACK WinMain(
 
         nodec::logging::InfoStream(__FILE__, __LINE__) 
             << "=== Booting Finished ===\n" 
-            << "engine_time: " << game_engine_module.engine_time() <<"[s]" 
+            << "engine_time: " << game_engine_module->engine_time() <<"[s]" 
             << std::flush;
 
-        game_engine_module.engine_time_stopwatch().lap();
+        game_engine_module->engine_time_stopwatch().lap();
 
         int exit_code;
         while (true)
@@ -66,8 +68,8 @@ int CALLBACK WinMain(
             window.Gfx().BeginFrame();
             window.Gfx().DrawTestTriangle();
 
-            game_engine_module.rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module.engine_time_stopwatch().lap()).count();
-            game_engine_module.rendering_module().on_frame_update.invoke(game_engine_module.rendering());
+            game_engine_module->rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module->engine_time_stopwatch().lap()).count();
+            game_engine_module->rendering_module().on_frame_update.invoke(game_engine_module->rendering());
             
             window.Gfx().EndFrame();
         }
