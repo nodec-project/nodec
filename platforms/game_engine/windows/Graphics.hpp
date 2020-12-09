@@ -39,7 +39,12 @@ public:
     void BeginFrame() noexcept;
     void EndFrame();
 
+    void ThrowIfError(HRESULT hr, const char* file, size_t line);
     void DrawTestTriangle();
+
+    ID3D11Device* GetDevice() noexcept;
+    ID3D11DeviceContext* GetContext() noexcept;
+    DxgiInfoLogger* GetInfoLogger() noexcept;
 
 private:
     UINT width;

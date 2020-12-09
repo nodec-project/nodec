@@ -1,5 +1,7 @@
 #pragma once
 
+#include "VertexBuffer.hpp"
+
 #include <nodec/nodec_object.hpp>
 
 #include <unordered_map>
@@ -9,6 +11,12 @@
 
 class GraphicsResources
 {
+public:
+    std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<VertexBuffer>> vertexBufferMap;
+
+public:
+    GraphicsResources();
+
 private:
-    std::unordered_map<nodec::NodecObject::ID, 
+    NODEC_DISABLE_COPY(GraphicsResources);
 };

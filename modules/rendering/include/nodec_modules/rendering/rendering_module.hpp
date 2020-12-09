@@ -14,11 +14,11 @@ namespace nodec_modules
 
         public:
             float frame_delta_time() const noexcept override;
-            void publish_mesh(const interfaces::Mesh& mesh) override;
+            void publish_mesh(interfaces::Mesh& mesh) override;
 
         public:
             float frame_delta_time_;
-            nodec::event::Event<const interfaces::Mesh&> on_publish_mesh;
+            nodec::event::Event<interfaces::Mesh&> on_publish_mesh;
         };
     }
 }

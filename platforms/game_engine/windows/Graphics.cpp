@@ -10,14 +10,18 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 
-#define THROW_IF_ERROR(hr)                               \
-    if( FAILED( (hr) ) ) {                               \
-        infoLogger.Dump( nodec::logging::Level::Error ); \
-        throw HrException( (hr) , __FILE__, __LINE__);   \
-    }
 
 namespace wrl = Microsoft::WRL;
 //namespace dx = DirectX;
+
+void Graphics::ThrowIfError(HRESULT hr, const char* file, size_t line)
+{
+    if (FAILED(hr))
+    {
+        infoLogger.Dump(nodec::logging::Level::Error);
+        throw HrException(hr, file, line);
+    }
+}
 
 Graphics::Graphics(HWND hWnd, int width, int height) :
     width(width),
@@ -48,7 +52,7 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     infoLogger.SetLatest();
 
     // create device and front/back buffers, and swap chain and rendering context.
-    THROW_IF_ERROR(D3D11CreateDeviceAndSwapChain(
+    ThrowIfError(D3D11CreateDeviceAndSwapChain(
         nullptr,                  // video adapter: nullptr=default adapter
         D3D_DRIVER_TYPE_HARDWARE, // driver type
         nullptr,                  // Needed if D3D_DRIVER_TYPE_SOFTWARE is enabled
@@ -61,13 +65,13 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
         &pDevice,
         nullptr,
         &pContext
-    ));
+    ), __FILE__, __LINE__);
 
     // gain access to texture subresource in swap chain (back buffer)
     wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
-    
-    THROW_IF_ERROR(pSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer));
-    THROW_IF_ERROR(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget));
+
+    ThrowIfError(pSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer), __FILE__, __LINE__);
+    ThrowIfError(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget), __FILE__, __LINE__);
 
     infoLogger.Dump(nodec::logging::Level::Info);
     nodec::logging::info("[Graphics] >>> Initialized Successfully Completed.", __FILE__, __LINE__);
@@ -78,11 +82,16 @@ Graphics::~Graphics()
 
 }
 
+ID3D11Device* Graphics::GetDevice() noexcept { return pDevice.Get(); }
+ID3D11DeviceContext* Graphics::GetContext() noexcept { return pContext.Get(); }
+DxgiInfoLogger* Graphics::GetInfoLogger() noexcept { return &infoLogger; }
+
+
 void Graphics::BeginFrame() noexcept
 {
     static float i = 0.0f;
     const float color[] = { std::sinf(i += 0.1f), 0.1f, 0.1f, 1.0f };
-    
+
     pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
 
@@ -131,7 +140,7 @@ void Graphics::DrawTestTriangle()
 
     D3D11_SUBRESOURCE_DATA sd = {};
     sd.pSysMem = vertices;
-    THROW_IF_ERROR(pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer));
+    ThrowIfError(pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer), __FILE__, __LINE__);
 
     const UINT stride = sizeof(Vertex);
     const UINT offset = 0u;
@@ -153,7 +162,7 @@ void Graphics::DrawTestTriangle()
     wrl::ComPtr<ID3D11VertexShader> pVertexShader;
     D3DReadFileToBlob(L"VertexShader.cso", &pBlob);
     pDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
-    
+
     pContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
 
 
@@ -174,7 +183,7 @@ void Graphics::DrawTestTriangle()
     // bind render target
     pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
 
-    
+
     pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // configure viewport
@@ -192,7 +201,7 @@ void Graphics::DrawTestTriangle()
     //infoLogger.Dump(nodec::logging::Level::Debug);
 }
 // === Exception ===
-Graphics::HrException::HrException(HRESULT hr, const char* file, size_t line) noexcept:
+Graphics::HrException::HrException(HRESULT hr, const char* file, size_t line) noexcept :
     Exception(file, line)
 {
 

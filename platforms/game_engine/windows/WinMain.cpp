@@ -1,6 +1,8 @@
 #include "Window.hpp"
 #include "Utils.hpp"
 #include "Logging.hpp"
+#include "RenderingHandlers.hpp"
+#include "GraphicsResources.hpp"
 
 #include <nodec_modules/game_engine/game_engine_module.hpp>
 
@@ -34,6 +36,10 @@ int CALLBACK WinMain(
 
         auto game_engine_module = nodec::NodecObject::instanciate<nodec_modules::game_engine::GameEngineModule>();
         Window window(1280, 720, L"TEST", game_engine_module.get());
+        GraphicsResources graphicsResources;
+
+        auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources);
+        renderingHandlers->Init((game_engine_module->rendering_module()));
 
         nodec::logging::info("=== Booting ===", __FILE__, __LINE__);
 

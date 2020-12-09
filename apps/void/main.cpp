@@ -33,7 +33,20 @@ void on_boot(nodec_game_engine::GameEngine& engine)
     
     nodec::logging::DebugStream(__FILE__, __LINE__) << root_object->name << std::flush;
 
-    root_object->add_component<nodec_rendering::Renderer>();
+    auto renderer_ref = root_object->add_component<nodec_rendering::Renderer>();
+    if (auto renderer = renderer_ref.lock())
+    {
+        renderer->mesh = nodec::NodecObject::instanciate<nodec_rendering::Mesh>();
+        renderer->mesh->vertices.push_back({ -0.5, -0.5, -0.5 });
+        renderer->mesh->vertices.push_back({ +0.5, -0.5, -0.5 });
+        renderer->mesh->vertices.push_back({ +0.5, -0.5, +0.5 });
+        renderer->mesh->vertices.push_back({ -0.5, -0.5, +0.5 });
+        renderer->mesh->vertices.push_back({ -0.5, +0.5, -0.5 });
+        renderer->mesh->vertices.push_back({ +0.5, +0.5, -0.5 });
+        renderer->mesh->vertices.push_back({ +0.5, +0.5, +0.5 });
+        renderer->mesh->vertices.push_back({ -0.5, +0.5, +0.5 });
+        engine.rendering().publish_mesh(*(renderer->mesh));
+    }
 
     p_engine = &engine;
 }
