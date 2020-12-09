@@ -73,6 +73,17 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     ThrowIfError(pSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer), __FILE__, __LINE__);
     ThrowIfError(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget), __FILE__, __LINE__);
 
+
+    // configure viewport
+    D3D11_VIEWPORT vp;
+    vp.Width = static_cast<float>(width);
+    vp.Height = static_cast<float>(height);
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0.0f;
+    vp.TopLeftY = 0.0f;
+    pContext->RSSetViewports(1u, &vp);
+
     infoLogger.Dump(nodec::logging::Level::Info);
     nodec::logging::info("[Graphics] >>> Initialized Successfully Completed.", __FILE__, __LINE__);
 }
@@ -185,16 +196,6 @@ void Graphics::DrawTestTriangle()
 
 
     pContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    // configure viewport
-    D3D11_VIEWPORT vp;
-    vp.Width = 800;
-    vp.Height = 600;
-    vp.MinDepth = 0;
-    vp.MaxDepth = 1;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    pContext->RSSetViewports(1u, &vp);
 
     pContext->Draw((UINT)std::size(vertices), 0u);
 

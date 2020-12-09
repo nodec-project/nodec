@@ -45,7 +45,7 @@ void on_boot(nodec_game_engine::GameEngine& engine)
         renderer->mesh->vertices.push_back({ +0.5, +0.5, -0.5 });
         renderer->mesh->vertices.push_back({ +0.5, +0.5, +0.5 });
         renderer->mesh->vertices.push_back({ -0.5, +0.5, +0.5 });
-        engine.rendering().publish_mesh(*(renderer->mesh));
+        engine.rendering().publish_mesh(renderer->mesh.get());
     }
 
     p_engine = &engine;

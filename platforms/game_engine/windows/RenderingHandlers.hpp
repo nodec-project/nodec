@@ -12,7 +12,7 @@ public:
     RenderingHandlers(Graphics* pGraphics, GraphicsResources* pGraphicsResources);
 
     void Init(nodec_modules::rendering::RenderingModule& rendering_module);
-    void HandleMeshPublishing(nodec_modules::rendering::interfaces::Mesh& mesh);
+    void HandleMeshPublishing(nodec_modules::rendering::interfaces::Mesh* mesh);
 
 private:
     Graphics* pGraphics;

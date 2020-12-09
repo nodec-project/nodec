@@ -16,7 +16,7 @@ namespace nodec_modules
             return frame_delta_time_;
         }
 
-        void RenderingModule::publish_mesh(interfaces::Mesh& mesh)
+        void RenderingModule::publish_mesh(interfaces::Mesh* mesh)
         {
             on_publish_mesh.invoke(mesh);
         }
