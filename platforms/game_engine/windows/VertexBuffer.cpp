@@ -1,6 +1,6 @@
 #include "VertexBuffer.hpp"
 
-VertexBuffer::VertexBuffer(Graphics* pGfx, UINT sizeBytes, UINT strideBytes, void* pSysMem):
+VertexBuffer::VertexBuffer(Graphics* pGraphics, UINT sizeBytes, UINT strideBytes, void* pSysMem):
     sizeBytes(sizeBytes),
     strideBytes(strideBytes)
 {
@@ -13,7 +13,15 @@ VertexBuffer::VertexBuffer(Graphics* pGfx, UINT sizeBytes, UINT strideBytes, voi
     bd.StructureByteStride = strideBytes;
     D3D11_SUBRESOURCE_DATA sd = {};
     sd.pSysMem = pSysMem;
-    pGfx->ThrowIfError(
-        pGfx->GetDevice()->CreateBuffer(&bd, &sd, &pVertexBuffer),
+    pGraphics->ThrowIfError(
+        pGraphics->GetDevice()->CreateBuffer(&bd, &sd, &pVertexBuffer),
         __FILE__, __LINE__);
+}
+
+void VertexBuffer::Bind(Graphics* pGraphics)
+{
+    const UINT offset = 0u;
+
+    pGraphics->GetContext()->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &strideBytes, &offset);
+    pGraphics->GetInfoLogger()->Dump(nodec::logging::Level::Debug);
 }

@@ -18,6 +18,7 @@ namespace nodec_modules
             {
             public:
                 std::vector<nodec::Vector3f> vertices;
+                std::vector<int> triangles;
 
             public:
                 Mesh();

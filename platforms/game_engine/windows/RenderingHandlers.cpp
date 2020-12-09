@@ -1,4 +1,5 @@
 #include "RenderingHandlers.hpp"
+#include "RenderingUtils.hpp"
 
 RenderingHandlers::RenderingHandlers(Graphics* pGraphics, GraphicsResources* pGraphicsResources):
     pGraphics(pGraphics),
@@ -22,28 +23,6 @@ void RenderingHandlers::Init(
 void RenderingHandlers::HandleMeshPublishing(nodec_modules::rendering::interfaces::Mesh* mesh)
 {
 
-    if (pGraphicsResources->vertexBufferMap.find(mesh->id()) != pGraphicsResources->vertexBufferMap.end())
-    {
-        // Already exists.
-        return;
-    }
-
-    if (mesh->vertices.size() > 0)
-    {
-        //auto vertexBuffer = std::shared_ptr<VertexBuffer>(
-        //    new VertexBuffer(
-        //        pGraphics,
-        //        static_cast<UINT>(mesh.vertices.size() * sizeof(nodec::Vector3f)),
-        //        static_cast<UINT>(sizeof(nodec::Vector3f)),
-        //        mesh.vertices.data()
-        //    )
-        //    );
-        auto vertexBuffer = std::make_shared<VertexBuffer>(
-            pGraphics,
-            mesh->vertices.size() * sizeof(nodec::Vector3f),
-            sizeof(nodec::Vector3f),
-            mesh->vertices.data()
-            );
-    }
+    PublishMesh(mesh, pGraphics, pGraphicsResources);
 
 }
