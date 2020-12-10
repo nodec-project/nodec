@@ -6,7 +6,7 @@ namespace nodec_modules
     {
         namespace interfaces
         {
-            Shader::Shader(const char* shader_name) :
+            Shader::Shader(const std::string& shader_name) :
                 NodecObject("Shader"),
                 shader_name(shader_name)
             {

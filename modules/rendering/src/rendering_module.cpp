@@ -16,23 +16,32 @@ namespace nodec_modules
             return frame_delta_time_;
         }
 
-        void RenderingModule::publish_mesh(interfaces::Mesh* mesh)
+        void RenderingModule::bind_mesh(interfaces::Mesh* mesh)
         {
-            on_publish_mesh.invoke(mesh);
+            on_bind_mesh.invoke(mesh);
         }
 
-        void RenderingModule::discard_mesh(interfaces::Mesh* mesh)
+        void RenderingModule::unbind_mesh(interfaces::Mesh* mesh)
         {
-            on_discard_mesh.invoke(mesh);
+            on_unbind_mesh.invoke(mesh);
         }
 
-        void RenderingModule::publish_shader(interfaces::Shader* shader)
+        void RenderingModule::bind_shader(interfaces::Shader* shader)
         {
-            on_publish_shader.invoke(shader);
+            on_bind_shader.invoke(shader);
         }
-        void RenderingModule::discard_shader(interfaces::Shader* shader)
+        void RenderingModule::unbind_shader(interfaces::Shader* shader)
         {
-            on_discard_shader.invoke(shader);
+            on_unbind_shader.invoke(shader);
+        }
+
+        void RenderingModule::bind_material(interfaces::Material* material)
+        {
+            on_bind_material.invoke(material);
+        }
+        void RenderingModule::unbind_material(interfaces::Material* material)
+        {
+            on_unbind_material.invoke(material);
         }
 
         void RenderingModule::regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer)

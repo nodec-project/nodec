@@ -12,11 +12,11 @@ namespace nodec_modules
             class Shader : public nodec::NodecObject
             {
             public:
-                Shader(const char* shader_name);
+                Shader(const std::string& shader_name);
                 ~Shader();
 
             private:
-                const char* shader_name;
+                std::string shader_name;
             };
         }
     }

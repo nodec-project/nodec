@@ -1,8 +1,9 @@
-#include "Window.hpp"
-#include "Utils.hpp"
+#include "Graphics/GraphicsResources.hpp"
+#include "Graphics/RenderingHandlers.hpp"
+#include "Graphics/RenderingUtils.hpp"
 #include "Logging.hpp"
-#include "RenderingHandlers.hpp"
-#include "GraphicsResources.hpp"
+#include "Utils.hpp"
+#include "Window.hpp"
 
 #include <nodec_modules/game_engine/game_engine_module.hpp>
 
@@ -14,15 +15,13 @@
 #include <exception>
 #include <fstream>
 
-
 void on_boot(nodec_modules::game_engine::interfaces::GameEngine& engine);
-
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
-    LPSTR     lpCmdLine,
-    int       nCmdShow)
+    LPSTR lpCmdLine,
+    int nCmdShow)
 {
 
     try
@@ -32,33 +31,30 @@ int CALLBACK WinMain(
 #else
         InitLogging(nodec::logging::Level::Info);
 #endif
-        nodec::logging::info("=== Program Start ===", __FILE__, __LINE__);
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program start." << std::flush;
 
         auto game_engine_module = nodec::NodecObject::instanciate<nodec_modules::game_engine::GameEngineModule>();
+
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Booting..." << std::flush;
+
+        on_boot(*game_engine_module);
+
         Window window(1280, 720, L"TEST", game_engine_module.get());
         GraphicsResources graphicsResources;
 
         auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources);
-        renderingHandlers->Init((game_engine_module->rendering_module()));
-
-        nodec::logging::info("=== Booting ===", __FILE__, __LINE__);
-
-        on_boot(*game_engine_module);
-
-
-        
+        RenderingUtils::InitRenderingHandlers(renderingHandlers, game_engine_module->rendering_module());
 
         //game_engine_module.keyboard().test = 10;
         //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
         //game_engine_module.keyboard_module().test = 100;
         //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
-        
-        window.SetTitle("ほげってる");
 
-        nodec::logging::InfoStream(__FILE__, __LINE__) 
-            << "=== Booting Finished ===\n" 
-            << "engine_time: " << game_engine_module->engine_time() <<"[s]" 
-            << std::flush;
+        //window.SetTitle("ほげってる");
+
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[Main] >>> Booting finished.\n"
+            << "engine_time: " << game_engine_module->engine_time() << "[s]" << std::flush;
 
         game_engine_module->engine_time_stopwatch().lap();
 
@@ -72,11 +68,11 @@ int CALLBACK WinMain(
                 break;
             }
             window.Gfx().BeginFrame();
-            window.Gfx().DrawTestTriangle();
+            //window.Gfx().DrawTestTriangle();
 
             game_engine_module->rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module->engine_time_stopwatch().lap()).count();
             game_engine_module->rendering_module().on_frame_update.invoke(game_engine_module->rendering());
-            
+
             window.Gfx().EndFrame();
         }
 
@@ -125,7 +121,7 @@ int CALLBACK WinMain(
 
         MessageBox(nullptr, L"Unknow Error Occurs. No details available.", L"UnkownErrorException", MB_OK | MB_ICONEXCLAMATION);
     }
-    
+
     nodec::logging::warn("=== Unexpected Program End ===", __FILE__, __LINE__);
     return -1;
 }

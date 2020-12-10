@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Graphics.hpp"
+#include "Graphics/Graphics.hpp"
 
 #include <nodec_modules/game_engine/game_engine_module.hpp>
 

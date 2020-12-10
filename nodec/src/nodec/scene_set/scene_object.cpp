@@ -7,10 +7,7 @@ namespace nodec
 {
     namespace scene_set
     {
-        class Test
-        {
 
-        };
         SceneObject::SceneObject(const std::string& name) :
             NodecObject(name),
             p_transform(nullptr)
