@@ -62,6 +62,7 @@ public:
         }
 
         component->name = typeid(T).name();
+        component->on_awake();
 
         return component;
     }

@@ -15,7 +15,6 @@
 #include <exception>
 #include <fstream>
 
-void on_boot(nodec_modules::game_engine::interfaces::GameEngine& engine);
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -31,15 +30,15 @@ int CALLBACK WinMain(
 #else
         InitLogging(nodec::logging::Level::Info);
 #endif
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program start." << std::flush;
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Hello world. Program start." << std::flush;
 
-        auto game_engine_module = nodec::NodecObject::instanciate<nodec_modules::game_engine::GameEngineModule>();
 
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Booting..." << std::flush;
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the Engine." << std::flush;
+        auto game_engine_module = nodec_modules::game_engine::get_game_engine_module();
 
-        on_boot(*game_engine_module);
 
-        Window window(1280, 720, L"TEST", game_engine_module.get());
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
+        Window window(1280, 720, L"TEST", game_engine_module);
         GraphicsResources graphicsResources;
 
         auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources);
@@ -52,9 +51,6 @@ int CALLBACK WinMain(
 
         //window.SetTitle("ほげってる");
 
-        nodec::logging::InfoStream(__FILE__, __LINE__)
-            << "[Main] >>> Booting finished.\n"
-            << "engine_time: " << game_engine_module->engine_time() << "[s]" << std::flush;
 
         game_engine_module->engine_time_stopwatch().lap();
 
@@ -76,7 +72,7 @@ int CALLBACK WinMain(
             window.Gfx().EndFrame();
         }
 
-        nodec::logging::info("=== Program End ===", __FILE__, __LINE__);
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program Sucessfully Ended. See you." << std::flush;
         return exit_code;
     }
     catch (const nodec::NodecException& e)

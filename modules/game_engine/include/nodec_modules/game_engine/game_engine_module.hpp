@@ -9,50 +9,57 @@
 
 #include <string>
 
-namespace nodec_modules {
-namespace game_engine {
-    class GameEngineModule : public interfaces::GameEngine {
-    public:
-        GameEngineModule();
+namespace nodec_modules
+{
+namespace game_engine
+{
+class GameEngineModule : public interfaces::GameEngine
+{
+public:
+    GameEngineModule();
+    ~GameEngineModule();
 
-    public:
-        input::interfaces::Keyboard&
+public:
+    input::interfaces::Keyboard&
         keyboard() const noexcept override;
 
-        input::interfaces::Mouse&
+    input::interfaces::Mouse&
         mouse() const noexcept override;
 
-        rendering::interfaces::Rendering&
+    rendering::interfaces::Rendering&
         rendering() const noexcept override;
 
-        nodec::scene_set::SceneObject&
+    nodec::scene_set::SceneObject&
         root_scene_object() const noexcept override;
 
-        float engine_time() const noexcept override;
+    float engine_time() const noexcept override;
 
-    public:
-        input::KeyboardModule&
+public:
+    input::KeyboardModule&
         keyboard_module() const noexcept;
 
-        input::MouseModule&
+    input::MouseModule&
         mouse_module() const noexcept;
 
-        rendering::RenderingModule&
+    rendering::RenderingModule&
         rendering_module() const noexcept;
 
-        nodec::Stopwatch<std::chrono::steady_clock>&
+    nodec::Stopwatch<std::chrono::steady_clock>&
         engine_time_stopwatch() noexcept;
 
-    protected:
-        nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
-        nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
-        nodec::NodecObject::Holder<rendering::RenderingModule> rendering_module_;
+protected:
+    nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
+    nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
+    nodec::NodecObject::Holder<rendering::RenderingModule> rendering_module_;
 
-        nodec::NodecObject::Holder<nodec::scene_set::SceneObject> root_scene_object_;
+    nodec::NodecObject::Holder<nodec::scene_set::SceneObject> root_scene_object_;
 
-        nodec::Stopwatch<std::chrono::steady_clock> engine_time_stopwatch_;
-    };
-}
-}
+    nodec::Stopwatch<std::chrono::steady_clock> engine_time_stopwatch_;
+};
+
+GameEngineModule* get_game_engine_module();
+
+} // namespace game_engine
+} // namespace nodec_modules
 
 #endif
