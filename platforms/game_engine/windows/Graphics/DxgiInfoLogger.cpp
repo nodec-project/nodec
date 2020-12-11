@@ -37,7 +37,7 @@ DxgiInfoLogger::DxgiInfoLogger()
         throw Graphics::HrException(hr, __FILE__, __LINE__);
     }
 
-    nodec::logging::info("DxgiInfoLogger successfully initialized.", __FILE__, __LINE__);
+    nodec::logging::InfoStream(__FILE__, __LINE__) << "[DxgiInfoLogger] >>> Successfully initialized." << std::flush;
 }
 
 void DxgiInfoLogger::SetLatest() noexcept
@@ -47,14 +47,45 @@ void DxgiInfoLogger::SetLatest() noexcept
     next = pDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 }
 
-void DxgiInfoLogger::Dump(nodec::logging::Level log_level)
+bool DxgiInfoLogger::DumpIfAny(nodec::logging::Level logLevel)
 {
     std::ostringstream oss;
-    const auto end = pDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 
     oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
         << "=== Messages ===\n";
-    for(; next < end; ++next)
+    if (!GetMessages(oss))
+    {
+        return false;
+    }
+    oss << "END Messages ===\n";
+
+    nodec::logging::log(logLevel, oss.str(), __FILE__, __LINE__);
+
+    return true;
+}
+
+void DxgiInfoLogger::Dump(nodec::logging::Level logLevel)
+{
+    std::ostringstream oss;
+
+    oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
+        << "=== Messages ===\n";
+    GetMessages(oss);
+    oss << "END Messages ===\n";
+
+    nodec::logging::log(logLevel, oss.str(), __FILE__, __LINE__);
+}
+
+bool DxgiInfoLogger::GetMessages(std::ostringstream& outMessagesStream)
+{
+    const auto end = pDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
+
+    if (next == end)
+    {
+        return false;
+    }
+
+    for (; next < end; ++next)
     {
         HRESULT hr;
         SIZE_T messageLength;
@@ -62,7 +93,7 @@ void DxgiInfoLogger::Dump(nodec::logging::Level log_level)
         // get the size of message in bytes
         if (FAILED(hr = pDxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, next, nullptr, &messageLength)))
         {
-            oss << "[ERROR] cannnot get the size of message '" << next << "': hr=0x"
+            outMessagesStream << "[ERROR] cannnot get the size of message '" << next << "': hr=0x"
                 << std::hex << std::uppercase << hr << std::dec << "\n";
             continue;
         }
@@ -72,13 +103,11 @@ void DxgiInfoLogger::Dump(nodec::logging::Level log_level)
         // get the message and log its description
         if (FAILED(hr = pDxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, next, pMessage, &messageLength)))
         {
-            oss << "[ERROR] cannnot get the size of message '" << next << "': hr=0x"
+            outMessagesStream << "[ERROR] cannnot get the size of message '" << next << "': hr=0x"
                 << std::hex << std::uppercase << hr << std::dec << "\n";
             continue;
         }
-        oss << pMessage->pDescription << "\n";
+        outMessagesStream << pMessage->pDescription << "\n";
     }
-    oss << "END Messages ===\n";
-
-    nodec::logging::log(log_level, oss.str(), __FILE__, __LINE__);
+    return true;
 }

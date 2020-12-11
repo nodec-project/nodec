@@ -72,7 +72,7 @@ int CALLBACK WinMain(
             window.Gfx().EndFrame();
         }
 
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program Sucessfully Ended. See you." << std::flush;
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program Sucessfully Ending. See you." << std::flush;
         return exit_code;
     }
     catch (const nodec::NodecException& e)

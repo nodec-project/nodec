@@ -13,9 +13,11 @@ public:
     ~DxgiInfoLogger() = default;
 
     void SetLatest() noexcept;
-    void Dump(nodec::logging::Level log_level);
+    void Dump(nodec::logging::Level logLevel);
+    bool DumpIfAny(nodec::logging::Level logLevel);
 
 private:
+    bool GetMessages(std::ostringstream& outMessagesStream);
     Microsoft::WRL::ComPtr<IDXGIInfoQueue> pDxgiInfoQueue;
     unsigned long long next = 0;
 

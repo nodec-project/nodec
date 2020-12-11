@@ -85,12 +85,13 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     pContext->RSSetViewports(1u, &vp);
 
     infoLogger.Dump(nodec::logging::Level::Info);
-    nodec::logging::info("[Graphics] >>> Initialized Successfully Completed.", __FILE__, __LINE__);
+    nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> Successfully initialized." << std::flush;
 }
 
 Graphics::~Graphics()
 {
-
+    infoLogger.DumpIfAny(nodec::logging::Level::Info);
+    nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> End Graphics." << std::flush;
 }
 
 ID3D11Device* Graphics::GetDevice() noexcept { return pDevice.Get(); }

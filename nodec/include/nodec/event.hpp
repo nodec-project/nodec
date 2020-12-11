@@ -15,7 +15,11 @@
 
 namespace nodec
 {
-
+/**
+* @note WARNING
+*   We cannnot use logging because logging using the event.
+*   callbacks in logging is called infinitely.
+*/
 //namespace logging
 //{
 //void debug(const std::string& message, const char* file, size_t line);

@@ -17,6 +17,28 @@ namespace nodec_game_engine = nodec_modules::game_engine::interfaces;
 namespace nodec_rendering = nodec_modules::rendering::interfaces;
 
 
+class BRDFMaterial : public nodec_rendering::Material
+{
+public:
+    struct Properties
+    {
+        Vector3f diffuse = Vector3f::one;
+        float alpha = 1.0f;
+
+        Vector3f specular = Vector3f(0.5f, 0.5f, 0.5f);
+        float roughness = 0.5f;
+
+        float metalness = 0.0f;
+        float shininess = 40.0f;
+
+    } properties;
+
+    BRDFMaterial()
+        : Material("brdf")
+    {
+    }
+};
+
 class TestBehavior : public nodec_game_engine::Behavior
 {
 public:
@@ -46,35 +68,19 @@ public:
         enable_frame_update();
         //enable_frame_update();
     }
+    void on_frame_start(nodec_rendering::Rendering& rendering) override
+    {
+        logging::DebugStream(__FILE__, __LINE__) << "start" << std::flush;
+
+    }
     void on_frame_update(nodec_rendering::Rendering& rendering) override
     {
+        logging::DebugStream(__FILE__, __LINE__) << "update" << std::flush;
         //throw NodecException("TEST", __FILE__, __LINE__);
         //logging::DebugStream(__FILE__, __LINE__) << rendering.frame_delta_time();
     }
 };
 
-
-class BRDFMaterial : public nodec_rendering::Material
-{
-public:
-    struct Properties
-    {
-        Vector3f diffuse = Vector3f::one;
-        float alpha = 1.0f;
-
-        Vector3f specular = Vector3f(0.5f, 0.5f, 0.5f);
-        float roughness = 0.5f;
-
-        float metalness = 0.0f;
-        float shininess = 40.0f;
-
-    } properties;
-
-    BRDFMaterial()
-        : Material("brdf")
-    {
-    }
-};
 
 void on_frame_update(nodec_rendering::Rendering& rendering)
 {

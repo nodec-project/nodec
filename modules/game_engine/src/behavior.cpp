@@ -39,10 +39,18 @@ namespace game_engine
 namespace interfaces
 {
 
+void Behavior::on_frame_start(Rendering& rendering) {}
 void Behavior::on_frame_update(Rendering& rendering) {}
 
 void Behavior::on_frame_update_(Rendering& rendering)
 {
+    if (!is_called_frame_start)
+    {
+        is_called_frame_start = true;
+        TRY(on_frame_start(rendering), "on_frame_start");
+        return;
+    }
+
     TRY(on_frame_update(rendering), "on_frame_update");
 }
 
