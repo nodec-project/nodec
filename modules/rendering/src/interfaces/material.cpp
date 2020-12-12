@@ -2,15 +2,17 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        namespace interfaces
-        {
-            Material::Material(const std::string& shader_name):
-                NodecObject("Material")
-            {
-                shader = nodec::NodecObject::instanciate<Shader>(shader_name);
-            }
-        }
-    }
+namespace rendering
+{
+namespace interfaces
+{
+
+Material::Material(nodec::NodecObject::Holder<Shader> shader, Rendering* target_rendering) :
+    BindableResource(target_rendering, "Material"),
+    shader(shader)
+{
+}
+
+}
+}
 }

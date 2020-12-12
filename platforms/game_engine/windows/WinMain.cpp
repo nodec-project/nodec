@@ -1,6 +1,7 @@
 #include "Graphics/GraphicsResources.hpp"
 #include "Graphics/RenderingHandlers.hpp"
 #include "Graphics/RenderingUtils.hpp"
+#include "Graphics/GraphicsRenderer.hpp"
 #include "Logging.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
@@ -40,8 +41,9 @@ int CALLBACK WinMain(
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
         Window window(1280, 720, L"TEST", game_engine_module);
         GraphicsResources graphicsResources;
+        GraphicsRenderer graphicsRenderer;
 
-        auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources);
+        auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources, &graphicsRenderer);
         RenderingUtils::InitRenderingHandlers(renderingHandlers, game_engine_module->rendering_module());
 
         //game_engine_module.keyboard().test = 10;
@@ -69,6 +71,9 @@ int CALLBACK WinMain(
             game_engine_module->rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module->engine_time_stopwatch().lap()).count();
             game_engine_module->rendering_module().on_frame_update.invoke(game_engine_module->rendering());
 
+
+
+            graphicsRenderer.Render(&window.Gfx(), &graphicsResources);
             window.Gfx().EndFrame();
         }
 
@@ -81,12 +86,12 @@ int CALLBACK WinMain(
 
         try
         {
-            auto wideWhat = TryMultiByteToWideChar(e.what());
-            auto wideType = TryMultiByteToWideChar(e.type());
+            auto wideWhat = Utils::TryMultiByteToWideChar(e.what());
+            auto wideType = Utils::TryMultiByteToWideChar(e.type());
 
             MessageBox(nullptr, wideWhat.c_str(), wideType.c_str(), MB_OK | MB_ICONEXCLAMATION);
         }
-        catch (const WideCharacterConvertException& e)
+        catch (const Utils::WideCharacterConvertException& e)
         {
             nodec::logging::error("Wide Character Conversion Error.", __FILE__, __LINE__);
             MessageBox(nullptr, e.what(), e.type(), MB_OK | MB_ICONEXCLAMATION);
@@ -100,11 +105,11 @@ int CALLBACK WinMain(
 
         try
         {
-            auto wideWhat = TryMultiByteToWideChar(e.what());
+            auto wideWhat = Utils::TryMultiByteToWideChar(e.what());
 
             MessageBox(nullptr, wideWhat.c_str(), L"StandardException", MB_OK | MB_ICONEXCLAMATION);
         }
-        catch (const WideCharacterConvertException& e)
+        catch (const Utils::WideCharacterConvertException& e)
         {
             nodec::logging::error("Wide Character Conversion Error.", __FILE__, __LINE__);
             MessageBox(nullptr, e.what(), e.type(), MB_OK | MB_ICONEXCLAMATION);

@@ -7,20 +7,20 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        namespace interfaces
-        {
-            class Material : public nodec::NodecObject
-            {
-            public:
-                Material(const std::string& shader_name);
+namespace rendering
+{
+namespace interfaces
+{
+class Material : public BindableResource
+{
+public:
+    Material(nodec::NodecObject::Holder<Shader> shader, Rendering* target_rendering);
 
-            private:
-                nodec::NodecObject::Holder<Shader> shader;
-            };
-        }
-    }
+private:
+    nodec::NodecObject::Holder<Shader> shader;
+};
+}
+}
 }
 
 #endif

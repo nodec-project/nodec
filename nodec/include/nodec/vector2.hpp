@@ -31,11 +31,11 @@ public:
 
 public:
     static const Vector2<T> zero;
-    static const Vector2<T> one;
-    static const Vector2<T> up;
-    static const Vector2<T> down;
-    static const Vector2<T> right;
-    static const Vector2<T> left;
+    static const Vector2<T> ones;
+    //static const Vector2<T> up;
+    //static const Vector2<T> down;
+    //static const Vector2<T> right;
+    //static const Vector2<T> left;
 
 };
 
@@ -58,19 +58,19 @@ template<typename T>
 const Vector2<T> Vector2<T>::zero(0, 0);
 
 template<typename T>
-const Vector2<T> Vector2<T>::one(1, 1);
-
-template<typename T>
-const Vector2<T> Vector2<T>::up(0, 1);
-
-template<typename T>
-const Vector2<T> Vector2<T>::down(0, -1);
-
-template<typename T>
-const Vector2<T> Vector2<T>::right(1, 0);
-
-template<typename T>
-const Vector2<T> Vector2<T>::left(-1, 0);
+const Vector2<T> Vector2<T>::ones(1, 1);
+//
+//template<typename T>
+//const Vector2<T> Vector2<T>::up(0, 1);
+//
+//template<typename T>
+//const Vector2<T> Vector2<T>::down(0, -1);
+//
+//template<typename T>
+//const Vector2<T> Vector2<T>::right(1, 0);
+//
+//template<typename T>
+//const Vector2<T> Vector2<T>::left(-1, 0);
 
 template<typename T>
 inline Vector2<T>::Vector2() :

@@ -21,13 +21,15 @@ namespace nodec
             using Component::Component;
 
         public:
-            Vector3f get_world_position();
-            Vector3f get_world_scale();
-            Quaternionf get_world_rotation();
+            /**
+            * @param [out] out_position
+            */
+            NodecObject::Reference<SceneObject>
+                get_world_transform(Vector3f& out_position, Quaternionf& out_rotation, Vector3f& out_scale);
 
-            void set_world_position(const Vector3f& position);
-            void set_world_scale(const Vector3f& scale);
-            void set_world_rotation(const Quaternionf& rotation);
+            NodecObject::Reference<SceneObject>
+                set_world_transform(const Vector3f& position, const Quaternionf& rotation, const Vector3f& scale);
+
 
         };
     }

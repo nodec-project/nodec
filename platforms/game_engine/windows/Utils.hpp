@@ -5,6 +5,10 @@
 #include <sstream>
 #include <string>
 
+namespace Utils
+{
+
+
 class WideCharacterConvertException
 {
 public:
@@ -45,4 +49,7 @@ inline std::wstring TryMultiByteToWideChar(const char* multiByteStr)
         throw WideCharacterConvertException(convertResult);
     }
     return wideCharStr;
+}
+
+
 }

@@ -16,28 +16,28 @@ using namespace nodec;
 namespace nodec_game_engine = nodec_modules::game_engine::interfaces;
 namespace nodec_rendering = nodec_modules::rendering::interfaces;
 
-
-class BRDFMaterial : public nodec_rendering::Material
-{
-public:
-    struct Properties
-    {
-        Vector3f diffuse = Vector3f::one;
-        float alpha = 1.0f;
-
-        Vector3f specular = Vector3f(0.5f, 0.5f, 0.5f);
-        float roughness = 0.5f;
-
-        float metalness = 0.0f;
-        float shininess = 40.0f;
-
-    } properties;
-
-    BRDFMaterial()
-        : Material("brdf")
-    {
-    }
-};
+//
+//class BRDFMaterial : public nodec_rendering::Material
+//{
+//public:
+//    struct Properties
+//    {
+//        Vector3f diffuse = Vector3f::one;
+//        float alpha = 1.0f;
+//
+//        Vector3f specular = Vector3f(0.5f, 0.5f, 0.5f);
+//        float roughness = 0.5f;
+//
+//        float metalness = 0.0f;
+//        float shininess = 40.0f;
+//
+//    } properties;
+//
+//    BRDFMaterial()
+//        : Material("brdf")
+//    {
+//    }
+//};
 
 class TestBehavior : public nodec_game_engine::Behavior
 {
@@ -46,24 +46,9 @@ public:
 
     void on_awake() override
     {
-        logging::DebugStream(__FILE__, __LINE__) << "Hello. I am " << name <<". I wake up." << std::flush;
+        logging::DebugStream(__FILE__, __LINE__) << "Hello. I am " << name << ". I wake up." << std::flush;
 
-        auto renderer_ref = scene_object().add_component<nodec_rendering::Renderer>();
-        if (auto renderer = renderer_ref.lock())
-        {
-            renderer->mesh = NodecObject::instanciate<nodec_rendering::Mesh>();
-            renderer->mesh->vertices.push_back({ -0.5, -0.5, -0.5 });
-            renderer->mesh->vertices.push_back({ +0.5, -0.5, -0.5 });
-            renderer->mesh->vertices.push_back({ +0.5, -0.5, +0.5 });
-            renderer->mesh->vertices.push_back({ -0.5, -0.5, +0.5 });
-            renderer->mesh->vertices.push_back({ -0.5, +0.5, -0.5 });
-            renderer->mesh->vertices.push_back({ +0.5, +0.5, -0.5 });
-            renderer->mesh->vertices.push_back({ +0.5, +0.5, +0.5 });
-            renderer->mesh->vertices.push_back({ -0.5, +0.5, +0.5 });
 
-            //throw nodec::NodecException("TEST", __FILE__, __LINE__);
-            renderer->mesh->bind(&(nodec_game_engine::get_engine()->rendering()));
-        }
 
         enable_frame_update();
         //enable_frame_update();
@@ -71,11 +56,68 @@ public:
     void on_frame_start(nodec_rendering::Rendering& rendering) override
     {
         logging::DebugStream(__FILE__, __LINE__) << "start" << std::flush;
+        auto renderer_ref = scene_object().add_component<nodec_rendering::Renderer>();
+        if (auto renderer = renderer_ref.lock())
+        {
+            renderer->mesh = NodecObject::instanciate<nodec_rendering::Mesh>(&rendering);
+            renderer->mesh->vertices.push_back({ -0.5, -0.5, -0.5 });
+            renderer->mesh->vertices.push_back({ -0.5, -0.5, +0.5 });
+            renderer->mesh->vertices.push_back({ +0.5, -0.5, -0.5 });
+            renderer->mesh->vertices.push_back({ +0.5, -0.5, +0.5 });
+            renderer->mesh->vertices.push_back({ -0.5, +0.5, -0.5 });
+            renderer->mesh->vertices.push_back({ -0.5, +0.5, +0.5 });
+            renderer->mesh->vertices.push_back({ +0.5, +0.5, -0.5 });
+            renderer->mesh->vertices.push_back({ +0.5, +0.5, +0.5 });
 
+            renderer->mesh->triangles.push_back(0);
+            renderer->mesh->triangles.push_back(2);
+            renderer->mesh->triangles.push_back(1);
+
+            renderer->mesh->triangles.push_back(1);
+            renderer->mesh->triangles.push_back(2);
+            renderer->mesh->triangles.push_back(3);
+
+            renderer->mesh->triangles.push_back(2);
+            renderer->mesh->triangles.push_back(6);
+            renderer->mesh->triangles.push_back(3);
+
+            renderer->mesh->triangles.push_back(6);
+            renderer->mesh->triangles.push_back(7);
+            renderer->mesh->triangles.push_back(3);
+
+            renderer->mesh->triangles.push_back(7);
+            renderer->mesh->triangles.push_back(5);
+            renderer->mesh->triangles.push_back(1);
+
+            renderer->mesh->triangles.push_back(7);
+            renderer->mesh->triangles.push_back(1);
+            renderer->mesh->triangles.push_back(3);
+
+            renderer->mesh->triangles.push_back(5);
+            renderer->mesh->triangles.push_back(4);
+            renderer->mesh->triangles.push_back(1);
+
+            renderer->mesh->triangles.push_back(1);
+            renderer->mesh->triangles.push_back(4);
+            renderer->mesh->triangles.push_back(0);
+
+            renderer->mesh->triangles.push_back(5);
+            renderer->mesh->triangles.push_back(7);
+            renderer->mesh->triangles.push_back(6);
+
+            renderer->mesh->triangles.push_back(4);
+            renderer->mesh->triangles.push_back(5);
+            renderer->mesh->triangles.push_back(6);
+
+            //throw nodec::NodecException("TEST", __FILE__, __LINE__);
+            //renderer->mesh->bind(&(nodec_game_engine::get_engine()->rendering()));
+            rendering.bind_mesh(renderer->mesh.get());
+            rendering.regist_renderer(renderer);
+        }
     }
     void on_frame_update(nodec_rendering::Rendering& rendering) override
     {
-        logging::DebugStream(__FILE__, __LINE__) << "update" << std::flush;
+        //logging::DebugStream(__FILE__, __LINE__) << "update" << std::flush;
         //throw NodecException("TEST", __FILE__, __LINE__);
         //logging::DebugStream(__FILE__, __LINE__) << rendering.frame_delta_time();
     }
@@ -105,14 +147,14 @@ void nodec_game_engine::on_boot(nodec_game_engine::GameEngine& engine)
     //engine.rendering().on_frame_update += on_frame_update_callback;
     //engine.rendering().on_frame_update += on_frame_update_2_callback;
 
-    auto test_object = nodec::NodecObject::instanciate<nodec::scene_set::SceneObject>("test_object");
-    auto testtest_object = nodec::NodecObject::instanciate<nodec::scene_set::SceneObject>("testtest_object");
+    auto test_object = NodecObject::instanciate<nodec::scene_set::SceneObject>("test_object");
+    auto testtest_object = NodecObject::instanciate<nodec::scene_set::SceneObject>("testtest_object");
     engine.root_scene_object().append_child(test_object);
     //testtest_object->append_child(test_object); // ERROR
 
     nodec::logging::DebugStream(__FILE__, __LINE__) << test_object->name << std::flush;
     test_object->add_component<TestBehavior>();
-    
+
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->id() << std::flush;
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->name << std::flush;
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->engine_time() << std::flush;

@@ -1,5 +1,4 @@
 #include <nodec/scene_set/scene_object.hpp>
-#include <nodec/scene_set/behavior.hpp>
 
 #include <nodec/logging.hpp>
 
@@ -28,7 +27,7 @@ int main()
                 //std::cout << wrong_used_component->name << std::endl;
             }
             auto component = root_object->add_component<Component>();
-            auto behavior = root_object->add_component<Behavior>();
+            //auto behavior = root_object->add_component<Behavior>();
             //auto component_ = root_object->add_component<Component>();
             
             if (auto com = component.lock())
@@ -45,12 +44,12 @@ int main()
 
         logging::DebugStream(__FILE__, __LINE__) << root_object->remove_component<Transform>();
 
-        auto transform_ref = root_object->get_component<Behavior>();
-        if (auto transform = transform_ref.lock())
-        {
-            std::cout << transform->name << std::endl;
-            std::cout << transform->id() << std::endl;
-        }
+        //auto transform_ref = root_object->get_component<Behavior>();
+        //if (auto transform = transform_ref.lock())
+        //{
+        //    std::cout << transform->name << std::endl;
+        //    std::cout << transform->id() << std::endl;
+        //}
 
         logging::debug("--- 3 ---", __FILE__, __LINE__);
         {
@@ -69,6 +68,20 @@ int main()
                 logging::DebugStream(__FILE__, __LINE__) << removed->name << std::flush;
             }
             //throw std::runtime_error("test");
+        }
+
+        logging::debug("--- 4 ---", __FILE__, __LINE__);
+        {
+            auto root = NodecObject::instanciate<SceneObject>("root");
+            auto child_1 = NodecObject::instanciate<SceneObject>("child_1");
+            root->append_child(child_1);
+            child_1->transform().local_position.set(1, 2, 3);
+            auto child_1_1 = NodecObject::instanciate<SceneObject>("child_1_");
+            child_1->append_child(child_1_1);
+            child_1_1->transform().local_position.set(4, 5, 6);
+            logging::DebugStream(__FILE__, __LINE__) << child_1_1->transform().get_world_position() << std::flush;
+            root->transform().local_position.set(-4, -3, -2);
+            logging::DebugStream(__FILE__, __LINE__) << child_1_1->transform().get_world_position() << std::flush;
         }
     }
     catch (const NodecException& e)

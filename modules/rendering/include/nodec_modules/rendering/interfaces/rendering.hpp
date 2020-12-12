@@ -8,38 +8,39 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        namespace interfaces
-        {
-            class Mesh;
-            class Shader;
-            class Renderer;
-            class Material;
+namespace rendering
+{
+namespace interfaces
+{
 
-            class Rendering : public nodec::ModuleInterface
-            {
-            public:
-                using ModuleInterface::ModuleInterface;
+class Mesh;
+class Shader;
+class Renderer;
+class Material;
 
-            public:
-                virtual float frame_delta_time() const noexcept = 0;
-                
-                virtual void bind_mesh(Mesh* mesh) = 0;
-                virtual void unbind_mesh(Mesh* mesh) = 0;
+class Rendering : public nodec::ModuleInterface
+{
+public:
+    using ModuleInterface::ModuleInterface;
 
-                virtual void bind_shader(Shader* shader) = 0;
-                virtual void unbind_shader(Shader* shader) = 0;
+public:
+    virtual float frame_delta_time() const noexcept = 0;
 
-                virtual void bind_material(Material* material) = 0;
-                virtual void unbind_material(Material* material) = 0;
+    virtual void bind_mesh(Mesh* mesh) = 0;
+    virtual void unbind_mesh(Mesh* mesh) = 0;
 
-                virtual void regist_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
+    virtual void bind_shader(Shader* shader) = 0;
+    virtual void unbind_shader(Shader* shader) = 0;
 
-            public:
-                nodec::event::Event<Rendering&> on_frame_update;
-            };
-        }
-    }
+    virtual void bind_material(Material* material) = 0;
+    virtual void unbind_material(Material* material) = 0;
+
+    virtual void regist_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
+
+public:
+    nodec::event::Event<Rendering&> on_frame_update;
+};
+}
+}
 }
 #endif

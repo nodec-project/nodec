@@ -1,9 +1,13 @@
 #include "RenderingHandlers.hpp"
 #include "RenderingUtils.hpp"
 
-RenderingHandlers::RenderingHandlers(Graphics* pGraphics, GraphicsResources* pGraphicsResources):
-    pGraphics(pGraphics),
-    pGraphicsResources(pGraphicsResources)
+RenderingHandlers::RenderingHandlers(
+    Graphics* graphics, 
+    GraphicsResources* graphicsResources,
+    GraphicsRenderer* graphicsRenderer):
+    graphics(graphics),
+    graphicsResources(graphicsResources),
+    graphicsRenderer(graphicsRenderer)
 {
     
 }
@@ -11,7 +15,14 @@ RenderingHandlers::RenderingHandlers(Graphics* pGraphics, GraphicsResources* pGr
 
 void RenderingHandlers::HandleMeshBinding(nodec_modules::rendering::interfaces::Mesh* mesh)
 {
+    RenderingUtils::BindMesh(mesh, graphics, graphicsResources);
+}
 
-    RenderingUtils::BindMesh(mesh, pGraphics, pGraphicsResources);
-
+void RenderingHandlers::HandleRendererRegisting(
+    nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)
+{
+    if (auto renderer_locked = renderer.lock())
+    {
+        graphicsRenderer->renderers.emplace(renderer_locked->id(), renderer);
+    }
 }

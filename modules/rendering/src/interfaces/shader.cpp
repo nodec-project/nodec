@@ -3,31 +3,23 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        namespace interfaces
-        {
-            Shader::Shader(const std::string& shader_name) :
-                NodecObject("Shader"),
-                shader_name(shader_name)
-            {
+namespace rendering
+{
+namespace interfaces
+{
 
-            }
+Shader::Shader(const std::string& shader_name, Rendering* target_rendering) :
+    BindableResource(target_rendering, "Shader::" + shader_name),
+    shader_name(shader_name)
+{
 
-            Shader::~Shader()
-            {
-                unbind();
-            }
+}
 
-            void Shader::bind_impl(Rendering* rendering)
-            {
-                rendering->bind_shader(this);
-            }
+Shader::~Shader()
+{
+    target_rendering->unbind_shader(this);
+}
 
-            void Shader::unbind_impl(Rendering* rendering)
-            {
-                rendering->unbind_shader(this);
-            }
-        }
-    }
+}
+}
 }

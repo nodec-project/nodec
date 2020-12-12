@@ -22,6 +22,7 @@ void VertexBuffer::Bind(Graphics* pGraphics)
 {
     const UINT offset = 0u;
 
+    pGraphics->GetInfoLogger()->SetLatest();
     pGraphics->GetContext()->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &strideBytes, &offset);
-    pGraphics->GetInfoLogger()->Dump(nodec::logging::Level::Debug);
+    pGraphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);
 }

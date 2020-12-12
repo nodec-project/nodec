@@ -1,7 +1,7 @@
 #ifndef NODEC_MODULES__RENDERING__INTERFACES__MESH_HPP_
 #define NODEC_MODULES__RENDERING__INTERFACES__MESH_HPP_
 
-#include "bindable.hpp"
+#include "bindable_resource.hpp"
 
 #include <nodec/nodec_object.hpp>
 #include <nodec/vector3.hpp>
@@ -12,30 +12,28 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        namespace interfaces
-        {
-            class Rendering;
+namespace rendering
+{
+namespace interfaces
+{
 
-            class Mesh : public nodec::NodecObject, public IBindable
-            {
-            public:
-                std::vector<nodec::Vector3f> vertices;
-                std::vector<int> indicies;
+class Rendering;
 
-            public:
-                Mesh();
-                ~Mesh();
+class Mesh : public BindableResource
+{
+public:
+    std::vector<nodec::Vector3f> vertices;
+    std::vector<uint16_t> triangles;
 
-            protected:
-                void bind_impl(Rendering* rendering) override;
-                void unbind_impl(Rendering* rendering) override;
+public:
+    Mesh(Rendering* target_rendering);
+    ~Mesh();
 
 
-            };
-        }
-    }
+};
+
+}
+}
 }
 
 #endif

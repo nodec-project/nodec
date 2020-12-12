@@ -3,31 +3,23 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        namespace interfaces
-        {
-            Mesh::Mesh():
-                NodecObject("Mesh")
-            {
+namespace rendering
+{
+namespace interfaces
+{
 
-            }
+Mesh::Mesh(Rendering* target_rendering) :
+    BindableResource(target_rendering, "Mesh")
+{
 
-            Mesh::~Mesh()
-            {
-                unbind();
-            }
+}
 
-            void Mesh::bind_impl(Rendering* rendering)
-            {
-                rendering->bind_mesh(this);
-            }
+Mesh::~Mesh()
+{
+    target_rendering->unbind_mesh(this);
+}
 
-            void Mesh::unbind_impl(Rendering* rendering)
-            {
-                rendering->unbind_mesh(this);
-            }
 
-        }
-    }
+}
+}
 }

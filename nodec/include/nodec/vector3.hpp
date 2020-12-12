@@ -32,14 +32,14 @@ public:
     void set(T x, T y, T z);
 
 public:
-    static const Vector3<T> forward;
-    static const Vector3<T> back;
-    static const Vector3<T> up;
-    static const Vector3<T> down;
-    static const Vector3<T> right;
-    static const Vector3<T> left;
-    static const Vector3<T> one;
     static const Vector3<T> zero;
+    static const Vector3<T> ones;
+    //static const Vector3<T> forward;
+    //static const Vector3<T> back;
+    //static const Vector3<T> up;
+    //static const Vector3<T> down;
+    //static const Vector3<T> right;
+    //static const Vector3<T> left;
 };
 
 using Vector3f = Vector3<float>;
@@ -50,25 +50,25 @@ template <typename T>
 const Vector3<T> Vector3<T>::zero(0, 0, 0);
 
 template <typename T>
-const Vector3<T> Vector3<T>::one(1, 1, 1);
-
-template <typename T>
-const Vector3<T> Vector3<T>::up(0, 1, 0);
-
-template <typename T>
-const Vector3<T> Vector3<T>::down(0, -1, 0);
-
-template <typename T>
-const Vector3<T> Vector3<T>::right(1, 0, 0);
-
-template <typename T>
-const Vector3<T> Vector3<T>::left(-1, 0, 0);
-
-template <typename T>
-const Vector3<T> Vector3<T>::forward(0, 0, 1);
-
-template <typename T>
-const Vector3<T> Vector3<T>::back(0, 0, -1);
+const Vector3<T> Vector3<T>::ones(1, 1, 1);
+//
+//template <typename T>
+//const Vector3<T> Vector3<T>::up(0, 1, 0);
+//
+//template <typename T>
+//const Vector3<T> Vector3<T>::down(0, -1, 0);
+//
+//template <typename T>
+//const Vector3<T> Vector3<T>::right(1, 0, 0);
+//
+//template <typename T>
+//const Vector3<T> Vector3<T>::left(-1, 0, 0);
+//
+//template <typename T>
+//const Vector3<T> Vector3<T>::forward(0, 0, 1);
+//
+//template <typename T>
+//const Vector3<T> Vector3<T>::back(0, 0, -1);
 
 template <typename T>
 inline Vector3<T>::Vector3() : x(0), y(0), z(0) {}

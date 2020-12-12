@@ -99,7 +99,7 @@ Window::~Window()
 
 void Window::SetTitle(const std::string& title)
 {
-    auto wide_title = TryMultiByteToWideChar(title.c_str());
+    auto wide_title = Utils::TryMultiByteToWideChar(title.c_str());
     if (SetWindowText(hWnd, wide_title.c_str()) == 0)
     {
         throw HrException(GetLastError(), __FILE__, __LINE__);
