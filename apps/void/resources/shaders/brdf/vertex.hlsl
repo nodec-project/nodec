@@ -1,7 +1,8 @@
 
 cbuffer ModelConstants : register(b0)
 {
-	matrix _Object2World;
+    matrix _Matrix_MVP;
+	matrix _Matrix_M;
 }
 
 
@@ -28,7 +29,7 @@ V2P VSMain(VSIn input)
 	const float4 pos = float4(input.position, 1);
 	
 	V2P output;
-    output.position = mul(_Object2World, pos);
+    output.position = mul(_Matrix_MVP, pos);
 	//Out.normal = normalize(mul(ObjMatricies.normal, In.normal));
 	//Out.tangent = normalize(mul(ObjMatricies.normal, In.tangent));
 	//Out.texCoord = In.texCoord;

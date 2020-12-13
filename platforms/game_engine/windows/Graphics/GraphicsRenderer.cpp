@@ -56,14 +56,22 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 Quaternionf rotation;
                 renderer->scene_object().transform().get_world_transform(position, rotation, scale);
 
-                auto object2world = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f,0.0f },
-                                                                    DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f, 1.0f },
-                                                                    DirectX::XMVECTOR{ scale.x, scale.y, scale.z },
-                                                                    DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
-                                                                    DirectX::XMVECTOR{ rotation.x, rotation.y, rotation.z, rotation.w },
-                                                                    DirectX::XMVECTOR{ position.x, position.y, position.z });
+                auto matrixM = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f,0.0f },
+                                                               DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f, 1.0f },
+                                                               DirectX::XMVECTOR{ scale.x, scale.y, scale.z },
+                                                               DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
+                                                               DirectX::XMVECTOR{ rotation.x, rotation.y, rotation.z, rotation.w },
+                                                               DirectX::XMVECTOR{ position.x, position.y, position.z });
 
-                DirectX::XMStoreFloat4x4(&(modelConstants.object2world), DirectX::XMMatrixTranspose(object2world));
+                auto matrixP = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f),
+                                                                 1280.0f / 720.0f,
+                                                                 0.1f,
+                                                                 100.0f);
+
+                auto matrixMVP = matrixP * matrixM;
+
+                DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), DirectX::XMMatrixTranspose(matrixM));
+                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), DirectX::XMMatrixTranspose(matrixMVP));
                 modelConstantBuffer.Update(graphics, &modelConstants);
             }
 
@@ -71,7 +79,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 
 
             graphics->DrawIndexed(mesh->triangles.size());
-
+            //logging::DebugStream(__FILE__, __LINE__) << mesh->triangles.size() << std::flush;
 
             ++iter;
         }

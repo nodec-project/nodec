@@ -14,7 +14,8 @@ class GraphicsRenderer
 public:
     struct ModelConstants
     {
-        DirectX::XMFLOAT4X4 object2world;
+        DirectX::XMFLOAT4X4 matrixMVP;
+        DirectX::XMFLOAT4X4 matrixM;
     };
 
 public:
