@@ -6,34 +6,34 @@
 
 namespace nodec
 {
-    /**
-    * @note
-    *   This exception class not inhereited from std::exception, because no merit.
-    *   std::exception is desugned under NOT wide charcter.
-    *   <https://stackoverflow.com/questions/38186579/unicode-exception-class>
-    * 
-    *   wchar_t is not clearly defined, depended on platform.
-    *   so we should not use it.
-    *   <https://stackoverflow.com/questions/50403342/how-do-i-properly-use-stdstring-on-utf-8-in-c>
-    */
-    class NodecException : std::exception
-    {
-    public:
+/**
+* @note
+*   This exception class not inhereited from std::exception, because no merit.
+*   std::exception is desugned under NOT wide charcter.
+*   <https://stackoverflow.com/questions/38186579/unicode-exception-class>
+*
+*   wchar_t is not clearly defined, depended on platform.
+*   so we should not use it.
+*   <https://stackoverflow.com/questions/50403342/how-do-i-properly-use-stdstring-on-utf-8-in-c>
+*/
+class NodecException : std::exception
+{
+public:
 
-        NodecException(std::string message, const char* file, size_t line) noexcept;
-        NodecException(const char* file, size_t line) noexcept;
-        
-        const char* what() const noexcept final;
-        virtual const char* type() const noexcept { return "NodecException"; }
+    NodecException(std::string message, const char* file, size_t line) noexcept;
+    NodecException(const char* file, size_t line) noexcept;
 
-    protected:
-        std::string file;
-        size_t line;
-        std::string message;
+    const char* what() const noexcept final;
+    virtual const char* type() const noexcept { return "NodecException"; }
 
-    private:
-        mutable std::string what_buffer;
-    };
+protected:
+    std::string file;
+    size_t line;
+    std::string message;
+
+private:
+    mutable std::string what_buffer;
+};
 }
 
 

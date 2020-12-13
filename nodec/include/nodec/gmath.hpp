@@ -3,13 +3,13 @@
 
 namespace nodec
 {
-    /**
-    * math utils for graphics
-    */
-    namespace gmath
-    {
+/**
+* math utils for graphics
+*/
+namespace gmath
+{
 
-    }
+}
 }
 
 #endif

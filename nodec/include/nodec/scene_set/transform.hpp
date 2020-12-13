@@ -7,31 +7,31 @@
 
 namespace nodec
 {
-    namespace scene_set
-    {
+namespace scene_set
+{
 
-        class Transform : public Component
-        {
-        public:
-            Vector3f local_position;
-            Vector3f local_scale;
-            Quaternionf local_rotation;
-            
-        public:
-            Transform(SceneObject* owner);
+class Transform : public Component
+{
+public:
+    Vector3f local_position;
+    Vector3f local_scale;
+    Quaternionf local_rotation;
 
-        public:
-            /**
-            * @param [out] out_position
-            */
-            NodecObject::Reference<SceneObject>
-                get_world_transform(Vector3f& out_position, Quaternionf& out_rotation, Vector3f& out_scale);
+public:
+    Transform(SceneObject* owner);
 
-            NodecObject::Reference<SceneObject>
-                set_world_transform(const Vector3f& position, const Quaternionf& rotation, const Vector3f& scale);
+public:
+    /**
+    * @param [out] out_position
+    */
+    NodecObject::Reference<SceneObject>
+        get_world_transform(Vector3f& out_position, Quaternionf& out_rotation, Vector3f& out_scale);
+
+    NodecObject::Reference<SceneObject>
+        set_world_transform(const Vector3f& position, const Quaternionf& rotation, const Vector3f& scale);
 
 
-        };
-    }
+};
+}
 }
 #endif

@@ -5,11 +5,11 @@
 
 namespace nodec
 {
-    class ModuleInterface : public NodecObject
-    {
-    public:
-        using NodecObject::NodecObject;
-    };
+class ModuleInterface : public NodecObject
+{
+public:
+    using NodecObject::NodecObject;
+};
 }
 
 #endif
