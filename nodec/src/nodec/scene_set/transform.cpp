@@ -7,6 +7,16 @@ namespace nodec
 namespace scene_set
 {
 
+Transform::Transform(SceneObject* owner) :
+    Component(owner),
+    local_position(0.0f, 0.0f, 0.0f),
+    local_rotation(0.0f, 0.0f, 0.0f, 1.0f),
+    local_scale(1.0f, 1.0f, 1.0f)
+{
+
+}
+
+
 NodecObject::Reference<SceneObject>
 Transform::get_world_transform(Vector3f& out_position, Quaternionf& out_rotation, Vector3f& out_scale)
 {
@@ -19,7 +29,7 @@ Transform::get_world_transform(Vector3f& out_position, Quaternionf& out_rotation
     while (parent)
     {
         out_position += parent->transform().local_position;
-        out_scale += parent->transform().local_scale;
+        out_scale *= parent->transform().local_scale;
         out_rotation = out_rotation * parent->transform().local_rotation;
         root = parent;
         parent = parent->parent().lock();

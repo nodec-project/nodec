@@ -18,7 +18,7 @@ namespace nodec
             Quaternionf local_rotation;
             
         public:
-            using Component::Component;
+            Transform(SceneObject* owner);
 
         public:
             /**

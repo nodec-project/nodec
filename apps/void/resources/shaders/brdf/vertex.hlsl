@@ -30,6 +30,7 @@ V2P VSMain(VSIn input)
 	
 	V2P output;
     output.position = mul(_Matrix_MVP, pos);
+    //output.position = pos;
 	//Out.normal = normalize(mul(ObjMatricies.normal, In.normal));
 	//Out.tangent = normalize(mul(ObjMatricies.normal, In.tangent));
 	//Out.texCoord = In.texCoord;

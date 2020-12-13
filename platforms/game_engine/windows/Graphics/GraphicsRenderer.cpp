@@ -56,22 +56,36 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 Quaternionf rotation;
                 renderer->scene_object().transform().get_world_transform(position, rotation, scale);
 
-                auto matrixM = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f,0.0f },
+                logging::DebugStream(__FILE__, __LINE__) << position << ", " << rotation << ", " << scale << std::flush;
+
+                auto matrixM = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
                                                                DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f, 1.0f },
                                                                DirectX::XMVECTOR{ scale.x, scale.y, scale.z },
                                                                DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
                                                                DirectX::XMVECTOR{ rotation.x, rotation.y, rotation.z, rotation.w },
                                                                DirectX::XMVECTOR{ position.x, position.y, position.z });
 
+                //auto matrixM = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+
+                //DirectX::XMVECTOR eye         = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
+                //DirectX::XMVECTOR focus       = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
+                //DirectX::XMVECTOR up          = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+                //DirectX::XMMATRIX matrixV  = DirectX::XMMatrixLookAtLH(eye, focus, up);
+
                 auto matrixP = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f),
                                                                  1280.0f / 720.0f,
                                                                  0.1f,
                                                                  100.0f);
 
-                auto matrixMVP = matrixP * matrixM;
+                auto matrixMVP = matrixM * matrixP;
+                //auto matrixMVP = matrixM * matrixV * matrixP;
 
                 DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), DirectX::XMMatrixTranspose(matrixM));
                 DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), DirectX::XMMatrixTranspose(matrixMVP));
+
+                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), matrixM);
+                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), matrixMVP);
+
                 modelConstantBuffer.Update(graphics, &modelConstants);
             }
 

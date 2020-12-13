@@ -60,6 +60,15 @@ public:
         if (auto renderer = renderer_ref.lock())
         {
             renderer->mesh = NodecObject::instanciate<nodec_rendering::Mesh>(&rendering);
+            //renderer->mesh->vertices.push_back({ 0.0f, 0.5, 0.0f });
+            //renderer->mesh->vertices.push_back({ 0.5f, -0.5f, 0.0f });
+            //renderer->mesh->vertices.push_back({ -0.5, -0.5, 0.0f });
+
+
+            //renderer->mesh->triangles.push_back(0);
+            //renderer->mesh->triangles.push_back(1);
+            //renderer->mesh->triangles.push_back(2);
+
             renderer->mesh->vertices.push_back({ -0.5, -0.5, -0.5 });
             renderer->mesh->vertices.push_back({ -0.5, -0.5, +0.5 });
             renderer->mesh->vertices.push_back({ +0.5, -0.5, -0.5 });
@@ -99,6 +108,14 @@ public:
 
             renderer->mesh->triangles.push_back(1);
             renderer->mesh->triangles.push_back(4);
+            renderer->mesh->triangles.push_back(0);
+
+            renderer->mesh->triangles.push_back(4);
+            renderer->mesh->triangles.push_back(6);
+            renderer->mesh->triangles.push_back(0);
+
+            renderer->mesh->triangles.push_back(6);
+            renderer->mesh->triangles.push_back(2);
             renderer->mesh->triangles.push_back(0);
 
             renderer->mesh->triangles.push_back(5);
@@ -154,7 +171,7 @@ void nodec_game_engine::on_boot(nodec_game_engine::GameEngine& engine)
 
     nodec::logging::DebugStream(__FILE__, __LINE__) << test_object->name << std::flush;
     test_object->add_component<TestBehavior>();
-    test_object->transform().local_position.z = 1.0f;
+    test_object->transform().local_position.z = 3.0f;
 
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->id() << std::flush;
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->name << std::flush;
