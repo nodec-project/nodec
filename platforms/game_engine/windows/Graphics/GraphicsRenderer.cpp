@@ -4,6 +4,7 @@
 #include <nodec/scene_set/scene_object.hpp>
 
 #include "VertexShader.hpp"
+#include "PixelShader.hpp"
 
 using namespace nodec;
 
@@ -18,19 +19,23 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 
     graphics->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
+
     const D3D11_INPUT_ELEMENT_DESC ied[] ={
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0,  0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
 
     VertexShader vertexShader(graphics, "resources/shaders/brdf/vertex.cso", ied, 1);
+    PixelShader pixelShader(graphics, "resources/shaders/brdf/pixel.cso");
 
     if (vertexShader.Fail())
     {
-        logging::debug("ffgh", __FILE__, __LINE__);
+        //logging::debug("ffgh", __FILE__, __LINE__);
 
     }
 
     vertexShader.Bind(graphics);
+    pixelShader.Bind(graphics);
+
     modelConstantBuffer.BindVS(graphics, 0);
 
 
@@ -46,26 +51,27 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 continue;
             }
 
-            Vector3f position, scale;
-            Quaternionf rotation;
-            renderer->scene_object().transform().get_world_transform(position, rotation, scale);
-
-            auto object2world = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f,0.0f },
-                                                                DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f, 1.0f },
-                                                                DirectX::XMVECTOR{ scale.x, scale.y, scale.z },
-                                                                DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
-                                                                DirectX::XMVECTOR{ rotation.x, rotation.y, rotation.z, rotation.w },
-                                                                DirectX::XMVECTOR{ position.x, position.y, position.z });
-
-            DirectX::XMStoreFloat4x4(&(modelConstants.object2world), DirectX::XMMatrixTranspose(object2world));
-
-            if (auto mesh = renderer->mesh)
             {
-                BindMesh(mesh.get(), graphics, resources);
+                Vector3f position, scale;
+                Quaternionf rotation;
+                renderer->scene_object().transform().get_world_transform(position, rotation, scale);
 
+                auto object2world = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f,0.0f },
+                                                                    DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f, 1.0f },
+                                                                    DirectX::XMVECTOR{ scale.x, scale.y, scale.z },
+                                                                    DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
+                                                                    DirectX::XMVECTOR{ rotation.x, rotation.y, rotation.z, rotation.w },
+                                                                    DirectX::XMVECTOR{ position.x, position.y, position.z });
 
-                graphics->DrawIndexed(mesh->triangles.size());
+                DirectX::XMStoreFloat4x4(&(modelConstants.object2world), DirectX::XMMatrixTranspose(object2world));
+                modelConstantBuffer.Update(graphics, &modelConstants);
             }
+
+            BindMesh(mesh.get(), graphics, resources);
+
+
+            graphics->DrawIndexed(mesh->triangles.size());
+
 
             ++iter;
         }

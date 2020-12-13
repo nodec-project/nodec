@@ -40,6 +40,7 @@ int CALLBACK WinMain(
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
         Window window(1280, 720, L"TEST", game_engine_module);
+        //window.SetTitle("ほげabほげ");
         GraphicsResources graphicsResources;
         GraphicsRenderer graphicsRenderer(&window.Gfx());
 
@@ -51,7 +52,6 @@ int CALLBACK WinMain(
         //game_engine_module.keyboard_module().test = 100;
         //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
 
-        //window.SetTitle("ほげってる");
 
 
         game_engine_module->engine_time_stopwatch().lap();
@@ -83,46 +83,19 @@ int CALLBACK WinMain(
     catch (const nodec::NodecException& e)
     {
         nodec::logging::fatal(e.what(), __FILE__, __LINE__);
-
-        try
-        {
-            auto wideWhat = Utils::TryMultiByteToWideChar(e.what());
-            auto wideType = Utils::TryMultiByteToWideChar(e.type());
-
-            MessageBox(nullptr, wideWhat.c_str(), wideType.c_str(), MB_OK | MB_ICONEXCLAMATION);
-        }
-        catch (const Utils::WideCharacterConvertException& e)
-        {
-            nodec::logging::error("Wide Character Conversion Error.", __FILE__, __LINE__);
-            MessageBox(nullptr, e.what(), e.type(), MB_OK | MB_ICONEXCLAMATION);
-        }
-
     }
     catch (const std::exception& e)
     {
-
         nodec::logging::fatal(e.what(), __FILE__, __LINE__);
-
-        try
-        {
-            auto wideWhat = Utils::TryMultiByteToWideChar(e.what());
-
-            MessageBox(nullptr, wideWhat.c_str(), L"StandardException", MB_OK | MB_ICONEXCLAMATION);
-        }
-        catch (const Utils::WideCharacterConvertException& e)
-        {
-            nodec::logging::error("Wide Character Conversion Error.", __FILE__, __LINE__);
-            MessageBox(nullptr, e.what(), e.type(), MB_OK | MB_ICONEXCLAMATION);
-        }
     }
     catch (...)
     {
-
         nodec::logging::fatal("Unknown Error Exception Ocuurs.", __FILE__, __LINE__);
-
-        MessageBox(nullptr, L"Unknow Error Occurs. No details available.", L"UnkownErrorException", MB_OK | MB_ICONEXCLAMATION);
     }
 
-    nodec::logging::warn("=== Unexpected Program End ===", __FILE__, __LINE__);
+    MessageBox(nullptr, 
+               L"Unhandling Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.", 
+               L"Fatal Error.", MB_OK | MB_ICONEXCLAMATION);
+    nodec::logging::warn("[Main] >>> Unexpected Program Ending.", __FILE__, __LINE__);
     return -1;
 }

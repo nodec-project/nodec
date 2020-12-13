@@ -99,8 +99,13 @@ Window::~Window()
 
 void Window::SetTitle(const std::string& title)
 {
-    auto wide_title = Utils::TryMultiByteToWideChar(title.c_str());
-    if (SetWindowText(hWnd, wide_title.c_str()) == 0)
+    std::string wideTitleBytes = nodec::unicode::utf8to16(title);
+
+    //nodec::logging::DebugStream(__FILE__, __LINE__) << title.size() << ", " << wideTitleBytes.size() << std::flush;
+    
+    std::wstring wideTitle(reinterpret_cast<wchar_t*>(&wideTitleBytes[0]), wideTitleBytes.size()/2);
+
+    if (SetWindowText(hWnd, wideTitle.c_str()) == 0)
     {
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }

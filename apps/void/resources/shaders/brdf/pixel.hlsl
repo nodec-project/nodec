@@ -13,5 +13,4 @@ float4 PSMain(V2P input) : SV_Target
 	
 	const float3 illumination = float3(0.5f, 0.5f, 0.5f);
 	return float4(illumination, 1.0f);
-
 }

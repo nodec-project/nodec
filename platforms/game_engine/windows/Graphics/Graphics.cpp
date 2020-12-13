@@ -74,6 +74,8 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     ThrowIfError(pDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &pTarget), __FILE__, __LINE__);
 
 
+    pContext->OMSetRenderTargets(1u, pTarget.GetAddressOf(), nullptr);
+
     // configure viewport
     D3D11_VIEWPORT vp;
     vp.Width = static_cast<float>(width);
