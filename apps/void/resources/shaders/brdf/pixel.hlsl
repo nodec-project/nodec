@@ -1,3 +1,12 @@
+struct MaterialProperties
+{
+    float3 diffuse;
+};
+
+cbuffer cbMaterialProperties
+{
+    MaterialProperties materialProperties;
+};
 
 struct V2P
 {

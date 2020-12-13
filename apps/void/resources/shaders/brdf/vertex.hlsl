@@ -1,8 +1,13 @@
 
-cbuffer ModelConstants : register(b0)
+struct ModelProperties
 {
-    matrix _Matrix_MVP;
-	matrix _Matrix_M;
+    matrix matrixMVP;
+    matrix matrixM;
+};
+
+cbuffer cbModelProperties : register(b0)
+{
+    ModelProperties modelProperties;
 }
 
 
@@ -29,7 +34,7 @@ V2P VSMain(VSIn input)
 	const float4 pos = float4(input.position, 1);
 	
 	V2P output;
-    output.position = mul(pos, _Matrix_MVP);
+    output.position = mul(pos, modelProperties.matrixMVP);
     //output.position = pos;
 	//Out.normal = normalize(mul(ObjMatricies.normal, In.normal));
 	//Out.tangent = normalize(mul(ObjMatricies.normal, In.tangent));
