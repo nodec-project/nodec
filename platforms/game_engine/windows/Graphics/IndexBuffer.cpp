@@ -1,6 +1,6 @@
 #include "IndexBuffer.hpp"
 
-IndexBuffer::IndexBuffer(Graphics* pGraphics, UINT size, void* pSysMem)
+IndexBuffer::IndexBuffer(Graphics* pGraphics, UINT size, const void* pSysMem)
 {
     D3D11_BUFFER_DESC ibd ={};
     ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;

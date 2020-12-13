@@ -11,7 +11,7 @@ void InitRenderingHandlers(
     rendering::RenderingModule& rendering_module)
 {
     auto meshPublishingHandler
-        = nodec::event::MemberCallback<RenderingHandlers, rendering::interfaces::Mesh*>::make_shared(
+        = nodec::event::MemberCallback<RenderingHandlers, const rendering::interfaces::Mesh*>::make_shared(
             handlers, &RenderingHandlers::HandleMeshBinding
         );
 
@@ -24,9 +24,8 @@ void InitRenderingHandlers(
     rendering_module.on_regist_renderer += rendererRegistingHandler;
 }
 
-void BindMesh(nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* graphics, GraphicsResources* graphicsResources)
+void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* graphics, GraphicsResources* graphicsResources)
 {
-
 
     if (mesh->vertices.size() > 0
         && graphicsResources->vertexBufferMap.find(mesh->id()) == graphicsResources->vertexBufferMap.end())

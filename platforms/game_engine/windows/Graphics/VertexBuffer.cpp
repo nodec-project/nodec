@@ -1,6 +1,6 @@
 #include "VertexBuffer.hpp"
 
-VertexBuffer::VertexBuffer(Graphics* pGraphics, UINT sizeBytes, UINT strideBytes, void* pSysMem):
+VertexBuffer::VertexBuffer(Graphics* pGraphics, UINT sizeBytes, UINT strideBytes, const void* pSysMem):
     sizeBytes(sizeBytes),
     strideBytes(strideBytes)
 {

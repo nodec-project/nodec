@@ -13,7 +13,7 @@ RenderingHandlers::RenderingHandlers(
 }
 
 
-void RenderingHandlers::HandleMeshBinding(nodec_modules::rendering::interfaces::Mesh* mesh)
+void RenderingHandlers::HandleMeshBinding(const nodec_modules::rendering::interfaces::Mesh* mesh)
 {
     RenderingUtils::BindMesh(mesh, graphics, graphicsResources);
 }

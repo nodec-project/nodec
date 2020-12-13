@@ -12,7 +12,7 @@ class RenderingHandlers
 public:
     RenderingHandlers(Graphics* graphics, GraphicsResources* graphicsResources, GraphicsRenderer* graphicsRenderer);
 
-    void HandleMeshBinding(nodec_modules::rendering::interfaces::Mesh* mesh);
+    void HandleMeshBinding(const nodec_modules::rendering::interfaces::Mesh* mesh);
     void HandleRendererRegisting(
         nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer
     );

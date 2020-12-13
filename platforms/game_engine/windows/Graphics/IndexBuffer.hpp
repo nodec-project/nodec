@@ -5,7 +5,7 @@
 class IndexBuffer
 {
 public:
-    IndexBuffer(Graphics* pGraphics, UINT size, void* pSysMem);
+    IndexBuffer(Graphics* pGraphics, UINT size, const void* pSysMem);
     void Bind(Graphics* pGraphics);
 
 private:

@@ -7,6 +7,11 @@ using namespace nodec;
 
 void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 {
+
+    graphics->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+
+
     for (auto iter = renderers.begin(); iter != renderers.end();)
     {
         if (auto renderer = iter->second.lock())
@@ -20,9 +25,9 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 BindMesh(mesh.get(), graphics, resources);
 
 
+                graphics->DrawIndexed(mesh->triangles.size());
             }
 
-            logging::debug("asas", __FILE__, __LINE__);
             ++iter;
         }
         else

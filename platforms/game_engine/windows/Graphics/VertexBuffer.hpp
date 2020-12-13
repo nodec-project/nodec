@@ -8,7 +8,7 @@
 class VertexBuffer
 {
 public:
-    VertexBuffer(Graphics* pGraphics, UINT sizeBytes, UINT strideBytes, void* pSysMem);
+    VertexBuffer(Graphics* pGraphics, UINT sizeBytes, UINT strideBytes, const void* pSysMem);
 
     void Bind(Graphics* pGraphics);
 

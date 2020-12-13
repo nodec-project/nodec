@@ -27,7 +27,7 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     width(width),
     height(height)
 {
-    DXGI_SWAP_CHAIN_DESC sd = {};
+    DXGI_SWAP_CHAIN_DESC sd ={};
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
     sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
@@ -102,7 +102,7 @@ DxgiInfoLogger* Graphics::GetInfoLogger() noexcept { return &infoLogger; }
 void Graphics::BeginFrame() noexcept
 {
     static float i = 0.0f;
-    const float color[] = { std::sinf(i += 0.1f), 0.1f, 0.1f, 1.0f };
+    const float color[] ={ std::sinf(i += 0.1f), 0.1f, 0.1f, 1.0f };
 
     pContext->ClearRenderTargetView(pTarget.Get(), color);
 }
@@ -125,6 +125,13 @@ void Graphics::EndFrame()
     }
 }
 
+void Graphics::DrawIndexed(UINT count)
+{
+    infoLogger.SetLatest();
+    pContext->DrawIndexed(count, 0u, 0u);
+    infoLogger.DumpIfAny(nodec::logging::Level::Warn);
+}
+
 void Graphics::DrawTestTriangle()
 {
     namespace wrl = Microsoft::WRL;
@@ -135,14 +142,14 @@ void Graphics::DrawTestTriangle()
         float y;
     };
 
-    const Vertex vertices[] = {
+    const Vertex vertices[] ={
         {0.0f, 0.5f},
         {0.5f, -0.5f},
         {-0.5f, -0.5f}
     };
     wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
 
-    D3D11_BUFFER_DESC bd = {};
+    D3D11_BUFFER_DESC bd ={};
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.CPUAccessFlags = 0u;
@@ -150,7 +157,7 @@ void Graphics::DrawTestTriangle()
     bd.ByteWidth = sizeof(vertices);
     bd.StructureByteStride = sizeof(Vertex);
 
-    D3D11_SUBRESOURCE_DATA sd = {};
+    D3D11_SUBRESOURCE_DATA sd ={};
     sd.pSysMem = vertices;
     ThrowIfError(pDevice->CreateBuffer(&bd, &sd, &pVertexBuffer), __FILE__, __LINE__);
 
@@ -180,7 +187,7 @@ void Graphics::DrawTestTriangle()
 
     // input (vertex) layout (2d position only) 
     wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-    const D3D11_INPUT_ELEMENT_DESC ied[] = {
+    const D3D11_INPUT_ELEMENT_DESC ied[] ={
         {"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
     pDevice->CreateInputLayout(

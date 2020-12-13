@@ -26,14 +26,14 @@ public:
 public:
     virtual float frame_delta_time() const noexcept = 0;
 
-    virtual void bind_mesh(Mesh* mesh) = 0;
-    virtual void unbind_mesh(Mesh* mesh) = 0;
+    virtual void bind_mesh(const Mesh* mesh) = 0;
+    virtual void unbind_mesh(const Mesh* mesh) = 0;
 
-    virtual void bind_shader(Shader* shader) = 0;
-    virtual void unbind_shader(Shader* shader) = 0;
+    virtual void bind_shader(const Shader* shader) = 0;
+    virtual void unbind_shader(const Shader* shader) = 0;
 
-    virtual void bind_material(Material* material) = 0;
-    virtual void unbind_material(Material* material) = 0;
+    virtual void bind_material(const Material* material) = 0;
+    virtual void unbind_material(const Material* material) = 0;
 
     virtual void regist_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
 

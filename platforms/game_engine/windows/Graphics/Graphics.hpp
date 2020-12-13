@@ -38,6 +38,7 @@ public:
 
     void BeginFrame() noexcept;
     void EndFrame();
+    void DrawIndexed(UINT count);
 
     void ThrowIfError(HRESULT hr, const char* file, size_t line);
     void DrawTestTriangle();

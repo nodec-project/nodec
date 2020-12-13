@@ -9,7 +9,13 @@
 
 namespace RenderingUtils
 {
-    void InitRenderingHandlers(std::shared_ptr<RenderingHandlers> handlers, nodec_modules::rendering::RenderingModule& rendering_module);
+void InitRenderingHandlers(
+    std::shared_ptr<RenderingHandlers> handlers,
+    nodec_modules::rendering::RenderingModule& rendering_module);
 
-    void BindMesh(nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* graphics, GraphicsResources* graphicsResources);
+void BindMesh(
+    const nodec_modules::rendering::interfaces::Mesh* mesh, 
+    Graphics* graphics, 
+    GraphicsResources* graphicsResources);
+
 }
