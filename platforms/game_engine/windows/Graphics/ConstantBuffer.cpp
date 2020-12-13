@@ -38,16 +38,16 @@ void ConstantBuffer::Update(Graphics* graphics, const void* pSysMem)
     graphics->GetContext()->Unmap(pConstantBuffer.Get(), 0u);
 }
 
-void ConstantBuffer::BindVS(ConstantBuffer* constantBuffer, Graphics* graphics, UINT slot)
+void ConstantBuffer::BindVS(Graphics* graphics, UINT slot)
 {
     graphics->GetInfoLogger()->SetLatest();
-    graphics->GetContext()->VSSetConstantBuffers(slot, 1u, constantBuffer->pConstantBuffer.GetAddressOf());
+    graphics->GetContext()->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
     graphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);
 }
 
-void ConstantBuffer::BindPS(ConstantBuffer* constantBuffer, Graphics* graphics, UINT slot)
+void ConstantBuffer::BindPS(Graphics* graphics, UINT slot)
 {
     graphics->GetInfoLogger()->SetLatest();
-    graphics->GetContext()->PSSetConstantBuffers(slot, 1u, constantBuffer->pConstantBuffer.GetAddressOf());
+    graphics->GetContext()->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
     graphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);
 }

@@ -41,7 +41,7 @@ int CALLBACK WinMain(
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
         Window window(1280, 720, L"TEST", game_engine_module);
         GraphicsResources graphicsResources;
-        GraphicsRenderer graphicsRenderer;
+        GraphicsRenderer graphicsRenderer(&window.Gfx());
 
         auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources, &graphicsRenderer);
         RenderingUtils::InitRenderingHandlers(renderingHandlers, game_engine_module->rendering_module());

@@ -9,9 +9,9 @@ public:
 
     void Update(Graphics* graphics, const void* pSysMem);
 
-public:
-    static void BindVS(ConstantBuffer* constantBuffer, Graphics* graphics, UINT slot);
-    static void BindPS(ConstantBuffer* constantBuffer, Graphics* graphics, UINT slot);
+
+    void BindVS(Graphics* graphics, UINT slot);
+    void BindPS(Graphics* graphics, UINT slot);
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> pConstantBuffer;

@@ -1,11 +1,16 @@
 #include "VertexShader.hpp"
 
-VertexShader::VertexShader(Graphics* pGraphics, const void* pShaderBytecode, SIZE_T bytecodeLength)
+VertexShader::VertexShader(Graphics* graphics, 
+                           const std::string& path, 
+                           const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
+                           UINT numElements):
+    Shader(path),
+    inputLayout(graphics, pInputElementDescs, numElements, bytecode.data(), bytecode.size())
 {
-    pGraphics->ThrowIfError(
-        pGraphics->GetDevice()->CreateVertexShader(
-            pShaderBytecode,
-            bytecodeLength,
+    graphics->ThrowIfError(
+        graphics->GetDevice()->CreateVertexShader(
+            bytecode.data(),
+            bytecode.size(),
             nullptr,
             &pVertexShader
         ),
@@ -13,8 +18,11 @@ VertexShader::VertexShader(Graphics* pGraphics, const void* pShaderBytecode, SIZ
 
 }
 
-void VertexShader::Bind(Graphics* pGraphics)
+void VertexShader::Bind(Graphics* graphics)
 {
-    pGraphics->GetContext()->VSSetShader(pVertexShader.Get(), nullptr, 0u);
-    pGraphics->GetInfoLogger()->Dump(nodec::logging::Level::Debug);
+    inputLayout.Bind(graphics);
+
+    graphics->GetInfoLogger()->SetLatest();
+    graphics->GetContext()->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+    graphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);
 }

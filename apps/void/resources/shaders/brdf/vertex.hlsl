@@ -1,14 +1,7 @@
-struct ObjectMatrices
-{
-	matrix modelViewProj;
-	matrix model;
-	//matrix normal;
-};
 
-
-cbuffer perModel
+cbuffer ModelConstants : register(b0)
 {
-	ObjectMatrices ObjMatricies;
+	matrix _Object2World;
 }
 
 
@@ -21,27 +14,26 @@ struct VSIn
 };
 
 
-struct PSIn
+struct V2P
 {
 	float4 position : SV_Position;
-	float3 worldPos : POSITION;
+	//float3 worldPos : POSITION;
 	//float3 normal : NORMAL;
 	//float3 tangent : TANGENT;
 	//float2 texCoord : TEXCOORD4;
 };
 
-PSIn VSMain(VSIn In)
+V2P VSMain(VSIn input)
 {
-	const float4 pos = float4(In.position, 1);
+	const float4 pos = float4(input.position, 1);
 	
-	PSIn Out;
-	Out.position = mul(ObjMatricies.modelViewProj, pos);
-	Out.worldPos = mul(ObjMatricies.model, pos).xyz;
+	V2P output;
+    output.position = mul(_Object2World, pos);
 	//Out.normal = normalize(mul(ObjMatricies.normal, In.normal));
 	//Out.tangent = normalize(mul(ObjMatricies.normal, In.tangent));
 	//Out.texCoord = In.texCoord;
 
 	
-	return Out;
+	return output;
 
 }

@@ -154,6 +154,7 @@ void nodec_game_engine::on_boot(nodec_game_engine::GameEngine& engine)
 
     nodec::logging::DebugStream(__FILE__, __LINE__) << test_object->name << std::flush;
     test_object->add_component<TestBehavior>();
+    test_object->transform().local_position.z = 5.0f;
 
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->id() << std::flush;
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->name << std::flush;
