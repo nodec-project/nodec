@@ -65,7 +65,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                                                                DirectX::XMVECTOR{ rotation.x, rotation.y, rotation.z, rotation.w },
                                                                DirectX::XMVECTOR{ position.x, position.y, position.z });
 
-                //auto matrixM = DirectX::XMMatrixTranslation(0.0f, 0.0f, 0.0f);
+                //auto matrixM = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
                 //DirectX::XMVECTOR eye         = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
                 //DirectX::XMVECTOR focus       = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);

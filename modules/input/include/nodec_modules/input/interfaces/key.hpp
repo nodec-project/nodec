@@ -48,6 +48,8 @@ enum class Key
     X = 0x58, // 'X'
     Y = 0x59, // 'Y'
     Z = 0x5A, // 'Z'
+    LeftShift = 0xA0,
+    RightShift = 0xA1
     //Escape = GLFW_KEY_ESCAPE, // 256
     //Enter = GLFW_KEY_ENTER, // 257
     //RightArrow = GLFW_KEY_RIGHT, // 262

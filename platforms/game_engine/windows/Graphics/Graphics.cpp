@@ -103,8 +103,9 @@ DxgiInfoLogger* Graphics::GetInfoLogger() noexcept { return &infoLogger; }
 
 void Graphics::BeginFrame() noexcept
 {
-    static float i = 0.0f;
-    const float color[] ={ std::sinf(i += 0.1f), 0.1f, 0.1f, 1.0f };
+    //static float i = 0.0f;
+    //const float color[] ={ std::sinf(i += 0.1f), 0.1f, 0.1f, 1.0f };
+    const float color[] ={ 0.1f, 0.1f, 0.1f, 1.0f };
 
     pContext->ClearRenderTargetView(pTarget.Get(), color);
 }

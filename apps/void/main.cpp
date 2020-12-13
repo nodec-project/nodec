@@ -44,7 +44,7 @@ using namespace nodec_modules::input::interfaces;
 //    }
 //};
 
-class TestBehavior : public nodec_game_engine::Behavior
+class TestCube : public nodec_game_engine::Behavior
 {
 public:
     using Behavior::Behavior;
@@ -140,10 +140,39 @@ public:
     void on_frame_update(nodec_rendering::Rendering& rendering) override
     {
         Keyboard& keyboard = nodec_game_engine::get_engine()->keyboard();
-        if (keyboard.get_key_down(Key::A))
+        float delta_time = rendering.frame_delta_time();
+        float speed = 0.5f;
+
+        if (keyboard.get_key_pressed(Key::LeftShift))
         {
-            logging::debug("A", __FILE__, __LINE__);
+            logging::debug("dad", __FILE__, __LINE__);
+            speed *= 2.0f;
         }
+
+        if (keyboard.get_key_pressed(Key::A))
+        {
+            scene_object().transform().local_position.x -= speed * delta_time;
+        }
+
+        if (keyboard.get_key_pressed(Key::D))
+        {
+            scene_object().transform().local_position.x += speed * delta_time;
+        }
+
+        if (keyboard.get_key_pressed(Key::W))
+        {
+            scene_object().transform().local_position.y += speed * delta_time;
+        }
+
+        if (keyboard.get_key_pressed(Key::S))
+        {
+            scene_object().transform().local_position.y -= speed * delta_time;
+        }
+
+        
+
+
+
         //logging::DebugStream(__FILE__, __LINE__) << "update" << std::flush;
         //throw NodecException("TEST", __FILE__, __LINE__);
         //logging::DebugStream(__FILE__, __LINE__) << rendering.frame_delta_time();
@@ -180,7 +209,7 @@ void nodec_game_engine::on_boot(nodec_game_engine::GameEngine& engine)
     //testtest_object->append_child(test_object); // ERROR
 
     nodec::logging::DebugStream(__FILE__, __LINE__) << test_object->name << std::flush;
-    test_object->add_component<TestBehavior>();
+    test_object->add_component<TestCube>();
     test_object->transform().local_position.z = 3.0f;
 
     logging::InfoStream(__FILE__, __LINE__) << nodec_game_engine::get_engine()->id() << std::flush;
