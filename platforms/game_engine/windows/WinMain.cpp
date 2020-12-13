@@ -39,7 +39,11 @@ int CALLBACK WinMain(
 
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
-        Window window(1280, 720, L"TEST", game_engine_module);
+        Window window(1280, 720, 
+                      L"TEST", 
+                      &(game_engine_module->keyboard_module())
+        );
+
         //window.SetTitle("ほげabほげ");
         GraphicsResources graphicsResources;
         GraphicsRenderer graphicsRenderer(&window.Gfx());
@@ -69,6 +73,9 @@ int CALLBACK WinMain(
             //window.Gfx().DrawTestTriangle();
 
             game_engine_module->rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module->engine_time_stopwatch().lap()).count();
+
+            game_engine_module->keyboard_module().flush();
+
             game_engine_module->rendering_module().on_frame_update.invoke(game_engine_module->rendering());
 
 

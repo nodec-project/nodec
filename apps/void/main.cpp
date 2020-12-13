@@ -7,6 +7,9 @@
 #include <nodec_modules/rendering/interfaces/renderer.hpp>
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
+#include <nodec_modules/input/interfaces/keyboard.hpp>
+#include <nodec_modules/input/interfaces/key.hpp>
+
 #include <nodec/scene_set/scene_object.hpp>
 
 #include <nodec/event.hpp>
@@ -15,6 +18,8 @@
 using namespace nodec;
 namespace nodec_game_engine = nodec_modules::game_engine::interfaces;
 namespace nodec_rendering = nodec_modules::rendering::interfaces;
+
+using namespace nodec_modules::input::interfaces;
 
 //
 //class BRDFMaterial : public nodec_rendering::Material
@@ -134,6 +139,11 @@ public:
     }
     void on_frame_update(nodec_rendering::Rendering& rendering) override
     {
+        Keyboard& keyboard = nodec_game_engine::get_engine()->keyboard();
+        if (keyboard.get_key_down(Key::A))
+        {
+            logging::debug("A", __FILE__, __LINE__);
+        }
         //logging::DebugStream(__FILE__, __LINE__) << "update" << std::flush;
         //throw NodecException("TEST", __FILE__, __LINE__);
         //logging::DebugStream(__FILE__, __LINE__) << rendering.frame_delta_time();

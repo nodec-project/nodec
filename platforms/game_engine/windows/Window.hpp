@@ -62,7 +62,7 @@ private:
     };
 
 public:
-    Window(int width, int height, const wchar_t* name, nodec_modules::game_engine::GameEngineModule* game_engine_module);
+    Window(int width, int height, const wchar_t* name, nodec_modules::input::KeyboardModule* keyboard_module);
     ~Window();
 
 public:
@@ -79,7 +79,8 @@ private:
     int width;
     int height;
     HWND hWnd;
-    nodec_modules::game_engine::GameEngineModule* game_engine_module;
+    nodec_modules::input::KeyboardModule* keyboard_module;
+    nodec_modules::input::MouseModule* mouse_module;
     std::unique_ptr<Graphics> pGfx;
 
     NODEC_DISABLE_COPY(Window);

@@ -2,14 +2,14 @@
 #include "Window.hpp"
 #include "Utils.hpp"
 
-#include <nodec_modules/game_engine/game_engine_module.hpp>
+#include <nodec_modules/input/keyboard_module.hpp>
 
 #include <nodec/unicode.hpp>
 
 #include <string>
 #include <sstream>
 
-
+using namespace nodec_modules;
 
 // === Window Class ====
 
@@ -53,11 +53,14 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 
 // END Window Class ===
 
-Window::Window(int width, int height, const wchar_t* name, nodec_modules::game_engine::GameEngineModule* game_engine_module)
+Window::Window(int width, 
+               int height, 
+               const wchar_t* name, 
+               nodec_modules::input::KeyboardModule* keyboard_module)
     :
     width(width),
     height(height),
-    game_engine_module(game_engine_module)
+    keyboard_module(keyboard_module)
 {
     RECT wr;
     wr.left = 100;
@@ -156,6 +159,7 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
+
     switch (msg)
     {
         // We don't want the DefProc to handle this message because
@@ -191,17 +195,23 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // filter autorepeat
         if (!(lParam & 0x40000000))
         {
-            /*char ch = static_cast<char>(wParam);
-            SetTitle(std::string{ ch });*/
+            keyboard_module->handle_key_press(static_cast<input::interfaces::Key>(wParam));
         }
         break;
 
     case WM_KEYUP:
     case WM_SYSKEYUP:
+
+        keyboard_module->handle_key_release(static_cast<input::interfaces::Key>(wParam));
+
         break;
 
     case WM_CHAR:
+
+        keyboard_module->handle_text_input(static_cast<unsigned char>(wParam));
+        
         break;
+
         // END KEYBOARD MESSAGE ---
 
         // --- MOUSE MESSAGE ---

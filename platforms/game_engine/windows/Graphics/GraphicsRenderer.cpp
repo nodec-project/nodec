@@ -56,7 +56,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 Quaternionf rotation;
                 renderer->scene_object().transform().get_world_transform(position, rotation, scale);
 
-                logging::DebugStream(__FILE__, __LINE__) << position << ", " << rotation << ", " << scale << std::flush;
+                //logging::DebugStream(__FILE__, __LINE__) << position << ", " << rotation << ", " << scale << std::flush;
 
                 auto matrixM = DirectX::XMMatrixTransformation(DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f },
                                                                DirectX::XMVECTOR{ 0.0f, 0.0f, 0.0f, 1.0f },
