@@ -39,7 +39,7 @@ int CALLBACK WinMain(
 
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
-        Window window(1280, 720, 
+        Window window(1920, 1080, 
                       L"TEST", 
                       &(game_engine_module->keyboard_module())
         );
