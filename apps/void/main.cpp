@@ -126,14 +126,24 @@ public:
             scene_object().transform().local_position.x += speed * delta_time;
         }
 
-        if (keyboard.get_key_pressed(Key::W))
+        if (keyboard.get_key_pressed(Key::Q))
         {
             scene_object().transform().local_position.y += speed * delta_time;
         }
 
-        if (keyboard.get_key_pressed(Key::S))
+        if (keyboard.get_key_pressed(Key::Z))
         {
             scene_object().transform().local_position.y -= speed * delta_time;
+        }
+
+        if (keyboard.get_key_pressed(Key::W))
+        {
+            scene_object().transform().local_position.z += speed * delta_time;
+        }
+
+        if (keyboard.get_key_pressed(Key::S))
+        {
+            scene_object().transform().local_position.z -= speed * delta_time;
         }
     }
 };

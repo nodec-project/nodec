@@ -2,10 +2,9 @@
 
 struct MaterialProperties
 {
-    float3 diffuse;
+    float3 albedo;
     float roughness;
     float metalness;
-    float3 specular;
 };
 
 cbuffer cbMaterialProperties
@@ -35,16 +34,15 @@ float4 PSMain(V2P input) : SV_Target
     BRDFSurface surface;
     
     surface.normal = input.worldNormal;
-    surface.diffuseColor = float3(1.0f, 0.0f, 0.0f);
-    surface.specularColor = float3(1.0f, 1.0f, 1.0f);
+    surface.albedo = float3(0.1f, 1.0f, 0.1f);
     
-    surface.metalness = 0.5;
+    surface.metalness = 1.0;
     surface.roughness = 0.2;
     
     //const float ambient
     
     // illumination
-    const float3 iAmbient = surface.diffuseColor * 0.0f; // ambient
+    //const float3 iAmbient = surface.diffuseColor * 0.0f; // ambient
     float3 iDiffuseSpecular = float3(0.0f, 0.0f, 0.0f); // diffuse & specular
     float3 iEnv = 0.0f.xxx; // environment lighting
     
@@ -54,8 +52,19 @@ float4 PSMain(V2P input) : SV_Target
     
     const float3 lightInSolidAngle = -lightDirection;
     
-    iDiffuseSpecular += BRDF(surface, lightInSolidAngle, viewDir) * lightColor;
+    const float3 environmentIrradience = float3(0.1f, 0.1f, 0.1f);
+    const float3 environmentSpecular = float3(1.0f, 1.0f, 1.0f);
     
-    const float3 illumination = iAmbient + iDiffuseSpecular + iEnv;
+    //float3 indirectDiffuse = half3(0.1f, 0.1f, 0.1f);
+    //float3 indirectSpecular = half3(1.0f, 1.0f, 1.0f);
+    
+    iDiffuseSpecular += BRDF(surface, lightInSolidAngle, viewDir) * lightColor;
+    //iDiffuseSpecular += BRDF_2(surface, lightInSolidAngle, viewDir, lightColor, environmentIrradience, environmentSpecular);
+    
+    iEnv = EnvironmentBRDF(surface, viewDir, environmentIrradience, environmentSpecular);
+    
+    //const float3 illumination = iAmbient + iDiffuseSpecular + iEnv;
+    const float3 illumination = iDiffuseSpecular + iEnv;
+    //const float3 illumination = iDiffuseSpecular;
 	return float4(illumination, 1.0f);
 }
