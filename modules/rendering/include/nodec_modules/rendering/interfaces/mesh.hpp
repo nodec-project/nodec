@@ -22,8 +22,28 @@ class Rendering;
 class Mesh : public BindableResource
 {
 public:
-    std::vector<nodec::Vector3f> vertices;
+    struct Vertex
+    {
+        nodec::Vector3f position;
+        nodec::Vector3f normal;
+
+        Vertex(const nodec::Vector3f& position) :
+            position(position)
+        {
+        };
+
+        Vertex(const nodec::Vector3f& position, const nodec::Vector3f& normal) :
+            position(position),
+            normal(normal)
+        {
+        };
+
+    };
+
+    std::vector<Vertex> vertices;
+
     std::vector<uint16_t> triangles;
+
 
 public:
     Mesh(Rendering* target_rendering);

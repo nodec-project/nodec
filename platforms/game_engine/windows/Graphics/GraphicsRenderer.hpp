@@ -16,6 +16,7 @@ public:
     {
         DirectX::XMFLOAT4X4 matrixMVP;
         DirectX::XMFLOAT4X4 matrixM;
+        DirectX::XMFLOAT4X4 matrixMInverse;
     };
 
 public:

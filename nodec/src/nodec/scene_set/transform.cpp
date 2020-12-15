@@ -30,7 +30,7 @@ Transform::get_world_transform(Vector3f& out_position, Quaternionf& out_rotation
     {
         out_position += parent->transform().local_position;
         out_scale *= parent->transform().local_scale;
-        out_rotation = out_rotation * parent->transform().local_rotation;
+        out_rotation = parent->transform().local_rotation * out_rotation;
         root = parent;
         parent = parent->parent().lock();
     }

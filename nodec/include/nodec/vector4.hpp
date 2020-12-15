@@ -114,6 +114,23 @@ inline Vector4<T> operator-(const Vector4<T>& left, const Vector4<T>& right)
 }
 
 template <typename T>
+inline Vector4<T> operator* (const Vector4<T>& left, const Vector4<T>& right)
+{
+    return Vector4<T>(left.x * right.x, left.y * right.y, left.z * right.z, left.w * right.w);
+}
+
+template <typename T>
+inline Vector4<T>& operator*=(Vector4<T>& left, const Vector4<T>& right)
+{
+    left.x *= right.x;
+    left.y *= right.y;
+    left.z *= right.z;
+    left.w *= right.w;
+
+    return left;
+}
+
+template <typename T>
 inline Vector4<T> operator*(const Vector4<T>& left, T right)
 {
     return Vector4<T>(left.x * right, left.y * right, left.z * right,

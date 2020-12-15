@@ -101,7 +101,7 @@ int CALLBACK WinMain(
     }
 
     MessageBox(nullptr, 
-               L"Unhandling Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.", 
+               L"Unhandled Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.", 
                L"Fatal Error.", MB_OK | MB_ICONEXCLAMATION);
     nodec::logging::warn("[Main] >>> Unexpected Program Ending.", __FILE__, __LINE__);
     return -1;

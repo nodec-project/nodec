@@ -1,6 +1,7 @@
 #ifndef NODEC__QUATERNION_HPP_
 #define NODEC__QUATERNION_HPP_
 
+#include <iostream>
 
 namespace nodec
 {

@@ -32,11 +32,14 @@ void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* 
     {
         auto vertexBuffer = std::make_shared<VertexBuffer>(
             graphics,
-            mesh->vertices.size() * sizeof(nodec::Vector3f),
-            sizeof(nodec::Vector3f),
+            mesh->vertices.size() * sizeof(rendering::interfaces::Mesh::Vertex),
+            sizeof(rendering::interfaces::Mesh::Vertex),
             mesh->vertices.data()
             );
         graphicsResources->vertexBufferMap.emplace(mesh->id(), vertexBuffer);
+        //logging::DebugStream(__FILE__, __LINE__) << sizeof(rendering::interfaces::Mesh::Vertex);
+        //logging::DebugStream(__FILE__, __LINE__) << sizeof(Vector3f);
+        //logging::DebugStream(__FILE__, __LINE__) << sizeof(float);
     }
 
     if (mesh->triangles.size() > 0
