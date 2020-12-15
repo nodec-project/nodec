@@ -14,9 +14,11 @@
 
 #include <nodec/event.hpp>
 #include <nodec/logging.hpp>
-#include <nodec/gmath.hpp>
+#include <nodec/math/math.hpp>
+#include <nodec/math/gfx.hpp>
 
 using namespace nodec;
+
 namespace nodec_game_engine = nodec_modules::game_engine::interfaces;
 namespace nodec_rendering = nodec_modules::rendering::interfaces;
 
@@ -149,7 +151,7 @@ public:
 
         Vector3f axis(0, 1, 0);
         float angle = nodec_game_engine::get_engine()->engine_time() * 10.0f;
-        gmath::set_angle_axis(scene_object().transform().local_rotation, angle, axis);
+        math::gfx::set_angle_axis(scene_object().transform().local_rotation, angle, axis);
         
 
         if (keyboard.get_key_pressed(Key::LeftShift))

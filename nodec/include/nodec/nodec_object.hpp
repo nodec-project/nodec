@@ -85,6 +85,8 @@ shared_from(That* that)
 {
     return std::static_pointer_cast<That>(shared_from_base(that));
 }
-}
+
+
+} // namespace nodec
 
 #endif

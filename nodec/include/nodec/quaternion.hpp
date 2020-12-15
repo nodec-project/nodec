@@ -5,6 +5,7 @@
 
 namespace nodec
 {
+
 /**
 * Quaternion
 * q = x i + y j + z k + w

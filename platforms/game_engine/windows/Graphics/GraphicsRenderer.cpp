@@ -78,17 +78,18 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                                                                  1280.0f / 720.0f,
                                                                  0.1f,
                                                                  100.0f);
-
+                // DirectX Math using row-major representation
+                // HLSL using column-major representation
                 auto matrixMVP =  matrixM * matrixP;
                 //auto matrixMVP = matrixM * matrixV * matrixP;
 
-                DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), DirectX::XMMatrixTranspose(matrixM));
-                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), DirectX::XMMatrixTranspose(matrixMVP));
-                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), DirectX::XMMatrixTranspose(matrixMInverse));
+                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), DirectX::XMMatrixTranspose(matrixM));
+                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), DirectX::XMMatrixTranspose(matrixMVP));
+                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), DirectX::XMMatrixTranspose(matrixMInverse));
 
-                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), matrixM);
-                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), matrixMVP);
-                //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), matrixMInverse);
+                DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), matrixM);
+                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), matrixMVP);
+                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), matrixMInverse);
 
                 modelConstantBuffer.Update(graphics, &modelConstants);
             }

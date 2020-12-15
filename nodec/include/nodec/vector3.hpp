@@ -5,6 +5,8 @@
 
 namespace nodec
 {
+
+
 /**
  * 3-dimentional vector
  * give just container and basic operation
@@ -202,6 +204,8 @@ inline std::ostream& operator<< (std::ostream& stream, const Vector3<T>& vec)
 {
     return stream << "( " << vec.x << ", " << vec.y << ", " << vec.z << " )";
 }
+
+
 }  // namespace nodec
 
 #endif

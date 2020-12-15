@@ -1,11 +1,13 @@
 #include <nodec/scene_set/transform.hpp>
 #include <nodec/scene_set/scene_object.hpp>
+#include <nodec/math/gfx.hpp>
 
 
 namespace nodec
 {
 namespace scene_set
 {
+
 
 Transform::Transform(SceneObject* owner) :
     Component(owner),
@@ -18,19 +20,23 @@ Transform::Transform(SceneObject* owner) :
 
 
 NodecObject::Reference<SceneObject>
-Transform::get_world_transform(Vector3f& out_position, Quaternionf& out_rotation, Vector3f& out_scale)
+Transform::get_world_transform(Vector3f& world_position, Quaternionf& world_rotation, Vector3f& world_scale)
 {
-    out_position = local_position;
-    out_rotation = local_rotation;
-    out_scale = local_scale;
+    world_position = local_position;
+    world_rotation = local_rotation;
+    world_scale = local_scale;
 
     NodecObject::Reference<SceneObject> root;
     auto parent = scene_object().parent().lock();
     while (parent)
     {
-        out_position += parent->transform().local_position;
-        out_scale *= parent->transform().local_scale;
-        out_rotation = parent->transform().local_rotation * out_rotation;
+        Transform& parent_transform = parent->transform();
+        world_position *= parent_transform.local_scale;
+        world_position = nodec::math::gfx::transform(world_position, parent_transform.local_rotation);
+        world_position += parent_transform.local_position;
+
+        world_scale *= parent_transform.local_scale;
+        world_rotation = parent_transform.local_rotation * world_rotation;
         root = parent;
         parent = parent->parent().lock();
     }
