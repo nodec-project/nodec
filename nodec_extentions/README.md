@@ -1,5 +1,4 @@
-# platforms
-
+# nodec_extentions
 ## using
 * nodec
 * modules
@@ -10,4 +9,4 @@
 
 ## independent
 * apps
-* nodec_extentions
+* platforms

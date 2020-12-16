@@ -1,13 +1,13 @@
-# 3rd_party/modules
+# nodec
 
 ## using
 
 ## be implemented by
-* platforms
 
 ## independent
 * apps
-* nodec
-* modules
-* nodec_extentions
 * 3rd_party/libs
+* 3rd_party/modules
+* platforms
+* nodec_extentions
+* modules
