@@ -47,6 +47,9 @@ public:
     ID3D11DeviceContext* GetContext() noexcept;
     DxgiInfoLogger* GetInfoLogger() noexcept;
 
+    UINT GetWidth() noexcept;
+    UINT GetHeight() noexcept;
+
 private:
     UINT width;
     UINT height;

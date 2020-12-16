@@ -74,8 +74,9 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 //DirectX::XMVECTOR up          = DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
                 //DirectX::XMMATRIX matrixV  = DirectX::XMMatrixLookAtLH(eye, focus, up);
 
+                auto aspect = static_cast<float>(graphics->GetWidth()) / static_cast<float>(graphics->GetHeight());
                 auto matrixP = DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(45.0f),
-                                                                 1920.0f / 1080.0f,
+                                                                 aspect,
                                                                  0.1f,
                                                                  100.0f);
                 // DirectX Math using row-major representation

@@ -27,9 +27,9 @@ public:
     nodec::Vector2i resolution_;
     std::string title_;
 
-    nodec::event::Event<ScreenModule&> on_submit_resolution_change;
-    nodec::event::Event<ScreenModule&> on_submit_size_change;
-    nodec::event::Event<ScreenModule&> on_submit_title_change;
+    nodec::event::Event<ScreenModule&, const nodec::Vector2i&> on_submit_resolution_change;
+    nodec::event::Event<ScreenModule&, const nodec::Vector2i&> on_submit_size_change;
+    nodec::event::Event<ScreenModule&, const std::string&> on_submit_title_change;
 
 };
 

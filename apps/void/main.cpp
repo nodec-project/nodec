@@ -94,6 +94,7 @@ public:
         Vector3f axis(0, 1, 0);
         float angle = get_engine()->engine_time() * 20.0f;
         math::gfx::set_angle_axis(scene_object().transform().local_rotation, angle, axis);
+
     }
 };
 
@@ -255,6 +256,10 @@ void nodec_modules::game_engine::interfaces::on_boot(GameEngine& engine)
     nodec::logging::info("booting... in application layer", __FILE__, __LINE__);
     nodec::logging::info("HELLO WORLD!", __FILE__, __LINE__);
 
+    engine.screen().set_size({ 1280, 720 });
+    engine.screen().set_resolution({ 1920, 1080 });
+    engine.screen().set_title("[ void ]");
+
     //auto on_frame_update_callback = nodec::event::StaticCallback<nodec_rendering::Rendering&>::make_shared(&on_frame_update);
     //auto on_frame_update_2_callback = nodec::event::StaticCallback<nodec_rendering::Rendering&>::make_shared(&on_frame_update_2);
     //engine.rendering().on_frame_update += on_frame_update_callback;
@@ -278,7 +283,6 @@ void nodec_modules::game_engine::interfaces::on_boot(GameEngine& engine)
     //test_object_2->add_component<TestCube>();
     //test_object_2->transform().local_position.x = 0.0f;
     //test_object_2->transform().local_position.z = 3.0f;
-
 
     auto test_triangle_1 = NodecObject::instanciate<nodec::scene_set::SceneObject>("test_triangle_1");
     engine.root_scene_object().append_child(test_triangle_1);

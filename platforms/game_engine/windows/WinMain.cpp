@@ -5,6 +5,7 @@
 #include "Logging.hpp"
 #include "Utils.hpp"
 #include "Window.hpp"
+#include "ScreenHandlers.hpp"
 
 #include <nodec_modules/game_engine/game_engine_module.hpp>
 
@@ -26,36 +27,56 @@ int CALLBACK WinMain(
 
     try
     {
+        // {
 #ifndef NDEBUG
         InitLogging(nodec::logging::Level::Debug);
 #else
         InitLogging(nodec::logging::Level::Info);
 #endif
+        // }
+
+
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Hello world. Program start." << std::flush;
 
 
+        // {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the Engine." << std::flush;
         auto game_engine_module = nodec_modules::game_engine::get_game_engine_module();
+        // }
 
+        // {
+        auto screenHandlers = std::make_shared<ScreenHandlers>();
+        ScreenHandlers::SetupOnBootingHandlers(screenHandlers, game_engine_module->screen_module());
+        // }
 
+        // {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> boot the Engine." << std::flush;
+
+        if (!nodec_modules::game_engine::boot(game_engine_module))
+        {
+            throw nodec::NodecException("Engine booting failed.", __FILE__, __LINE__);
+        };
+        // }
+
+        // {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the window and graphics." << std::flush;
-        Window window(1920, 1080, 
-                      L"TEST", 
+        Window window(game_engine_module->screen_module().size_.x, game_engine_module->screen_module().size_.y,
+                      game_engine_module->screen_module().resolution_.x, game_engine_module->screen_module().resolution_.y,
+                      L"Nodec Game Engine",
                       &(game_engine_module->keyboard_module())
         );
+        window.SetTitle(game_engine_module->screen_module().title_);
+        // }
 
-        //window.SetTitle("ほげabほげ");
+        // {
+        ScreenHandlers::SetupRuntimeHandlers(screenHandlers, &window, game_engine_module->screen_module());
+        // }
+
         GraphicsResources graphicsResources;
         GraphicsRenderer graphicsRenderer(&window.Gfx());
 
         auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources, &graphicsRenderer);
         RenderingUtils::InitRenderingHandlers(renderingHandlers, game_engine_module->rendering_module());
-
-        //game_engine_module.keyboard().test = 10;
-        //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
-        //game_engine_module.keyboard_module().test = 100;
-        //MessageBox(nullptr, std::to_wstring(game_engine_module.keyboard().test).c_str(), L"", MB_OK | MB_ICONEXCLAMATION);
-
 
 
         game_engine_module->engine_time_stopwatch().lap();
@@ -70,7 +91,6 @@ int CALLBACK WinMain(
                 break;
             }
             window.Gfx().BeginFrame();
-            //window.Gfx().DrawTestTriangle();
 
             game_engine_module->rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module->engine_time_stopwatch().lap()).count();
 
@@ -78,9 +98,8 @@ int CALLBACK WinMain(
 
             game_engine_module->rendering_module().on_frame_update.invoke(game_engine_module->rendering());
 
-
-
             graphicsRenderer.Render(&window.Gfx(), &graphicsResources);
+
             window.Gfx().EndFrame();
         }
 
@@ -100,8 +119,8 @@ int CALLBACK WinMain(
         nodec::logging::fatal("Unknown Error Exception Ocuurs.", __FILE__, __LINE__);
     }
 
-    MessageBox(nullptr, 
-               L"Unhandled Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.", 
+    MessageBox(nullptr,
+               L"Unhandled Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.",
                L"Fatal Error.", MB_OK | MB_ICONEXCLAMATION);
     nodec::logging::warn("[Main] >>> Unexpected Program Ending.", __FILE__, __LINE__);
     return -1;

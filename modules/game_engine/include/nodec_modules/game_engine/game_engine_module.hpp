@@ -6,6 +6,7 @@
 #include <nodec_modules/input/keyboard_module.hpp>
 #include <nodec_modules/input/mouse_module.hpp>
 #include <nodec_modules/rendering/rendering_module.hpp>
+#include <nodec_modules/screen/screen_module.hpp>
 
 #include <string>
 
@@ -29,6 +30,9 @@ public:
     rendering::interfaces::Rendering&
         rendering() const noexcept override;
 
+    screen::interfaces::Screen&
+        screen() const noexcept override;
+
     nodec::scene_set::SceneObject&
         root_scene_object() const noexcept override;
 
@@ -44,13 +48,18 @@ public:
     rendering::RenderingModule&
         rendering_module() const noexcept;
 
+    screen::ScreenModule&
+        screen_module() const noexcept;
+
     nodec::Stopwatch<std::chrono::steady_clock>&
         engine_time_stopwatch() noexcept;
+
 
 protected:
     nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
     nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
     nodec::NodecObject::Holder<rendering::RenderingModule> rendering_module_;
+    nodec::NodecObject::Holder<screen::ScreenModule> screen_module_;
 
     nodec::NodecObject::Holder<nodec::scene_set::SceneObject> root_scene_object_;
 
@@ -58,6 +67,7 @@ protected:
 };
 
 GameEngineModule* get_game_engine_module();
+bool boot(GameEngineModule* game_engine_module) noexcept;
 
 } // namespace game_engine
 } // namespace nodec_modules

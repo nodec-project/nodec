@@ -53,8 +53,8 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 
 // END Window Class ===
 
-Window::Window(int width, 
-               int height, 
+Window::Window(int width, int height, 
+               int gfxWidth, int gfxHeight,
                const wchar_t* name, 
                nodec_modules::input::KeyboardModule* keyboard_module)
     :
@@ -91,7 +91,7 @@ Window::Window(int width,
     ShowWindow(hWnd, SW_SHOWDEFAULT);
 
     // create graphics object
-    pGfx = std::make_unique<Graphics>(hWnd, width, height);
+    pGfx = std::make_unique<Graphics>(hWnd, gfxWidth, gfxHeight);
 
 }
 

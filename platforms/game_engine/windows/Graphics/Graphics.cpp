@@ -136,6 +136,9 @@ ID3D11Device* Graphics::GetDevice() noexcept { return pDevice.Get(); }
 ID3D11DeviceContext* Graphics::GetContext() noexcept { return pContext.Get(); }
 DxgiInfoLogger* Graphics::GetInfoLogger() noexcept { return &infoLogger; }
 
+UINT Graphics::GetWidth() noexcept { return width; }
+UINT Graphics::GetHeight() noexcept { return height; }
+
 
 void Graphics::BeginFrame() noexcept
 {

@@ -73,7 +73,6 @@ public:
 private:
     std::chrono::time_point<ClockT> current_time() const
     {
-        std::chrono::steady_clock::now();
         auto current_time_ = stop_time;
         if (is_running_)
         {

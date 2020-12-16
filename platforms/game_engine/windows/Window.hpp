@@ -62,7 +62,10 @@ private:
     };
 
 public:
-    Window(int width, int height, const wchar_t* name, nodec_modules::input::KeyboardModule* keyboard_module);
+    Window(int width, int height, 
+           int gfxWidth, int gfxHeight, 
+           const wchar_t* name, nodec_modules::input::KeyboardModule* keyboard_module);
+
     ~Window();
 
 public:

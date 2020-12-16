@@ -9,14 +9,16 @@ namespace input
 {
 namespace interfaces
 {
+
 class Mouse : public nodec::ModuleInterface
 {
 public:
     using ModuleInterface::ModuleInterface;
 
 };
-}
-}
-}
+
+} // namespace interfaces
+} // namespace input
+} // namespace nodec_modules
 
 #endif
