@@ -5,15 +5,15 @@
 
 namespace nodec_modules
 {
-    namespace input
-    {
-        class MouseModule : public interfaces::Mouse
-        {
-        public:
-            MouseModule();
+namespace input
+{
+class MouseModule : public interfaces::Mouse
+{
+public:
+    MouseModule();
 
-        };
-    }
+};
+}
 }
 
 #endif

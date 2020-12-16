@@ -18,7 +18,7 @@ public:
     {
     };
 
-    const char* type() const noexcept override { return "IllegalCharacterException"; }
+    //const char* type() const noexcept override { return "IllegalCharacterException"; }
 };
 
 class BufferRangeException : public NodecException
@@ -28,7 +28,7 @@ public:
         :NodecException("Cannot add characters to buffer, output is too small.", file, line)
     {
     };
-    const char* type() const noexcept override { return "BufferRangeException"; }
+    //const char* type() const noexcept override { return "BufferRangeException"; }
 };
 
 /**

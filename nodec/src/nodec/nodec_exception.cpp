@@ -1,6 +1,7 @@
 #include <nodec/nodec_exception.hpp>
 
 #include <sstream>
+#include <typeinfo>
 
 namespace nodec
 {
@@ -9,17 +10,36 @@ NodecException::NodecException(std::string message, const char* file, size_t lin
     :
     message(message),
     file(file),
-    line(line)
+    line(line),
+    type_(nullptr)
 {
 }
 
 NodecException::NodecException(const char* file, size_t line) noexcept
     :
     file(file),
-    line(line)
+    line(line),
+    type_(nullptr)
 {
 }
 
+NodecException::~NodecException()
+{
+}
+
+/**
+* @note
+*   <https://stackoverflow.com/questions/6747089/programmatically-getting-the-name-of-a-derived-class>
+*/
+const char* NodecException::type() const noexcept
+{
+    if (type_ == nullptr)
+    {
+        type_ = typeid(*this).name();
+    }
+
+    return type_;
+}
 
 const char* NodecException::what() const noexcept
 {

@@ -17,7 +17,7 @@ public:
     {
         using NodecException::NodecException;
     public:
-        const char* type() const noexcept override { return "Window::Exception"; }
+        //const char* type() const noexcept override { return "Window::Exception"; }
         static std::string TranslateErrorCode(HRESULT hr) noexcept;
     };
 
@@ -25,7 +25,7 @@ public:
     {
     public:
         HrException(HRESULT hr, const char* file, size_t line) noexcept;
-        const char* type() const noexcept override { return "Window::HrException"; }
+        //const char* type() const noexcept override { return "Window::HrException"; }
         HRESULT error_code() const noexcept { return hr; }
     private:
         HRESULT hr;
@@ -38,7 +38,7 @@ public:
             Exception("No Graphics.", file, line)
         {
         }
-        const char* type() const noexcept override { return "Window::NoGfxException"; }
+        //const char* type() const noexcept override { return "Window::NoGfxException"; }
     };
 
 private:

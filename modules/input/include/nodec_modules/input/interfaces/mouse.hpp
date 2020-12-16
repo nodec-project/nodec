@@ -5,18 +5,18 @@
 
 namespace nodec_modules
 {
-    namespace input
-    {
-        namespace interfaces
-        {
-            class Mouse : public nodec::ModuleInterface
-            {
-            public:
-                using ModuleInterface::ModuleInterface;
+namespace input
+{
+namespace interfaces
+{
+class Mouse : public nodec::ModuleInterface
+{
+public:
+    using ModuleInterface::ModuleInterface;
 
-            };
-        }
-    }
+};
+}
+}
 }
 
 #endif

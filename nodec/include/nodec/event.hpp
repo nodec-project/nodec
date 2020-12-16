@@ -47,7 +47,7 @@ public:
 
     }
 
-    const char* type() const noexcept override { return "ObjectHasBeenDeletedException"; }
+    //const char* type() const noexcept override { return "ObjectHasBeenDeletedException"; }
 
 };
 namespace detail

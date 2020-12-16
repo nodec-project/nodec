@@ -21,14 +21,14 @@ public:
     {
     public:
         HrException(HRESULT hr, const char* file, size_t line) noexcept;
-        const char* type() const noexcept override { return "Graphics::HrException"; }
+        //const char* type() const noexcept override { return "Graphics::HrException"; }
 
     };
 
     class DeviceRemovedException : public HrException
     {
         using HrException::HrException;
-        const char* type() const noexcept override { return "Graphics::DeviceRemovedException";  }
+        //const char* type() const noexcept override { return "Graphics::DeviceRemovedException";  }
 
     };
 

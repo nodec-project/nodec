@@ -5,41 +5,41 @@
 
 namespace nodec_modules
 {
-    namespace rendering
-    {
-        class RenderingModule : public interfaces::Rendering
-        {
-        public:
-            RenderingModule();
+namespace rendering
+{
+class RenderingModule : public interfaces::Rendering
+{
+public:
+    RenderingModule();
 
-        public:
-            float frame_delta_time() const noexcept override;
+public:
+    float frame_delta_time() const noexcept override;
 
-            void bind_mesh(const interfaces::Mesh* mesh) override;
-            void unbind_mesh(const interfaces::Mesh* mesh) override;
+    void bind_mesh(const interfaces::Mesh* mesh) override;
+    void unbind_mesh(const interfaces::Mesh* mesh) override;
 
-            void bind_shader(const interfaces::Shader* shader) override;
-            void unbind_shader(const interfaces::Shader* shader) override;
+    void bind_shader(const interfaces::Shader* shader) override;
+    void unbind_shader(const interfaces::Shader* shader) override;
 
-            void bind_material(const interfaces::Material* material) override;
-            void unbind_material(const interfaces::Material* material) override;
+    void bind_material(const interfaces::Material* material) override;
+    void unbind_material(const interfaces::Material* material) override;
 
-            void regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer) override;
+    void regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer) override;
 
-        public:
-            float frame_delta_time_;
+public:
+    float frame_delta_time_;
 
-            nodec::event::Event<const interfaces::Mesh*> on_bind_mesh;
-            nodec::event::Event<const interfaces::Mesh*> on_unbind_mesh;
-            nodec::event::Event<const interfaces::Shader*> on_bind_shader;
-            nodec::event::Event<const interfaces::Shader*> on_unbind_shader;
-            nodec::event::Event<const interfaces::Material*> on_bind_material;
-            nodec::event::Event<const interfaces::Material*> on_unbind_material;
+    nodec::event::Event<const interfaces::Mesh*> on_bind_mesh;
+    nodec::event::Event<const interfaces::Mesh*> on_unbind_mesh;
+    nodec::event::Event<const interfaces::Shader*> on_bind_shader;
+    nodec::event::Event<const interfaces::Shader*> on_unbind_shader;
+    nodec::event::Event<const interfaces::Material*> on_bind_material;
+    nodec::event::Event<const interfaces::Material*> on_unbind_material;
 
-            nodec::event::Event<nodec::NodecObject::Reference<interfaces::Renderer>> on_regist_renderer;
+    nodec::event::Event<nodec::NodecObject::Reference<interfaces::Renderer>> on_regist_renderer;
 
-        };
-    }
+};
+}
 }
 
 #endif

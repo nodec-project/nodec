@@ -6,6 +6,7 @@
 
 namespace nodec
 {
+
 /**
 * @note
 *   This exception class not inhereited from std::exception, because no merit.
@@ -24,7 +25,11 @@ public:
     NodecException(const char* file, size_t line) noexcept;
 
     const char* what() const noexcept final;
-    virtual const char* type() const noexcept { return "NodecException"; }
+    const char* type() const noexcept;
+
+    //virtual const char* type() const noexcept { return "NodecException"; }
+
+    virtual ~NodecException();
 
 protected:
     std::string file;
@@ -32,8 +37,10 @@ protected:
     std::string message;
 
 private:
+    mutable const char* type_;
     mutable std::string what_buffer;
 };
+
 }
 
 

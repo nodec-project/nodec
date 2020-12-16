@@ -18,7 +18,8 @@ public:
             << "error code: " << error_code << std::endl;
         message = oss.str();
     }
-    const char* type() const noexcept override { return "TestNodecException"; }
+
+    //const char* type() const noexcept override { return "TestNodecException"; }
 
 private:
     int error_code;

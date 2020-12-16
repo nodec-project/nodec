@@ -7,16 +7,16 @@
 
 namespace nodec_modules {
 namespace rendering {
-    namespace interfaces {
-        class Renderer : public nodec::scene_set::Component {
-        public:
-            using Component::Component;
+namespace interfaces {
+class Renderer : public nodec::scene_set::Component {
+public:
+    using Component::Component;
 
-        public:
-            nodec::NodecObject::Holder<Mesh> mesh;
-            nodec::NodecObject::Holder<Material> material;
-        };
-    };
+public:
+    nodec::NodecObject::Holder<Mesh> mesh;
+    nodec::NodecObject::Holder<Material> material;
+};
+};
 }
 }
 
