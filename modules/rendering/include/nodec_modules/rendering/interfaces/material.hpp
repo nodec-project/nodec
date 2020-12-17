@@ -17,13 +17,20 @@ namespace interfaces
 class Material : public BindableResource
 {
 public:
-    Material(nodec::NodecObject::Holder<Shader> shader, Rendering* target_rendering);
+    Material(Rendering* target_rendering, 
+             nodec::NodecObject::Holder<Shader> shader,
+             void* primitive_properties_entry_ptr,
+             size_t primitive_properties_byte_size);
 
+    void* primitive_properties_entry_ptr() const noexcept;
+    size_t primitive_properties_byte_size() const noexcept;
 
+protected:
+    nodec::NodecObject::Holder<Shader> shader;
 
 private:
-    nodec::NodecObject::Holder<Shader> shader;
-    std::vector<uint8_t> primitivePropertyBytes;
+    void* primitive_properties_entry_ptr_;
+    size_t primitive_properties_byte_size_;
 
 
 };

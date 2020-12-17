@@ -6,24 +6,6 @@ using namespace nodec;
 namespace RenderingUtils
 {
 
-void InitRenderingHandlers(
-    std::shared_ptr<RenderingHandlers> handlers,
-    rendering::RenderingModule& rendering_module)
-{
-    auto meshPublishingHandler
-        = nodec::event::MemberCallback<RenderingHandlers, const rendering::interfaces::Mesh*>::make_shared(
-            handlers, &RenderingHandlers::HandleMeshBinding
-        );
-
-    rendering_module.on_bind_mesh += meshPublishingHandler;
-
-    auto rendererRegistingHandler
-        = nodec::event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Renderer>>::make_shared(
-            handlers, &RenderingHandlers::HandleRendererRegisting
-        );
-    rendering_module.on_regist_renderer += rendererRegistingHandler;
-}
-
 void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* graphics, GraphicsResources* graphicsResources)
 {
 

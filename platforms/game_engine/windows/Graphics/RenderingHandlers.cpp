@@ -1,6 +1,31 @@
 #include "RenderingHandlers.hpp"
 #include "RenderingUtils.hpp"
 
+using namespace nodec;
+using namespace nodec_modules;
+
+void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handlers,
+                                      nodec_modules::rendering::RenderingModule& rendering_module)
+{
+    auto meshBindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Mesh*>::make_shared(
+            handlers, &RenderingHandlers::HandleMeshBinding
+        );
+    rendering_module.on_bind_mesh += meshBindingHandler;
+
+    auto shaderBindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Shader*>::make_shared(
+            handlers, &RenderingHandlers::HandleShaderBinding
+        );
+    rendering_module.on_bind_shader += shaderBindingHandler;
+
+    auto rendererRegistingHandler
+        = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Renderer>>::make_shared(
+            handlers, &RenderingHandlers::HandleRendererRegisting
+        );
+    rendering_module.on_regist_renderer += rendererRegistingHandler;
+}
+
 RenderingHandlers::RenderingHandlers(
     Graphics* graphics, 
     GraphicsResources* graphicsResources,
@@ -16,6 +41,12 @@ RenderingHandlers::RenderingHandlers(
 void RenderingHandlers::HandleMeshBinding(const nodec_modules::rendering::interfaces::Mesh* mesh)
 {
     RenderingUtils::BindMesh(mesh, graphics, graphicsResources);
+}
+
+
+void RenderingHandlers::HandleShaderBinding(const nodec_modules::rendering::interfaces::Shader* shader)
+{
+
 }
 
 void RenderingHandlers::HandleRendererRegisting(

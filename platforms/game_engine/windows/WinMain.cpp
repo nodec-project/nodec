@@ -77,7 +77,7 @@ int CALLBACK WinMain(
         GraphicsRenderer graphicsRenderer(&window.Gfx());
 
         auto renderingHandlers = std::make_shared<RenderingHandlers>(&window.Gfx(), &graphicsResources, &graphicsRenderer);
-        RenderingUtils::InitRenderingHandlers(renderingHandlers, game_engine_module->rendering_module());
+        RenderingHandlers::SetupHandlers(renderingHandlers, game_engine_module->rendering_module());
 
 
         game_engine_module->engine_time_stopwatch().lap();

@@ -29,29 +29,46 @@ class TestTriangle : public Behavior {
 public:
     using Behavior::Behavior;
 
+    static NodecObject::Reference<Mesh> mesh_global;
+
     void on_awake() override {
         enable_frame_update();
     }
     void on_frame_start(Rendering& rendering) override {
         auto renderer_ = scene_object().add_component<Renderer>();
+
         if (auto renderer = renderer_.lock()) {
-            renderer->mesh = NodecObject::instanciate<Mesh>(&rendering);
 
-            renderer->mesh->vertices.push_back({ { 0.0f, 0.5f, 0.0f }, {0.0f, 0.0f, -1.0f} }); // front
-            renderer->mesh->vertices.push_back({ { 0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, -1.0f} });
-            renderer->mesh->vertices.push_back({ { -0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, -1.0f} });
-            renderer->mesh->vertices.push_back({ { 0.0f, 0.5f, 0.0f }, {0.0f, 0.0f, 1.0f} }); // back
-            renderer->mesh->vertices.push_back({ { -0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, 1.0f} });
-            renderer->mesh->vertices.push_back({ { 0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, 1.0f} });
+            if (auto mesh = mesh_global.lock())
+            {
+                renderer->mesh = mesh;
 
-            renderer->mesh->triangles.push_back(0);
-            renderer->mesh->triangles.push_back(1);
-            renderer->mesh->triangles.push_back(2);
-            renderer->mesh->triangles.push_back(3);
-            renderer->mesh->triangles.push_back(4);
-            renderer->mesh->triangles.push_back(5);
+                logging::debug("reused", __FILE__, __LINE__);
+            }
+            else
+            {
+                auto new_mesh = NodecObject::instanciate<Mesh>(&rendering);
 
-            rendering.bind_mesh(renderer->mesh.get());
+                new_mesh->vertices.push_back({ { 0.0f, 0.5f, 0.0f }, {0.0f, 0.0f, -1.0f} }); // front
+                new_mesh->vertices.push_back({ { 0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, -1.0f} });
+                new_mesh->vertices.push_back({ { -0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, -1.0f} });
+                new_mesh->vertices.push_back({ { 0.0f, 0.5f, 0.0f }, {0.0f, 0.0f, 1.0f} }); // back
+                new_mesh->vertices.push_back({ { -0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, 1.0f} });
+                new_mesh->vertices.push_back({ { 0.5f, -0.5f, 0.0f }, {0.0f, 0.0f, 1.0f} });
+                
+                new_mesh->triangles.push_back(0);
+                new_mesh->triangles.push_back(1);
+                new_mesh->triangles.push_back(2);
+                new_mesh->triangles.push_back(3);
+                new_mesh->triangles.push_back(4);
+                new_mesh->triangles.push_back(5);
+
+                rendering.bind_mesh(new_mesh.get());
+
+                renderer->mesh = new_mesh;
+                mesh_global = new_mesh;
+            }
+
             rendering.regist_renderer(renderer);
         }
     }
@@ -59,6 +76,8 @@ public:
 
     }
 };
+
+NodecObject::Reference<Mesh> TestTriangle::mesh_global;
 
 class Rotating : public Behavior {
 public:
@@ -81,6 +100,8 @@ public:
 class Movable : public Behavior {
 public:
     using Behavior::Behavior;
+
+    std::vector<NodecObject::Reference<scene_set::SceneObject>> child_refs;
 
     void on_awake() override {
         enable_frame_update();
@@ -134,6 +155,23 @@ public:
         {
             scene_object().transform().local_position.z -= speed * delta_time;
         }
+
+        if (keyboard.get_key_down(Key::U))
+        {
+            auto new_child = NodecObject::instanciate<scene_set::SceneObject>("child");
+            //new_child->add_component<TestTriangle>();
+            new_child->add_component<Rotating>();
+            new_child->transform().local_position.z = 5.0f;
+            //new_child->transform().local_position.x = -5.0f + child_refs.size() * 1.0f;
+            scene_object().append_child(new_child);
+            //child_refs.push_back(new_child);
+        }
+
+        if (keyboard.get_key_down(Key::I))
+        {
+
+        }
+
     }
 };
 

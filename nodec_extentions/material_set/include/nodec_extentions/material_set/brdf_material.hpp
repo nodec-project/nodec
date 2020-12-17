@@ -11,8 +11,11 @@ namespace material_set
 {
 
 
-class BRDFMaterial : public nodec_modules::rendering::interfaces::Material
+class BRDFMaterial final: public nodec_modules::rendering::interfaces::Material
 {
+private:
+    static nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Shader> brdf_shader_global;
+
 public:
     struct Properties
     {
@@ -21,7 +24,7 @@ public:
         float metalness = 0.2f;
     } properties;
 
-    BRDFMaterial();
+    BRDFMaterial(nodec_modules::rendering::interfaces::Rendering* target_rendering);
 };
 
 
