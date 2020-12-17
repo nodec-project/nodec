@@ -1,5 +1,5 @@
-#ifndef NODEC_MODULES__INPUT__KEYBOARD_MODULE_HPP_
-#define NODEC_MODULES__INPUT__KEYBOARD_MODULE_HPP_
+#ifndef NODEC_MODULES__INPUT__KEYBOARD__KEYBOARD_MODULE_HPP_
+#define NODEC_MODULES__INPUT__KEYBOARD__KEYBOARD_MODULE_HPP_
 
 #include "interfaces/keyboard.hpp"
 
@@ -10,6 +10,9 @@ namespace nodec_modules
 {
 namespace input
 {
+namespace keyboard
+{
+
 class KeyboardModule : public interfaces::Keyboard
 {
 public:
@@ -34,6 +37,8 @@ private:
     std::queue<Event> event_queue;
     std::queue<unsigned char> text_queue;
 };
+
+}
 }
 }
 

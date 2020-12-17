@@ -63,7 +63,8 @@ int CALLBACK WinMain(
         Window window(game_engine_module->screen_module().size_.x, game_engine_module->screen_module().size_.y,
                       game_engine_module->screen_module().resolution_.x, game_engine_module->screen_module().resolution_.y,
                       L"Nodec Game Engine",
-                      &(game_engine_module->keyboard_module())
+                      &(game_engine_module->keyboard_module()),
+                      &(game_engine_module->mouse_module())
         );
         window.SetTitle(game_engine_module->screen_module().title_);
         // }
@@ -95,6 +96,7 @@ int CALLBACK WinMain(
             game_engine_module->rendering_module().frame_delta_time_ = std::chrono::duration<float>(game_engine_module->engine_time_stopwatch().lap()).count();
 
             game_engine_module->keyboard_module().flush();
+            game_engine_module->mouse_module().flush();
 
             game_engine_module->rendering_module().on_frame_update.invoke(game_engine_module->rendering());
 
@@ -122,6 +124,6 @@ int CALLBACK WinMain(
     MessageBox(nullptr,
                L"Unhandled Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.",
                L"Fatal Error.", MB_OK | MB_ICONEXCLAMATION);
-    nodec::logging::warn("[Main] >>> Unexpected Program Ending.", __FILE__, __LINE__);
+    nodec::logging::WarnStream(__FILE__, __LINE__) << "[Main] >>> Unexpected Program Ending." << std::flush;
     return -1;
 }

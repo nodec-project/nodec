@@ -1,11 +1,13 @@
-#include <nodec_modules/input/keyboard_module.hpp>
+#include <nodec_modules/input/keyboard/keyboard_module.hpp>
 
 namespace nodec_modules
 {
 namespace input
 {
+namespace keyboard
+{
 
-KeyboardModule::KeyboardModule() :
+KeyboardModule::KeyboardModule():
     Keyboard("nodec_modules::input::KeyboardModule")
 {
 
@@ -72,5 +74,6 @@ void KeyboardModule::handle_text_input(unsigned char text)
     text_queue.push(text);
 }
 
+}
 } // namespace input
 }

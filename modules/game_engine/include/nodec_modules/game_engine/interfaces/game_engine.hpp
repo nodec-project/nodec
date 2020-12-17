@@ -1,8 +1,8 @@
 #ifndef NODEC_MODULES__GAME_ENGINE__INTERFACES__GAME_ENGINE_HPP_
 #define NODEC_MODULES__GAME_ENGINE__INTERFACES__GAME_ENGINE_HPP_
 
-#include <nodec_modules/input/interfaces/keyboard.hpp>
-#include <nodec_modules/input/interfaces/mouse.hpp>
+#include <nodec_modules/input/keyboard/interfaces/keyboard.hpp>
+#include <nodec_modules/input/mouse/interfaces/mouse.hpp>
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 #include <nodec_modules/screen/interfaces/screen.hpp>
 
@@ -27,9 +27,9 @@ public:
 public:
     virtual nodec::scene_set::SceneObject& root_scene_object() const noexcept = 0;
 
-    virtual input::interfaces::Keyboard& keyboard() const noexcept = 0;
+    virtual input::keyboard::interfaces::Keyboard& keyboard() const noexcept = 0;
 
-    virtual input::interfaces::Mouse& mouse() const noexcept = 0;
+    virtual input::mouse::interfaces::Mouse& mouse() const noexcept = 0;
 
     virtual rendering::interfaces::Rendering& rendering() const noexcept = 0;
 

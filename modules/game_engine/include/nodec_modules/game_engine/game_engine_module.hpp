@@ -3,8 +3,8 @@
 
 #include "interfaces/game_engine.hpp"
 
-#include <nodec_modules/input/keyboard_module.hpp>
-#include <nodec_modules/input/mouse_module.hpp>
+#include <nodec_modules/input/keyboard/keyboard_module.hpp>
+#include <nodec_modules/input/mouse/mouse_module.hpp>
 #include <nodec_modules/rendering/rendering_module.hpp>
 #include <nodec_modules/screen/screen_module.hpp>
 
@@ -21,10 +21,10 @@ public:
     ~GameEngineModule();
 
 public:
-    input::interfaces::Keyboard&
+    input::keyboard::interfaces::Keyboard&
         keyboard() const noexcept override;
 
-    input::interfaces::Mouse&
+    input::mouse::interfaces::Mouse&
         mouse() const noexcept override;
 
     rendering::interfaces::Rendering&
@@ -39,10 +39,10 @@ public:
     float engine_time() const noexcept override;
 
 public:
-    input::KeyboardModule&
+    input::keyboard::KeyboardModule&
         keyboard_module() const noexcept;
 
-    input::MouseModule&
+    input::mouse::MouseModule&
         mouse_module() const noexcept;
 
     rendering::RenderingModule&
@@ -56,8 +56,8 @@ public:
 
 
 protected:
-    nodec::NodecObject::Holder<input::KeyboardModule> keyboard_module_;
-    nodec::NodecObject::Holder<input::MouseModule> mouse_module_;
+    nodec::NodecObject::Holder<input::keyboard::KeyboardModule> keyboard_module_;
+    nodec::NodecObject::Holder<input::mouse::MouseModule> mouse_module_;
     nodec::NodecObject::Holder<rendering::RenderingModule> rendering_module_;
     nodec::NodecObject::Holder<screen::ScreenModule> screen_module_;
 

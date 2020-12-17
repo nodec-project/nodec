@@ -7,8 +7,8 @@
 #include <nodec_modules/rendering/interfaces/renderer.hpp>
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
-#include <nodec_modules/input/interfaces/keyboard.hpp>
-#include <nodec_modules/input/interfaces/key.hpp>
+#include <nodec_modules/input/keyboard/interfaces/keyboard.hpp>
+#include <nodec_modules/input/keyboard/interfaces/key.hpp>
 
 #include <nodec/scene_set/scene_object.hpp>
 
@@ -20,7 +20,9 @@
 using namespace nodec;
 using namespace nodec_modules::game_engine::interfaces;
 using namespace nodec_modules::rendering::interfaces;
-using namespace nodec_modules::input::interfaces;
+using namespace nodec_modules::input::keyboard::interfaces;
+using namespace nodec_modules::input::mouse::interfaces;
+using namespace nodec_modules::screen::interfaces;
 
 //
 //class BRDFMaterial : public nodec_rendering::Material
@@ -108,9 +110,16 @@ public:
 
     void on_frame_update(Rendering& rendering) override {
         Keyboard& keyboard = get_engine()->keyboard();
+        Mouse& mouse = get_engine()->mouse();
+        Screen& screen = get_engine()->screen();
+        
         float delta_time = rendering.frame_delta_time();
 
         float speed = 0.5f;
+
+        std::ostringstream oss;
+        oss << mouse.position();
+        screen.set_title(oss.str());
 
         if (keyboard.get_key_pressed(Key::LeftShift))
         {
@@ -127,22 +136,23 @@ public:
             scene_object().transform().local_position.x += speed * delta_time;
         }
 
-        if (keyboard.get_key_pressed(Key::Q))
+        if (keyboard.get_key_pressed(Key::W))
         {
             scene_object().transform().local_position.y += speed * delta_time;
         }
 
-        if (keyboard.get_key_pressed(Key::Z))
+        if (keyboard.get_key_pressed(Key::S))
         {
             scene_object().transform().local_position.y -= speed * delta_time;
         }
 
-        if (keyboard.get_key_pressed(Key::W))
+
+        if (mouse.get_button_pressed(MouseButton::Left))
         {
             scene_object().transform().local_position.z += speed * delta_time;
         }
 
-        if (keyboard.get_key_pressed(Key::S))
+        if (mouse.get_button_pressed(MouseButton::Right))
         {
             scene_object().transform().local_position.z -= speed * delta_time;
         }

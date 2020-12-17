@@ -2,8 +2,6 @@
 #include "Window.hpp"
 #include "Utils.hpp"
 
-#include <nodec_modules/input/keyboard_module.hpp>
-
 #include <nodec/unicode.hpp>
 
 #include <string>
@@ -53,14 +51,16 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 
 // END Window Class ===
 
-Window::Window(int width, int height, 
+Window::Window(int width, int height,
                int gfxWidth, int gfxHeight,
-               const wchar_t* name, 
-               nodec_modules::input::KeyboardModule* keyboard_module)
+               const wchar_t* name,
+               nodec_modules::input::keyboard::KeyboardModule* keyboardModule,
+               nodec_modules::input::mouse::MouseModule* mouseModule)
     :
     width(width),
     height(height),
-    keyboard_module(keyboard_module)
+    keyboardModule(keyboardModule),
+    mouseModule(mouseModule)
 {
     RECT wr;
     wr.left = 100;
@@ -98,6 +98,7 @@ Window::Window(int width, int height,
 Window::~Window()
 {
     DestroyWindow(hWnd);
+    nodec::logging::InfoStream(__FILE__, __LINE__) << "[Window] >>> End Window." << std::flush;
 }
 
 void Window::SetTitle(const std::string& title)
@@ -105,8 +106,8 @@ void Window::SetTitle(const std::string& title)
     std::string wideTitleBytes = nodec::unicode::utf8to16(title);
 
     //nodec::logging::DebugStream(__FILE__, __LINE__) << title.size() << ", " << wideTitleBytes.size() << std::flush;
-    
-    std::wstring wideTitle(reinterpret_cast<wchar_t*>(&wideTitleBytes[0]), wideTitleBytes.size()/2);
+
+    std::wstring wideTitle(reinterpret_cast<wchar_t*>(&wideTitleBytes[0]), wideTitleBytes.size() / 2);
 
     if (SetWindowText(hWnd, wideTitle.c_str()) == 0)
     {
@@ -195,42 +196,76 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // filter autorepeat
         if (!(lParam & 0x40000000))
         {
-            keyboard_module->handle_key_press(static_cast<input::interfaces::Key>(wParam));
+            keyboardModule->handle_key_press(static_cast<input::keyboard::interfaces::Key>(wParam));
         }
         break;
 
     case WM_KEYUP:
     case WM_SYSKEYUP:
 
-        keyboard_module->handle_key_release(static_cast<input::interfaces::Key>(wParam));
+        keyboardModule->handle_key_release(static_cast<input::keyboard::interfaces::Key>(wParam));
 
         break;
 
     case WM_CHAR:
 
-        keyboard_module->handle_text_input(static_cast<unsigned char>(wParam));
-        
+        keyboardModule->handle_text_input(static_cast<unsigned char>(wParam));
+
         break;
 
         // END KEYBOARD MESSAGE ---
 
         // --- MOUSE MESSAGE ---
     case WM_MOUSEMOVE:
-        break;
-    case WM_LBUTTONDOWN:
-        //SetTitle("hoge");
-        break;
-    case WM_RBUTTONDOWN:
-        break;
-    case WM_LBUTTONUP:
-        break;
-    case WM_RBUTTONUP:
-        break;
-    case WM_MOUSEWHEEL:
-        //SetTitle("FD");
-        break;
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
 
-        // END MOUSE MESSAGE ---
+        mouseModule->handle_mouse_move({ pt.x, pt.y });
+
+        break;
+    }
+    case WM_LBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+        
+        mouseModule->handle_button_press(input::mouse::interfaces::MouseButton::Left,
+                                         { pt.x, pt.y });
+
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+
+        mouseModule->handle_button_press(input::mouse::interfaces::MouseButton::Right,
+                                         { pt.x, pt.y });
+
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+
+        mouseModule->handle_button_release(input::mouse::interfaces::MouseButton::Left,
+                                         { pt.x, pt.y });
+
+        break;
+    }
+    case WM_RBUTTONUP:
+    {
+        const POINTS pt = MAKEPOINTS(lParam);
+
+        mouseModule->handle_button_release(input::mouse::interfaces::MouseButton::Right,
+                                           { pt.x, pt.y });
+
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+
+        break;
+    }
+    // END MOUSE MESSAGE ---
 
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);

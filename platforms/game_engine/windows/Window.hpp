@@ -2,7 +2,8 @@
 
 #include "Graphics/Graphics.hpp"
 
-#include <nodec_modules/game_engine/game_engine_module.hpp>
+#include <nodec_modules/input/keyboard/keyboard_module.hpp>
+#include <nodec_modules/input/mouse/mouse_module.hpp>
 
 #include <nodec/nodec_exception.hpp>
 #include <nodec/macros.hpp>
@@ -17,7 +18,6 @@ public:
     {
         using NodecException::NodecException;
     public:
-        //const char* type() const noexcept override { return "Window::Exception"; }
         static std::string TranslateErrorCode(HRESULT hr) noexcept;
     };
 
@@ -25,7 +25,6 @@ public:
     {
     public:
         HrException(HRESULT hr, const char* file, size_t line) noexcept;
-        //const char* type() const noexcept override { return "Window::HrException"; }
         HRESULT error_code() const noexcept { return hr; }
     private:
         HRESULT hr;
@@ -38,7 +37,6 @@ public:
             Exception("No Graphics.", file, line)
         {
         }
-        //const char* type() const noexcept override { return "Window::NoGfxException"; }
     };
 
 private:
@@ -64,13 +62,17 @@ private:
 public:
     Window(int width, int height, 
            int gfxWidth, int gfxHeight, 
-           const wchar_t* name, nodec_modules::input::KeyboardModule* keyboard_module);
+           const wchar_t* name, 
+           nodec_modules::input::keyboard::KeyboardModule* keyboardModule,
+           nodec_modules::input::mouse::MouseModule* mouseModule
+           );
 
     ~Window();
 
 public:
     static bool ProcessMessages(int& exit_code) noexcept;
     void SetTitle(const std::string& title);
+
     Graphics& Gfx();
 
 private:
@@ -82,8 +84,8 @@ private:
     int width;
     int height;
     HWND hWnd;
-    nodec_modules::input::KeyboardModule* keyboard_module;
-    nodec_modules::input::MouseModule* mouse_module;
+    nodec_modules::input::keyboard::KeyboardModule* keyboardModule;
+    nodec_modules::input::mouse::MouseModule* mouseModule;
     std::unique_ptr<Graphics> pGfx;
 
     NODEC_DISABLE_COPY(Window);

@@ -1,9 +1,11 @@
-#ifndef NODEC_MODULES__INPUT__KEY_HPP_
-#define NODEC_MODULES__INPUT__KEY_HPP_
+#ifndef NODEC_MODULES__INPUT__KEYBOARD__INTERFACES__KEY_HPP_
+#define NODEC_MODULES__INPUT__KEYBOARD__INTERFACES__KEY_HPP_
 
 namespace nodec_modules
 {
 namespace input
+{
+namespace keyboard
 {
 namespace interfaces
 {
@@ -89,6 +91,7 @@ enum class Key
     //RightAlt = GLFW_KEY_RIGHT_ALT, // 346
 };
 
+}
 }
 }
 }

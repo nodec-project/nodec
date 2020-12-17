@@ -1,5 +1,5 @@
-#ifndef NODEC_MODULES__INPUT__INTERFACES__KEYBOARD_HPP_
-#define NODEC_MODULES__INPUT__INTERFACES__KEYBOARD_HPP_
+#ifndef NODEC_MODULES__INPUT__KEYBOARD__INTERFACES__KEYBOARD_HPP_
+#define NODEC_MODULES__INPUT__KEYBOARD__INTERFACES__KEYBOARD_HPP_
 
 #include "key.hpp"
 
@@ -9,6 +9,8 @@
 namespace nodec_modules
 {
 namespace input
+{
+namespace keyboard
 {
 namespace interfaces
 {
@@ -27,7 +29,7 @@ public:
             Release
         };
 
-        Event(Type type, Key key) :
+        Event(Type type, Key key):
             type(type),
             key(key)
         {
@@ -47,8 +49,10 @@ public:
     nodec::event::Event<const Event&> on_keyboard_event;
 
 };
-}
-}
-}
+
+} // namespace interfaces
+} // namespace keyboard
+} // namespace input
+} // namespace nodec_mosules
 
 #endif

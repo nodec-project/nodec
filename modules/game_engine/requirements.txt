@@ -2,4 +2,5 @@ nodec
 
 nodec_modules/rendering
 nodec_modules/screen
-nodec_modules/input
+nodec_modules/input/keyboard
+nodec_modules/input/mouse
