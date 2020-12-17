@@ -5,19 +5,27 @@
 
 #include <nodec/nodec_object.hpp>
 
+#include <vector>
+
 namespace nodec_modules
 {
 namespace rendering
 {
 namespace interfaces
 {
+
 class Material : public BindableResource
 {
 public:
     Material(nodec::NodecObject::Holder<Shader> shader, Rendering* target_rendering);
 
+
+
 private:
     nodec::NodecObject::Holder<Shader> shader;
+    std::vector<uint8_t> primitivePropertyBytes;
+
+
 };
 }
 }

@@ -24,28 +24,6 @@ using namespace nodec_modules::input::keyboard::interfaces;
 using namespace nodec_modules::input::mouse::interfaces;
 using namespace nodec_modules::screen::interfaces;
 
-//
-//class BRDFMaterial : public nodec_rendering::Material
-//{
-//public:
-//    struct Properties
-//    {
-//        Vector3f diffuse = Vector3f::one;
-//        float alpha = 1.0f;
-//
-//        Vector3f specular = Vector3f(0.5f, 0.5f, 0.5f);
-//        float roughness = 0.5f;
-//
-//        float metalness = 0.0f;
-//        float shininess = 40.0f;
-//
-//    } properties;
-//
-//    BRDFMaterial()
-//        : Material("brdf")
-//    {
-//    }
-//};
 
 class TestTriangle : public Behavior {
 public:
