@@ -1,6 +1,8 @@
 #include "RenderingUtils.hpp"
 
+#include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>
+#include <nodec_modules/rendering/interfaces/material.hpp>
 
 using namespace nodec_modules;
 using namespace nodec;
@@ -136,13 +138,27 @@ void BindMaterial(const nodec_modules::rendering::interfaces::Material* material
                   Graphics* graphics,
                   GraphicsResources* graphicsResources)
 {
+    nodec::logging::DebugStream(__FILE__, __LINE__) << material->primitive_properties_byte_size() << std::flush;
+    nodec::logging::DebugStream(__FILE__, __LINE__) << sizeof(float) << std::flush;
 
+    try
+    {
+        auto constantBuffer = std::make_shared<ConstantBuffer>(graphics, 
+                                                               material->primitive_properties_byte_size(), 
+                                                               material->primitive_properties_entry_ptr());
+        graphicsResources->constantBufferMap.emplace(material->id(), constantBuffer);
+
+    }
+    catch (...)
+    {
+        HandleException("Creating ConstantBuffer");
+    }
 }
 
 void UnbindMaterial(const nodec_modules::rendering::interfaces::Material* material,
                     GraphicsResources* graphicsResources)
 {
-
+    graphicsResources->constantBufferMap.erase(material->id());
 }
 
 } // namespace RenderingUtils

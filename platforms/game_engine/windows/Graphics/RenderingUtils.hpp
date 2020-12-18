@@ -5,7 +5,6 @@
 #include "RenderingHandlers.hpp"
 
 #include <nodec_modules/rendering/rendering_module.hpp>
-#include <nodec_modules/rendering/interfaces/mesh.hpp>
 
 namespace RenderingUtils
 {

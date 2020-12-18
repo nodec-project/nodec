@@ -7,6 +7,7 @@ using namespace nodec_modules;
 void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handlers,
                                       nodec_modules::rendering::RenderingModule& rendering_module)
 {
+    // --- Mesh ---
     auto meshBindingHandler
         = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Mesh*>::make_shared(
             handlers, &RenderingHandlers::HandleMeshBinding
@@ -18,7 +19,9 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
             handlers, &RenderingHandlers::HandleMeshUnbinding
         );
     rendering_module.on_unbind_mesh += meshUnbindingHandler;
+    // End Mesh ---
 
+    // --- Shader ---
     auto shaderBindingHandler
         = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Shader*>::make_shared(
             handlers, &RenderingHandlers::HandleShaderBinding
@@ -30,6 +33,21 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
             handlers, &RenderingHandlers::HandleShaderUnbinding
         );
     rendering_module.on_unbind_shader += shaderUnbindingHandler;
+    // End Shader ---
+
+    // --- Material ---
+    auto materialBindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Material*>::make_shared(
+            handlers, &RenderingHandlers::HandleMaterialBinding
+        );
+    rendering_module.on_bind_material += materialBindingHandler;
+
+    auto materialUnbindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Material*>::make_shared(
+            handlers, &RenderingHandlers::HandleMaterialUnbinding
+        );
+    rendering_module.on_unbind_material += materialUnbindingHandler;
+    // End Material ---
 
     auto rendererRegistingHandler
         = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Renderer>>::make_shared(
@@ -49,7 +67,7 @@ RenderingHandlers::RenderingHandlers(
     
 }
 
-
+// --- Mesh ---
 void RenderingHandlers::HandleMeshBinding(const nodec_modules::rendering::interfaces::Mesh* mesh)
 {
     RenderingUtils::BindMesh(mesh, graphics, graphicsResources);
@@ -59,7 +77,9 @@ void RenderingHandlers::HandleMeshUnbinding(const nodec_modules::rendering::inte
 {
     RenderingUtils::UnbindMesh(mesh, graphicsResources);
 }
+// End Mesh ---
 
+// --- Shader ---
 void RenderingHandlers::HandleShaderBinding(const nodec_modules::rendering::interfaces::Shader* shader)
 {
     RenderingUtils::BindShader(shader, graphics, graphicsResources);
@@ -69,6 +89,19 @@ void RenderingHandlers::HandleShaderUnbinding(const nodec_modules::rendering::in
 {
     RenderingUtils::UnbindShader(shader, graphicsResources);
 }
+// End Shader ---
+
+// --- Material ---
+void RenderingHandlers::HandleMaterialBinding(const nodec_modules::rendering::interfaces::Material* material)
+{
+    RenderingUtils::BindMaterial(material, graphics, graphicsResources);
+}
+
+void RenderingHandlers::HandleMaterialUnbinding(const nodec_modules::rendering::interfaces::Material* material)
+{
+    RenderingUtils::UnbindMaterial(material, graphicsResources);
+}
+// End Material ---
 
 void RenderingHandlers::HandleRendererRegisting(
     nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)

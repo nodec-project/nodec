@@ -4,6 +4,7 @@
 #include "IndexBuffer.hpp"
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
+#include "ConstantBuffer.hpp"
 
 #include <nodec/nodec_object.hpp>
 
@@ -20,6 +21,8 @@ public:
     
     std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<VertexShader>> vertexShaderMap;
     std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<PixelShader>> pixelShaderMap;
+
+    std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<ConstantBuffer>> constantBufferMap;
 
     
 
