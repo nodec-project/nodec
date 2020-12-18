@@ -15,6 +15,8 @@ void BindMesh(
     Graphics* graphics, 
     GraphicsResources* graphicsResources);
 
-
+void UnbindMesh(
+    const nodec_modules::rendering::interfaces::Mesh* mesh,
+    GraphicsResources* graphicsResources);
 
 }

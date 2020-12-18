@@ -13,6 +13,12 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
         );
     rendering_module.on_bind_mesh += meshBindingHandler;
 
+    auto meshUnbindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Mesh*>::make_shared(
+            handlers, &RenderingHandlers::HandleMeshUnbinding
+        );
+    rendering_module.on_unbind_mesh += meshUnbindingHandler;
+
     auto shaderBindingHandler
         = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Shader*>::make_shared(
             handlers, &RenderingHandlers::HandleShaderBinding
@@ -43,6 +49,11 @@ void RenderingHandlers::HandleMeshBinding(const nodec_modules::rendering::interf
     RenderingUtils::BindMesh(mesh, graphics, graphicsResources);
 }
 
+void RenderingHandlers::HandleMeshUnbinding(const nodec_modules::rendering::interfaces::Mesh* mesh)
+{
+    logging::debug("hjhj", __FILE__, __LINE__);
+    RenderingUtils::UnbindMesh(mesh, graphicsResources);
+}
 
 void RenderingHandlers::HandleShaderBinding(const nodec_modules::rendering::interfaces::Shader* shader)
 {

@@ -36,6 +36,7 @@ public:
     ~DeletedLogger()
     {
         logging::DebugStream(__FILE__, __LINE__) << "I '" << scene_object().name << "' was deleted.";
+        //logging::DebugStream(__FILE__, __LINE__) << "is it ok? " << get_engine()->engine_time();
     }
 };
 
@@ -81,6 +82,8 @@ public:
 
                 renderer->mesh = new_mesh;
                 mesh_global = new_mesh;
+
+                logging::debug("created", __FILE__, __LINE__);
             }
 
             rendering.regist_renderer(renderer);
@@ -337,14 +340,14 @@ void nodec_modules::game_engine::interfaces::on_boot(GameEngine& engine)
 
     auto test_triangle_1 = NodecObject::instanciate<nodec::scene_set::SceneObject>("test_triangle_1");
     engine.root_scene_object().append_child(test_triangle_1);
-    test_triangle_1->add_component<TestTriangle>();
+    //test_triangle_1->add_component<TestTriangle>();
     test_triangle_1->add_component<Movable>();
     test_triangle_1->transform().local_position.z = 3.0f;
 
 
     auto test_triangle_2 = NodecObject::instanciate<nodec::scene_set::SceneObject>("test_triangle_2");
     engine.root_scene_object().append_child(test_triangle_2);
-    test_triangle_2->add_component<TestTriangle>();
+    //test_triangle_2->add_component<TestTriangle>();
     test_triangle_2->add_component<Rotating>();
     test_triangle_2->transform().local_position.z = 5.0f;
 }

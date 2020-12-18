@@ -1,5 +1,7 @@
 #include <nodec_modules/rendering/rendering_module.hpp>
 
+#include <nodec/logging.hpp>
+
 namespace nodec_modules
 {
     namespace rendering
@@ -23,6 +25,7 @@ namespace nodec_modules
 
         void RenderingModule::unbind_mesh(const interfaces::Mesh* mesh)
         {
+            nodec::logging::debug("wqwq", __FILE__, __LINE__);
             on_unbind_mesh.invoke(mesh);
         }
 

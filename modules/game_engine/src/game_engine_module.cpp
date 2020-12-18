@@ -38,9 +38,13 @@ GameEngineModule::GameEngineModule()
 
 GameEngineModule::~GameEngineModule()
 {
+
+    //root_scene_object_.reset();
+
     nodec::logging::InfoStream(__FILE__, __LINE__)
         << "[GameEngineModule] >>> Engine now shuting down.\n"
         << "engine_time: " << engine_time() << "[s]" << std::flush;
+
 
 }
 

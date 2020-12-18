@@ -35,4 +35,15 @@ void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* 
         graphicsResources->indexBufferMap.emplace(mesh->id(), indexBuffer);
     }
 }
+
+void UnbindMesh(
+    const nodec_modules::rendering::interfaces::Mesh* mesh,
+    GraphicsResources* graphicsResources)
+{
+    graphicsResources->indexBufferMap.erase(mesh->id());
+    graphicsResources->vertexBufferMap.erase(mesh->id());
+
+    nodec::logging::debug("unbind mesh", __FILE__, __LINE__);
+}
+
 }
