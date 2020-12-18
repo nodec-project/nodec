@@ -24,6 +24,20 @@ using namespace nodec_modules::input::keyboard::interfaces;
 using namespace nodec_modules::input::mouse::interfaces;
 using namespace nodec_modules::screen::interfaces;
 
+class DeletedLogger : public Behavior
+{
+public:
+    using Behavior::Behavior;
+
+    void on_awake() override
+    {
+    }
+
+    ~DeletedLogger()
+    {
+        logging::DebugStream(__FILE__, __LINE__) << "I '" << scene_object().name << "' was deleted.";
+    }
+};
 
 class TestTriangle : public Behavior {
 public:
@@ -101,7 +115,7 @@ class Movable : public Behavior {
 public:
     using Behavior::Behavior;
 
-    std::vector<NodecObject::Reference<scene_set::SceneObject>> child_refs;
+    std::vector<scene_set::SceneObject*> child_ptrs;
 
     void on_awake() override {
         enable_frame_update();
@@ -159,21 +173,32 @@ public:
         if (keyboard.get_key_down(Key::U))
         {
             auto new_child = NodecObject::instanciate<scene_set::SceneObject>("child");
-            //new_child->add_component<TestTriangle>();
+            new_child->add_component<TestTriangle>();
             new_child->add_component<Rotating>();
+            new_child->add_component<DeletedLogger>();
             new_child->transform().local_position.z = 5.0f;
-            //new_child->transform().local_position.x = -5.0f + child_refs.size() * 1.0f;
+            new_child->transform().local_position.x = -5.0f + child_ptrs.size() * 1.0f;
             scene_object().append_child(new_child);
-            //child_refs.push_back(new_child);
+            child_ptrs.push_back(new_child.get());
         }
 
         if (keyboard.get_key_down(Key::I))
         {
+            if (child_ptrs.size() > 0)
+            {
 
+                auto child_ptr = child_ptrs.back();
+                child_ptrs.pop_back();
+
+                auto child = scene_object().remove_child(*child_ptr);
+            }
+            
         }
 
     }
 };
+
+
 
 class TestCube : public Behavior
 {

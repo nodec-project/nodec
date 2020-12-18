@@ -11,7 +11,10 @@
 #include <mutex>
 #include <algorithm>
 #include <unordered_map>
+#include <queue>
+#include <atomic>
 
+//#include <iostream> // For debuging instead of logging.
 
 namespace nodec
 {
@@ -185,11 +188,6 @@ public:
         }
     }
 
-    //void operator() (A... args) override
-    //{
-
-    //}
-
 
 private:
     std::weak_ptr<T> obj;
@@ -203,80 +201,53 @@ class Event
 public:
     using CallbackSharedPtr = std::shared_ptr<detail::Callback<A...>>;
 
-    Event() = default;
+    Event() :
+        is_in_event_loop(false)
+    {
+    }
+
 
     void hook(CallbackSharedPtr cb)
     {
-        safety_lock.lock();
-
-        auto iter = callbacks.find(cb->hash());
-        if (iter == callbacks.end())
+        if (is_in_event_loop.load())
         {
-            // not found same callback
-            callbacks.insert(std::pair<size_t, CallbackSharedPtr>(cb->hash(), cb));
+            std::lock_guard<std::mutex> lock(pending_queue_lock);
+            pending_operations.push({ Operation::Type::Hook, cb });
+            return;
         }
-        //else
-        //{
-        //    std::cout << "FOUND" << std::endl;
-        //}
-        //auto iter = std::find_if(callbacks.begin(), callbacks.end(),
-        //    [cb](CallbackSharedPtr p)
-        //    {
-        //        return *p == *cb;
-        //    });
 
-        //if (iter == callbacks.end())
-        //{
-        //    // not found same callback
-        //    //callbacks.insert(std::pair<const size_t, CallbackSharedPtr>(cb->hash(), cb));
-        //}
-
-        safety_lock.unlock();
+        hook_impl(cb);
     }
 
     void unhook(CallbackSharedPtr cb)
     {
-        safety_lock.lock();
-
-        auto iter = callbacks.find(cb->hash());
-        if (iter != callbacks.end())
+        if (is_in_event_loop.load())
         {
-            // find the callback object.
-            callbacks.erase(iter);
+            std::lock_guard<std::mutex> lock(pending_queue_lock);
+            pending_operations.push({ Operation::Type::Unhook, cb });
+            return;
         }
-        //else
-        //{
-        //    std::cout << "NOT FOUND" << std::endl;
-        //}
 
-        //auto iter = std::find_if(callbacks.begin(), callbacks.end(),
-        //    [cb](CallbackSharedPtr p)
-        //    {
-        //        return *p == *cb;
-        //    });
-
-        //if (iter != callbacks.end())
-        //{
-        //    // find the callback object.
-        //    callbacks.erase(iter);
-        //}
-
-        safety_lock.unlock();
+        unhook_impl(cb);
     }
 
     void unhook_all()
     {
-        safety_lock.lock();
+        if (is_in_event_loop.load())
+        {
+            std::lock_guard<std::mutex> lock(pending_queue_lock);
+            pending_operations.push({ Operation::Type::UnhookAll, CallbackSharedPtr() });
+            return;
+        }
 
-        callbacks.clear();
-
-        safety_lock.unlock();
+        unhook_all_impl();
     }
 
     void invoke(A... args)
     {
-        safety_lock.lock();
+        std::lock_guard<std::mutex> lock(event_lock);
 
+        is_in_event_loop = true;
         for (auto iter = callbacks.begin(); iter != callbacks.end();)
         {
             try
@@ -298,8 +269,27 @@ public:
                 //std::cout << "?" << std::endl;
             }
         }
-        //for(auto iter = callbacks.begin(); iter != callbacks.end(); ++iter)
-        safety_lock.unlock();
+        is_in_event_loop = false;
+
+        while (!pending_operations.empty())
+        {
+            Operation& operation = pending_operations.front();
+
+            switch (operation.type)
+            {
+            case Operation::Type::Hook:
+                hook_impl(operation.cb);
+                break;
+            case Operation::Type::Unhook:
+                unhook_impl(operation.cb);
+                break;
+            case Operation::Type::UnhookAll:
+                unhook_all_impl();
+                break;
+            }
+
+            pending_operations.pop();
+        }
     }
 
     const Event& operator+= (CallbackSharedPtr cb)
@@ -315,9 +305,67 @@ public:
     }
 
 private:
-    std::mutex safety_lock;
-    std::unordered_map<size_t, CallbackSharedPtr> callbacks;
+    struct Operation
+    {
+        enum class Type
+        {
+            Hook,
+            Unhook,
+            UnhookAll
+        };
 
+        Operation(Type type, CallbackSharedPtr cb) :
+            type(type),
+            cb(cb)
+        {
+        }
+
+        Type type;
+        CallbackSharedPtr cb;
+    };
+
+    void hook_impl(CallbackSharedPtr cb)
+    {
+        std::lock_guard<std::mutex> lock(operation_lock);
+
+        auto iter = callbacks.find(cb->hash());
+        if (iter == callbacks.end())
+        {
+            // not found same callback
+            callbacks.insert(std::pair<size_t, CallbackSharedPtr>(cb->hash(), cb));
+        }
+    }
+
+    void unhook_impl(CallbackSharedPtr cb)
+    {
+        std::lock_guard<std::mutex> lock(operation_lock);
+
+        auto iter = callbacks.find(cb->hash());
+        if (iter != callbacks.end())
+        {
+            // find the callback object.
+            callbacks.erase(iter);
+        }
+    }
+
+    void unhook_all_impl()
+    {
+        std::lock_guard<std::mutex> lock(operation_lock);
+
+        callbacks.clear();
+    }
+
+private:
+    std::mutex event_lock;
+    std::mutex operation_lock;
+    std::mutex pending_queue_lock;
+
+    std::atomic<bool> is_in_event_loop;
+    std::unordered_map<size_t, CallbackSharedPtr> callbacks;
+    std::queue<Operation> pending_operations;
+
+
+private:
     NODEC_DISABLE_COPY(Event);
 };
 }

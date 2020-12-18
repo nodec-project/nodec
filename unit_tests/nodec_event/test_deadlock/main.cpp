@@ -1,6 +1,8 @@
 #include <nodec/event.hpp>
 #include <nodec/logging.hpp>
 
+#include <iostream>
+
 using namespace nodec;
 
 class Updater
@@ -11,8 +13,7 @@ public:
 
 void sub_func(Updater& updater)
 {
-
-    logging::info("hey", __FILE__, __LINE__);
+    std::cout << "hey" << std::endl;
 }
 
 
@@ -20,30 +21,32 @@ void func(Updater& updater)
 {
     try
     {
-        logging::info("hello", __FILE__, __LINE__);
+        std::cout << "hello" << std::endl;
 
         auto callback = event::StaticCallback<Updater&>::make_shared(&sub_func);
 
         updater.on_update += callback; // DEADLOCK!!
+        //updater.on_update.unhook_all(); // CRASH!
     }
     catch (const NodecException& e)
     {
-        logging::ErrorStream(__FILE__, __LINE__) << e.what() << std::flush;
+        logging::ErrorStream(__FILE__, __LINE__) << e.what() << std::endl;
     }
     catch (const std::exception& e)
     {
-        logging::ErrorStream(__FILE__, __LINE__) << e.what() << std::flush;
+        logging::ErrorStream(__FILE__, __LINE__) << e.what() << std::endl;
     }
 
 }
 
 int main()
 {
-    logging::record_handlers += event::StaticCallback<const logging::LogRecord&>::make_shared(&logging::record_to_stdout_handler);
-    logging::info("log start", __FILE__, __LINE__);
+    std::cout << "log start" << std::endl;
 
     try
     {
+
+        std::cout << "--- 1 ---" << std::endl;
         Updater updater;
 
         auto callback = event::StaticCallback<Updater&>::make_shared(&func);
@@ -51,14 +54,18 @@ int main()
         updater.on_update += callback;
 
         updater.on_update.invoke(updater);
+
+        std::cout << "--- 2 ---" << std::endl;
+        updater.on_update.invoke(updater);
     }
     catch (const NodecException& e)
     {
-        logging::ErrorStream(__FILE__, __LINE__) << e.what() << std::flush;
+
+        std::cout << e.what() << std::endl;
     }
     catch (const std::exception& e)
     {
-        logging::ErrorStream(__FILE__, __LINE__) << e.what() << std::flush;
+        std::cout << e.what() << std::endl;
     }
 
 
