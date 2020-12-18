@@ -10,6 +10,8 @@
 #include <nodec_modules/input/keyboard/interfaces/keyboard.hpp>
 #include <nodec_modules/input/keyboard/interfaces/key.hpp>
 
+#include <nodec_extentions/material_set/brdf_material.hpp>
+
 #include <nodec/scene_set/scene_object.hpp>
 
 #include <nodec/event.hpp>
@@ -23,6 +25,7 @@ using namespace nodec_modules::rendering::interfaces;
 using namespace nodec_modules::input::keyboard::interfaces;
 using namespace nodec_modules::input::mouse::interfaces;
 using namespace nodec_modules::screen::interfaces;
+using namespace nodec_extentions::material_set;
 
 class DeletedLogger : public Behavior
 {
@@ -42,16 +45,16 @@ public:
 
 class TestTriangle : public Behavior {
 public:
-    using Behavior::Behavior;
-
     static NodecObject::Reference<Mesh> mesh_global;
+
+public:
+    using Behavior::Behavior;
 
     void on_awake() override {
         enable_frame_update();
     }
     void on_frame_start(Rendering& rendering) override {
         auto renderer_ = scene_object().add_component<Renderer>();
-
         if (auto renderer = renderer_.lock()) {
 
             if (auto mesh = mesh_global.lock())
@@ -85,6 +88,10 @@ public:
 
                 logging::debug("created", __FILE__, __LINE__);
             }
+
+            auto material = NodecObject::instanciate<BRDFMaterial>(&rendering);
+            rendering.bind_material(material.get());
+            renderer->material = material;
 
             rendering.regist_renderer(renderer);
         }

@@ -2,6 +2,8 @@
 
 #include "VertexBuffer.hpp"
 #include "IndexBuffer.hpp"
+#include "VertexShader.hpp"
+#include "PixelShader.hpp"
 
 #include <nodec/nodec_object.hpp>
 
@@ -15,6 +17,11 @@ class GraphicsResources
 public:
     std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<VertexBuffer>> vertexBufferMap;
     std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<IndexBuffer>> indexBufferMap;
+    
+    std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<VertexShader>> vertexShaderMap;
+    std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<PixelShader>> pixelShaderMap;
+
+    
 
 public:
     GraphicsResources();

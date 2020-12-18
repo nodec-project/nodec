@@ -15,6 +15,7 @@ public:
 public:
     nodec::NodecObject::Holder<Mesh> mesh;
     nodec::NodecObject::Holder<Material> material;
+
 };
 };
 }

@@ -1,6 +1,8 @@
 #include "GraphicsRenderer.hpp"
 
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
+#include <nodec_modules/rendering/interfaces/shader.hpp>
+#include <nodec_modules/rendering/interfaces/material.hpp>
 #include <nodec/scene_set/scene_object.hpp>
 
 #include "VertexShader.hpp"
@@ -20,22 +22,6 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
     graphics->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 
-    const D3D11_INPUT_ELEMENT_DESC ied[] ={
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0                           , D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-    };
-
-    VertexShader vertexShader(graphics, "resources/shaders/brdf/vertex.cso", ied, std::size(ied));
-    PixelShader pixelShader(graphics, "resources/shaders/brdf/pixel.cso");
-
-    if (vertexShader.Fail())
-    {
-        //logging::debug("ffgh", __FILE__, __LINE__);
-    }
-
-    vertexShader.Bind(graphics);
-    pixelShader.Bind(graphics);
-
     modelConstantBuffer.BindVS(graphics, 0);
 
 
@@ -44,13 +30,15 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
         if (auto renderer = iter->second.lock())
         {
             auto mesh = renderer->mesh;
+            auto material = renderer->material;
 
-            if (!mesh)
+            if (!mesh || !material)
             {
                 ++iter;
                 continue;
             }
 
+            // Model ConstantBuffer
             {
                 Vector3f position, scale;
                 Quaternionf rotation;
@@ -93,8 +81,9 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), matrixMInverse);
 
                 modelConstantBuffer.Update(graphics, &modelConstants);
-            }
-
+            } // Model ConstantBuffer
+            
+            BindShader(&material->shader(), graphics, resources);
             BindMesh(mesh.get(), graphics, resources);
 
 
@@ -111,8 +100,8 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
     }
 }
 
-void GraphicsRenderer::BindMesh(
-    nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* graphics, GraphicsResources* resources)
+void GraphicsRenderer::BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, 
+                                Graphics* graphics, GraphicsResources* resources)
 {
     {
         auto iter = resources->vertexBufferMap.find(mesh->id());
@@ -128,5 +117,23 @@ void GraphicsRenderer::BindMesh(
             iter->second->Bind(graphics);
         }
     }
+}
 
+void GraphicsRenderer::BindShader(const nodec_modules::rendering::interfaces::Shader *shader,
+                Graphics* graphics, GraphicsResources* resources)
+{
+    {
+        auto iter = resources->vertexShaderMap.find(shader->id());
+        if (iter != resources->vertexShaderMap.end())
+        {
+            iter->second->Bind(graphics);
+        }
+    }
+    {
+        auto iter = resources->pixelShaderMap.find(shader->id());
+        if (iter != resources->pixelShaderMap.end())
+        {
+            iter->second->Bind(graphics);
+        }
+    }
 }

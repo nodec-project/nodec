@@ -22,11 +22,15 @@ public:
              void* primitive_properties_entry_ptr,
              size_t primitive_properties_byte_size);
 
+    ~Material();
+
     void* primitive_properties_entry_ptr() const noexcept;
     size_t primitive_properties_byte_size() const noexcept;
 
+    const Shader& shader() const noexcept;
+
 protected:
-    nodec::NodecObject::Holder<Shader> shader;
+    nodec::NodecObject::Holder<Shader> shader_;
 
 private:
     void* primitive_properties_entry_ptr_;

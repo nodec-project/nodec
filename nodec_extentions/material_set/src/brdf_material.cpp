@@ -8,19 +8,21 @@ namespace nodec_extentions
 namespace material_set
 {
 
+nodec::NodecObject::Reference<Shader> BRDFMaterial::brdf_shader_global;
+
 BRDFMaterial::BRDFMaterial(Rendering* target_rendering) :
     Material(target_rendering, NodecObject::Holder<Shader>(), &properties, sizeof(Properties))
 {
     if (auto brdf_shader = brdf_shader_global.lock())
     {
-        shader = brdf_shader;
+        shader_ = brdf_shader;
     }
     else
     {
         auto new_shader = NodecObject::instanciate<Shader>("brdf", target_rendering);
         brdf_shader_global = new_shader;
-        shader = new_shader;
-        target_rendering->bind_shader(shader.get());
+        shader_ = new_shader;
+        target_rendering->bind_shader(shader_.get());
     }
 }
 

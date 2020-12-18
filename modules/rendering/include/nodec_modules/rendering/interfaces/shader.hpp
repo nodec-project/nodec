@@ -17,9 +17,11 @@ public:
     Shader(const std::string& shader_name, Rendering* target_rendering);
     ~Shader();
 
+    const char* shader_name() const noexcept;
+
 
 private:
-    std::string shader_name;
+    std::string shader_name_;
 };
 
 }

@@ -20,6 +20,10 @@ public:
     void HandleMeshUnbinding(const nodec_modules::rendering::interfaces::Mesh* mesh);
 
     void HandleShaderBinding(const nodec_modules::rendering::interfaces::Shader* shader);
+    void HandleShaderUnbinding(const nodec_modules::rendering::interfaces::Shader* shader);
+
+    void HandleMaterialBinding(const nodec_modules::rendering::interfaces::Material* material);
+    void HandleMaterialUnbinding(const nodec_modules::rendering::interfaces::Material* material);
 
     void HandleRendererRegisting(
         nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer

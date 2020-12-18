@@ -19,7 +19,6 @@ Mesh::Mesh(Rendering* target_rendering) :
 Mesh::~Mesh()
 {
     target_rendering->unbind_mesh(this);
-    nodec::logging::debug("sas", __FILE__, __LINE__);
 }
 
 

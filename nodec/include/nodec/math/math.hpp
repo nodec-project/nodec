@@ -21,10 +21,10 @@ template<class T>
 constexpr T pi = static_cast<T>(3.14159265358979323846);
 
 template<class T>
-constexpr T deg2rad = pi<T> / 180.0;
+constexpr T deg2rad = pi<T> / static_cast<T>(180.0);
 
 template<class T>
-constexpr T rad2deg = 180.0 / pi<T>;
+constexpr T rad2deg = static_cast<T>(180.0) / pi<T>;
 
 
 template<typename T>

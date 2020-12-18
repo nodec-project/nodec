@@ -30,7 +30,11 @@ public:
         renderers;
 
 private:
-    void BindMesh(nodec_modules::rendering::interfaces::Mesh* mesh, Graphics* graphics, GraphicsResources* resources);
+    void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, 
+                  Graphics* graphics, GraphicsResources* resources);
+
+    void BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
+                    Graphics* graphics, GraphicsResources* resources);
 
 private:
     ModelConstants modelConstants;
