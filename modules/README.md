@@ -9,5 +9,4 @@
 ## independent
 * apps
 * nodec_extentions
-* 3rd_party/modules
-* 3rd_party/libs
+* 3rd_party

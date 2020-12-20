@@ -6,8 +6,7 @@
 
 ## independent
 * apps
-* 3rd_party/libs
-* 3rd_party/modules
+* 3rd_party
 * platforms
 * nodec_extentions
 * modules

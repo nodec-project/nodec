@@ -3,8 +3,7 @@
 ## using
 * modules
 * nodec
-* 3rd_party/modules
-* 3rd_party/libs
+* 3rd_party
 * nodec_extentions
 
 ## be implemented by
