@@ -138,15 +138,15 @@ void BindMaterial(const nodec_modules::rendering::interfaces::Material* material
                   Graphics* graphics,
                   GraphicsResources* graphicsResources)
 {
-    nodec::logging::DebugStream(__FILE__, __LINE__) << material->primitive_properties_byte_size() << std::flush;
-    nodec::logging::DebugStream(__FILE__, __LINE__) << sizeof(float) << std::flush;
+    //nodec::logging::DebugStream(__FILE__, __LINE__) << material->primitive_properties_byte_size() << std::flush;
+    //nodec::logging::DebugStream(__FILE__, __LINE__) << sizeof(float) << std::flush;
 
     try
     {
-        auto constantBuffer = std::make_shared<ConstantBuffer>(graphics, 
+        /*auto constantBuffer = std::make_shared<ConstantBuffer>(graphics, 
                                                                material->primitive_properties_byte_size(), 
                                                                material->primitive_properties_entry_ptr());
-        graphicsResources->constantBufferMap.emplace(material->id(), constantBuffer);
+        graphicsResources->constantBufferMap.emplace(material->id(), constantBuffer);*/
 
     }
     catch (...)

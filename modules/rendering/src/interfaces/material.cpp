@@ -9,13 +9,9 @@ namespace interfaces
 {
 
 Material::Material(Rendering* target_rendering,
-                   nodec::NodecObject::Holder<Shader> shader,
-                   void* primitive_properties_entry_ptr,
-                   size_t primitive_properties_byte_size) :
+                   nodec::NodecObject::Holder<Shader> shader) :
     BindableResource(target_rendering, "Material"),
-    shader_(shader),
-    primitive_properties_entry_ptr_(primitive_properties_entry_ptr),
-    primitive_properties_byte_size_(primitive_properties_byte_size)
+    shader_(shader)
 {
 }
 
@@ -24,20 +20,69 @@ Material::~Material()
     target_rendering->unbind_material(this);
 }
 
-const Shader& Material::shader() const noexcept
+const Shader& 
+Material::shader() const noexcept
 {
     return *shader_;
 }
 
-void* Material::primitive_properties_entry_ptr() const noexcept
+
+const std::map<std::string, float>&
+Material::float_properties()
 {
-    return primitive_properties_entry_ptr_;
+    return float_properties_;
 }
-size_t Material::primitive_properties_byte_size() const noexcept
+bool Material::set_float(const std::string& name, const float& value)
 {
-    return primitive_properties_byte_size_;
+    return set_value_generic(float_properties_, name, value);
 }
 
+bool Material::get_float(const std::string& name, float& out)
+{
+    return get_value_generic(float_properties_, name, out);
+}
+
+
+const std::map<std::string, nodec::Vector3f>& 
+Material::vector3_properties()
+{
+    return vector3_properties_;
+}
+bool Material::set_vector3(const std::string& name, const nodec::Vector3f& value)
+{
+    return set_value_generic(vector3_properties_, name, value);
+}
+bool Material::get_vector3(const std::string& name, nodec::Vector3f& out)
+{
+    return get_value_generic(vector3_properties_, name, out);
+}
+
+template<typename T>
+bool Material::get_value_generic(std::map<std::string, T>& properties, const std::string& name, T& out)
+{
+    auto iter = properties.find(name);
+    if (iter == properties.end())
+    {
+        return false;
+    }
+
+    out = iter->second;
+    return true;
+}
+
+
+template<typename T>
+bool Material::set_value_generic(std::map<std::string, T>& properties, const std::string& name, const T& value)
+{
+    auto iter = properties.find(name);
+    if (iter == properties.end())
+    {
+        return false;
+    }
+
+    iter->second = value;
+    return true;
+}
 }
 }
 }

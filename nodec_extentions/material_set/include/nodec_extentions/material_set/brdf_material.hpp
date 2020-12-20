@@ -11,19 +11,19 @@ namespace material_set
 {
 
 
+/**
+* Properties:
+*   metalness float    
+*   roughness float    
+*   albedo    Vector3f 
+* 
+*/
 class BRDFMaterial final: public nodec_modules::rendering::interfaces::Material
 {
 private:
     static nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Shader> brdf_shader_global;
 
 public:
-    struct Properties
-    {
-        nodec::Vector3f albedo = nodec::Vector3f::ones;
-        float roughness = 0.5f;
-        float metalness = 0.2f;
-    } properties;
-
     BRDFMaterial(nodec_modules::rendering::interfaces::Rendering* target_rendering);
 };
 
