@@ -1,3 +1,6 @@
 [submodule "3rd_party/libs/cereal"]
-	path = 3rd_party/libs/cereal
+	path = 3rd_party/cereal/cereal
 	url = https://github.com/USCiLab/cereal.git
+[submodule "3rd_party/assimp/assimp"]
+	path = 3rd_party/assimp/assimp
+	url = https://github.com/assimp/assimp.git
