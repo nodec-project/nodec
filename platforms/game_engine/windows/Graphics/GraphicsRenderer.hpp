@@ -36,6 +36,8 @@ private:
     void BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
                     Graphics* graphics, GraphicsResources* resources);
 
+    
+
 private:
     ModelConstants modelConstants;
     ConstantBuffer modelConstantBuffer;

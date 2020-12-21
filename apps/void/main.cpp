@@ -50,11 +50,16 @@ public:
 public:
     using Behavior::Behavior;
 
+private:
+    NodecObject::Reference<Renderer> renderer_;
+
+public:
     void on_awake() override {
         enable_frame_update();
     }
     void on_frame_start(Rendering& rendering) override {
-        auto renderer_ = scene_object().add_component<Renderer>();
+        renderer_ = scene_object().add_component<Renderer>();
+
         if (auto renderer = renderer_.lock()) {
 
             if (auto mesh = mesh_global.lock())
@@ -93,11 +98,32 @@ public:
             rendering.bind_material(material.get());
             renderer->material = material;
 
+            renderer->material->set_vector4("albedo", Vector4f(1.0f, 0.0f, 0.0f, 1.0f));
+
             rendering.regist_renderer(renderer);
+
+            renderer_ = renderer;
         }
     }
     void on_frame_update(Rendering& rendering) override {
 
+        Screen& screen = get_engine()->screen();
+
+        if (auto renderer = renderer_.lock())
+        {
+            auto engine_time = get_engine()->engine_time();
+
+            auto metalness = (1 + std::sinf(engine_time))/2;
+            auto roughness = (1 + std::cosf(engine_time))/2;
+            renderer->material->set_float("metalness", metalness);
+            renderer->material->set_float("roughness", roughness);
+
+            std::ostringstream oss;
+            oss << metalness << ", " << roughness;
+
+            nodec::logging::DebugStream(__FILE__, __LINE__) << oss.str();
+            screen.set_title(oss.str());
+        }
     }
 };
 
@@ -140,9 +166,9 @@ public:
 
         float speed = 0.5f;
 
-        std::ostringstream oss;
-        oss << mouse.position();
-        screen.set_title(oss.str());
+        //std::ostringstream oss;
+        //oss << mouse.position();
+        //screen.set_title(oss.str());
 
         if (keyboard.get_key_pressed(Key::LeftShift))
         {

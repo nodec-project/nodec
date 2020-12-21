@@ -28,7 +28,7 @@ Material::shader() const noexcept
 
 
 const std::map<std::string, float>&
-Material::float_properties()
+Material::float_properties() const
 {
     return float_properties_;
 }
@@ -43,18 +43,18 @@ bool Material::get_float(const std::string& name, float& out)
 }
 
 
-const std::map<std::string, nodec::Vector3f>& 
-Material::vector3_properties()
+const std::map<std::string, nodec::Vector4f>& 
+Material::vector4_properties() const
 {
-    return vector3_properties_;
+    return vector4_properties_;
 }
-bool Material::set_vector3(const std::string& name, const nodec::Vector3f& value)
+bool Material::set_vector4(const std::string& name, const nodec::Vector4f& value)
 {
-    return set_value_generic(vector3_properties_, name, value);
+    return set_value_generic(vector4_properties_, name, value);
 }
-bool Material::get_vector3(const std::string& name, nodec::Vector3f& out)
+bool Material::get_vector4(const std::string& name, nodec::Vector4f& out)
 {
-    return get_value_generic(vector3_properties_, name, out);
+    return get_value_generic(vector4_properties_, name, out);
 }
 
 template<typename T>
@@ -83,6 +83,7 @@ bool Material::set_value_generic(std::map<std::string, T>& properties, const std
     iter->second = value;
     return true;
 }
-}
-}
-}
+
+} // namespace interfaces
+} // namespace rendering
+} // namespace nodec_modules

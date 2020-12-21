@@ -2,9 +2,9 @@
 
 struct MaterialProperties
 {
-    float3 albedo;
-    float roughness;
     float metalness;
+    float roughness;
+    float4 albedo;
 };
 
 cbuffer cbMaterialProperties
@@ -34,10 +34,10 @@ float4 PSMain(V2P input) : SV_Target
     BRDFSurface surface;
     
     surface.normal = input.worldNormal;
-    surface.albedo = float3(0.1f, 1.0f, 0.1f);
     
-    surface.metalness = 1.0;
-    surface.roughness = 0.2;
+    surface.albedo = materialProperties.albedo.xyz;
+    surface.metalness = materialProperties.metalness;
+    surface.roughness = materialProperties.roughness;
     
     //const float ambient
     

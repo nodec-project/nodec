@@ -43,10 +43,10 @@ using Vector4i = Vector4<int>;
 using Vector4d = Vector4<double>;
 
 template <typename T>
-const Vector4<T> Vector4<T>::zero(0, 0, 0);
+const Vector4<T> Vector4<T>::zero(0, 0, 0, 0);
 
 template <typename T>
-const Vector4<T> Vector4<T>::ones(1, 1, 1);
+const Vector4<T> Vector4<T>::ones(1, 1, 1, 1);
 
 template <typename T>
 inline Vector4<T>::Vector4() : x(0), y(0), z(0), w(0) {}
@@ -76,7 +76,7 @@ void Vector4<T>::set(T _x, T _y, T _z, T _w)
 template <typename T>
 inline Vector4<T> operator-(const Vector4<T>& right)
 {
-    return Vector3<T>(-right.x, -right.y, -right.z, -right.w);
+    return Vector4<T>(-right.x, -right.y, -right.z, -right.w);
 }
 
 template <typename T>

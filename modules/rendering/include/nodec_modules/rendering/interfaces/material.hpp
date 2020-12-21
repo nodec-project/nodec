@@ -4,7 +4,7 @@
 #include "shader.hpp"
 
 #include <nodec/nodec_object.hpp>
-#include <nodec/vector3.hpp>
+#include <nodec/vector4.hpp>
 
 #include <map>
 
@@ -26,20 +26,20 @@ public:
 public:
     const Shader& shader() const noexcept;
 
-    const std::map<std::string, float>& float_properties();
+    const std::map<std::string, float>& float_properties() const;
     bool set_float(const std::string& name, const float& value);
     bool get_float(const std::string& name, float& out);
 
-    const std::map<std::string, nodec::Vector3f>& vector3_properties();
-    bool set_vector3(const std::string& name, const nodec::Vector3f& value);
-    bool get_vector3(const std::string& name, nodec::Vector3f& out);
+    const std::map<std::string, nodec::Vector4f>& vector4_properties() const;
+    bool set_vector4(const std::string& name, const nodec::Vector4f& value);
+    bool get_vector4(const std::string& name, nodec::Vector4f& out);
 
 
 protected:
     nodec::NodecObject::Holder<Shader> shader_;
 
     std::map<std::string, float> float_properties_;
-    std::map<std::string, nodec::Vector3f> vector3_properties_;
+    std::map<std::string, nodec::Vector4f> vector4_properties_;
 
 private:
     template<typename T>

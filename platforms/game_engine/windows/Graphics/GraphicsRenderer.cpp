@@ -1,4 +1,5 @@
 #include "GraphicsRenderer.hpp"
+#include "RenderingUtils.hpp"
 
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>
@@ -69,7 +70,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                                                                  100.0f);
                 // DirectX Math using row-major representation
                 // HLSL using column-major representation
-                auto matrixMVP =  matrixM * matrixP;
+                auto matrixMVP = matrixM * matrixP;
                 //auto matrixMVP = matrixM * matrixV * matrixP;
 
                 //DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), DirectX::XMMatrixTranspose(matrixM));
@@ -83,8 +84,24 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 modelConstantBuffer.Update(graphics, &modelConstants);
             } // Model ConstantBuffer
             
+            // Material Properties
+            {
+                auto iter = resources->constantBufferMap.find(material->id());
+                if (iter != resources->constantBufferMap.end())
+                {
+                    auto constantBuffer = iter->second;
+                    constantBuffer->BindPS(graphics, 0);
+
+                    std::vector<uint8_t> cbuffer;
+                    RenderingUtils::CreateMaterialCBuffer(material.get(), cbuffer);
+                    constantBuffer->Update(graphics, cbuffer.data());
+                }
+            }
+
+
             BindShader(&material->shader(), graphics, resources);
             BindMesh(mesh.get(), graphics, resources);
+
 
 
             graphics->DrawIndexed(mesh->triangles.size());
@@ -100,7 +117,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
     }
 }
 
-void GraphicsRenderer::BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, 
+void GraphicsRenderer::BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh,
                                 Graphics* graphics, GraphicsResources* resources)
 {
     {
@@ -119,8 +136,8 @@ void GraphicsRenderer::BindMesh(const nodec_modules::rendering::interfaces::Mesh
     }
 }
 
-void GraphicsRenderer::BindShader(const nodec_modules::rendering::interfaces::Shader *shader,
-                Graphics* graphics, GraphicsResources* resources)
+void GraphicsRenderer::BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
+                                  Graphics* graphics, GraphicsResources* resources)
 {
     {
         auto iter = resources->vertexShaderMap.find(shader->id());

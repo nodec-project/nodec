@@ -91,7 +91,6 @@ void BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
                 Graphics* graphics,
                 GraphicsResources* graphicsResources)
 {
-    nodec::logging::debug("stst", __FILE__, __LINE__);
     std::string vertexShaderPath = "resources/shaders/";
     vertexShaderPath += shader->shader_name();
     vertexShaderPath += "/vertex.cso";
@@ -138,16 +137,14 @@ void BindMaterial(const nodec_modules::rendering::interfaces::Material* material
                   Graphics* graphics,
                   GraphicsResources* graphicsResources)
 {
-    //nodec::logging::DebugStream(__FILE__, __LINE__) << material->primitive_properties_byte_size() << std::flush;
-    //nodec::logging::DebugStream(__FILE__, __LINE__) << sizeof(float) << std::flush;
-
     try
     {
-        /*auto constantBuffer = std::make_shared<ConstantBuffer>(graphics, 
-                                                               material->primitive_properties_byte_size(), 
-                                                               material->primitive_properties_entry_ptr());
-        graphicsResources->constantBufferMap.emplace(material->id(), constantBuffer);*/
-
+        std::vector<uint8_t> cbuffer;
+        CreateMaterialCBuffer(material, cbuffer);
+        auto constantBuffer = std::make_shared<ConstantBuffer>(graphics,
+                                                               cbuffer.size(),
+                                                               cbuffer.data());
+        graphicsResources->constantBufferMap.emplace(material->id(), constantBuffer);
     }
     catch (...)
     {
@@ -160,5 +157,40 @@ void UnbindMaterial(const nodec_modules::rendering::interfaces::Material* materi
 {
     graphicsResources->constantBufferMap.erase(material->id());
 }
+
+template<typename T>
+static void AppendPropertiesByteSequence(const std::map<std::string, T>& properties, std::vector<uint8_t>& cbuffer)
+{
+    for (auto& pair : properties)
+    {
+        // <https://stackoverrun.com/ja/q/3787586>
+        const uint8_t* p = reinterpret_cast<const uint8_t*>(&pair.second);
+        for (size_t i = 0; i < sizeof(T); ++i)
+        {
+            cbuffer.push_back(p[i]);
+        }
+
+        constexpr size_t alignment_size = 16;
+        size_t aligned = (cbuffer.size() + (alignment_size - 1)) & ~(alignment_size - 1);
+
+        // add padding so that size will be a multiple of 16.
+        while (cbuffer.size() < aligned)
+        {
+            cbuffer.push_back(0x00);
+        }
+    }
+}
+
+void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material* material,
+                                  std::vector<uint8_t>& cbuffer)
+{
+    AppendPropertiesByteSequence(material->float_properties(), cbuffer);
+    AppendPropertiesByteSequence(material->vector4_properties(), cbuffer);
+    
+    
+
+    //nodec::logging::DebugStream(__FILE__, __LINE__) << cbuffer.size() << std::flush;
+}
+
 
 } // namespace RenderingUtils
