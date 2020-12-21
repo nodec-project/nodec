@@ -111,18 +111,18 @@ public:
 
         if (auto renderer = renderer_.lock())
         {
-            auto engine_time = get_engine()->engine_time();
+            //auto engine_time = get_engine()->engine_time();
 
-            auto metalness = (1 + std::sinf(engine_time))/2;
-            auto roughness = (1 + std::cosf(engine_time))/2;
-            renderer->material->set_float("metalness", metalness);
-            renderer->material->set_float("roughness", roughness);
+            //auto metalness = (1 + std::sinf(engine_time))/2;
+            //auto roughness = (1 + std::cosf(engine_time))/2;
+            //renderer->material->set_float("metalness", metalness);
+            //renderer->material->set_float("roughness", roughness);
 
-            std::ostringstream oss;
-            oss << metalness << ", " << roughness;
+            //std::ostringstream oss;
+            //oss << metalness << ", " << roughness;
 
-            nodec::logging::DebugStream(__FILE__, __LINE__) << oss.str();
-            screen.set_title(oss.str());
+            //nodec::logging::DebugStream(__FILE__, __LINE__) << oss.str();
+            //screen.set_title(oss.str());
         }
     }
 };
