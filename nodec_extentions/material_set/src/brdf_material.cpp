@@ -25,8 +25,8 @@ BRDFMaterial::BRDFMaterial(Rendering* target_rendering) :
         target_rendering->bind_shader(shader_.get());
     }
 
-    float_properties_.emplace("metalness", 0.2f);
-    float_properties_.emplace("roughness", 0.5f);
+    float_properties_.emplace("metallic", 1.0f);
+    float_properties_.emplace("roughness", 1.0f);
     vector4_properties_.emplace("albedo", nodec::Vector4f::ones);
 }
 

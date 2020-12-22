@@ -170,14 +170,6 @@ static void AppendPropertiesByteSequence(const std::map<std::string, T>& propert
             cbuffer.push_back(p[i]);
         }
 
-        constexpr size_t alignment_size = 16;
-        size_t aligned = (cbuffer.size() + (alignment_size - 1)) & ~(alignment_size - 1);
-
-        // add padding so that size will be a multiple of 16.
-        while (cbuffer.size() < aligned)
-        {
-            cbuffer.push_back(0x00);
-        }
     }
 }
 
@@ -187,7 +179,15 @@ void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material*
     AppendPropertiesByteSequence(material->float_properties(), cbuffer);
     AppendPropertiesByteSequence(material->vector4_properties(), cbuffer);
     
-    
+
+    constexpr size_t alignment_size = 16;
+    size_t aligned = (cbuffer.size() + (alignment_size - 1)) & ~(alignment_size - 1);
+
+    // add padding so that size will be a multiple of 16.
+    while (cbuffer.size() < aligned)
+    {
+        cbuffer.push_back(0x00);
+    }
 
     //nodec::logging::DebugStream(__FILE__, __LINE__) << cbuffer.size() << std::flush;
 }

@@ -56,7 +56,13 @@ inline T norm(const Vector4<T>& v)
     return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z + v.w * v.w);
 }
 
+template<typename T>
+inline T normalized(const T& v)
+{
+    return v / norm(v);
 }
-}
+
+} // namespace math
+} // namespace nodec
 
 #endif

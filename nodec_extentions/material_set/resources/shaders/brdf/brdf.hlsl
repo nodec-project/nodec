@@ -33,7 +33,7 @@ struct BRDFSurface
     float3 normal;
     float3 albedo;
     float roughness;
-    float metalness;
+    float metallic;
 };
 
 // Trowbridge-Reitz GGX Distribution
@@ -158,7 +158,7 @@ float3 BRDF_2(BRDFSurface surface, float3 lightDir, float3 viewDir, float3 light
 {
     const float3 normal = surface.normal;
     const float3 albedo = surface.albedo;
-    const float metalness = surface.metalness;
+    const float metallic = surface.metallic;
     const float roughness = surface.roughness;
     
     float3 halfDir = normalize(lightDir + viewDir);
@@ -166,8 +166,8 @@ float3 BRDF_2(BRDFSurface surface, float3 lightDir, float3 viewDir, float3 light
     float ndotl = max(0, dot(normal, lightDir));
     float ndoth = max(0, dot(normal, halfDir));
     half ldoth = max(0, dot(lightDir, halfDir));
-    half reflectivity = lerp(0.04f.xxx, 1, metalness);
-    half3 f0 = lerp(0.04f.xxx, albedo, metalness);
+    half reflectivity = lerp(0.04f.xxx, 1, metallic);
+    half3 f0 = lerp(0.04f.xxx, albedo, metallic);
     
     // Diffuse
     half diffuseTerm = Fd_Burley(ndotv, ndotl, ldoth, roughness) * ndotl;
@@ -204,8 +204,8 @@ float3 BRDF(BRDFSurface surface, float3 lightInSolidAngle, float3 viewDir)
     //// surface
     const float3 albedo = surface.albedo;
     const float roughness = surface.roughness;
-    const float metalness = surface.metalness;
-    const float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), albedo, metalness);
+    const float metallic = surface.metallic;
+    const float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), albedo, metallic);
     
     //// Fresnel_Cook-Torrence BRDF
     const float3 fresnel = Fresnel(lightHalfSolidAngle, viewDir, f0);
@@ -222,7 +222,7 @@ float3 BRDF(BRDFSurface surface, float3 lightInSolidAngle, float3 viewDir)
     
     // Diffuse BRDF
     const float3 ks = fresnel;
-    const float3 kd = (float3(1.0f, 1.0f, 1.0f) - ks) * (1.0f - metalness) * albedo;
+    const float3 kd = (float3(1.0f, 1.0f, 1.0f) - ks) * (1.0f - metallic) * albedo;
     const float3 iDiffuse = FLambertDiffuse(kd);
     
     return (iDiffuse + iSpecular);
@@ -234,9 +234,9 @@ float3 BRDF(BRDFSurface surface, float3 lightInSolidAngle, float3 viewDir)
 
 float3 EnvironmentBRDF(BRDFSurface surface, float3 viewDir, float3 irradience, float3 envSpecular)
 {
-    const float3 f0 = lerp(0.04f.xxx, surface.albedo, surface.metalness);
+    const float3 f0 = lerp(0.04f.xxx, surface.albedo, surface.metallic);
     const float3 ks = FresnelWithRoughness(max(dot(surface.normal, viewDir), 0.0), f0, surface.roughness);
-    const float kd = (1.0f - ks) * (1.0f - surface.metalness);
+    const float kd = (1.0f - ks) * (1.0f - surface.metallic);
     
     const float3 diffuse = irradience * surface.albedo;
     const float3 specular = envSpecular * ks;

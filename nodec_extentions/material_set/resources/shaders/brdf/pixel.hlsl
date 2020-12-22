@@ -2,7 +2,7 @@
 
 struct MaterialProperties
 {
-    float metalness;
+    float metallic;
     float roughness;
     float4 albedo;
 };
@@ -36,7 +36,7 @@ float4 PSMain(V2P input) : SV_Target
     surface.normal = input.worldNormal;
     
     surface.albedo = materialProperties.albedo.xyz;
-    surface.metalness = materialProperties.metalness;
+    surface.metallic = materialProperties.metallic;
     surface.roughness = materialProperties.roughness;
     
     //const float ambient
