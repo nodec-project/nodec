@@ -7,3 +7,6 @@
 [submodule "3rd_party/imgui/imgui"]
 	path = 3rd_party/imgui/imgui
 	url = https://github.com/ocornut/imgui.git
+[submodule "platforms/sdks/DirectXTex/DirectXTex"]
+	path = platforms/sdks/DirectXTex/DirectXTex
+	url = https://github.com/microsoft/DirectXTex.git
