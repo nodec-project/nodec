@@ -1,13 +1,13 @@
 #include "GraphicsRenderer.hpp"
 #include "RenderingUtils.hpp"
+#include "VertexShader.hpp"
+#include "PixelShader.hpp"
 
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>
 #include <nodec_modules/rendering/interfaces/material.hpp>
 #include <nodec/scene_set/scene_object.hpp>
 
-#include "VertexShader.hpp"
-#include "PixelShader.hpp"
 
 using namespace nodec;
 
