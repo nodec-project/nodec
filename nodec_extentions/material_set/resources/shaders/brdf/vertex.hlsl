@@ -39,7 +39,7 @@ float3 ModelToWorldNormal(float3 normal)
     return normalize(
 		modelProperties.matrixMInverse[0].xyz * normal.x
 		+ modelProperties.matrixMInverse[1].xyz * normal.y 
-		+ modelProperties.matrixMInverse[2].xyz) * normal.z;
+		+ modelProperties.matrixMInverse[2].xyz * normal.z);
 }
 
 V2P VSMain(VSIn input)
