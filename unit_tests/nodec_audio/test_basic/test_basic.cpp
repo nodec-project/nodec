@@ -55,5 +55,12 @@ int main()
         }
     }
 
+    // clean up
+    alDeleteBuffers(1, &buffer);
+    alDeleteSources(1, &source);
+    alcDestroyContext(context);
+    alcCloseDevice(device);
+
+
     return 0;
 }

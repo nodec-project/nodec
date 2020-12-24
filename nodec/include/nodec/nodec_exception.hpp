@@ -12,6 +12,10 @@ namespace nodec
 *   This exception class not inhereited from std::exception, because no merit.
 *   std::exception is desugned under NOT wide charcter.
 *   <https://stackoverflow.com/questions/38186579/unicode-exception-class>
+* 
+*   ^ 2020-12-24:
+*       We decided to inherit std::exception. 
+*       We're considering that this class can be caught by std::exception type.
 *
 *   wchar_t is not clearly defined, depended on platform.
 *   so we should not use it.
