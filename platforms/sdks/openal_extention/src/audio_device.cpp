@@ -20,7 +20,9 @@ AudioDevice::AudioDevice()
     }
     alcMakeContextCurrent(p_context);
 
-    nodec::logging::InfoStream(__FILE__, __LINE__) << "[AudioDevice] >>> Successfully initialized.";
+    nodec::logging::InfoStream(__FILE__, __LINE__) 
+        << "[AudioDevice] >>> Successfully initialized.\n"
+        << "Device info: " << alcGetString(p_device, ALC_DEVICE_SPECIFIER);
 }
 
 AudioDevice::~AudioDevice()

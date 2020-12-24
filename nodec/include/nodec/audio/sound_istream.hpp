@@ -12,11 +12,11 @@ namespace nodec
 namespace audio
 {
 
-template<typename T>
+template<typename FloatT>
 class SoundStream
 {
 public:
-    SoundStream(BasicSoundBuffer<T>::SharedPtr buffer);
+    SoundStream(BasicSoundBuffer<FloatT>::SharedPtr buffer);
 
 private:
     NODEC_DISABLE_COPY(SoundStream);

@@ -10,7 +10,7 @@ namespace nodec
 namespace audio
 {
 
-template<typename T>
+template<typename FloatT>
 class BasicSoundBuffer
 {
 public:
@@ -18,12 +18,11 @@ public:
 
 public:
 
-    size_t read(T* samples, size_t max_length, bool loop);
+    virtual size_t read(FloatT* samples, size_t max_length, bool loop) = 0;
 
 protected:
     unsigned int sampling_rate;
     unsigned int n_channels;
-    std::vector<T> samples;
 
 };
 

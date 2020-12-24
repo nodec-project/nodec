@@ -21,7 +21,7 @@ namespace nodec
 *   so we should not use it.
 *   <https://stackoverflow.com/questions/50403342/how-do-i-properly-use-stdstring-on-utf-8-in-c>
 */
-class NodecException : std::exception
+class NodecException : public std::exception
 {
 public:
 
