@@ -1,7 +1,7 @@
-#include <al.h>
-#include <alc.h>
+#include <openal_extention/audio_device.hpp>
 
 #include <nodec/math/math.hpp>
+#include <nodec/logging.hpp>
 
 #include <limits>
 #include <array>
@@ -9,16 +9,18 @@
 #include <chrono>
 
 using namespace nodec;
+using namespace openal_extention;
 
 int main()
 {
+    logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
 
     constexpr int sampling_rate = 44100;
     constexpr int tone = 440;
     constexpr int duration = 3;
     constexpr size_t data_size = sampling_rate * duration;
 
-    std::array<int16_t, data_size> data;
+    std::unique_ptr<int16_t[]> data(new int16_t[data_size]);
 
     // radian per sampling rate
     double delta = (2 * math::pi<double> *tone) / sampling_rate;
@@ -30,9 +32,7 @@ int main()
     }
 
     // init device and create context
-    ALCdevice* device = alcOpenDevice(nullptr);
-    ALCcontext* context = alcCreateContext(device, nullptr);
-    alcMakeContextCurrent(context);
+    AudioDevice audio_device;
 
     // make buffer and source
     ALuint buffer;
@@ -40,7 +40,7 @@ int main()
     alGenBuffers(1, &buffer);
     alGenSources(1, &source);
 
-    alBufferData(buffer, AL_FORMAT_MONO16, data.data(), data.size(), sampling_rate);
+    alBufferData(buffer, AL_FORMAT_MONO16, data.get(), data_size, sampling_rate);
     alSourcei(source, AL_BUFFER, buffer);
     alSourcePlay(source);
 
@@ -58,8 +58,6 @@ int main()
     // clean up
     alDeleteBuffers(1, &buffer);
     alDeleteSources(1, &source);
-    alcDestroyContext(context);
-    alcCloseDevice(device);
 
 
     return 0;
