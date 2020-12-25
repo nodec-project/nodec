@@ -93,6 +93,17 @@ inline Quaternion<T> operator* (const Quaternion<T>& left, const Quaternion<T>& 
 }
 
 template<typename T>
+inline Quaternion<T>& operator*= (Quaternion<T>& left, const Quaternion<T>& right)
+{
+    auto x = +left.x * right.w + left.y * right.z - left.z * right.y + left.w * right.x;
+    auto y = -left.x * right.z + left.y * right.w + left.z * right.x + left.w * right.y;
+    auto z = +left.x * right.y - left.y * right.x + left.z * right.w + left.w * right.z;
+    auto w = -left.x * right.x - left.y * right.y - left.z * right.z + left.w * right.w;
+    left.x = x; left.y = y; left.z = z; left.w = w;
+    return left;
+}
+
+template<typename T>
 inline Quaternion<T> operator+ (const Quaternion<T>& left, const Quaternion<T>& right)
 {
     return Quaternion<T>(
@@ -101,6 +112,16 @@ inline Quaternion<T> operator+ (const Quaternion<T>& left, const Quaternion<T>& 
         left.z + right.z,
         left.w + right.w
         );
+}
+
+template<typename T>
+inline Quaternion<T> operator+= (Quaternion<T>& left, const Quaternion<T>& right)
+{
+    left.x += right.x;
+    left.y += right.y;
+    left.z += right.z;
+    left.w += right.w;
+    return left;
 }
 
 template<typename T>

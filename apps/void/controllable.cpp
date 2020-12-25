@@ -52,17 +52,29 @@ void Controllable::on_frame_update(Rendering& rendering)
         scene_object().transform().local_position.y -= speed * delta_time;
     }
 
-    if (keyboard.get_key_pressed(Key::F))
+    if (keyboard.get_key_pressed(Key::J))
     {
-        auto rotation = scene_object().transform().local_rotation;
         Quaternionf delta;
         math::gfx::set_angle_axis(delta, delta_time * 30, Vector3f(0, 1, 0));
-        scene_object().transform().local_rotation = scene_object().transform().local_rotation * delta;
+        scene_object().transform().local_rotation *= delta;
     }
-    if (keyboard.get_key_pressed(Key::H))
+    if (keyboard.get_key_pressed(Key::L))
     {
-        math::gfx::set_angle_axis(scene_object().transform().local_rotation, delta_time * 30, Vector3f(0, 0, -1));
-
+        Quaternionf delta;
+        math::gfx::set_angle_axis(delta, delta_time * 30, Vector3f(0, -1, 0));
+        scene_object().transform().local_rotation *= delta;
+    }
+    if (keyboard.get_key_pressed(Key::I))
+    {
+        Quaternionf delta;
+        math::gfx::set_angle_axis(delta, delta_time * 30, Vector3f(1, 0, 0));
+        scene_object().transform().local_rotation *= delta;
+    }
+    if (keyboard.get_key_pressed(Key::K))
+    {
+        Quaternionf delta;
+        math::gfx::set_angle_axis(delta, delta_time * 30, Vector3f(-1, 0, 0));
+        scene_object().transform().local_rotation *= delta;
     }
 
     if (mouse.get_button_pressed(MouseButton::Left))

@@ -43,8 +43,8 @@ static const Vector3f normals[6] = {
     Vector3f(+1.0f, +0.0f, +0.0f),
     Vector3f(+0.0f, +0.0f, +1.0f),
     Vector3f(-1.0f, +0.0f, +0.0f),
-    Vector3f(+0.0f, -1.0f, +0.0f),
-    Vector3f(+0.0f, +1.0f, +0.0f)
+    Vector3f(+0.0f, +1.0f, +0.0f),
+    Vector3f(+0.0f, -1.0f, +0.0f)
 };
 static const Vector3f rights[6] = {
     Vector3f(+1.0f, +0.0f, +0.0f),
