@@ -1,6 +1,7 @@
 #include <nodec/audio/wav_file_sound_ibuffer.hpp>
-#include <nodec/audio/wav_format.hpp>
 #include <nodec/logging.hpp>
+
+#include <sstream>
 
 namespace nodec
 {
@@ -12,7 +13,9 @@ template class WavFileSoundIBuffer<double>;
 
 
 template<typename FloatT>
-WavFileSoundIBuffer<FloatT>::WavFileSoundIBuffer()
+WavFileSoundIBuffer<FloatT>::WavFileSoundIBuffer() :
+    bytes_per_sample(0),
+    format(wav_format::Format::PCM_Integer)
 {
 
 }
@@ -30,20 +33,100 @@ void WavFileSoundIBuffer<FloatT>::open(const std::string& path)
 
     if (!wav_format::parse_header(file, header_info, data_start, data_end))
     {
-        throw Exception("Failed to read header (invalid or unsupported file). path: " + path, 
+        throw Exception("Failed to read header (invalid or unsupported file). path: " + path,
                         __FILE__, __LINE__);
     }
 
+    if ((header_info.format != wav_format::Format::PCM_Integer)
+        && (header_info.format != wav_format::Format::PCM_Float)
+        && (header_info.format != wav_format::Format::Extensible))
+    {
+        std::ostringstream oss;
+        oss << "Unsupported format: format tag (" << std::hex << std::uppercase
+            << static_cast<int>(header_info.format) << std::dec << ") is not supported.";
+        throw Exception(oss.str(), __FILE__, __LINE__);
+    }
+    format = header_info.format;
+
+    if (header_info.bits_per_sample != 8
+        && header_info.bits_per_sample != 16
+        && header_info.bits_per_sample != 24
+        && header_info.bits_per_sample != 32)
+    {
+        std::ostringstream oss;
+        oss << "Unsupported sample size: " << header_info.bits_per_sample
+            << " bit (Supported sample size are 8/16/24/32 bit)";
+        throw Exception(oss.str(), __FILE__, __LINE__);
+    }
+
+    bytes_per_sample = header_info.bits_per_sample / 8;
+
+    if (header_info.format == wav_format::Format::Extensible)
+    {
+        if (header_info.sub_format == wav_format::SubFormat::None)
+        {
+            throw Exception("Unsupported format: extensible format with unkown sub format.", __FILE__, __LINE__);
+        }
+
+        if (header_info.valid_bits_per_sample != header_info.bits_per_sample)
+        {
+            std::ostringstream oss;
+            oss << "Unsupported format: sample size ("
+                << header_info.valid_bits_per_sample << " bits) and "
+                "sample container size (" << header_info.bits_per_sample
+                << " bits) differ";
+            throw Exception(oss.str(), __FILE__, __LINE__);
+        }
+
+        format = static_cast<wav_format::Format>(header_info.sub_format);
+    }
+
+    if (format == wav_format::Format::PCM_Float
+        && bytes_per_sample != 4)
+    {
+        std::ostringstream oss;
+        oss << "Unsupported format: float " << header_info.bits_per_sample << " bit not supported. "
+            << "(supported format is 32bit float)";
+        throw Exception(oss.str(), __FILE__, __LINE__);
+    }
+
+    this->sample_rate = header_info.n_samples_per_sec;
+    this->n_channels = header_info.n_channels;
+
     logging::DebugStream(__FILE__, __LINE__) << header_info.n_channels;
     logging::DebugStream(__FILE__, __LINE__) << header_info.bits_per_sample;
-    logging::DebugStream(__FILE__, __LINE__) << header_info.n_samples;
-    logging::DebugStream(__FILE__, __LINE__) << (header_info.format == wav_format::Format::PCM_Integer);
+    //logging::DebugStream(__FILE__, __LINE__) << header_info.bits_per_sample;
 
 }
 
 template<typename FloatT>
-size_t WavFileSoundIBuffer<FloatT>::read(FloatT* samples, size_t max_length, bool loop)
+size_t WavFileSoundIBuffer<FloatT>::read(FloatT* const* const samples, std::streamoff offset, std::streamsize max_length, bool loop)
 {
+    switch (format)
+    {
+    case nodec::audio::wav_format::Format::PCM_Integer:
+        break;
+
+    case nodec::audio::wav_format::Format::PCM_Float:
+        switch (bytes_per_sample)
+        {
+        case 4:
+            switch (this->n_channels)
+            {
+            case 2:
+                return wav_format::read_data_float32_stereo(samples, file, offset, max_length, data_start, data_end, loop);
+
+            default:
+                break;
+            }
+            break;
+        default:
+            break;
+        }
+        break;
+    default:
+        break;
+    }
     return 0;
 }
 

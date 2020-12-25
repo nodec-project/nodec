@@ -30,7 +30,13 @@ bool decode8(std::istream& stream, uint8_t& value);
 
 bool decode16(std::istream& stream, uint16_t& value);
 
+bool decode24(std::istream& stream, uint32_t& value);
+
 bool decode32(std::istream& stream, uint32_t& value);
+
+bool decode32float(std::istream& stream, float& value);
+
+
 
 enum class Format
 {
@@ -60,6 +66,10 @@ struct HeaderInfo
 
 bool parse_header(std::istream& stream, HeaderInfo& info,
                   std::streampos& data_start, std::streampos& data_end);
+
+template<typename FloatT>
+size_t read_data_float32_stereo(FloatT* const* const samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
+                                const std::streampos& data_start, const std::streampos& data_end, bool loop);
 
 }
 }

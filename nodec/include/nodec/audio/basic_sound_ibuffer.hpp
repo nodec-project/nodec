@@ -18,11 +18,11 @@ public:
 
 public:
 
-    virtual size_t read(FloatT* samples, size_t max_length, bool loop) = 0;
+    virtual size_t read(FloatT* const* const samples, std::streamoff offset, std::streamsize max_length, bool loop) = 0;
 
 protected:
-    unsigned int sampling_rate;
-    unsigned int n_channels;
+    uint32_t sample_rate;
+    uint16_t n_channels;
 
 };
 

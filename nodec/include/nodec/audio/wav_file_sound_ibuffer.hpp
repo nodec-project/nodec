@@ -1,9 +1,10 @@
-#ifndef NODEC__AUDIO__WAV_FILE_SOUND_BUFFER_HPP_
-#define NODEC__AUDIO__WAV_FILE_SOUND_BUFFER_HPP_
+#ifndef NODEC__AUDIO__WAV_FILE_SOUND_IBUFFER_HPP_
+#define NODEC__AUDIO__WAV_FILE_SOUND_IBUFFER_HPP_
 
 #include <nodec/audio/basic_sound_ibuffer.hpp>
 #include <nodec/macros.hpp>
 #include <nodec/nodec_exception.hpp>
+#include <nodec/audio/wav_format.hpp>
 
 #include <fstream>
 
@@ -25,14 +26,20 @@ public:
     WavFileSoundIBuffer();
 
 public:
-    size_t read(FloatT* samples, size_t max_length, bool loop) override;
-
     void open(const std::string& path);
+
+    size_t read(FloatT* const* const  samples, std::streamoff offset, std::streamsize max_length, bool loop) override;
+
 
 private:
     std::ifstream file;
     std::streampos data_start;
     std::streampos data_end;
+
+    wav_format::Format format;
+    uint16_t bytes_per_sample;
+
+
 
 private:
     NODEC_DISABLE_COPY(WavFileSoundIBuffer);

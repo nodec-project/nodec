@@ -38,6 +38,19 @@ bool decode16(std::istream& stream, uint16_t& value)
     return true;
 }
 
+bool decode24(std::istream& stream, uint32_t& value)
+{
+    uint8_t bytes[3];
+    stream.read(reinterpret_cast<char*>(bytes), sizeof(bytes));
+    if (stream.fail())
+    {
+        return false;
+    }
+
+    value = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16);
+    return true;
+}
+
 bool decode32(std::istream& stream, uint32_t& value)
 {
     uint8_t bytes[sizeof(value)];
@@ -51,7 +64,24 @@ bool decode32(std::istream& stream, uint32_t& value)
     return true;
 }
 
-bool parse_header(std::istream& stream, HeaderInfo& info, 
+
+bool decode32float(std::istream& stream, float& value)
+{
+    uint8_t bytes[sizeof(value)];
+    stream.read(reinterpret_cast<char*>(bytes), sizeof(bytes));
+    if (stream.fail())
+    {
+        return false;
+    }
+    uint32_t value_bytes = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+    value = *reinterpret_cast<float*>(&value_bytes);
+
+    return true;
+}
+
+
+
+bool parse_header(std::istream& stream, HeaderInfo& info,
                   std::streampos& data_start, std::streampos& data_end)
 {
 
@@ -206,7 +236,7 @@ bool parse_header(std::istream& stream, HeaderInfo& info,
 
             // store the start and end position of samples in the file
             data_start = sub_chunk_start;
-            data_end = data_start + static_cast<std::streamoff>(info.n_samples * bytes_per_sample);
+            data_end = data_start + static_cast<std::streamoff>(sub_chunk_size);
 
             data_chunk_found = true;
         }
@@ -222,6 +252,85 @@ bool parse_header(std::istream& stream, HeaderInfo& info,
     }
     return true;
 }
+
+template<typename FloatT>
+bool decode32float_stereo(std::istream& stream, FloatT* const* const samples, uint64_t index)
+{
+    float value;
+    if (!decode32float(stream, value))
+    {
+        return false;
+    }
+    samples[0][index] = static_cast<FloatT>(value);
+
+    if (!decode32float(stream, value))
+    {
+        return false;
+    }
+    samples[1][index] = static_cast<FloatT>(value);
+
+    return true;
+}
+
+template<typename FloatT, typename Function>
+size_t read_data_generic(FloatT* const* const  samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
+                         const std::streampos& data_start, const std::streampos& data_end, bool loop, Function decoder)
+{
+    stream.seekg(data_start + offset);
+    size_t index = 0;
+
+    while (true)
+    {
+        if (stream.tellg() >= data_end)
+        {
+            if (stream.fail())
+            {
+                // if prev operation 'tellg()' setted fail bit.
+                break;
+            }
+
+            // reach the end of stream.
+            if (!loop)
+            {
+                break;
+            }
+
+            // seek to data start for loop.
+            stream.seekg(data_start);
+        }
+
+        if (!decoder(stream, samples, index))
+        {
+            return false;
+        }
+
+        index++;
+
+        if (index >= max_length)
+        {
+            break;
+        }
+    }
+
+    return index;
+}
+
+
+template<typename FloatT>
+size_t read_data_float32_stereo(FloatT* const* const samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
+                                const std::streampos& data_start, const std::streampos& data_end, bool loop)
+{
+    using Function = decltype(decode32float_stereo<FloatT>);
+    return read_data_generic<FloatT, Function>(samples, stream, offset, max_length, data_start, data_end, loop, decode32float_stereo);
+}
+
+template
+size_t read_data_float32_stereo(float* const* const samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
+                                const std::streampos& data_start, const std::streampos& data_end, bool loop);
+
+template
+size_t read_data_float32_stereo(double* const* const samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
+                                const std::streampos& data_start, const std::streampos& data_end, bool loop);
 
 } // namespace wav_format
 } // namespace audio
