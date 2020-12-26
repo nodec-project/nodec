@@ -200,7 +200,6 @@ void BindTexture(const nodec_modules::rendering::interfaces::Texture* texture_cl
 {
     try
     {
-        logging::DebugStream(__FILE__, __LINE__) << "tst";
         std::string image_path = "resources/textures/";
         image_path += texture_client->path();
 

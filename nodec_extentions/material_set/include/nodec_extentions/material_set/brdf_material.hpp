@@ -19,6 +19,7 @@ namespace material_set
 *
 *   albedo    texture
 *   metallic  texture
+*   normal    texture
 *   roughness texture
 * 
 */

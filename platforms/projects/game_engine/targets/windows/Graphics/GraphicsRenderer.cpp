@@ -26,6 +26,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
     graphics->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     cbModelProperties.BindVS(graphics, 0);
+    cbModelProperties.BindPS(graphics, 0);
 
 
     for (auto iter = renderers.begin(); iter != renderers.end();)
@@ -85,14 +86,15 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 
                 cbModelProperties.Update(graphics, &modelProperties);
             } // Model ConstantBuffer
-            
-            // Material Properties
+
+            // Material Properties Primitive
             {
                 auto iter = resources->constantBufferMap.find(material->id());
                 if (iter != resources->constantBufferMap.end())
                 {
                     auto constantBuffer = iter->second;
-                    constantBuffer->BindPS(graphics, 0);
+                    constantBuffer->BindVS(graphics, 1);
+                    constantBuffer->BindPS(graphics, 1);
 
                     std::vector<uint8_t> cbuffer;
                     RenderingUtils::CreateMaterialCBuffer(material.get(), cbuffer);
@@ -100,6 +102,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 }
             }
 
+            BindMaterialTextures(material.get(), graphics, resources);
 
             BindShader(&material->shader(), graphics, resources);
             BindMesh(mesh.get(), graphics, resources);
@@ -155,4 +158,44 @@ void GraphicsRenderer::BindShader(const nodec_modules::rendering::interfaces::Sh
             iter->second->Bind(graphics);
         }
     }
+}
+
+void GraphicsRenderer::BindMaterialTextures(const nodec_modules::rendering::interfaces::Material* material,
+                                            Graphics* graphics, GraphicsResources* resources)
+{
+    UINT slot = 0;
+    for (auto& pair : material->texture_properties())
+    {
+        if (!pair.second.texture)
+        {
+            slot++;
+            continue;
+        }
+        auto iter = resources->textureMap.find(pair.second.texture->id());
+        if (iter != resources->textureMap.end())
+        {
+            iter->second->BindVS(graphics, slot);
+            iter->second->BindPS(graphics, slot);
+
+            switch (pair.second.sampler)
+            {
+            case nodec_modules::rendering::interfaces::Sampler::Anisotropic:
+                samplerAnisotropic.BindPS(graphics, slot);
+                samplerAnisotropic.BindVS(graphics, slot);
+                break;
+            case nodec_modules::rendering::interfaces::Sampler::Point:
+                samplerPoint.BindPS(graphics, slot);
+                samplerPoint.BindVS(graphics, slot);
+                break;
+            default:
+            case nodec_modules::rendering::interfaces::Sampler::Bilinear:
+                samplerBilinear.BindPS(graphics, slot);
+                samplerBilinear.BindVS(graphics, slot);
+                break;
+            }
+        }
+
+        slot++;
+    }
+
 }

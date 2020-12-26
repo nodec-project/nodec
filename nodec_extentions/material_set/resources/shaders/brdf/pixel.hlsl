@@ -1,34 +1,7 @@
+#include "interface.hlsl"
+
 #include "brdf.hlsl"
 
-struct MaterialProperties
-{
-    float metallic;
-    float roughness;
-    float4 albedo;
-};
-
-cbuffer cbMaterialProperties
-{
-    MaterialProperties materialProperties;
-};
-
-Texture2D texMetallic;
-Texture2D texRoughtness;
-Texture2D texAlbedo;
-
-SamplerState sampler_texMetallic;
-SamplerState sampler_texRoughtness;
-SamplerState sampler_texAlbedo;
-
-struct V2P
-{
-    float4 position : SV_Position;
-    float3 worldPos : POSITION;
-    float3 worldNormal : NORMAL;
-    float2 texcoord : TEXCOORD0;
-	//float3 tangent : TANGENT;
-	//float2 texCoord : TEXCOORD4;
-};
 
 float4 PSMain(V2P input) : SV_Target
 {
@@ -44,6 +17,7 @@ float4 PSMain(V2P input) : SV_Target
     surface.normal = input.worldNormal;
     
     surface.albedo = materialProperties.albedo.xyz;
+    surface.albedo = texAlbedo.Sample(sampler_texAlbedo, input.texcoord);
     surface.metallic = materialProperties.metallic;
     surface.roughness = materialProperties.roughness;
     

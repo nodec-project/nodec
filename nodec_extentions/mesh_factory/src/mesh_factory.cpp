@@ -85,10 +85,10 @@ void make_cube(int divisions, Mesh& mesh)
             {
                 const Vector3f i3(i, i, i);
                 Vector3f p = origin + step3 * (i3 * right + j3 * up);
-
+                Vector2f uv(step * i, 1.0f - step * j);
                 //logging::DebugStream(__FILE__, __LINE__) << p;
                 
-                mesh.vertices.emplace_back(p, normal);
+                mesh.vertices.emplace_back(p, normal, uv);
             }
         }
     }

@@ -44,13 +44,28 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         if (auto texture = tex_albedo_global.lock())
         {
-            renderer->material->set_texture("albedo", { texture, Sampler::Bilinear });
+            renderer->material->set_texture("albedo", texture);
         }
         else
         {
             texture = NodecObject::instanciate<Texture>("concrete/Tcom_Pavement_PaintedConcrete3_Base_Color.tga", &rendering);
+            //texture = NodecObject::instanciate<Texture>("panel/Tcom_Scifi_Panel_Base_Color.tga", &rendering);
             rendering.bind_texture(texture.get());
+            renderer->material->set_texture("albedo", texture);
             tex_albedo_global = texture;
+        }
+
+        if (auto texture = tex_roughness_global.lock())
+        {
+            renderer->material->set_texture("roughness", texture);
+        }
+        else
+        {
+            texture = NodecObject::instanciate<Texture>("concrete/Tcom_Pavement_PaintedConcrete3_Roughness.tga", &rendering);
+            //texture = NodecObject::instanciate<Texture>("panel/Tcom_Scifi_Panel_Roughness.tga", &rendering);
+            rendering.bind_texture(texture.get());
+            renderer->material->set_texture("roughness", texture);
+            tex_roughness_global = texture;
         }
 
         rendering.bind_material(renderer->material.get());

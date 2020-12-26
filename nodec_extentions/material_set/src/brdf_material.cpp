@@ -31,6 +31,7 @@ BRDFMaterial::BRDFMaterial(Rendering* target_rendering) :
 
     texture_properties_.emplace("albedo", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
     texture_properties_.emplace("metallic", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
+    texture_properties_.emplace("normal", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
     texture_properties_.emplace("roughness", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
 }
 

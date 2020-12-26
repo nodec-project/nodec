@@ -34,14 +34,24 @@ Material::float_properties() const
 }
 bool Material::get_float(const std::string& name, float& out) const
 {
-    return get_value_generic(float_properties_, name, out);
+    auto iter = float_properties_.find(name);
+    if (iter == float_properties_.end())
+    {
+        return false;
+    }
+    out = iter->second;
+    return true;
 }
 bool Material::set_float(const std::string& name, const float& value)
 {
-    return set_value_generic(float_properties_, name, value);
+    auto iter = float_properties_.find(name);
+    if (iter == float_properties_.end())
+    {
+        return false;
+    }
+    iter->second = value;
+    return true;
 }
-
-
 
 const std::map<std::string, nodec::Vector4f>&
 Material::vector4_properties() const
@@ -50,11 +60,23 @@ Material::vector4_properties() const
 }
 bool Material::get_vector4(const std::string& name, nodec::Vector4f& out) const
 {
-    return get_value_generic(vector4_properties_, name, out);
+    auto iter = vector4_properties_.find(name);
+    if (iter == vector4_properties_.end())
+    {
+        return false;
+    }
+    out = iter->second;
+    return true;
 }
 bool Material::set_vector4(const std::string& name, const nodec::Vector4f& value)
 {
-    return set_value_generic(vector4_properties_, name, value);
+    auto iter = vector4_properties_.find(name);
+    if (iter == vector4_properties_.end())
+    {
+        return false;
+    }
+    iter->second = value;
+    return true;
 }
 
 
@@ -64,43 +86,51 @@ Material::texture_properties() const
     return texture_properties_;
 }
 
-bool Material::get_texture(const std::string& name, TextureEntry& out) const
+bool Material::get_texture(const std::string& name, NodecObject::Holder<Texture>& out) const
 {
-    return get_value_generic(texture_properties_, name, out);
-}
-
-bool Material::set_texture(const std::string& name, const TextureEntry& texture_entry)
-{
-    return set_value_generic(texture_properties_, name, texture_entry);
-}
-
-
-template<typename T>
-bool Material::get_value_generic(const std::map<std::string, T>& properties, const std::string& name, T& out)
-{
-    auto iter = properties.find(name);
-    if (iter == properties.end())
+    auto iter = texture_properties_.find(name);
+    if (iter == texture_properties_.end())
     {
         return false;
     }
+    out = iter->second.texture;
+    return true;
+}
 
-    out = iter->second;
+bool Material::set_texture(const std::string& name, const NodecObject::Holder<Texture>& texture)
+{
+    auto iter = texture_properties_.find(name);
+    if (iter == texture_properties_.end())
+    {
+        return false;
+    }
+    iter->second.texture = texture;
+    return true;
+}
+
+bool Material::get_texture_sampler(const std::string& name, Sampler& out) const
+{
+    auto iter = texture_properties_.find(name);
+    if (iter == texture_properties_.end())
+    {
+        return false;
+    }
+    out = iter->second.sampler;
+    return true;
+}
+
+bool Material::set_texture_sampler(const std::string& name, const Sampler& sampler)
+{
+    auto iter = texture_properties_.find(name);
+    if (iter == texture_properties_.end())
+    {
+        return false;
+    }
+    iter->second.sampler = sampler;
     return true;
 }
 
 
-template<typename T>
-bool Material::set_value_generic(std::map<std::string, T>& properties, const std::string& name, const T& value)
-{
-    auto iter = properties.find(name);
-    if (iter == properties.end())
-    {
-        return false;
-    }
-
-    iter->second = value;
-    return true;
-}
 
 } // namespace interfaces
 } // namespace rendering

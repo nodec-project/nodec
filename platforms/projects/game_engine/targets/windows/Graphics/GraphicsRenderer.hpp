@@ -31,13 +31,14 @@ public:
         renderers;
 
 private:
-    void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh, 
+    void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh,
                   Graphics* graphics, GraphicsResources* resources);
 
     void BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
                     Graphics* graphics, GraphicsResources* resources);
 
-    
+    void BindMaterialTextures(const nodec_modules::rendering::interfaces::Material* material,
+                              Graphics* graphics, GraphicsResources* resources);
 
 private:
     ModelProperties modelProperties;

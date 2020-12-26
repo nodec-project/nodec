@@ -33,6 +33,11 @@ public:
         {
         }
 
+        TextureEntry() :
+            sampler(Sampler::Bilinear)
+        {
+        }
+
         NodecObject::Holder<Texture> texture;
         Sampler sampler;
     };
@@ -48,8 +53,11 @@ public:
     bool set_vector4(const std::string& name, const nodec::Vector4f& value);
 
     const std::map<std::string, TextureEntry>& texture_properties() const;
-    bool get_texture(const std::string& name, TextureEntry& out) const;
-    bool set_texture(const std::string& name, const TextureEntry& texture_entry);
+    bool get_texture(const std::string& name, NodecObject::Holder<Texture>& out) const;
+    bool set_texture(const std::string& name, const NodecObject::Holder<Texture>& texture);
+
+    bool get_texture_sampler(const std::string& name, Sampler& out) const;
+    bool set_texture_sampler(const std::string& name, const Sampler& sampler);
 
 protected:
     nodec::NodecObject::Holder<Shader> shader_;
@@ -58,21 +66,12 @@ protected:
     std::map<std::string, nodec::Vector4f> vector4_properties_;
     std::map<std::string, TextureEntry> texture_properties_;
 
-private:
-    template<typename T>
-    static bool get_value_generic(const std::map<std::string, T>& properties,
-                                  const std::string& name,
-                                  T& out);
-
-    template<typename T>
-    static bool set_value_generic(std::map<std::string, T>& properties,
-                                  const std::string& name,
-                                  const T& value);
 
 
 };
-}
-}
-}
+
+} // namespace interfaces
+} // namespace rendering
+} // namespace nodec_modules
 
 #endif
