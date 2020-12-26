@@ -3,6 +3,7 @@
 #include "Graphics.hpp"
 #include "GraphicsResources.hpp"
 #include "ConstantBuffer.hpp"
+#include "Sampler.hpp"
 
 #include <nodec_modules/rendering/interfaces/renderer.hpp>
 
@@ -41,6 +42,9 @@ private:
 private:
     ModelConstants modelConstants;
     ConstantBuffer modelConstantBuffer;
+    Sampler samplerAnisotropic;
+    Sampler samplerPoint;
+    Sampler samplerBilinear;
 
 private:
     NODEC_DISABLE_COPY(GraphicsRenderer);

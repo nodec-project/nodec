@@ -12,7 +12,10 @@
 using namespace nodec;
 
 GraphicsRenderer::GraphicsRenderer(Graphics* graphics) :
-    modelConstantBuffer(graphics, sizeof(ModelConstants), &modelConstants)
+    modelConstantBuffer(graphics, sizeof(ModelConstants), &modelConstants),
+    samplerAnisotropic(graphics, Sampler::Type::Anisotropic),
+    samplerBilinear(graphics, Sampler::Type::Bilinear),
+    samplerPoint(graphics, Sampler::Type::Point)
 {
 
 }
