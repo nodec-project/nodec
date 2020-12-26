@@ -27,22 +27,23 @@ int CALLBACK WinMain(
 
     try
     {
-        // {
+        // --- Init Logging ---
 #ifndef NDEBUG
         InitLogging(nodec::logging::Level::Debug);
 #else
         InitLogging(nodec::logging::Level::Info);
 #endif
-        // }
+        // end Init Logging ---
 
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Hello world. Program start." << std::flush;
 
 
-        // {
+        // --- Launch Engine ---
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> launch the Engine." << std::flush;
-        auto game_engine_module = nodec_modules::game_engine::get_game_engine_module();
-        // }
+        auto game_engine_module = nodec::NodecObject::instanciate<nodec_modules::game_engine::GameEngineModule>();
+        nodec_modules::game_engine::current = game_engine_module;
+        // end Launch Engine ---
 
         // {
         auto screenHandlers = std::make_shared<ScreenHandlers>();
@@ -52,7 +53,7 @@ int CALLBACK WinMain(
         // {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> boot the Engine." << std::flush;
 
-        if (!nodec_modules::game_engine::boot(game_engine_module))
+        if (!nodec_modules::game_engine::boot(game_engine_module.get()))
         {
             throw nodec::NodecException("Engine booting failed.", __FILE__, __LINE__);
         };

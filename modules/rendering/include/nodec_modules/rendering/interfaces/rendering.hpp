@@ -17,6 +17,7 @@ class Mesh;
 class Shader;
 class Renderer;
 class Material;
+class Texture;
 
 class Rendering : public nodec::ModuleInterface
 {
@@ -34,6 +35,9 @@ public:
 
     virtual void bind_material(const Material* material) = 0;
     virtual void unbind_material(const Material* material) = 0;
+
+    virtual void bind_texture(const Texture* texture) = 0;
+    virtual void unbind_texture(const Texture* texture) = 0;
 
     virtual void regist_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
 

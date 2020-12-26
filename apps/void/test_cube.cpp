@@ -18,6 +18,10 @@ void TestCube::on_awake()
 void TestCube::on_frame_start(Rendering& rendering)
 {
     renderer_ = scene_object().add_component<Renderer>();
+
+    auto texture = NodecObject::instanciate<Texture>("concrete/Tcom_Pavement_PaintedConcrete3_Base_Color.tga", &rendering);
+
+    rendering.bind_texture(texture.get());
     if (auto renderer = renderer_.lock())
     {
         if (auto mesh = mesh_global.lock())

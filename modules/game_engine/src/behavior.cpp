@@ -86,6 +86,7 @@ void Behavior::enable_frame_update()
     on_frame_update_callback = event::MemberCallback<Behavior, Rendering&>::make_shared(
         shared_from(this), &Behavior::on_frame_update_
     );
+
     get_engine()->rendering().on_frame_update += on_frame_update_callback;
 
 }

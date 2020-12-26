@@ -19,6 +19,12 @@ namespace game_engine
 namespace interfaces
 {
 
+class NoEngineException : public nodec::NodecException
+{
+public:
+    using NodecException::NodecException;
+};
+
 class GameEngine : public nodec::ModuleInterface
 {
 public:
@@ -40,7 +46,7 @@ public:
 
 void on_boot(GameEngine& engine);
 
-GameEngine* get_engine() noexcept;
+GameEngine* get_engine();
 
 }  // namespace interfaces
 }  // namespace game_engine

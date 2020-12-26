@@ -7,6 +7,7 @@
 #include <nodec_modules/rendering/interfaces/material.hpp>
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/renderer.hpp>
+#include <nodec_modules/rendering/interfaces/texture.hpp>
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
 #include <nodec_modules/input/keyboard/interfaces/keyboard.hpp>

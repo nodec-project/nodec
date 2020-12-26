@@ -3,6 +3,7 @@
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>
 #include <nodec_modules/rendering/interfaces/material.hpp>
+#include <nodec_modules/rendering/interfaces/texture.hpp>
 
 using namespace nodec_modules;
 using namespace nodec;
@@ -192,5 +193,28 @@ void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material*
     //nodec::logging::DebugStream(__FILE__, __LINE__) << cbuffer.size() << std::flush;
 }
 
+
+void BindTexture(const nodec_modules::rendering::interfaces::Texture* texture, 
+                 Graphics* graphics)
+{
+    try
+    {
+        logging::DebugStream(__FILE__, __LINE__) << "tst";
+        std::string image_path = "resources/textures/";
+        image_path += texture->path();
+
+        //auto texture = new Texture(graphics, image_path);
+        auto texture = std::make_shared<Texture>(graphics, image_path);
+    }
+    catch (...)
+    {
+        HandleException("Creating Texture");
+    }
+}
+
+void UnbindTexture(const nodec_modules::rendering::interfaces::Texture* texture)
+{
+
+}
 
 } // namespace RenderingUtils

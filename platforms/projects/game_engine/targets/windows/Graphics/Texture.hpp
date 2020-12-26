@@ -5,7 +5,7 @@
 class Texture
 {
 public:
-    Texture(Graphics* graphics);
+    Texture(Graphics* graphics, const std::string& path);
 
     void BindVS(Graphics* graphics, UINT slot);
     void BindPS(Graphics* graphics, UINT slot);

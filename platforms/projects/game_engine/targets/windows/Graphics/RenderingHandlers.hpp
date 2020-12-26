@@ -25,6 +25,9 @@ public:
     void HandleMaterialBinding(const nodec_modules::rendering::interfaces::Material* material);
     void HandleMaterialUnbinding(const nodec_modules::rendering::interfaces::Material* material);
 
+    void HandleTextureBinding(const nodec_modules::rendering::interfaces::Texture* texture);
+    void HandleTextureUnbinding(const nodec_modules::rendering::interfaces::Texture* texture);
+
     void HandleRendererRegisting(
         nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer
     );

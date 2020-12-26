@@ -143,6 +143,7 @@ void nodec_modules::game_engine::interfaces::on_boot(GameEngine& engine)
     engine.screen().set_size({ 1280, 720 });
     engine.screen().set_resolution({ 1920, 1080 });
     engine.screen().set_title("[ void ]");
+    //engine.screen().set_title("[ ほっげ ]　￥");
 
     //auto on_frame_update_callback = nodec::event::StaticCallback<nodec_rendering::Rendering&>::make_shared(&on_frame_update);
     //auto on_frame_update_2_callback = nodec::event::StaticCallback<nodec_rendering::Rendering&>::make_shared(&on_frame_update_2);

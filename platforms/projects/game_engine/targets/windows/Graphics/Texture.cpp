@@ -1,25 +1,57 @@
 #include "Texture.hpp"
+#include "../Utils.hpp"
 
-Texture::Texture(Graphics* graphics)
+#include <nodec/unicode.hpp>
+
+#include <DirectXTex.h>
+
+Texture::Texture(Graphics* graphics, const std::string& path)
 {
 
-    // create texture resource
-    D3D11_TEXTURE2D_DESC textureDesc = {};
-    textureDesc.MipLevels = 0;
-    textureDesc.ArraySize = 1;
-    textureDesc.SampleDesc.Count = 1;
-    textureDesc.SampleDesc.Quality = 0;
-    textureDesc.Usage = D3D11_USAGE_DEFAULT;
-    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-    textureDesc.CPUAccessFlags = 0;
-    textureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+    enum class ImageType
+    {
+        TGA,
+        WIC
+    };
 
-    Microsoft::WRL::ComPtr<ID3D11Texture2D> pTexture;
-    graphics->GetDevice()->CreateTexture2D(&textureDesc, nullptr, &pTexture);
+    ImageType imageType = ImageType::WIC;
 
-    // write image data into top mip level
+    auto extention_pos = path.find_last_of('.');
+    if (extention_pos != std::string::npos)
+    {
+        auto extention = path.substr(extention_pos);
+
+        if (extention == ".tga" || extention == ".TGA")
+        {
+            imageType = ImageType::TGA;
+        }
+    }
+
+    std::wstring widePath;
+    Utils::UTF8ToUTF16WString(path, widePath);
 
 
+    DirectX::ScratchImage image;
+    DirectX::TexMetadata metadata;
+    switch (imageType)
+    {
+    case ImageType::TGA:
+        graphics->ThrowIfError(DirectX::LoadFromTGAFile(widePath.c_str(), &metadata, image),
+                               __FILE__, __LINE__);
+        break;
+
+    default:
+    case ImageType::WIC:
+        graphics->ThrowIfError(DirectX::LoadFromWICFile(widePath.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
+                               __FILE__, __LINE__);
+        break;
+    }
+    
+    // create the resource view on the texture
+    graphics->ThrowIfError(DirectX::CreateShaderResourceView(graphics->GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &pTextureView),
+                           __FILE__, __LINE__);
+
+    
 
 }
 
@@ -37,6 +69,6 @@ void Texture::BindPS(Graphics* graphics, UINT slot)
     graphics->GetInfoLogger()->SetLatest();
 
     graphics->GetContext()->PSSetShaderResources(slot, 1u, pTextureView.GetAddressOf());
-    
+
     graphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);
 }

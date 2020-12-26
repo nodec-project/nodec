@@ -24,6 +24,9 @@ public:
     void bind_material(const interfaces::Material* material) override;
     void unbind_material(const interfaces::Material* material) override;
 
+    void bind_texture(const interfaces::Texture* texture) override;
+    void unbind_texture(const interfaces::Texture* texture) override;
+
     void regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer) override;
 
 public:
@@ -35,6 +38,8 @@ public:
     nodec::event::Event<const interfaces::Shader*> on_unbind_shader;
     nodec::event::Event<const interfaces::Material*> on_bind_material;
     nodec::event::Event<const interfaces::Material*> on_unbind_material;
+    nodec::event::Event<const interfaces::Texture*> on_bind_texture;
+    nodec::event::Event<const interfaces::Texture*> on_unbind_texture;
 
     nodec::event::Event<nodec::NodecObject::Reference<interfaces::Renderer>> on_regist_renderer;
 

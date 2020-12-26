@@ -12,7 +12,13 @@ namespace interfaces
 
 class Texture : public BindableResource
 {
+public:
+    Texture(const std::string& path, Rendering* target_rendering);
+    ~Texture();
 
+    const char* path() const noexcept;
+private:
+    std::string path_;
 };
 
 }

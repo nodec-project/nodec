@@ -118,16 +118,7 @@ GameEngineModule::engine_time_stopwatch() noexcept
     return (engine_time_stopwatch_);
 }
 
-static nodec::NodecObject::Holder<GameEngineModule> game_engine_module;
-
-GameEngineModule* get_game_engine_module()
-{
-    if (!game_engine_module)
-    {
-        game_engine_module = nodec::NodecObject::instanciate<GameEngineModule>();
-    }
-    return game_engine_module.get();
-}
+nodec::NodecObject::Reference<GameEngineModule> current;
 
 bool boot(GameEngineModule* game_engine_module) noexcept
 {
@@ -153,7 +144,7 @@ bool boot(GameEngineModule* game_engine_module) noexcept
     catch (...)
     {
         nodec::logging::ErrorStream(__FILE__, __LINE__) 
-            << "[GameEngineModule] >>> An UnknownException has occured while booting.\n"
+            << "[GameEngineModule] >>> An UnknownException has been occured while booting.\n"
             << "detail: Unavailable." << std::flush;
     }
 
@@ -168,9 +159,13 @@ bool boot(GameEngineModule* game_engine_module) noexcept
 namespace interfaces
 {
 
-GameEngine* get_engine() noexcept
+GameEngine* get_engine()
 {
-    return game_engine_module.get();
+    if (auto locked = current.lock())
+    {
+        return locked.get();
+    }
+    throw NoEngineException("Current Engine not assigned. May be not instanciated or already deleted.", __FILE__, __LINE__);
 }
 
 } // namespace interfaces

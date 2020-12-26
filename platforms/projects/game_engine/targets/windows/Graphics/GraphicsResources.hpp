@@ -5,6 +5,7 @@
 #include "VertexShader.hpp"
 #include "PixelShader.hpp"
 #include "ConstantBuffer.hpp"
+#include "Texture.hpp"
 
 #include <nodec/nodec_object.hpp>
 

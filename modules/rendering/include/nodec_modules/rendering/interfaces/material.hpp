@@ -18,8 +18,8 @@ namespace interfaces
 class Material : public BindableResource
 {
 public:
-    Material(Rendering* target_rendering,
-             nodec::NodecObject::Holder<Shader> shader);
+    Material(nodec::NodecObject::Holder<Shader> shader,
+             Rendering* target_rendering);
 
     ~Material();
 

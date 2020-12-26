@@ -49,6 +49,20 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
     rendering_module.on_unbind_material += materialUnbindingHandler;
     // End Material ---
 
+    // --- Texture ---
+    auto textureBindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Texture*>::make_shared(
+            handlers, &RenderingHandlers::HandleTextureBinding
+        );
+    rendering_module.on_bind_texture += textureBindingHandler;
+
+    auto textureUnbindingHandler
+        = event::MemberCallback<RenderingHandlers, const rendering::interfaces::Texture*>::make_shared(
+            handlers, &RenderingHandlers::HandleTextureUnbinding
+        );
+    rendering_module.on_unbind_texture += textureUnbindingHandler;
+    // End Texture ---
+
     auto rendererRegistingHandler
         = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Renderer>>::make_shared(
             handlers, &RenderingHandlers::HandleRendererRegisting
@@ -102,6 +116,17 @@ void RenderingHandlers::HandleMaterialUnbinding(const nodec_modules::rendering::
     RenderingUtils::UnbindMaterial(material, graphicsResources);
 }
 // End Material ---
+
+// --- Texture ---
+void RenderingHandlers::HandleTextureBinding(const nodec_modules::rendering::interfaces::Texture* texture)
+{
+    RenderingUtils::BindTexture(texture, graphics);
+}
+void RenderingHandlers::HandleTextureUnbinding(const nodec_modules::rendering::interfaces::Texture* texture)
+{
+    RenderingUtils::UnbindTexture(texture);
+}
+// End Texture ---
 
 void RenderingHandlers::HandleRendererRegisting(
     nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)

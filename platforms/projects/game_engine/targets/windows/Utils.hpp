@@ -1,5 +1,7 @@
 #pragma once
 
+#include <nodec/unicode.hpp>
+
 #include <Windows.h>
 
 #include <sstream>
@@ -8,6 +10,11 @@
 namespace Utils
 {
 
+inline void UTF8ToUTF16WString(const std::string& utf8, std::wstring& utf16)
+{
+    std::string wideBytes = nodec::unicode::utf8to16(utf8);
+    utf16.assign(reinterpret_cast<wchar_t*>(&wideBytes[0]), wideBytes.size() / 2);
+}
 
 class WideCharacterConvertException
 {

@@ -46,6 +46,15 @@ namespace nodec_modules
             on_unbind_material.invoke(material);
         }
 
+        void RenderingModule::bind_texture(const interfaces::Texture* texture)
+        {
+            on_bind_texture.invoke(texture);
+        }
+        void RenderingModule::unbind_texture(const interfaces::Texture* texture)
+        {
+            on_unbind_texture.invoke(texture);
+        }
+
         void RenderingModule::regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer)
         {
             on_regist_renderer.invoke(renderer);

@@ -11,7 +11,7 @@ namespace material_set
 nodec::NodecObject::Reference<Shader> BRDFMaterial::brdf_shader_global;
 
 BRDFMaterial::BRDFMaterial(Rendering* target_rendering) :
-    Material(target_rendering, NodecObject::Holder<Shader>())
+    Material(NodecObject::Holder<Shader>(), target_rendering)
 {
     if (auto brdf_shader = brdf_shader_global.lock())
     {

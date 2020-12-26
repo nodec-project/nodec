@@ -66,8 +66,9 @@ protected:
     nodec::Stopwatch<std::chrono::steady_clock> engine_time_stopwatch_;
 };
 
-GameEngineModule* get_game_engine_module();
+extern nodec::NodecObject::Reference<GameEngineModule> current;
 bool boot(GameEngineModule* game_engine_module) noexcept;
+
 
 } // namespace game_engine
 } // namespace nodec_modules
