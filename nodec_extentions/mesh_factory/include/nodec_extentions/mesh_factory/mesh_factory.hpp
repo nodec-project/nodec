@@ -8,7 +8,9 @@ namespace nodec_extentions
 namespace mesh_factory
 {
 
-void make_cube(int divisions,nodec_modules::rendering::interfaces::Mesh& mesh);
+void calc_tangent_space(nodec_modules::rendering::interfaces::Mesh& mesh);
+
+void make_cube(int divisions, nodec_modules::rendering::interfaces::Mesh& mesh);
 
 
 

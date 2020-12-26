@@ -28,6 +28,8 @@ public:
         nodec::Vector3f position;
         nodec::Vector3f normal;
         nodec::Vector2f uv;
+        nodec::Vector3f tangent;
+        //nodec::Vector3f bitangent;
 
         Vertex(const nodec::Vector3f& position) :
             position(position)

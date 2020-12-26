@@ -13,6 +13,7 @@ class TestCube : public nodec_modules::game_engine::interfaces::Behavior
 private:
     static NodecObject::Reference<Mesh> mesh_global;
     static NodecObject::Reference<Texture> tex_albedo_global;
+    static NodecObject::Reference<Texture> tex_normal_global;
     static NodecObject::Reference<Texture> tex_metallic_global;
     static NodecObject::Reference<Texture> tex_roughness_global;
 
@@ -21,6 +22,8 @@ public:
 
 private:
     NodecObject::Reference<Renderer> renderer_;
+    NodecObject::Holder<Texture> get_texture(NodecObject::Reference<Texture> global,
+                                             const std::string& path);
 
 public:
     void on_awake() override;

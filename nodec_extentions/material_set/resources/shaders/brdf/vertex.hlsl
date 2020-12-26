@@ -1,3 +1,7 @@
+/**
+* @require Shader Model 4 (/4_0)
+*/
+
 #include "interface.hlsl"
 
 
@@ -27,6 +31,8 @@ V2P VSMain(VSIn input)
     //output.worldNormal = float3(1, 0, 0);
     //output.worldNormal = input.normal;
     
+    output.worldTangent = ModelToWorldNormal(input.tangent);
+	
     output.texcoord = input.texcoord;
 	
 	return output;

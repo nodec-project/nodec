@@ -64,6 +64,52 @@ static const Vector3f ups[6] = {
 };
 } // namespace cube2space
 
+void calc_tangent_space(nodec_modules::rendering::interfaces::Mesh& mesh)
+{
+    // <https://learnopengl.com/Advanced-Lighting/Normal-Mapping>
+
+    std::vector<uint16_t> counts(mesh.vertices.size());
+    for (auto& idx : mesh.triangles)
+    {
+        counts[idx]++;
+    }
+
+    for (auto iter = mesh.triangles.begin(); iter != mesh.triangles.end(); ++iter)
+    {
+        uint16_t idx1 = *iter++;
+        uint16_t idx2 = *iter++;
+        uint16_t idx3 = *iter;
+
+        auto edge1 = mesh.vertices[idx2].position - mesh.vertices[idx1].position;
+        auto edge2 = mesh.vertices[idx3].position - mesh.vertices[idx1].position;
+        auto delta_uv1 = mesh.vertices[idx2].uv - mesh.vertices[idx1].uv;
+        auto delta_uv2 = mesh.vertices[idx3].uv - mesh.vertices[idx1].uv;
+
+        float f = 1.0f / (delta_uv1.x * delta_uv2.y - delta_uv2.x * delta_uv1.y);
+        nodec::Vector3f tangent(
+            f * (delta_uv2.y * edge1.x - delta_uv1.y * edge2.x),
+            f * (delta_uv2.y * edge1.y - delta_uv1.y * edge2.y),
+            f * (delta_uv2.y * edge1.z - delta_uv1.y * edge2.z)
+        );
+        //nodec::Vector3f tangent = f * (edge1 * delta_uv2.y - edge2 * delta_uv1.y);
+
+        //nodec::Vector3f bitangent(
+        //    f * (-delta_uv2.x * edge1.x + delta_uv1.x * edge2.x),
+        //    f * (-delta_uv2.x * edge1.y + delta_uv1.x * edge2.y),
+        //    f * (-delta_uv2.x * edge1.z + delta_uv1.x * edge2.z)
+        //);
+
+        mesh.vertices[idx1].tangent += tangent / static_cast<float>(counts[idx1]);
+        //mesh.vertices[idx1].bitangent = bitangent / static_cast<float>(counts[idx1]);
+
+        mesh.vertices[idx2].tangent += tangent / static_cast<float>(counts[idx2]);
+        //mesh.vertices[idx2].bitangent = bitangent / static_cast<float>(counts[idx2]);
+
+        mesh.vertices[idx3].tangent += tangent / static_cast<float>(counts[idx3]);
+        //mesh.vertices[idx3].bitangent = bitangent / static_cast<float>(counts[idx3]);
+    }
+}
+
 void make_cube(int divisions, Mesh& mesh)
 {
     const float step = 1.0f / static_cast<float>(divisions);
@@ -116,6 +162,8 @@ void make_cube(int divisions, Mesh& mesh)
             }
         }
     }
+
+    calc_tangent_space(mesh);
 }
 
 void make_normalized_cube(int divisions, Mesh& mesh)

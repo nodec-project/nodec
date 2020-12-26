@@ -103,7 +103,8 @@ void BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
     const D3D11_INPUT_ELEMENT_DESC ied[] = {
         { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0                           , D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "NORMAL"   , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT   , 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        { "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT   , 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TANGENT"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
     try
@@ -173,6 +174,16 @@ static void AppendPropertiesByteSequence(const std::map<std::string, T>& propert
         }
 
     }
+    // Packing Rules for Constant Variables
+    // <https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-packing-rules>
+    constexpr size_t alignment_size = 16;
+    size_t aligned = (cbuffer.size() + (alignment_size - 1)) & ~(alignment_size - 1);
+
+    // add padding so that size will be a multiple of 16.
+    while (cbuffer.size() < aligned)
+    {
+        cbuffer.push_back(0x00);
+    }
 }
 
 void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material* material,
@@ -182,14 +193,6 @@ void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material*
     AppendPropertiesByteSequence(material->vector4_properties(), cbuffer);
     
 
-    constexpr size_t alignment_size = 16;
-    size_t aligned = (cbuffer.size() + (alignment_size - 1)) & ~(alignment_size - 1);
-
-    // add padding so that size will be a multiple of 16.
-    while (cbuffer.size() < aligned)
-    {
-        cbuffer.push_back(0x00);
-    }
 
     //nodec::logging::DebugStream(__FILE__, __LINE__) << cbuffer.size() << std::flush;
 }

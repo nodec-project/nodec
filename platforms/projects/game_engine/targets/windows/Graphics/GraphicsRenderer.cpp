@@ -13,6 +13,7 @@ using namespace nodec;
 
 GraphicsRenderer::GraphicsRenderer(Graphics* graphics) :
     cbModelProperties(graphics, sizeof(ModelProperties), &modelProperties),
+    cbTextureConfig(graphics, sizeof(TextureConfig), &textureConfig),
     samplerAnisotropic(graphics, Sampler::Type::Anisotropic),
     samplerBilinear(graphics, Sampler::Type::Bilinear),
     samplerPoint(graphics, Sampler::Type::Point)
@@ -27,6 +28,9 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 
     cbModelProperties.BindVS(graphics, 0);
     cbModelProperties.BindPS(graphics, 0);
+
+    cbTextureConfig.BindVS(graphics, 2);
+    cbTextureConfig.BindPS(graphics, 2);
 
 
     for (auto iter = renderers.begin(); iter != renderers.end();)
@@ -102,11 +106,13 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 }
             }
 
-            BindMaterialTextures(material.get(), graphics, resources);
+            textureConfig.texHasFlag = 0x00;
+            BindMaterialTextures(material.get(), graphics, resources, textureConfig.texHasFlag);
+            cbTextureConfig.Update(graphics, &textureConfig);
+
 
             BindShader(&material->shader(), graphics, resources);
             BindMesh(mesh.get(), graphics, resources);
-
 
 
             graphics->DrawIndexed(mesh->triangles.size());
@@ -161,7 +167,7 @@ void GraphicsRenderer::BindShader(const nodec_modules::rendering::interfaces::Sh
 }
 
 void GraphicsRenderer::BindMaterialTextures(const nodec_modules::rendering::interfaces::Material* material,
-                                            Graphics* graphics, GraphicsResources* resources)
+                                            Graphics* graphics, GraphicsResources* resources, uint32_t& texhasFlag)
 {
     UINT slot = 0;
     for (auto& pair : material->texture_properties())
@@ -199,6 +205,12 @@ void GraphicsRenderer::BindMaterialTextures(const nodec_modules::rendering::inte
                 samplerBilinear.BindVS(graphics, slot);
                 break;
             }
+            texhasFlag |= 0x01 << slot;
+        }
+        else
+        {
+            samplerBilinear.BindPS(graphics, slot);
+            samplerBilinear.BindVS(graphics, slot);
         }
 
         slot++;

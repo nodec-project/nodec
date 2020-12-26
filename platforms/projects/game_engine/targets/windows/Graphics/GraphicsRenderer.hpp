@@ -20,6 +20,12 @@ public:
         DirectX::XMFLOAT4X4 matrixMInverse;
     };
 
+    struct TextureConfig
+    {
+        uint32_t texHasFlag;
+        uint32_t padding[3];
+    };
+
 public:
     GraphicsRenderer(Graphics* graphics);
     void Render(Graphics* graphics, GraphicsResources* resources);
@@ -38,11 +44,15 @@ private:
                     Graphics* graphics, GraphicsResources* resources);
 
     void BindMaterialTextures(const nodec_modules::rendering::interfaces::Material* material,
-                              Graphics* graphics, GraphicsResources* resources);
+                              Graphics* graphics, GraphicsResources* resources, uint32_t& texhasFlag);
 
 private:
     ModelProperties modelProperties;
     ConstantBuffer cbModelProperties;
+
+    TextureConfig textureConfig;
+    ConstantBuffer cbTextureConfig;
+
     Sampler samplerAnisotropic;
     Sampler samplerPoint;
     Sampler samplerBilinear;

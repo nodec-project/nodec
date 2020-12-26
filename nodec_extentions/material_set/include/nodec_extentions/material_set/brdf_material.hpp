@@ -18,6 +18,7 @@ namespace material_set
 *   albedo    Vector4f
 *
 *   albedo    texture
+*   height    texture
 *   metallic  texture
 *   normal    texture
 *   roughness texture
