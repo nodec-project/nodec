@@ -13,9 +13,13 @@ namespace material_set
 
 /**
 * Properties:
-*   metalness float    
+*   metallic  float    
 *   roughness float    
-*   albedo    Vector3f 
+*   albedo    Vector4f
+*
+*   albedo    texture
+*   metallic  texture
+*   roughness texture
 * 
 */
 class BRDFMaterial final: public nodec_modules::rendering::interfaces::Material

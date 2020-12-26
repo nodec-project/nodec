@@ -12,7 +12,7 @@
 using namespace nodec;
 
 GraphicsRenderer::GraphicsRenderer(Graphics* graphics) :
-    modelConstantBuffer(graphics, sizeof(ModelConstants), &modelConstants),
+    cbModelProperties(graphics, sizeof(ModelProperties), &modelProperties),
     samplerAnisotropic(graphics, Sampler::Type::Anisotropic),
     samplerBilinear(graphics, Sampler::Type::Bilinear),
     samplerPoint(graphics, Sampler::Type::Point)
@@ -25,8 +25,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 
     graphics->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-
-    modelConstantBuffer.BindVS(graphics, 0);
+    cbModelProperties.BindVS(graphics, 0);
 
 
     for (auto iter = renderers.begin(); iter != renderers.end();)
@@ -80,11 +79,11 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), DirectX::XMMatrixTranspose(matrixMVP));
                 //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), DirectX::XMMatrixTranspose(matrixMInverse));
 
-                DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), matrixM);
-                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), matrixMVP);
-                DirectX::XMStoreFloat4x4(&(modelConstants.matrixMInverse), matrixMInverse);
+                DirectX::XMStoreFloat4x4(&(modelProperties.matrixM), matrixM);
+                DirectX::XMStoreFloat4x4(&(modelProperties.matrixMVP), matrixMVP);
+                DirectX::XMStoreFloat4x4(&(modelProperties.matrixMInverse), matrixMInverse);
 
-                modelConstantBuffer.Update(graphics, &modelConstants);
+                cbModelProperties.Update(graphics, &modelProperties);
             } // Model ConstantBuffer
             
             // Material Properties

@@ -5,6 +5,7 @@
 
 #include <nodec/nodec_object.hpp>
 #include <nodec/vector3.hpp>
+#include <nodec/vector2.hpp>
 
 #include <vector>
 #include <memory>
@@ -26,6 +27,7 @@ public:
     {
         nodec::Vector3f position;
         nodec::Vector3f normal;
+        nodec::Vector2f uv;
 
         Vertex(const nodec::Vector3f& position) :
             position(position)
@@ -35,6 +37,13 @@ public:
         Vertex(const nodec::Vector3f& position, const nodec::Vector3f& normal) :
             position(position),
             normal(normal)
+        {
+        };
+
+        Vertex(const nodec::Vector3f& position, const nodec::Vector3f& normal, const nodec::Vector2f& uv) :
+            position(position),
+            normal(normal),
+            uv(uv)
         {
         };
 

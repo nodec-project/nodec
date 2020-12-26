@@ -32,9 +32,10 @@ void UnbindMaterial(const nodec_modules::rendering::interfaces::Material* materi
 
 
 void BindTexture(const nodec_modules::rendering::interfaces::Texture* texture,
-                 Graphics* graphics);
+                 Graphics* graphics, GraphicsResources* resources);
 
-void UnbindTexture(const nodec_modules::rendering::interfaces::Texture* texture);
+void UnbindTexture(const nodec_modules::rendering::interfaces::Texture* texture,
+                   GraphicsResources* resources);
 
 
 void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material* material,

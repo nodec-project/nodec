@@ -13,7 +13,7 @@
 class GraphicsRenderer
 {
 public:
-    struct ModelConstants
+    struct ModelProperties
     {
         DirectX::XMFLOAT4X4 matrixMVP;
         DirectX::XMFLOAT4X4 matrixM;
@@ -40,8 +40,8 @@ private:
     
 
 private:
-    ModelConstants modelConstants;
-    ConstantBuffer modelConstantBuffer;
+    ModelProperties modelProperties;
+    ConstantBuffer cbModelProperties;
     Sampler samplerAnisotropic;
     Sampler samplerPoint;
     Sampler samplerBilinear;

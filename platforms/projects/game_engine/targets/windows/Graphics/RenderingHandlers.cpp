@@ -120,11 +120,11 @@ void RenderingHandlers::HandleMaterialUnbinding(const nodec_modules::rendering::
 // --- Texture ---
 void RenderingHandlers::HandleTextureBinding(const nodec_modules::rendering::interfaces::Texture* texture)
 {
-    RenderingUtils::BindTexture(texture, graphics);
+    RenderingUtils::BindTexture(texture, graphics, graphicsResources);
 }
 void RenderingHandlers::HandleTextureUnbinding(const nodec_modules::rendering::interfaces::Texture* texture)
 {
-    RenderingUtils::UnbindTexture(texture);
+    RenderingUtils::UnbindTexture(texture, graphicsResources);
 }
 // End Texture ---
 

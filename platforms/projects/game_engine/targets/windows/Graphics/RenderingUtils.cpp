@@ -101,8 +101,9 @@ void BindShader(const nodec_modules::rendering::interfaces::Shader* shader,
     pixelShaderPath += "/pixel.cso";
 
     const D3D11_INPUT_ELEMENT_DESC ied[] = {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0                           , D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "NORMAL"  , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        { "POSITION" , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0                           , D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "NORMAL"   , 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        { "TEXCOORD" , 0, DXGI_FORMAT_R32G32_FLOAT   , 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 }
     };
 
     try
@@ -194,17 +195,18 @@ void CreateMaterialCBuffer(const nodec_modules::rendering::interfaces::Material*
 }
 
 
-void BindTexture(const nodec_modules::rendering::interfaces::Texture* texture, 
-                 Graphics* graphics)
+void BindTexture(const nodec_modules::rendering::interfaces::Texture* texture_client, 
+                 Graphics* graphics, GraphicsResources* resources)
 {
     try
     {
         logging::DebugStream(__FILE__, __LINE__) << "tst";
         std::string image_path = "resources/textures/";
-        image_path += texture->path();
+        image_path += texture_client->path();
 
-        //auto texture = new Texture(graphics, image_path);
         auto texture = std::make_shared<Texture>(graphics, image_path);
+
+        resources->textureMap.emplace(texture_client->id(), texture);
     }
     catch (...)
     {
@@ -212,9 +214,10 @@ void BindTexture(const nodec_modules::rendering::interfaces::Texture* texture,
     }
 }
 
-void UnbindTexture(const nodec_modules::rendering::interfaces::Texture* texture)
+void UnbindTexture(const nodec_modules::rendering::interfaces::Texture* texture,
+                   GraphicsResources* resources)
 {
-
+    resources->textureMap.erase(texture->id());
 }
 
 } // namespace RenderingUtils

@@ -25,7 +25,7 @@ public:
 
     std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<ConstantBuffer>> constantBufferMap;
 
-    
+    std::unordered_map<nodec::NodecObject::ID, std::shared_ptr<Texture>> textureMap;
 
 public:
     GraphicsResources();

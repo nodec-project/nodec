@@ -12,12 +12,20 @@ cbuffer cbMaterialProperties
     MaterialProperties materialProperties;
 };
 
+Texture2D texMetallic;
+Texture2D texRoughtness;
+Texture2D texAlbedo;
+
+SamplerState sampler_texMetallic;
+SamplerState sampler_texRoughtness;
+SamplerState sampler_texAlbedo;
 
 struct V2P
 {
     float4 position : SV_Position;
     float3 worldPos : POSITION;
     float3 worldNormal : NORMAL;
+    float2 texcoord : TEXCOORD0;
 	//float3 tangent : TANGENT;
 	//float2 texCoord : TEXCOORD4;
 };

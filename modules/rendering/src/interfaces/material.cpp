@@ -32,15 +32,15 @@ Material::float_properties() const
 {
     return float_properties_;
 }
+bool Material::get_float(const std::string& name, float& out) const
+{
+    return get_value_generic(float_properties_, name, out);
+}
 bool Material::set_float(const std::string& name, const float& value)
 {
     return set_value_generic(float_properties_, name, value);
 }
 
-bool Material::get_float(const std::string& name, float& out)
-{
-    return get_value_generic(float_properties_, name, out);
-}
 
 
 const std::map<std::string, nodec::Vector4f>&
@@ -48,17 +48,35 @@ Material::vector4_properties() const
 {
     return vector4_properties_;
 }
+bool Material::get_vector4(const std::string& name, nodec::Vector4f& out) const
+{
+    return get_value_generic(vector4_properties_, name, out);
+}
 bool Material::set_vector4(const std::string& name, const nodec::Vector4f& value)
 {
     return set_value_generic(vector4_properties_, name, value);
 }
-bool Material::get_vector4(const std::string& name, nodec::Vector4f& out)
+
+
+const std::map<std::string, Material::TextureEntry>&
+Material::texture_properties() const
 {
-    return get_value_generic(vector4_properties_, name, out);
+    return texture_properties_;
 }
 
+bool Material::get_texture(const std::string& name, TextureEntry& out) const
+{
+    return get_value_generic(texture_properties_, name, out);
+}
+
+bool Material::set_texture(const std::string& name, const TextureEntry& texture_entry)
+{
+    return set_value_generic(texture_properties_, name, texture_entry);
+}
+
+
 template<typename T>
-bool Material::get_value_generic(std::map<std::string, T>& properties, const std::string& name, T& out)
+bool Material::get_value_generic(const std::map<std::string, T>& properties, const std::string& name, T& out)
 {
     auto iter = properties.find(name);
     if (iter == properties.end())

@@ -28,6 +28,10 @@ BRDFMaterial::BRDFMaterial(Rendering* target_rendering) :
     float_properties_.emplace("metallic", 1.0f);
     float_properties_.emplace("roughness", 1.0f);
     vector4_properties_.emplace("albedo", nodec::Vector4f::ones);
+
+    texture_properties_.emplace("albedo", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
+    texture_properties_.emplace("metallic", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
+    texture_properties_.emplace("roughness", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
 }
 
 } // namespace material_set
