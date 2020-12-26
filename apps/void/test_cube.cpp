@@ -42,18 +42,18 @@ void TestCube::on_frame_start(Rendering& rendering)
         renderer->material->set_float("metallic", 0.5f);
         renderer->material->set_float("roughness", 0.5f);
 
-        if (auto texture = tex_albedo_global.lock())
-        {
-            renderer->material->set_texture("albedo", texture);
-        }
-        else
-        {
-            texture = NodecObject::instanciate<Texture>("concrete/Tcom_Pavement_PaintedConcrete3_Base_Color.tga", &rendering);
-            //texture = NodecObject::instanciate<Texture>("panel/Tcom_Scifi_Panel_Base_Color.tga", &rendering);
-            rendering.bind_texture(texture.get());
-            renderer->material->set_texture("albedo", texture);
-            tex_albedo_global = texture;
-        }
+        //if (auto texture = tex_albedo_global.lock())
+        //{
+        //    renderer->material->set_texture("albedo", texture);
+        //}
+        //else
+        //{
+        //    texture = NodecObject::instanciate<Texture>("concrete/Tcom_Pavement_PaintedConcrete3_Base_Color.tga", &rendering);
+        //    //texture = NodecObject::instanciate<Texture>("panel/Tcom_Scifi_Panel_Base_Color.tga", &rendering);
+        //    rendering.bind_texture(texture.get());
+        //    renderer->material->set_texture("albedo", texture);
+        //    tex_albedo_global = texture;
+        //}
 
         if (auto texture = tex_roughness_global.lock())
         {

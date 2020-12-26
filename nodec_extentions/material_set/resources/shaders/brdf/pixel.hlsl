@@ -20,6 +20,7 @@ float4 PSMain(V2P input) : SV_Target
     surface.albedo = texAlbedo.Sample(sampler_texAlbedo, input.texcoord);
     surface.metallic = materialProperties.metallic;
     surface.roughness = materialProperties.roughness;
+    surface.roughness = texRoughtness.Sample(sampler_texRoughtness, input.texcoord);
     
     //const float ambient
     

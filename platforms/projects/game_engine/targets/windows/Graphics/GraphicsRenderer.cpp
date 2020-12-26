@@ -168,6 +168,12 @@ void GraphicsRenderer::BindMaterialTextures(const nodec_modules::rendering::inte
     {
         if (!pair.second.texture)
         {
+            // texture not setted.
+            // skip bind texture, 
+            // but bind sampler because the The Pixel Shader unit expects a Sampler to be set at Slot 0.
+            samplerBilinear.BindPS(graphics, slot);
+            samplerBilinear.BindVS(graphics, slot);
+
             slot++;
             continue;
         }
