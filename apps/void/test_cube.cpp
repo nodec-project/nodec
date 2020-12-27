@@ -53,7 +53,7 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         renderer->material = NodecObject::instanciate<BRDFMaterial>(&rendering);
         renderer->material->set_vector4("albedo", Vector4f(1, 1, 1, 1.0));
-        renderer->material->set_float("metallic", 0.1f);
+        renderer->material->set_float("metallic", 0.5f);
         renderer->material->set_float("roughness", 0.5f);
 
         //renderer->material->set_texture("albedo",
@@ -68,6 +68,8 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         renderer->material->set_texture("albedo",
                                         get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Base_Color.tga"));
+        renderer->material->set_texture("ambient_occlusion",
+                                        get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_ambientOcclusion.tga"));
         renderer->material->set_texture("height",
                                         get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Height.tga"));
         renderer->material->set_texture("roughness",

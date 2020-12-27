@@ -34,5 +34,7 @@
   __NODEC_MAKE_SHARED_DEFINITION(__VA_ARGS__)
 
 
+#define NODEC_STRING_JOIN(arg1, arg2) NODEC_DO_STRING_JOIN(arg1, arg2)
+#define NODEC_DO_STRING_JOIN(arg1, arg2) arg1 ## arg2
 
 #endif

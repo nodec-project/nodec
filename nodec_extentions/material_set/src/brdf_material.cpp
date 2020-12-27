@@ -30,6 +30,7 @@ BRDFMaterial::BRDFMaterial(Rendering* target_rendering) :
     vector4_properties_.emplace("albedo", nodec::Vector4f::ones);
 
     texture_properties_.emplace("albedo", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
+    texture_properties_.emplace("ambient_occlusion", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
     texture_properties_.emplace("height", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
     texture_properties_.emplace("metallic", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });
     texture_properties_.emplace("normal", TextureEntry{ NodecObject::Holder<Texture>(), Sampler::Bilinear });

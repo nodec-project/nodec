@@ -17,11 +17,12 @@ namespace material_set
 *   roughness float    
 *   albedo    Vector4f
 *
-*   albedo    texture
-*   height    texture
-*   metallic  texture
-*   normal    texture
-*   roughness texture
+*   albedo            texture
+*   ambient_occlusion texture
+*   height            texture
+*   metallic          texture
+*   normal            texture
+*   roughness         texture
 * 
 */
 class BRDFMaterial final: public nodec_modules::rendering::interfaces::Material

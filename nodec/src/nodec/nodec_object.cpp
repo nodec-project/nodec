@@ -23,8 +23,6 @@ NodecObject::NodecObject(const std::string& name) :
         // id_counter is overflowed
         logging::warn("NodecObject id counter is overflowed. It will cause id confliction.", __FILE__, __LINE__);
     }
-
-    //std::cout << "in base contructor. " << std::endl;
 }
 
 
