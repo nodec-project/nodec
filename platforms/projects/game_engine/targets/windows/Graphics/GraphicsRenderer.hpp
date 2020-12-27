@@ -5,7 +5,7 @@
 #include "ConstantBuffer.hpp"
 #include "Sampler.hpp"
 
-#include <nodec_modules/rendering/interfaces/renderer.hpp>
+#include <nodec_modules/rendering/interfaces/rendering.hpp>
 
 #include <DirectXMath.h>
 #include <unordered_map>
@@ -35,6 +35,8 @@ public:
         nodec::NodecObject::ID,
         nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer>>
         renderers;
+
+    nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Camera> currentCamera;
 
 private:
     void BindMesh(const nodec_modules::rendering::interfaces::Mesh* mesh,

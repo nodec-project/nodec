@@ -1,6 +1,12 @@
 #ifndef NODEC_MODULES__RENDERING__INTERFACES__RENDERING_HPP_
 #define NODEC_MODULES__RENDERING__INTERFACES__RENDERING_HPP_
 
+#include <nodec_modules/rendering/interfaces/mesh.hpp>
+#include <nodec_modules/rendering/interfaces/shader.hpp>
+#include <nodec_modules/rendering/interfaces/renderer.hpp>
+#include <nodec_modules/rendering/interfaces/material.hpp>
+#include <nodec_modules/rendering/interfaces/texture.hpp>
+#include <nodec_modules/rendering/interfaces/camera.hpp>
 
 #include <nodec/module_interface.hpp>
 #include <nodec/event.hpp>
@@ -13,11 +19,6 @@ namespace rendering
 namespace interfaces
 {
 
-class Mesh;
-class Shader;
-class Renderer;
-class Material;
-class Texture;
 
 class Rendering : public nodec::ModuleInterface
 {
@@ -40,6 +41,8 @@ public:
     virtual void unbind_texture(const Texture* texture) = 0;
 
     virtual void regist_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
+
+    virtual void regist_camera(nodec::NodecObject::Reference<Camera> camera) = 0;
 
 public:
     nodec::event::Event<Rendering&> on_frame_update;

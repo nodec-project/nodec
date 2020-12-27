@@ -24,7 +24,6 @@ int CALLBACK WinMain(
     LPSTR lpCmdLine,
     int nCmdShow)
 {
-
     try
     {
         // --- Init Logging ---
@@ -81,8 +80,11 @@ int CALLBACK WinMain(
         RenderingHandlers::SetupHandlers(renderingHandlers, game_engine_module->rendering_module());
 
 
-        game_engine_module->engine_time_stopwatch().lap();
+        nodec::logging::InfoStream(__FILE__, __LINE__) 
+            << "[Main] >>> [[ START FRAME LOOP ]]\n"
+            << "engine_time: " << game_engine_module->engine_time() << " [s]" << std::flush;
 
+        game_engine_module->engine_time_stopwatch().lap();
         int exit_code;
         while (true)
         {
@@ -105,6 +107,10 @@ int CALLBACK WinMain(
 
             window.Gfx().EndFrame();
         }
+
+        nodec::logging::InfoStream(__FILE__, __LINE__) 
+            << "[Main] >>> [[ END FRAME LOOP ]]\n"
+            << "engine_time: " << game_engine_module->engine_time() << " [s]"<< std::flush;
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program Sucessfully Ending. See you." << std::flush;
         return exit_code;

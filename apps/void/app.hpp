@@ -4,10 +4,6 @@
 #include <nodec_modules/game_engine/interfaces/game_engine.hpp>
 #include <nodec_modules/game_engine/interfaces/behavior.hpp>
 
-#include <nodec_modules/rendering/interfaces/material.hpp>
-#include <nodec_modules/rendering/interfaces/mesh.hpp>
-#include <nodec_modules/rendering/interfaces/renderer.hpp>
-#include <nodec_modules/rendering/interfaces/texture.hpp>
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
 #include <nodec_modules/input/keyboard/interfaces/keyboard.hpp>
@@ -24,5 +20,13 @@
 #include <nodec/math/gfx.hpp>
 
 
+class App
+{
+    using Camera = nodec_modules::rendering::interfaces::Camera;
+
+public:
+    static nodec::NodecObject::Reference<Camera> main_camera;
+
+};
 
 #endif

@@ -28,15 +28,15 @@ public:
     void HandleTextureBinding(const nodec_modules::rendering::interfaces::Texture* texture);
     void HandleTextureUnbinding(const nodec_modules::rendering::interfaces::Texture* texture);
 
-    void HandleRendererRegisting(
-        nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer
-    );
+    void HandleRendererRegisting(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer);
+
+    void HandleCameraRegisting(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Camera> camera);
 
 private:
     Graphics* graphics;
     GraphicsResources* graphicsResources;
     GraphicsRenderer* graphicsRenderer;
-    
+
 
 private:
     NODEC_DISABLE_COPY(RenderingHandlers);

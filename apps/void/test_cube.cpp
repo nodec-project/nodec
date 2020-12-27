@@ -58,6 +58,8 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         //renderer->material->set_texture("albedo",
         //                                get_texture(tex_albedo_global, "concrete/Tcom_Pavement_PaintedConcrete3_Base_Color.tga"));
+        //renderer->material->set_texture("ambient_occlusion",
+        //                                get_texture(tex_albedo_global, "concrete/Tcom_Pavement_PaintedConcrete3_Ambient_Occlusion.tga"));
         //renderer->material->set_texture("height",
         //                                get_texture(tex_albedo_global, "concrete/Tcom_Pavement_PaintedConcrete3_Height.tga"));
         //renderer->material->set_texture("roughness",
@@ -93,6 +95,8 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         //renderer->material->set_texture("albedo",
         //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_Base_Color.tga"));
+        //renderer->material->set_texture("ambient_occlusion",
+        //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_AO.tga"));
         //renderer->material->set_texture("height",
         //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_Height.tga"));
         //renderer->material->set_texture("roughness",
@@ -103,6 +107,8 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         //renderer->material->set_texture("albedo",
         //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Base_Color.tga"));
+        //renderer->material->set_texture("ambient_occlusion",
+        //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Ambient_Occlusion.tga"));
         //renderer->material->set_texture("height",
         //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Height.tga"));
         //renderer->material->set_texture("roughness",
@@ -119,9 +125,6 @@ void TestCube::on_frame_start(Rendering& rendering)
         //renderer->material->set_texture("height",
         //                                get_texture(tex_albedo_global, "test/HeightMap.png"));
 
-        //texture = NodecObject::instanciate<Texture>("panel/Tcom_Scifi_Panel_Base_Color.tga", &rendering);
-
-        //texture = NodecObject::instanciate<Texture>("panel/Tcom_Scifi_Panel_Roughness.tga", &rendering);
 
 
 

@@ -68,6 +68,11 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
             handlers, &RenderingHandlers::HandleRendererRegisting
         );
     rendering_module.on_regist_renderer += rendererRegistingHandler;
+
+    auto cameraRegistingHandler
+        = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Camera>>::make_shared(
+            handlers, &RenderingHandlers::HandleCameraRegisting
+        );
 }
 
 RenderingHandlers::RenderingHandlers(
@@ -128,11 +133,16 @@ void RenderingHandlers::HandleTextureUnbinding(const nodec_modules::rendering::i
 }
 // End Texture ---
 
-void RenderingHandlers::HandleRendererRegisting(
-    nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)
+void RenderingHandlers::HandleRendererRegisting(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)
 {
     if (auto renderer_locked = renderer.lock())
     {
         graphicsRenderer->renderers.emplace(renderer_locked->id(), renderer);
     }
+}
+
+void RenderingHandlers::HandleCameraRegisting(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Camera> camera)
+{
+    logging::debug("test", __FILE__, __LINE__);
+    graphicsRenderer->currentCamera = camera;
 }
