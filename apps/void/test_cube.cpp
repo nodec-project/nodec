@@ -53,7 +53,7 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         renderer->material = NodecObject::instanciate<BRDFMaterial>(&rendering);
         renderer->material->set_vector4("albedo", Vector4f(1, 1, 1, 1.0));
-        renderer->material->set_float("metallic", 0.0f);
+        renderer->material->set_float("metallic", 0.1f);
         renderer->material->set_float("roughness", 0.5f);
 
         //renderer->material->set_texture("albedo",
@@ -66,28 +66,49 @@ void TestCube::on_frame_start(Rendering& rendering)
         //                                get_texture(tex_albedo_global, "concrete/Tcom_Pavement_PaintedConcrete3_Normal.tga"));
 
 
-        //renderer->material->set_texture("albedo",
-        //                                get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Base_Color.tga"));
-        //renderer->material->set_texture("height",
-        //                                get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Height.tga"));
-        //renderer->material->set_texture("roughness",
-        //                                get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Roughness.tga"));
-        //renderer->material->set_texture("metallic",
-        //                                get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Metallic.tga"));
-        //renderer->material->set_texture("normal",
-        //                                get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Normal.tga"));
-
         renderer->material->set_texture("albedo",
-                                        get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Base_Color.tga"));
+                                        get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Base_Color.tga"));
         renderer->material->set_texture("height",
-                                        get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Height.tga"));
+                                        get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Height.tga"));
         renderer->material->set_texture("roughness",
-                                        get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Roughness.tga"));
+                                        get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Roughness.tga"));
         renderer->material->set_texture("metallic",
-                                        get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Metallic.tga"));
+                                        get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Metallic.tga"));
         renderer->material->set_texture("normal",
-                                        get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Normal.tga"));
+                                        get_texture(tex_albedo_global, "acoustic_foam/Tcom_Various_AcousticFoam_Normal.tga"));
 
+        //renderer->material->set_texture("albedo",
+        //                                get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Base_Color.tga"));
+        //renderer->material->set_texture("height",
+        //                                get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Height.tga"));
+        //renderer->material->set_texture("roughness",
+        //                                get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Roughness.tga"));
+        //renderer->material->set_texture("metallic",
+        //                                get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Metallic.tga"));
+        //renderer->material->set_texture("normal",
+        //                                get_texture(tex_albedo_global, "panel/Tcom_Scifi_Panel_Normal.tga"));
+
+
+        //renderer->material->set_texture("albedo",
+        //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_Base_Color.tga"));
+        //renderer->material->set_texture("height",
+        //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_Height.tga"));
+        //renderer->material->set_texture("roughness",
+        //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_Roughness.tga"));
+        //renderer->material->set_texture("normal",
+        //                                get_texture(tex_albedo_global, "rock/Tcom_Rock_CliffVolcanic_Normal.tga"));
+
+
+        //renderer->material->set_texture("albedo",
+        //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Base_Color.tga"));
+        //renderer->material->set_texture("height",
+        //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Height.tga"));
+        //renderer->material->set_texture("roughness",
+        //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Roughness.tga"));
+        //renderer->material->set_texture("metallic",
+        //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Metallic.tga"));
+        //renderer->material->set_texture("normal",
+        //                                get_texture(tex_albedo_global, "blanket/Tcom_Plastic_SpaceBlanketFolds_Normal.tga"));
 
 
         //renderer->material->set_texture("normal",

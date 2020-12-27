@@ -31,7 +31,7 @@ V2P VSMain(VSIn input)
     //output.worldNormal = float3(1, 0, 0);
     //output.worldNormal = input.normal;
     
-    output.worldTangent = ModelToWorldNormal(input.tangent);
+    output.worldTangent = normalize(mul(modelProperties.matrixM, float4(input.tangent, 0)).xyz);
 	
     output.texcoord = input.texcoord;
 	
