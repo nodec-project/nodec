@@ -44,13 +44,6 @@ Transform::get_world_transform(Vector3f& world_position, Quaternionf& world_rota
     return root;
 }
 
-NodecObject::Reference<SceneObject>
-Transform::set_world_transform(const Vector3f& position, const Quaternionf& rotation, const Vector3f& scale)
-{
-    NodecObject::Reference<SceneObject> root;
-
-    return root;
-}
 
 }
 }

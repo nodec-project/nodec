@@ -32,7 +32,10 @@ void nodec_modules::game_engine::interfaces::on_boot(GameEngine& engine)
     
     auto test_object_1 = NodecObject::instanciate<nodec::scene_set::SceneObject>("test_1");
     test_object_1->add_component<TestCube>();
-    player->append_child(test_object_1);
+    test_object_1->transform().local_position.y = 1.6;
+    test_object_1->transform().local_position.z = 2;
+    //player->append_child(test_object_1);
+    engine.root_scene_object().append_child(test_object_1);
 
 
 }

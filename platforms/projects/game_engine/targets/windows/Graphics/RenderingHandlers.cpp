@@ -73,6 +73,7 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
         = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Camera>>::make_shared(
             handlers, &RenderingHandlers::HandleCameraRegisting
         );
+    rendering_module.on_regist_camera += cameraRegistingHandler;
 }
 
 RenderingHandlers::RenderingHandlers(

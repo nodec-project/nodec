@@ -16,12 +16,13 @@ namespace gfx
 
 inline void set_angle_axis(Quaternionf& quaternion, float angle_deg, const Vector3f& axis)
 {
-    auto a = angle_deg * deg2rad<float> / 2.0f;
-    auto s = std::sin(a);
-    quaternion.x = axis.x * s;
-    quaternion.y = axis.y * s;
-    quaternion.z = axis.z * s;
-    quaternion.w = std::cos(a);
+    auto theta = angle_deg * deg2rad<float> / 2.0f;
+    auto s = std::sin(theta);
+    auto a = normalize(axis);
+    quaternion.x = a.x * s;
+    quaternion.y = a.y * s;
+    quaternion.z = a.z * s;
+    quaternion.w = std::cos(theta);
 }
 
 inline Vector3f transform(const Vector3f& vec, const Quaternionf& q)

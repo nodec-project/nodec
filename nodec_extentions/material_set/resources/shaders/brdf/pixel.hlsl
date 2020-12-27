@@ -8,7 +8,7 @@
 
 float2 ApplyParallaxOffset(float2 uv, float3 viewDirInTangentSpace, Texture2D heightMap, SamplerState samplerHeightMap, float dotVN)
 {
-	//src: https://www.gamedev.net/articles/programming/graphics/a-closer-look-at-parallax-occlusion-mapping-r3262/
+    //src: https://www.gamedev.net/articles/programming/graphics/a-closer-look-at-parallax-occlusion-mapping-r3262/
 
     const float fHeigtMapScale = 0.1f;
     const float nMaxSamples = 32.0f;
@@ -70,7 +70,7 @@ float2 ApplyParallaxOffset(float2 uv, float3 viewDirInTangentSpace, Texture2D he
 
 float4 PSMain(V2P input) : SV_Target
 {
-    float3 cameraPos = float3(0.0f, 0.0f, 0.0f);
+    float3 cameraPos = sceneProperties.cameraPos.xyz;
     
     
     const float3 viewDir = normalize(input.worldPos - cameraPos); // camera to obj 
@@ -149,5 +149,5 @@ float4 PSMain(V2P input) : SV_Target
         illumination *= texAmbientOcclusion.Sample(sampler_texAmbientOcclusion, input.texcoord).r;
     }
     
-	return float4(illumination, 1.0f);
+    return float4(illumination, 1.0f);
 }

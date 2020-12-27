@@ -27,6 +27,9 @@ public:
     SceneObject& scene_object() const noexcept;
 
 private:
+    /**
+    * @brief pointer to scene object (owner). 
+    */
     SceneObject* p_scene_object;
 };
 

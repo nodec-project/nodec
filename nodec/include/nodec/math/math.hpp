@@ -57,10 +57,39 @@ inline T norm(const Vector4<T>& v)
 }
 
 template<typename T>
-inline T normalized(const T& v)
+inline T norm(const Quaternion<T>& q)
+{
+    return std::sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
+}
+
+template<typename T>
+inline T normalize(const T& v)
 {
     return v / norm(v);
 }
+
+/**
+* @note Dot product
+* <https://en.wikipedia.org/wiki/Dot_product>
+*/
+template<typename T>
+inline T dot(const Vector2<T>& a, const Vector2<T>& b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
+template<typename T>
+inline T dot(const Vector3<T>& a, const Vector3<T>& b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z;
+}
+
+template<typename T>
+inline T dot(const Vector4<T>& a, const Vector4<T>& b)
+{
+    return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
+}
+
 
 } // namespace math
 } // namespace nodec

@@ -17,6 +17,7 @@ void Player::on_frame_start(Rendering& rendering)
 {
     if (auto camera = App::main_camera.lock())
     {
+        logging::debug("as", __FILE__, __LINE__);
         rendering.regist_camera(camera);
     }
 
@@ -41,25 +42,41 @@ void Player::on_frame_update(Rendering& rendering)
     }
 
     // --- locomotion ---
+    Vector3f forward = math::gfx::transform(Vector3f(0, 0, 1), scene_object().transform().local_rotation); forward.y = 0;
+    forward = math::normalize(forward);
+
+    Vector3f right = math::gfx::transform(Vector3f(1, 0, 0), scene_object().transform().local_rotation); right.y = 0;
+    right = math::normalize(right);
+
+    Vector2f move_vec;
+
     if (keyboard.get_key_pressed(Key::A))
     {
-        scene_object().transform().local_position.x -= speed * delta_time;
+        move_vec.x = -1.0f;
     }
 
     if (keyboard.get_key_pressed(Key::D))
     {
-        scene_object().transform().local_position.x += speed * delta_time;
+        move_vec.x = 1.0f;
     }
 
     if (keyboard.get_key_pressed(Key::W))
     {
-        scene_object().transform().local_position.z += speed * delta_time;
+        move_vec.y = 1.0f;
     }
 
     if (keyboard.get_key_pressed(Key::S))
     {
-        scene_object().transform().local_position.z -= speed * delta_time;
+        move_vec.y = -1.0f;
     }
+    if (math::norm(move_vec) > 0.001f)
+    {
+        move_vec = math::normalize(move_vec);
+
+        scene_object().transform().local_position += move_vec.y * forward * speed * delta_time;
+        scene_object().transform().local_position += move_vec.x * right * speed * delta_time;
+    }
+
     // end locomotion ---
 
     // --- angle ---
@@ -75,6 +92,7 @@ void Player::on_frame_update(Rendering& rendering)
         math::gfx::set_angle_axis(delta, delta_time * 30, Vector3f(0, 1, 0));
         scene_object().transform().local_rotation *= delta;
     }
+
     if (keyboard.get_key_pressed(Key::I))
     {
         Quaternionf delta;

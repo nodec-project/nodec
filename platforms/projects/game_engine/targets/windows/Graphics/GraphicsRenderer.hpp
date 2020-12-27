@@ -13,6 +13,11 @@
 class GraphicsRenderer
 {
 public:
+    struct SceneProperties
+    {
+        nodec::Vector4f cameraPos;
+    };
+
     struct ModelProperties
     {
         DirectX::XMFLOAT4X4 matrixMVP;
@@ -49,6 +54,9 @@ private:
                               Graphics* graphics, GraphicsResources* resources, uint32_t& texhasFlag);
 
 private:
+    SceneProperties sceneProperties;
+    ConstantBuffer cbSceneProperties;
+
     ModelProperties modelProperties;
     ConstantBuffer cbModelProperties;
 

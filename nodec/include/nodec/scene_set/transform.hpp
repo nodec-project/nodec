@@ -27,9 +27,6 @@ public:
     NodecObject::Reference<SceneObject>
         get_world_transform(Vector3f& out_position, Quaternionf& out_rotation, Vector3f& out_scale);
 
-    NodecObject::Reference<SceneObject>
-        set_world_transform(const Vector3f& position, const Quaternionf& rotation, const Vector3f& scale);
-
 
 };
 }

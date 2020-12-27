@@ -1,26 +1,26 @@
 
 
 // ================================== BRDF NOTES =========================================
-//	src: https://learnopengl.com/#!PBR/Theory
-//	ref: http://blog.selfshadow.com/publications/s2012-shading-course/hoffman/s2012_pbs_physics_math_notes.pdf
+//    src: https://learnopengl.com/#!PBR/Theory
+//    ref: http://blog.selfshadow.com/publications/s2012-shading-course/hoffman/s2012_pbs_physics_math_notes.pdf
 //
 // Rendering Equation
 // ------------------
 //
-//		L_o(p, w_o) = L_e(p) + Integral_Omega()[f_r(p, w_i, w_o) * L_i(p, w_i) * dot(N, w_i)]dw_i
+//        L_o(p, w_o) = L_e(p) + Integral_Omega()[f_r(p, w_i, w_o) * L_i(p, w_i) * dot(N, w_i)]dw_i
 //
-// L_o		: Radiance leaving surface point P along the direction w_o (V=eye)
-// L_e		: Emissive Radiance leaving surface point p | we're not gonna use emissive materials for now 
-// L_i		: Irradiance (Radiance coming) coming from a light source at point p 
-// f_r()	: reflectance equation representing the material property
+// L_o        : Radiance leaving surface point P along the direction w_o (V=eye)
+// L_e        : Emissive Radiance leaving surface point p | we're not gonna use emissive materials for now 
+// L_i        : Irradiance (Radiance coming) coming from a light source at point p 
+// f_r()    : reflectance equation representing the material property
 // Integral : all incoming radiance over hemisphere omega, reflected towards the direction of w_o<->(V=eye) 
-//			  by the surface material
+//              by the surface material
 //
 // The integral is numerically solved.
 // 
-// BRDF						: Bi-directional Reflectance Distribution Function
-// The Cook-Torrence BRDF	: f_r = k_d * f_lambert + k_s * f_cook-torrence
-//							f_lambert = albedo / PI;
+// BRDF                        : Bi-directional Reflectance Distribution Function
+// The Cook-Torrence BRDF    : f_r = k_d * f_lambert + k_s * f_cook-torrence
+//                            f_lambert = albedo / PI;
 //
 
 #define PI 3.14159265359f
@@ -39,13 +39,13 @@ struct BRDFSurface
 // Trowbridge-Reitz GGX Distribution
 inline float NormalDistributionGGX(float3 normal, float3 wh, float roughness)
 {
-    // approximates microfacets :	approximates the amount the surface's microfacets are
-	//								aligned to the halfway vector influenced by the roughness
-	//								of the surface
-	//							:	determines the size, brightness, and shape of the specular highlight
-	// more: http://reedbeta.com/blog/hows-the-ndf-really-defined/
-	//
-	// NDF_GGXTR(N, H, roughness) = roughness^2 / ( PI * ( dot(N, H))^2 * (roughness^2 - 1) + 1 )^2
+    // approximates microfacets :    approximates the amount the surface's microfacets are
+    //                                aligned to the halfway vector influenced by the roughness
+    //                                of the surface
+    //                            :    determines the size, brightness, and shape of the specular highlight
+    // more: http://reedbeta.com/blog/hows-the-ndf-really-defined/
+    //
+    // NDF_GGXTR(N, H, roughness) = roughness^2 / ( PI * ( dot(N, H))^2 * (roughness^2 - 1) + 1 )^2
     const float a = roughness * roughness;
     const float a2 = a * a;
     const float nh2 = pow(max(dot(normal, wh), 0), 2);
@@ -60,14 +60,14 @@ inline float NormalDistributionGGX(float3 normal, float3 wh, float roughness)
 inline float GeometrySmithsSchlickGGX(float3 normal, float3 w, float roughness)
 {
     // describes self shadowing of geometry
-	//
-	// G_ShclickGGX(N, V, k) = ( dot(N,V) ) / ( dot(N,V)*(1-k) + k )
-	//
-	// k		 :	remapping of roughness based on wheter we're using geometry function 
-	//				for direct lighting or IBL
-	// k_direct	 = (roughness + 1)^2 / 8
-	// k_IBL	 = roughness^2 / 2
-	//
+    //
+    // G_ShclickGGX(N, V, k) = ( dot(N,V) ) / ( dot(N,V)*(1-k) + k )
+    //
+    // k         :    remapping of roughness based on wheter we're using geometry function 
+    //                for direct lighting or IBL
+    // k_direct     = (roughness + 1)^2 / 8
+    // k_IBL     = roughness^2 / 2
+    //
     const float k = pow((roughness + 1.0f), 2) / 8.0f;
     const float nv = max(0.0f, dot(normal, w));
     const float denom = (nv * (1.0f - k) + k) + 0.0001f;

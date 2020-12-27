@@ -1,3 +1,12 @@
+struct SceneProperties
+{
+    float4 cameraPos;
+};
+
+cbuffer cbSceneProperties : register(b0)
+{
+    SceneProperties sceneProperties;
+};
 
 struct ModelProperties
 {
@@ -6,7 +15,7 @@ struct ModelProperties
     matrix matrixMInverse;
 };
 
-cbuffer cbModelProperties : register(b0)
+cbuffer cbModelProperties : register(b1)
 {
     ModelProperties modelProperties;
 }
@@ -19,7 +28,7 @@ struct MaterialProperties
     float4 albedo;
 };
 
-cbuffer cbMaterialProperties : register(b1)
+cbuffer cbMaterialProperties : register(b2)
 {
     MaterialProperties materialProperties;
 };
@@ -29,7 +38,7 @@ struct TextureConfig
     uint texHasFlag;
 };
 
-cbuffer cbTextureConfig : register(b2)
+cbuffer cbTextureConfig : register(b3)
 {
     TextureConfig textureConfig;
 }

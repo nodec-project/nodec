@@ -6,12 +6,14 @@
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>
 #include <nodec_modules/rendering/interfaces/material.hpp>
-#include <nodec/scene_set/scene_object.hpp>
 
+#include <nodec/scene_set/scene_object.hpp>
+#include <nodec/math/math.hpp>
 
 using namespace nodec;
 
 GraphicsRenderer::GraphicsRenderer(Graphics* graphics) :
+    cbSceneProperties(graphics, sizeof(sceneProperties), &sceneProperties),
     cbModelProperties(graphics, sizeof(ModelProperties), &modelProperties),
     cbTextureConfig(graphics, sizeof(TextureConfig), &textureConfig),
     samplerAnisotropic(graphics, Sampler::Type::Anisotropic),
@@ -24,13 +26,33 @@ GraphicsRenderer::GraphicsRenderer(Graphics* graphics) :
 void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 {
 
+    auto camera = currentCamera.lock();
+    if (!camera)
+    {
+        return;
+    }
+
+    Vector3f cameraPos, cameraScale;
+    Quaternionf cameraRotation;
+    camera->scene_object().transform().get_world_transform(cameraPos, cameraRotation, cameraScale);
+
+    DirectX::XMMATRIX matrixV = DirectX::XMMatrixTranslation(-cameraPos.x,
+                                                             -cameraPos.y,
+                                                             -cameraPos.z)
+        * DirectX::XMMatrixRotationQuaternion(DirectX::FXMVECTOR{ -cameraRotation.x, -cameraRotation.y, -cameraRotation.z, cameraRotation.w });
+
+    sceneProperties.cameraPos.set(cameraPos.x, cameraPos.y, cameraPos.z, 1.0f);
+    cbSceneProperties.Update(graphics, &sceneProperties);
+    cbSceneProperties.BindVS(graphics, 0);
+    cbSceneProperties.BindPS(graphics, 0);
+
     graphics->GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    cbModelProperties.BindVS(graphics, 0);
-    cbModelProperties.BindPS(graphics, 0);
+    cbModelProperties.BindVS(graphics, 1);
+    cbModelProperties.BindPS(graphics, 1);
 
-    cbTextureConfig.BindVS(graphics, 2);
-    cbTextureConfig.BindPS(graphics, 2);
+    cbTextureConfig.BindVS(graphics, 3);
+    cbTextureConfig.BindPS(graphics, 3);
 
 
     for (auto iter = renderers.begin(); iter != renderers.end();)
@@ -63,7 +85,6 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
 
                 auto matrixMInverse = DirectX::XMMatrixInverse(nullptr, matrixM);
 
-                //auto matrixM = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
 
                 //DirectX::XMVECTOR eye         = DirectX::XMVectorSet(0.0f, 0.0f, -2.0f, 0.0f);
                 //DirectX::XMVECTOR focus       = DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f);
@@ -77,8 +98,7 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                                                                  100.0f);
                 // DirectX Math using row-major representation
                 // HLSL using column-major representation
-                auto matrixMVP = matrixM * matrixP;
-                //auto matrixMVP = matrixM * matrixV * matrixP;
+                auto matrixMVP = matrixM * matrixV * matrixP;
 
                 //DirectX::XMStoreFloat4x4(&(modelConstants.matrixM), DirectX::XMMatrixTranspose(matrixM));
                 //DirectX::XMStoreFloat4x4(&(modelConstants.matrixMVP), DirectX::XMMatrixTranspose(matrixMVP));
@@ -97,8 +117,8 @@ void GraphicsRenderer::Render(Graphics* graphics, GraphicsResources* resources)
                 if (iter != resources->constantBufferMap.end())
                 {
                     auto constantBuffer = iter->second;
-                    constantBuffer->BindVS(graphics, 1);
-                    constantBuffer->BindPS(graphics, 1);
+                    constantBuffer->BindVS(graphics, 2);
+                    constantBuffer->BindPS(graphics, 2);
 
                     std::vector<uint8_t> cbuffer;
                     RenderingUtils::CreateMaterialCBuffer(material.get(), cbuffer);
