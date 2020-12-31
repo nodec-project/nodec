@@ -25,7 +25,7 @@ public:
     /**
      * @brief
         Create a new NodecObject with specified name.
-     *  This MUST NOT be called directory, see `instanciate()` instead.
+     *  This MAY NOT be called directory, see `instanciate()` instead.
      *
      */
     NodecObject(const std::string& name);
@@ -56,10 +56,6 @@ public:
     static Holder<T> instanciate(Args&&... args)
     {
         static_assert(std::is_base_of<NodecObject, T>::value, "T must be derived from NodecObject.");
-
-        //struct Obj : T {};
-
-        //auto obj = std::shared_ptr<T>(new T());
         return std::make_shared<T>(std::forward<Args>(args)...);
     }
 
