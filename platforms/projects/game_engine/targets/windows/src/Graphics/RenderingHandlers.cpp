@@ -1,5 +1,5 @@
-#include "RenderingHandlers.hpp"
-#include "RenderingUtils.hpp"
+#include "Graphics/RenderingHandlers.hpp"
+#include "Graphics/RenderingUtils.hpp"
 
 using namespace nodec;
 using namespace nodec_modules;

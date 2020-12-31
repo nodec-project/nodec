@@ -1,4 +1,4 @@
-#include "ConstantBuffer.hpp"
+#include "Graphics/ConstantBuffer.hpp"
 
 ConstantBuffer::ConstantBuffer(
     Graphics* graphics, UINT sizeBytes, const void* pSysMem) :

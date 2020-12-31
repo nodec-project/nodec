@@ -1,4 +1,4 @@
-#include "Graphics.hpp"
+#include "Graphics/Graphics.hpp"
 
 #include <d3dcompiler.h>
 

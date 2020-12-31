@@ -1,4 +1,4 @@
-#include "Sampler.hpp"
+#include "Graphics/Sampler.hpp"
 
 Sampler::Sampler(Graphics* graphics, Type type):
     type(type)

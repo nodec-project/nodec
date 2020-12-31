@@ -1,4 +1,4 @@
-#include "VertexBuffer.hpp"
+#include "Graphics/VertexBuffer.hpp"
 
 VertexBuffer::VertexBuffer(Graphics* pGraphics, UINT sizeBytes, UINT strideBytes, const void* pSysMem):
     sizeBytes(sizeBytes),

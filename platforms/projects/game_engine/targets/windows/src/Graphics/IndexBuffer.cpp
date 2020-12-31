@@ -1,4 +1,4 @@
-#include "IndexBuffer.hpp"
+#include "Graphics/IndexBuffer.hpp"
 
 IndexBuffer::IndexBuffer(Graphics* pGraphics, UINT size, const void* pSysMem)
 {

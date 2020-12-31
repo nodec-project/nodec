@@ -1,7 +1,7 @@
-#include "GraphicsRenderer.hpp"
-#include "RenderingUtils.hpp"
-#include "VertexShader.hpp"
-#include "PixelShader.hpp"
+#include "Graphics/GraphicsRenderer.hpp"
+#include "Graphics/RenderingUtils.hpp"
+#include "Graphics/VertexShader.hpp"
+#include "Graphics/PixelShader.hpp"
 
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>

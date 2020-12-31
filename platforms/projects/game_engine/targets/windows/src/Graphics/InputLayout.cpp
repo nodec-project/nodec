@@ -1,4 +1,4 @@
-#include "InputLayout.hpp"
+#include "Graphics/InputLayout.hpp"
 
 InputLayout::InputLayout(Graphics* graphics,
                          const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,

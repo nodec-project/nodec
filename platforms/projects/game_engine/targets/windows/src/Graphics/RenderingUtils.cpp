@@ -1,4 +1,4 @@
-#include "RenderingUtils.hpp"
+#include "Graphics/RenderingUtils.hpp"
 
 #include <nodec_modules/rendering/interfaces/mesh.hpp>
 #include <nodec_modules/rendering/interfaces/shader.hpp>

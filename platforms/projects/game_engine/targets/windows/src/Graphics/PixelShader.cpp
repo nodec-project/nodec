@@ -1,4 +1,4 @@
-#include "PixelShader.hpp"
+#include "Graphics/PixelShader.hpp"
 
 PixelShader::PixelShader(Graphics* graphics,
                          const std::string& path) :

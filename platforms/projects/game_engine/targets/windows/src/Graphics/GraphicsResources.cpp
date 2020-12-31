@@ -1,4 +1,4 @@
-#include "GraphicsResources.hpp"
+#include "Graphics/GraphicsResources.hpp"
 
 GraphicsResources::GraphicsResources()
 {

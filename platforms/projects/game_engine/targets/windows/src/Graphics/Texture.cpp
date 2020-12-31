@@ -1,5 +1,5 @@
-#include "Texture.hpp"
-#include "../Utils.hpp"
+#include "Graphics/Texture.hpp"
+#include "Utils.hpp"
 
 #include <nodec/unicode.hpp>
 
