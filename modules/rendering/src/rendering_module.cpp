@@ -56,14 +56,14 @@ void RenderingModule::unbind_texture(const interfaces::Texture* texture)
     on_unbind_texture.invoke(texture);
 }
 
-void RenderingModule::regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer)
+void RenderingModule::register_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer)
 {
-    on_regist_renderer.invoke(renderer);
+    on_register_renderer.invoke(renderer);
 }
 
-void RenderingModule::regist_camera(nodec::NodecObject::Reference<interfaces::Camera> camera)
+void RenderingModule::register_camera(nodec::NodecObject::Reference<interfaces::Camera> camera)
 {
-    on_regist_camera.invoke(camera);
+    on_register_camera.invoke(camera);
 }
 
 } // namespace rendering

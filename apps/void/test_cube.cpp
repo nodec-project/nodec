@@ -130,7 +130,7 @@ void TestCube::on_frame_start(Rendering& rendering)
 
         rendering.bind_material(renderer->material.get());
 
-        rendering.regist_renderer(renderer);
+        rendering.register_renderer(renderer);
     }
 }
 

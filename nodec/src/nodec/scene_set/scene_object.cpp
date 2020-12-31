@@ -19,7 +19,7 @@ SceneObject::SceneObject(const std::string& name) :
     }
     else
     {
-        throw NodecException("Failed to regist transform component.", __FILE__, __LINE__);
+        throw NodecException("Failed to add transform component.", __FILE__, __LINE__);
     }
 }
 

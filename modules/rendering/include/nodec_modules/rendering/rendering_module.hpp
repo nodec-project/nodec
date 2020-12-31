@@ -27,9 +27,9 @@ public:
     void bind_texture(const interfaces::Texture* texture) override;
     void unbind_texture(const interfaces::Texture* texture) override;
 
-    void regist_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer) override;
+    void register_renderer(nodec::NodecObject::Reference<interfaces::Renderer> renderer) override;
 
-    void regist_camera(nodec::NodecObject::Reference<interfaces::Camera> camera) override;
+    void register_camera(nodec::NodecObject::Reference<interfaces::Camera> camera) override;
 
 public:
     float frame_delta_time_;
@@ -43,8 +43,8 @@ public:
     nodec::event::Event<const interfaces::Texture*> on_bind_texture;
     nodec::event::Event<const interfaces::Texture*> on_unbind_texture;
 
-    nodec::event::Event<nodec::NodecObject::Reference<interfaces::Renderer>> on_regist_renderer;
-    nodec::event::Event<nodec::NodecObject::Reference<interfaces::Camera>> on_regist_camera;
+    nodec::event::Event<nodec::NodecObject::Reference<interfaces::Renderer>> on_register_renderer;
+    nodec::event::Event<nodec::NodecObject::Reference<interfaces::Camera>> on_register_camera;
 
 };
 }

@@ -63,17 +63,17 @@ void RenderingHandlers::SetupHandlers(std::shared_ptr<RenderingHandlers> handler
     rendering_module.on_unbind_texture += textureUnbindingHandler;
     // End Texture ---
 
-    auto rendererRegistingHandler
+    auto rendererRegisteringHandler
         = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Renderer>>::make_shared(
-            handlers, &RenderingHandlers::HandleRendererRegisting
+            handlers, &RenderingHandlers::HandleRendererRegistering
         );
-    rendering_module.on_regist_renderer += rendererRegistingHandler;
+    rendering_module.on_register_renderer += rendererRegisteringHandler;
 
     auto cameraRegistingHandler
         = event::MemberCallback<RenderingHandlers, NodecObject::Reference<rendering::interfaces::Camera>>::make_shared(
-            handlers, &RenderingHandlers::HandleCameraRegisting
+            handlers, &RenderingHandlers::HandleCameraRegistering
         );
-    rendering_module.on_regist_camera += cameraRegistingHandler;
+    rendering_module.on_register_camera += cameraRegistingHandler;
 }
 
 RenderingHandlers::RenderingHandlers(
@@ -134,7 +134,7 @@ void RenderingHandlers::HandleTextureUnbinding(const nodec_modules::rendering::i
 }
 // End Texture ---
 
-void RenderingHandlers::HandleRendererRegisting(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)
+void RenderingHandlers::HandleRendererRegistering(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Renderer> renderer)
 {
     if (auto renderer_locked = renderer.lock())
     {
@@ -142,7 +142,7 @@ void RenderingHandlers::HandleRendererRegisting(nodec::NodecObject::Reference<no
     }
 }
 
-void RenderingHandlers::HandleCameraRegisting(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Camera> camera)
+void RenderingHandlers::HandleCameraRegistering(nodec::NodecObject::Reference<nodec_modules::rendering::interfaces::Camera> camera)
 {
     logging::debug("test", __FILE__, __LINE__);
     graphicsRenderer->currentCamera = camera;

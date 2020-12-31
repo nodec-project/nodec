@@ -40,9 +40,9 @@ public:
     virtual void bind_texture(const Texture* texture) = 0;
     virtual void unbind_texture(const Texture* texture) = 0;
 
-    virtual void regist_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
+    virtual void register_renderer(nodec::NodecObject::Reference<Renderer> renderer) = 0;
 
-    virtual void regist_camera(nodec::NodecObject::Reference<Camera> camera) = 0;
+    virtual void register_camera(nodec::NodecObject::Reference<Camera> camera) = 0;
 
 public:
     nodec::event::Event<Rendering&> on_frame_update;

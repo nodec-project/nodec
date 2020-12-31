@@ -18,7 +18,7 @@ void Player::on_frame_start(Rendering& rendering)
     if (auto camera = App::main_camera.lock())
     {
         logging::debug("as", __FILE__, __LINE__);
-        rendering.regist_camera(camera);
+        rendering.register_camera(camera);
     }
 
     scene_object().transform().local_position.y = 1.6; // height
