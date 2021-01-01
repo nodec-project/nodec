@@ -6,7 +6,7 @@ namespace scene_set
 {
 
 Component::Component(SceneObject* owner) :
-    // name will be overwritten afet constructor in add_component(). see SceneObject::add_component().
+    // name will be overwritten after constructor in add_component(). see SceneObject::add_component().
     NodecObject("Unexpected Component Object. Component must be instanceated by add_component()."),
     p_scene_object(owner)
 {
