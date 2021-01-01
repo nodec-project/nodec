@@ -38,13 +38,21 @@ public:
 
     NodecObject::Holder<SceneObject> remove_child(SceneObject& child);
 
+
+    const std::unordered_map<NodecObject::ID, NodecObject::Holder<SceneObject>>&
+        children() const noexcept;
+
+
+    const std::unordered_map<size_t, NodecObject::Holder<Component>>&
+        components() const noexcept;
+
 public:
     template<typename T>
     NodecObject::Reference<T> add_component()
     {
         static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component.");
 
-        if (components.find(typeid(T).hash_code()) != components.end())
+        if (components_.find(typeid(T).hash_code()) != components_.end())
         {
             // found same type component.
             std::ostringstream oss;
@@ -53,7 +61,7 @@ public:
         }
 
         auto component = NodecObject::instanciate<T>(this);
-        auto result = components.emplace(typeid(T).hash_code(), component);
+        auto result = components_.emplace(typeid(T).hash_code(), component);
         if (!result.second)
         {
             std::ostringstream oss;
@@ -70,13 +78,13 @@ public:
     template<typename T>
     NodecObject::Reference<T> get_component()
     {
-        static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component.");
+        static_assert(std::is_base_of<Component, T>::value, "T must be inherited from Component.");
 
         NodecObject::Reference<T> component;
-        auto iter = components.find(typeid(T).hash_code());
-        if (iter != components.end())
+        auto iter = components_.find(typeid(T).hash_code());
+        if (iter != components_.end())
         {
-            // Cast drom Base type "Component" to Derived type "T"
+            // Cast from Base type "Component" to Derived type "T"
             // <https://stackoverflow.com/questions/1358143/downcasting-shared-ptrbase-to-shared-ptrderived/14545746>
             component = std::dynamic_pointer_cast<T>(iter->second);
         }
@@ -86,19 +94,19 @@ public:
     template<typename T>
     bool remove_component()
     {
-        static_assert(std::is_base_of<Component, T>::value, "T must be derived from Component.");
+        static_assert(std::is_base_of<Component, T>::value, "T must be inherited from Component.");
 
         if (typeid(T) == typeid(Transform))
         {
-            logging::warn("Cannot remove Transform Compoennt. ScenenObject must have transform component.", __FILE__, __LINE__);
+            logging::warn("Cannot remove Transform Component. ScenenObject must have transform component.", __FILE__, __LINE__);
             return false;
         }
 
-        return components.erase(typeid(T).hash_code()) > 0;
+        return components_.erase(typeid(T).hash_code()) > 0;
     }
 
 private:
-    std::unordered_map<size_t, NodecObject::Holder<Component>> components;
+    std::unordered_map<size_t, NodecObject::Holder<Component>> components_;
 
     //! pointer to transform component.
     //! transform component is always attached to the object. non-detouchable relation.
@@ -110,7 +118,7 @@ private:
     //! it is possible that this object still alive but parent is destroyed.
     NodecObject::Reference<SceneObject> parent_;
 
-    std::unordered_map<NodecObject::ID, NodecObject::Holder<SceneObject>> children;
+    std::unordered_map<NodecObject::ID, NodecObject::Holder<SceneObject>> children_;
 };
 
 }

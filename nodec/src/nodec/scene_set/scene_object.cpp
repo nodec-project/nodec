@@ -36,6 +36,18 @@ SceneObject::parent()
     return parent_;
 }
 
+const std::unordered_map<NodecObject::ID, NodecObject::Holder<SceneObject>>&
+SceneObject::children() const noexcept
+{
+    return children_;
+}
+
+const std::unordered_map<size_t, NodecObject::Holder<Component>>& 
+SceneObject::components() const noexcept
+{
+    return components_;
+}
+
 NodecObject::Reference<SceneObject>
 SceneObject::append_child(NodecObject::Holder<SceneObject> child)
 {
@@ -51,10 +63,10 @@ SceneObject::append_child(NodecObject::Holder<SceneObject> child)
     }
 
 
-    auto result = children.emplace(child->id(), child);
+    auto result = children_.emplace(child->id(), child);
     if (!result.second)
     {
-        throw NodecException("Cannot append child.", __FILE__, __LINE__);
+        throw NodecException("Failed to append child.", __FILE__, __LINE__);
     }
 
     child->parent_ = shared_from(this);
@@ -64,20 +76,18 @@ SceneObject::append_child(NodecObject::Holder<SceneObject> child)
 NodecObject::Holder<SceneObject>
 SceneObject::remove_child(SceneObject& child)
 {
-    auto iter = children.find(child.id());
-    if (iter == children.end())
+    auto iter = children_.find(child.id());
+    if (iter == children_.end())
     {
         throw NodecException("Not found the specified child.", __FILE__, __LINE__);
     }
 
     auto removed = iter->second;
-    children.erase(iter);
-    //return NodecObject::instanciate<SceneObject>("dummy");
+    children_.erase(iter);
 
     child.parent_.reset();
     return removed;
-    //return iter->second;
 }
 
-}
-}
+} // namespace scene_set
+} // namespace nodec
