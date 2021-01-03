@@ -47,6 +47,40 @@ public:
         components() const noexcept;
 
 public:
+    
+    void add_component(NodecObject::Holder<Component> component)
+    {
+        if (&component->scene_object() != this)
+        {
+            std::ostringstream oss;
+            oss << "Not match between the scene object of component and this scene object. \n"
+                << "Being attached component must set this object as owner. see Component::attach(). \n"
+                << "scene_object.name: " << name << "\n"
+                << "component.name   : " << component->name;
+            throw NodecException(oss.str(), __FILE__, __LINE__);
+        }
+
+        if (components_.find(typeid(*component).hash_code()) != components_.end())
+        {
+            // found same type component.
+            std::ostringstream oss;
+            oss << "Component '" << typeid(*component).name() << "' already exisits. Cannot add same type component.";
+            throw NodecException(oss.str(), __FILE__, __LINE__);
+        }
+        auto result = components_.emplace(typeid(*component).hash_code(), component);
+        if (!result.second)
+        {
+            std::ostringstream oss;
+            oss << "Failed to add Component '" << typeid(*component).name() << "'";
+            throw NodecException(oss.str(), __FILE__, __LINE__);
+        }
+
+        component->name = typeid(*component).name();
+        component->on_awake();
+
+        //nodec::logging::DebugStream(__FILE__, __LINE__) << typeid(*component).name();
+    }
+
     template<typename T>
     NodecObject::Reference<T> add_component()
     {
@@ -65,7 +99,7 @@ public:
         if (!result.second)
         {
             std::ostringstream oss;
-            oss << "Cannot add Component '" << typeid(component).name() << "'";
+            oss << "Failed to add Component '" << typeid(*component).name() << "'";
             throw NodecException(oss.str(), __FILE__, __LINE__);
         }
 

@@ -66,8 +66,6 @@ protected:
     std::map<std::string, nodec::Vector4f> vector4_properties_;
     std::map<std::string, TextureEntry> texture_properties_;
 
-
-
 };
 
 } // namespace interfaces
