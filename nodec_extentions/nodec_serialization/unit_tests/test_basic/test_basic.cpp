@@ -72,23 +72,24 @@ public:
 
 class TestComponent : public scene_set::Component
 {
-private:
+public:
     std::string my_str;
 
 public:
-    TestComponent() :
-        Component(nullptr)
-    {
+    using Component::Component;
+    //TestComponent() :
+    //    Component(nullptr)
+    //{
 
-    }
+    //}
     //void hoge() override {}
     void set_my_str(const std::string& str) { my_str = str; }
 
-    template <class Archive>
-    void serialize(Archive& archive)
-    {
-        archive(my_str);
-    }
+    //template <class Archive>
+    //void serialize(Archive& archive)
+    //{
+    //    archive(my_str);
+    //}
 
     //template <class Archive>
     //static void load_and_construct(Archive& archive, cereal::construct<TestComponent>& construct)
@@ -98,8 +99,26 @@ public:
     //}
 };
 
+template<class Archive>
+void serialize(Archive& archive, TestComponent& test)
+{
+    archive(test.my_str);
+}
 
+namespace cereal
+{
+template<> struct LoadAndConstruct<TestComponent>
+{
+    template <class Archive>
+    static void load_and_construct(Archive& archive, cereal::construct<TestComponent>& construct)
+    {
+        construct(nullptr);
+        archive(construct->my_str);
+    }
+};
+} // namespace cereal
 CEREAL_REGISTER_TYPE(TestComponent);
+//CEREAL_REGISTER_DYNAMIC_INIT(TestComponent);
 //CEREAL_REGISTER_POLYMORPHIC_RELATION(Base, TestComponent);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(scene_set::Component, TestComponent);
 
@@ -194,21 +213,25 @@ int main()
                 logging::DebugStream(__FILE__, __LINE__) << pair.second->name;
                 //pair.second = NodecObject::instanciate<scene_set::SceneObject>("child_4");
             }
-            //NodecObject::Holder<scene_set::Component> test_component = NodecObject::instanciate<TestComponent>(nullptr);
+            auto test_component = NodecObject::instanciate<TestComponent>(nullptr);
 
-            //test_component->attach_to(root.get());
-            
+            test_component->attach_to(root.get());
+            test_component->set_my_str("test");
             //std::shared_ptr<Base> base = std::make_shared<TestComponent>();
-            std::shared_ptr<test_space::BaseClass> ptr1 = std::make_shared<DerivedClassOne>();
+            //std::shared_ptr<test_space::BaseClass> ptr1 = std::make_shared<DerivedClassOne>();
+            //std::shared_ptr<scene_set::Component> ptr1 = std::make_shared<scene_set::Transform>(nullptr);
             //std::shared_ptr<scene_set::Component> ptr1 = std::make_shared<TestComponent>();
 
             //archive(test_component);
             //auto transform = NodecObject::instanciate<scene_set::Transform>(nullptr);
-            archive(root, ptr1);
+            //archive(root, ptr1);
+            //archive(ptr1);
+            archive(root);
             //archive(root, transform);
             //archive(myData, vec, quaternion, nodec_object);
             //archive(vec, quaternion);
             //archive(quaternion);
+            //return 0;
         }
         {
             std::ifstream is("out.cereal", std::ios::binary);
