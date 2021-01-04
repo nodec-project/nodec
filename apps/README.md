@@ -4,7 +4,7 @@
 * modules
 * nodec
 * 3rd_party
-* nodec_extentions
+* extentions
 
 ## be implemented by
 

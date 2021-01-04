@@ -11,5 +11,5 @@
 * apps
 * nodec
 * modules
-* nodec_extentions
+* extentions
 * platforms (depend on each 3rd_party)

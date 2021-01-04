@@ -10,5 +10,5 @@
 
 ## independent
 * apps
-* nodec_extentions
+* extentions
 * 3rd_party

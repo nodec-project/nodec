@@ -12,4 +12,4 @@
 
 ## independent
 * apps
-* nodec_extentions
+* extentions
