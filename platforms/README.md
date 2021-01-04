@@ -2,10 +2,13 @@
 
 ## using
 * nodec
-* modules
-* 3rd_party
+* platforms/sdks
 
 ## be implemented by
+
+## implement
+* modules
+* 3rd_party
 
 ## independent
 * apps
