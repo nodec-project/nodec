@@ -85,11 +85,11 @@ int CALLBACK WinMain(
             << "engine_time: " << game_engine_module->engine_time() << " [s]" << std::flush;
 
         game_engine_module->engine_time_stopwatch().lap();
-        int exit_code;
+        int exitCode;
         while (true)
         {
             // process all messages pending, but to not block for new messages
-            if (!Window::ProcessMessages(exit_code))
+            if (!Window::ProcessMessages(exitCode))
             {
                 // if ProcessMessages() returns false, means we're quiting so break
                 break;
@@ -113,7 +113,7 @@ int CALLBACK WinMain(
             << "engine_time: " << game_engine_module->engine_time() << " [s]"<< std::flush;
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program Sucessfully Ending. See you." << std::flush;
-        return exit_code;
+        return exitCode;
     }
     catch (const nodec::NodecException& e)
     {

@@ -1,4 +1,6 @@
 #include "Graphics/Graphics.hpp"
+#include "imgui_backend/imgui_impl_dx11.h"
+#include "imgui_backend/imgui_impl_win32.h"
 
 #include <d3dcompiler.h>
 
@@ -122,6 +124,7 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     vp.TopLeftY = 0.0f;
     pContext->RSSetViewports(1u, &vp);
 
+
     infoLogger.Dump(nodec::logging::Level::Info);
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> Successfully initialized." << std::flush;
 }
@@ -142,14 +145,29 @@ UINT Graphics::GetHeight() noexcept { return height; }
 
 void Graphics::BeginFrame() noexcept
 {
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
+
     const float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
     pContext->ClearRenderTargetView(pTarget.Get(), color);
     pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
+
 }
 
 void Graphics::EndFrame()
 {
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
+    //// Update and Render additional Platform Windows
+    //if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+    //{
+    //    ImGui::UpdatePlatformWindows();
+    //    ImGui::RenderPlatformWindowsDefault();
+    //}
+
     HRESULT hr;
     infoLogger.SetLatest();
     if (FAILED(hr = pSwap->Present(1u, 0u)))

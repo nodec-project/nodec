@@ -1,11 +1,14 @@
-
 #include "Window.hpp"
 #include "Utils.hpp"
+#include "imgui_backend/imgui_impl_win32.h"
+#include "imgui_backend/imgui_impl_dx11.h"
 
 #include <nodec/unicode.hpp>
 
 #include <string>
 #include <sstream>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 using namespace nodec_modules;
 
@@ -93,11 +96,34 @@ Window::Window(int width, int height,
     // create graphics object
     pGfx = std::make_unique<Graphics>(hWnd, gfxWidth, gfxHeight);
 
+
+    // Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+    // Setup Dear ImGui style
+    ImGui::StyleColorsDark();
+
+    // Init ImGUI Win32 Impl
+    ImGui_ImplWin32_Init(hWnd);
+    // init imgui d3d impl
+    ImGui_ImplDX11_Init(pGfx->GetDevice(), pGfx->GetContext());
 }
 
 Window::~Window()
 {
+    // Cleanup
+    ImGui_ImplDX11_Shutdown();
+    ImGui_ImplWin32_Shutdown();
+    ImGui::DestroyContext();
+
     DestroyWindow(hWnd);
+    
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Window] >>> End Window." << std::flush;
 }
 
@@ -163,6 +189,10 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
+    {
+        return true;
+    }
 
     switch (msg)
     {
