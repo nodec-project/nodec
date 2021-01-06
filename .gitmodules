@@ -2,7 +2,7 @@
 	path = extentions/cereal/cereal
 	url = https://github.com/USCiLab/cereal.git
 [submodule "3rd_party/assimp/assimp"]
-	path = 3rd_party/assimp/assimp
+	path = extentions/assimp/assimp
 	url = https://github.com/assimp/assimp.git
 [submodule "3rd_party/imgui/imgui"]
 	path = modules/imgui/imgui
