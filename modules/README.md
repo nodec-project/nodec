@@ -11,4 +11,3 @@
 ## independent
 * apps
 * extentions
-* 3rd_party

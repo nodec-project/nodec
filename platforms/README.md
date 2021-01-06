@@ -8,7 +8,6 @@
 
 ## implement
 * modules
-* 3rd_party
 
 ## independent
 * apps
