@@ -5,7 +5,7 @@
 	path = 3rd_party/assimp/assimp
 	url = https://github.com/assimp/assimp.git
 [submodule "3rd_party/imgui/imgui"]
-	path = 3rd_party/imgui/imgui
+	path = modules/imgui/imgui
 	url = https://github.com/ocornut/imgui.git
 [submodule "platforms/sdks/DirectXTex/DirectXTex"]
 	path = platforms/sdks/DirectXTex/DirectXTex
