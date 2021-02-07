@@ -7,5 +7,5 @@
 ## independent
 * apps
 * platforms
-* nodec_extentions
+* extentions
 * modules

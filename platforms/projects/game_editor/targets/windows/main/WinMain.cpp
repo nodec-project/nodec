@@ -9,6 +9,8 @@
 #include <Windows.h>
 
 
+#include "imwindow/imwindow_impl.hpp"
+
 int CALLBACK WinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
@@ -45,6 +47,9 @@ int CALLBACK WinMain(
 
             bool showDemoWindow = true;
             ImGui::ShowDemoWindow(&showDemoWindow);
+
+            nodec_modules::imwindow::show_window_main_menu();
+
             window.Gfx().EndFrame();
 
         }
