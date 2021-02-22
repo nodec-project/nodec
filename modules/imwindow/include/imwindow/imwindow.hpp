@@ -17,10 +17,7 @@ namespace impl
 }
 
 template<typename T>
-void register_window()
-{
-
-}
+T get_window();
 
 }
 

@@ -1,9 +1,8 @@
 #include "Window.hpp"
 #include "Logging.hpp"
 
-
-#include <nodec_modules/input/keyboard/keyboard_module.hpp>
-#include <nodec_modules/input/mouse/mouse_module.hpp>
+#include <input/keyboard/impl/keyboard_module.hpp>
+#include <input/mouse/impl/mouse_module.hpp>
 #include <imgui.h>
 #include <imwindow/impl/imwindow_impl.hpp>
 
@@ -25,8 +24,8 @@ int CALLBACK WinMain(
 
         // end Init Logging ---
 
-        auto keyboard_module = nodec::NodecObject::instanciate<nodec_modules::input::keyboard::KeyboardModule>();
-        auto mouse_module = nodec::NodecObject::instanciate<nodec_modules::input::mouse::MouseModule>();
+        auto keyboard_module = nodec::NodecObject::instanciate<input::keyboard::impl::KeyboardModule>();
+        auto mouse_module = nodec::NodecObject::instanciate<input::mouse::impl::MouseModule>();
 
         Window window(1280, 720,
                       1280, 720,
