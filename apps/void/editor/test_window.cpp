@@ -10,14 +10,6 @@ public:
     }
 };
 
-class Registration
-{
-public:
-    Registration()
-    {
-        game_editor::menu::register_menu_item("Test/Func", &LogWindow::init);
-    }
-};
+static bool is_registered = game_editor::menu::register_menu_item("Test/Func", &LogWindow::init);
+//static game_editor::menu::MenuItemRegistration _registration("Test/Func", &LogWindow::init);
 
-
-Registration reg;

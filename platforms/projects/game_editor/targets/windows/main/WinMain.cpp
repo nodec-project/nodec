@@ -5,6 +5,7 @@
 #include <input/mouse/impl/mouse_module.hpp>
 #include <imgui.h>
 #include <imwindow/impl/imwindow_impl.hpp>
+#include <game_editor/impl/menu_impl.hpp>
 
 #include <Windows.h>
 
@@ -47,7 +48,7 @@ int CALLBACK WinMain(
             bool showDemoWindow = true;
             ImGui::ShowDemoWindow(&showDemoWindow);
 
-            imwindow::impl::show_window_main_menu();
+            game_editor::menu::impl::show_main_menu();
 
             window.Gfx().EndFrame();
 

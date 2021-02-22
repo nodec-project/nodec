@@ -11,10 +11,11 @@ namespace game_editor
 namespace menu
 {
 
-void register_menu_item(const std::string& item_name, std::function<void()> func);
+bool register_menu_item(const std::string& item_name, std::function<void()> func);
+
 
 }
-
 }
+
 
 #endif
