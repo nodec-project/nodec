@@ -10,7 +10,6 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-using namespace nodec_modules;
 
 // === Window Class ====
 
@@ -57,8 +56,8 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 Window::Window(int width, int height,
                int gfxWidth, int gfxHeight,
                const wchar_t* name,
-               nodec_modules::input::keyboard::KeyboardModule* keyboardModule,
-               nodec_modules::input::mouse::MouseModule* mouseModule)
+               input::keyboard::impl::KeyboardModule* keyboardModule,
+               input::mouse::impl::MouseModule* mouseModule)
     :
     width(width),
     height(height),
@@ -229,14 +228,14 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // filter autorepeat
         if (!(lParam & 0x40000000))
         {
-            keyboardModule->handle_key_press(static_cast<input::keyboard::interfaces::Key>(wParam));
+            keyboardModule->handle_key_press(static_cast<input::keyboard::Key>(wParam));
         }
         break;
 
     case WM_KEYUP:
     case WM_SYSKEYUP:
 
-        keyboardModule->handle_key_release(static_cast<input::keyboard::interfaces::Key>(wParam));
+        keyboardModule->handle_key_release(static_cast<input::keyboard::Key>(wParam));
 
         break;
 
@@ -261,7 +260,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     {
         const POINTS pt = MAKEPOINTS(lParam);
         
-        mouseModule->handle_button_press(input::mouse::interfaces::MouseButton::Left,
+        mouseModule->handle_button_press(input::mouse::MouseButton::Left,
                                          { pt.x, pt.y });
 
         break;
@@ -270,7 +269,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     {
         const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_press(input::mouse::interfaces::MouseButton::Right,
+        mouseModule->handle_button_press(input::mouse::MouseButton::Right,
                                          { pt.x, pt.y });
 
         break;
@@ -279,7 +278,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     {
         const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_release(input::mouse::interfaces::MouseButton::Left,
+        mouseModule->handle_button_release(input::mouse::MouseButton::Left,
                                          { pt.x, pt.y });
 
         break;
@@ -288,7 +287,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     {
         const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_release(input::mouse::interfaces::MouseButton::Right,
+        mouseModule->handle_button_release(input::mouse::MouseButton::Right,
                                            { pt.x, pt.y });
 
         break;

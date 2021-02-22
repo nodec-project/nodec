@@ -1,30 +1,30 @@
-#include <nodec_modules/input/keyboard/keyboard_module.hpp>
+#include <input/keyboard/impl/keyboard_module.hpp>
 
-namespace nodec_modules
-{
 namespace input
 {
 namespace keyboard
 {
+namespace impl
+{
 
-KeyboardModule::KeyboardModule():
+KeyboardModule::KeyboardModule() :
     Keyboard("nodec_modules::input::KeyboardModule")
 {
 
 }
 
-bool KeyboardModule::get_key_pressed(interfaces::Key key) const noexcept
+bool KeyboardModule::get_key_pressed(Key key) const noexcept
 {
     return key_states[static_cast<int>(key)];
 }
 
-bool KeyboardModule::get_key_down(interfaces::Key key) const noexcept
+bool KeyboardModule::get_key_down(Key key) const noexcept
 {
     auto code = static_cast<int>(key);
     return key_states[code] && (key_states[code] != key_states_prev[code]);
 }
 
-bool KeyboardModule::get_key_up(interfaces::Key key) const noexcept
+bool KeyboardModule::get_key_up(Key key) const noexcept
 {
     auto code = static_cast<int>(key);
     return !key_states[code] && (key_states[code] != key_states_prev[code]);
@@ -59,12 +59,12 @@ void KeyboardModule::flush()
     }
 }
 
-void KeyboardModule::handle_key_press(interfaces::Key key)
+void KeyboardModule::handle_key_press(Key key)
 {
     event_queue.push({ Event::Type::Press, key });
 }
 
-void KeyboardModule::handle_key_release(interfaces::Key key)
+void KeyboardModule::handle_key_release(Key key)
 {
     event_queue.push({ Event::Type::Release, key });
 }
@@ -75,5 +75,5 @@ void KeyboardModule::handle_text_input(unsigned char text)
 }
 
 }
-} // namespace input
 }
+} // namespace input

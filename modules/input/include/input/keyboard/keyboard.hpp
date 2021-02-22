@@ -1,18 +1,14 @@
-#ifndef NODEC_MODULES__INPUT__KEYBOARD__INTERFACES__KEYBOARD_HPP_
-#define NODEC_MODULES__INPUT__KEYBOARD__INTERFACES__KEYBOARD_HPP_
+#ifndef INPUT__KEYBOARD__KEYBOARD_HPP_
+#define INPUT__KEYBOARD__KEYBOARD_HPP_
 
-#include "key.hpp"
+#include <input/keyboard/key.hpp>
 
 #include <nodec/module_interface.hpp>
 #include <nodec/event.hpp>
 
-namespace nodec_modules
-{
 namespace input
 {
 namespace keyboard
-{
-namespace interfaces
 {
 
 class Keyboard : public nodec::ModuleInterface
@@ -50,9 +46,7 @@ public:
 
 };
 
-} // namespace interfaces
-} // namespace keyboard
-} // namespace input
-} // namespace nodec_mosules
+} 
+} 
 
 #endif

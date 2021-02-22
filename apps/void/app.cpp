@@ -6,8 +6,6 @@
 using namespace nodec;
 using namespace nodec_modules::game_engine::interfaces;
 using namespace nodec_modules::rendering::interfaces;
-using namespace nodec_modules::input::keyboard::interfaces;
-using namespace nodec_modules::input::mouse::interfaces;
 using namespace nodec_modules::screen::interfaces;
 using namespace nodec_extentions::material_set;
 

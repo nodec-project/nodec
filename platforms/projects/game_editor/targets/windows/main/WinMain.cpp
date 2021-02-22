@@ -1,15 +1,15 @@
 #include "Window.hpp"
 #include "Logging.hpp"
 
-#include "imgui.h"
 
 #include <nodec_modules/input/keyboard/keyboard_module.hpp>
 #include <nodec_modules/input/mouse/mouse_module.hpp>
+#include <imgui.h>
+#include <imwindow/impl/imwindow_impl.hpp>
 
 #include <Windows.h>
 
 
-#include "imwindow/imwindow_impl.hpp"
 
 int CALLBACK WinMain(
     HINSTANCE hInstance,
@@ -48,7 +48,7 @@ int CALLBACK WinMain(
             bool showDemoWindow = true;
             ImGui::ShowDemoWindow(&showDemoWindow);
 
-            nodec_modules::imwindow::show_window_main_menu();
+            imwindow::impl::show_window_main_menu();
 
             window.Gfx().EndFrame();
 

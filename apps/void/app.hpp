@@ -6,8 +6,8 @@
 
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
-#include <nodec_modules/input/keyboard/interfaces/keyboard.hpp>
-#include <nodec_modules/input/keyboard/interfaces/key.hpp>
+#include <input/keyboard/keyboard.hpp>
+#include <input/mouse/mouse.hpp>
 
 #include <nodec_extentions/material_set/brdf_material.hpp>
 #include <nodec_extentions/mesh_factory/mesh_factory.hpp>

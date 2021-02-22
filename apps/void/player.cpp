@@ -1,11 +1,10 @@
 #include "player.hpp"
 
-
+using namespace input::keyboard;
+using namespace input::mouse;
 using namespace nodec;
 using namespace nodec_modules::game_engine::interfaces;
 using namespace nodec_modules::rendering::interfaces;
-using namespace nodec_modules::input::keyboard::interfaces;
-using namespace nodec_modules::input::mouse::interfaces;
 using namespace nodec_modules::screen::interfaces;
 
 void Player::on_awake()
@@ -36,7 +35,7 @@ void Player::on_frame_update(Rendering& rendering)
     float speed = 0.5f;
 
 
-    if (keyboard.get_key_pressed(Key::LeftShift))
+    if (keyboard.get_key_pressed(input::keyboard::Key::LeftShift))
     {
         speed *= 2.0f;
     }

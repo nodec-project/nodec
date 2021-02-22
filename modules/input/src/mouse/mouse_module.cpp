@@ -1,11 +1,12 @@
-#include <nodec_modules/input/mouse/mouse_module.hpp>
+#include <input/mouse/impl/mouse_module.hpp>
 
-namespace nodec_modules
-{
 namespace input
 {
 namespace mouse
 {
+namespace impl
+{
+
 
 MouseModule::MouseModule() :
     Mouse("nodec_modules::input::MouseModule")
@@ -18,17 +19,17 @@ nodec::Vector2i MouseModule::position() const noexcept
     return position_;
 }
 
-bool MouseModule::get_button_down(interfaces::MouseButton button)
+bool MouseModule::get_button_down(MouseButton button)
 {
     auto code = static_cast<int>(button);
     return button_states[code] && (button_states[code] != button_states_prev[code]);
 }
-bool MouseModule::get_button_up(interfaces::MouseButton button)
+bool MouseModule::get_button_up(MouseButton button)
 {
     auto code = static_cast<int>(button);
     return !button_states[code] && (button_states[code] != button_states_prev[code]);
 }
-bool MouseModule::get_button_pressed(interfaces::MouseButton button)
+bool MouseModule::get_button_pressed(MouseButton button)
 {
     return button_states[static_cast<int>(button)];
 }
@@ -63,19 +64,19 @@ void MouseModule::flush()
 
 void MouseModule::handle_mouse_move(nodec::Vector2i position)
 {
-    event_queue.push({ Event::Type::Move, interfaces::MouseButton::None, position });
+    event_queue.push({ Event::Type::Move, MouseButton::None, position });
 }
 
-void MouseModule::handle_button_press(interfaces::MouseButton button, nodec::Vector2i position)
+void MouseModule::handle_button_press(MouseButton button, nodec::Vector2i position)
 {
     event_queue.push({ Event::Type::Press, button, position });
 }
 
-void MouseModule::handle_button_release(interfaces::MouseButton button, nodec::Vector2i position)
+void MouseModule::handle_button_release(MouseButton button, nodec::Vector2i position)
 {
     event_queue.push({ Event::Type::Release, button, position });
 }
 
+}
 } // namespace mouse
 } // namespace input
-} // namespace nodec_modules

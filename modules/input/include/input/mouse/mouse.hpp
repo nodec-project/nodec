@@ -1,19 +1,15 @@
-#ifndef NODEC_MODULES__INPUT__MOUSE__INTERFACES__MOUSE_HPP_
-#define NODEC_MODULES__INPUT__MOUSE__INTERFACES__MOUSE_HPP_
+#ifndef INPUT__MOUSE__MOUSE_HPP_
+#define INPUT__MOUSE__MOUSE_HPP_
 
-#include "mouse_button.hpp"
+#include <input/mouse/mouse_button.hpp>
 
 #include <nodec/module_interface.hpp>
 #include <nodec/event.hpp>
 #include <nodec/vector2.hpp>
 
-namespace nodec_modules
-{
 namespace input
 {
 namespace mouse
-{
-namespace interfaces
 {
 
 class Mouse : public nodec::ModuleInterface
@@ -55,9 +51,7 @@ public:
 
 };
 
-} // namespace interfaces
+} 
 }
-} // namespace input
-} // namespace nodec_modules
 
 #endif

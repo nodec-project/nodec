@@ -12,11 +12,9 @@ GameEngineModule::GameEngineModule()
     nodec::logging::InfoStream(__FILE__, __LINE__)
         << "[GameEngineModule] >>> Engine strat up..." << std::flush;
 
-    keyboard_module_ = nodec::NodecObject::instanciate<input::keyboard::KeyboardModule>();
+    keyboard_module_ = nodec::NodecObject::instanciate<input::keyboard::impl::KeyboardModule>();
 
-    keyboard_module_ = nodec::NodecObject::instanciate<input::keyboard::KeyboardModule>();
-
-    mouse_module_ = nodec::NodecObject::instanciate<input::mouse::MouseModule>();
+    mouse_module_ = nodec::NodecObject::instanciate<input::mouse::impl::MouseModule>();
 
     rendering_module_ = nodec::NodecObject::instanciate<rendering::RenderingModule>();
 
@@ -50,13 +48,13 @@ GameEngineModule::~GameEngineModule()
 
 
 // === interface ===
-input::keyboard::interfaces::Keyboard&
+input::keyboard::Keyboard&
 GameEngineModule::keyboard() const noexcept
 {
     return *keyboard_module_;
 }
 
-input::mouse::interfaces::Mouse&
+input::mouse::Mouse&
 GameEngineModule::mouse() const noexcept
 {
     return *mouse_module_;
@@ -88,13 +86,13 @@ GameEngineModule::root_scene_object() const noexcept
 
 // End interface ===
 
-input::keyboard::KeyboardModule&
+input::keyboard::impl::KeyboardModule&
 GameEngineModule::keyboard_module() const noexcept
 {
     return (*keyboard_module_);
 }
 
-input::mouse::MouseModule&
+input::mouse::impl::MouseModule&
 GameEngineModule::mouse_module() const noexcept
 {
     return (*mouse_module_);
