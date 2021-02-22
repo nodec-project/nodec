@@ -22,7 +22,7 @@ class MenuItem
 {
 public:
     NODEC_SMART_PTR_DEFINITIONS(MenuItem);
-    
+
     MenuItem(const std::string& name, std::function<void()> func, int order) :
         name(name),
         func(func),
@@ -47,9 +47,27 @@ static void init()
     }
 }
 
-static void show_menu_items()
+static void show_menu_items(const MenuItem& item)
 {
+    for (auto& pair : item.items)
+    {
+        auto& item = *(pair.second);
+        if (item.items.empty())
+        {
+            if (ImGui::MenuItem(item.name.c_str()))
+            {
 
+            }
+
+            continue;
+        }
+
+        if (ImGui::BeginMenu(item.name.c_str()))
+        {
+            show_menu_items(item);
+            ImGui::EndMenu();
+        }
+    }
 }
 
 void show_main_menu()
@@ -58,16 +76,8 @@ void show_main_menu()
 
     if (ImGui::BeginMainMenuBar())
     {
-        for (auto& pair : root_menu_item->items)
-        {
-            if (ImGui::BeginMenu(pair.second->name.c_str()))
-            {
-                ImGui::EndMenu();
-            }
-            //pair.second->name;
+        show_menu_items(*root_menu_item);
 
-            //item.second.func();
-        }
 
         //if (ImGui::BeginMenu("Window"))
         //{
@@ -85,11 +95,43 @@ void set_menu_item_order(int order)
 
 }
 
-bool register_menu_item(const std::string& item_name, std::function<void()> func)
+bool register_menu_item(const std::string& item_name, std::function<void()> func, int order = 0)
 {
     impl::init();
 
-    impl::root_menu_item->items.emplace(0, impl::MenuItem::make_shared("Window", nullptr, 0));
+    auto current_item = impl::root_menu_item.get();
+    size_t offset = 0;
+    while (true)
+    {
+        auto pos = item_name.find_first_of('/', offset);
+        if (pos == std::string::npos)
+        {
+            break;
+        }
+        auto name = item_name.substr(offset, pos - offset);
+
+        auto next_item = current_item;
+        for (auto& pair : current_item->items)
+        {
+            if (pair.second->name == name && !pair.second->items.empty())
+            {
+                next_item = pair.second.get();
+            }
+        }
+
+        if (next_item == current_item)
+        {
+            auto iter = current_item->items.emplace(0, impl::MenuItem::make_shared(name.c_str(), nullptr, 0));
+            next_item = iter->second.get();
+        }
+
+        current_item = next_item;
+        offset = pos + 1;
+    }
+
+    auto name = item_name.substr(offset);
+
+    current_item->items.emplace(order, impl::MenuItem::make_shared(name, func, order));
     return true;
 }
 
