@@ -1,8 +1,13 @@
+/*
+* 
+*/
+
 #ifndef APP__APP_HPP_
 #define APP__APP_HPP_
 
-#include <nodec_modules/game_engine/interfaces/game_engine.hpp>
-#include <nodec_modules/game_engine/interfaces/behavior.hpp>
+
+#include <game_engine/game_engine.hpp>
+#include <game_engine/behavior.hpp>
 
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 
@@ -13,7 +18,6 @@
 #include <nodec_extentions/mesh_factory/mesh_factory.hpp>
 
 #include <nodec/scene_set/scene_object.hpp>
-
 #include <nodec/event.hpp>
 #include <nodec/logging.hpp>
 #include <nodec/math/math.hpp>

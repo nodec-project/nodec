@@ -4,7 +4,7 @@
 #include "app.hpp"
 
 
-class Player : public nodec_modules::game_engine::interfaces::Behavior
+class Player : public game_engine::Behavior
 {
     using Rendering = nodec_modules::rendering::interfaces::Rendering;
 

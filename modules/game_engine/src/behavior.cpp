@@ -1,5 +1,9 @@
-#include <nodec_modules/game_engine/interfaces/game_engine.hpp>
-#include <nodec_modules/game_engine/interfaces/behavior.hpp>
+/**
+* 
+*/
+
+#include <game_engine/game_engine.hpp>
+#include <game_engine/behavior.hpp>
 
 #include <nodec/scene_set/scene_object.hpp>
 #include <nodec/logging.hpp>
@@ -41,11 +45,7 @@ void HandleException(const std::string& this_name,
 }
 
 
-namespace nodec_modules
-{
 namespace game_engine
-{
-namespace interfaces
 {
 
 void Behavior::on_frame_start(Rendering& rendering) {}
@@ -91,7 +91,4 @@ void Behavior::enable_frame_update()
 
 }
 
-
-} // namespace interfaces
-}
 }

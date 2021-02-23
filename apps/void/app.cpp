@@ -4,7 +4,7 @@
 #include "player.hpp"
 
 using namespace nodec;
-using namespace nodec_modules::game_engine::interfaces;
+using namespace game_engine;
 using namespace nodec_modules::rendering::interfaces;
 using namespace nodec_modules::screen::interfaces;
 using namespace nodec_extentions::material_set;
@@ -12,7 +12,7 @@ using namespace nodec_extentions::material_set;
 NodecObject::Reference<Camera> App::main_camera;
 
 
-void nodec_modules::game_engine::interfaces::on_boot(GameEngine& engine)
+void game_engine::on_boot(GameEngine& engine)
 {
     nodec::logging::info("booting... in application layer", __FILE__, __LINE__);
     nodec::logging::info("HELLO WORLD!", __FILE__, __LINE__);

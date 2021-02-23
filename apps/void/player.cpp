@@ -2,10 +2,10 @@
 
 using namespace input::keyboard;
 using namespace input::mouse;
-using namespace nodec;
-using namespace nodec_modules::game_engine::interfaces;
+using namespace game_engine;
 using namespace nodec_modules::rendering::interfaces;
 using namespace nodec_modules::screen::interfaces;
+using namespace nodec;
 
 void Player::on_awake()
 {

@@ -17,7 +17,7 @@ namespace impl
 class KeyboardModule : public Keyboard
 {
 public:
-    KeyboardModule();
+    KeyboardModule() {};
 
     bool get_key_pressed(Key key) const noexcept override;
     bool get_key_down(Key key) const noexcept override;

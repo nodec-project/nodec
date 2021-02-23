@@ -3,7 +3,6 @@
 
 #include <input/mouse/mouse_button.hpp>
 
-#include <nodec/module_interface.hpp>
 #include <nodec/event.hpp>
 #include <nodec/vector2.hpp>
 
@@ -12,10 +11,13 @@ namespace input
 namespace mouse
 {
 
-class Mouse : public nodec::ModuleInterface
+class Mouse
 {
+private:
+    NODEC_DISABLE_COPY(Mouse);
+
 public:
-    using ModuleInterface::ModuleInterface;
+    Mouse() {}
 
 public:
     struct Event

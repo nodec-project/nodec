@@ -1,14 +1,12 @@
-#include "Window.hpp"
-#include "Logging.hpp"
-
-#include <input/keyboard/impl/keyboard_module.hpp>
-#include <input/mouse/impl/mouse_module.hpp>
-#include <imgui.h>
-#include <imwindow/impl/imwindow_impl.hpp>
-#include <game_editor/impl/menu_impl.hpp>
+/**
+*
+*/
+/**
+*
+*/
+#include "Application.hpp"
 
 #include <Windows.h>
-
 
 
 int CALLBACK WinMain(
@@ -17,59 +15,6 @@ int CALLBACK WinMain(
     LPSTR lpCmdLine,
     int nCmdShow)
 {
-    try
-    {
-        // --- Init Logging ---
+    return Application{}.run();
 
-        InitLogging(nodec::logging::Level::Debug);
-
-        // end Init Logging ---
-
-        auto keyboard_module = nodec::NodecObject::instanciate<input::keyboard::impl::KeyboardModule>();
-        auto mouse_module = nodec::NodecObject::instanciate<input::mouse::impl::MouseModule>();
-
-        Window window(1280, 720,
-                      1280, 720,
-                      L"Nodec Game Editor",
-                      keyboard_module.get(),
-                      mouse_module.get()
-        );
-
-        int exitCode;
-        while (true)
-        {
-            if (!Window::ProcessMessages(exitCode))
-            {
-                break;
-            }
-
-            window.Gfx().BeginFrame();
-
-            bool showDemoWindow = true;
-            ImGui::ShowDemoWindow(&showDemoWindow);
-
-            game_editor::menu::impl::show_main_menu();
-            imwindow::impl::update_windows();
-
-            window.Gfx().EndFrame();
-
-        }
-
-
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Main] >>> Program Sucessfully Ending. See you." << std::flush;
-        return exitCode;
-    }
-    catch (const std::exception& e)
-    {
-        nodec::logging::fatal(e.what(), __FILE__, __LINE__);
-    }
-    catch (...)
-    {
-        nodec::logging::fatal("Unknown Error Exception Ocuurs.", __FILE__, __LINE__);
-    }
-    MessageBox(nullptr,
-               L"Unhandled Exception has been caught in main loop. \nFor more detail, Please check the 'output.log'.",
-               L"Fatal Error.", MB_OK | MB_ICONEXCLAMATION);
-    nodec::logging::WarnStream(__FILE__, __LINE__) << "[Main] >>> Unexpected Program Ending." << std::flush;
-    return -1;
 }

@@ -1,14 +1,10 @@
-#ifndef NODEC_MODULES__GAME_ENGINE__INTERFACES__BEHAVIOR_HPP_
-#define NODEC_MODULES__GAME_ENGINE__INTERFACES__BEHAVIOR_HPP_
+#ifndef GAME_ENGINE__BEHAVIOR_HPP_
+#define GAME_ENGINE__BEHAVIOR_HPP_
 
 #include <nodec_modules/rendering/interfaces/rendering.hpp>
 #include <nodec/scene_set/component.hpp>
 
-namespace nodec_modules
-{
 namespace game_engine
-{
-namespace interfaces
 {
 
 class Behavior : public nodec::scene_set::Component
@@ -36,7 +32,6 @@ private:
         on_frame_update_callback;
 };
 
-} //  namespace interfaces
 }
-}
+
 #endif

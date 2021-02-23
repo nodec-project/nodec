@@ -3,7 +3,7 @@
 
 #include "app.hpp"
 
-class TestCube : public nodec_modules::game_engine::interfaces::Behavior
+class TestCube : public game_engine::Behavior
 {
     using Renderer = nodec_modules::rendering::interfaces::Renderer;
     using Rendering = nodec_modules::rendering::interfaces::Rendering;

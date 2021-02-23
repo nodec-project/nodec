@@ -2,7 +2,7 @@
 
 //
 using namespace nodec;
-using namespace nodec_modules::game_engine::interfaces;
+using namespace game_engine;
 using namespace nodec_modules::rendering::interfaces;
 using namespace nodec_extentions;
 using namespace nodec_extentions::material_set;

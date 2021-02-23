@@ -1,20 +1,24 @@
+/*
+* 
+*/
+#include <game_engine/impl/game_engine_module.hpp>
 #include <nodec/logging.hpp>
-#include <nodec_modules/game_engine/game_engine_module.hpp>
 
-namespace nodec_modules
-{
+using namespace nodec_modules;
+
 namespace game_engine
+{
+namespace impl
 {
 
 GameEngineModule::GameEngineModule()
-    : GameEngine("nodec_modules::game_engine::GameEngineModule")
 {
     nodec::logging::InfoStream(__FILE__, __LINE__)
         << "[GameEngineModule] >>> Engine strat up..." << std::flush;
 
-    keyboard_module_ = nodec::NodecObject::instanciate<input::keyboard::impl::KeyboardModule>();
+    keyboard_module_ = nodec::Object::make_holder<input::keyboard::impl::KeyboardModule>();
 
-    mouse_module_ = nodec::NodecObject::instanciate<input::mouse::impl::MouseModule>();
+    mouse_module_ = nodec::Object::make_holder<input::mouse::impl::MouseModule>();
 
     rendering_module_ = nodec::NodecObject::instanciate<rendering::RenderingModule>();
 
@@ -118,30 +122,31 @@ GameEngineModule::engine_time_stopwatch() noexcept
 
 nodec::NodecObject::Reference<GameEngineModule> current;
 
+
 bool boot(GameEngineModule* game_engine_module) noexcept
 {
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[GameEngineModule] >>> Booting..." << std::flush;
     bool success = false;
     try
     {
-        interfaces::on_boot(*game_engine_module);
+        on_boot(*game_engine_module);
         success = true;
     }
     catch (const nodec::NodecException& e)
     {
-        nodec::logging::ErrorStream(__FILE__, __LINE__) 
+        nodec::logging::ErrorStream(__FILE__, __LINE__)
             << "[GameEngineModule] >>> A NodecException has been occured while booting.\n"
             << "detail: " << e.what() << std::flush;
     }
     catch (const std::exception& e)
     {
-        nodec::logging::ErrorStream(__FILE__, __LINE__) 
+        nodec::logging::ErrorStream(__FILE__, __LINE__)
             << "[GameEngineModule] >>> A StandardException has been occured while booting.\n"
             << "detail: " << e.what() << std::flush;
     }
     catch (...)
     {
-        nodec::logging::ErrorStream(__FILE__, __LINE__) 
+        nodec::logging::ErrorStream(__FILE__, __LINE__)
             << "[GameEngineModule] >>> An UnknownException has been occured while booting.\n"
             << "detail: Unavailable." << std::flush;
     }
@@ -154,20 +159,17 @@ bool boot(GameEngineModule* game_engine_module) noexcept
     return success;
 }
 
-namespace interfaces
-{
+}
 
 GameEngine* get_engine()
 {
-    if (auto locked = current.lock())
+    if (auto locked = impl::current.lock())
     {
         return locked.get();
     }
     throw NoEngineException("Current Engine not assigned. May be not instanciated or already deleted.", __FILE__, __LINE__);
 }
 
-} // namespace interfaces
 
 
 } // namespace game_engine
-} // namespace nodec_modules

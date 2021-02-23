@@ -7,12 +7,6 @@ namespace keyboard
 namespace impl
 {
 
-KeyboardModule::KeyboardModule() :
-    Keyboard("nodec_modules::input::KeyboardModule")
-{
-
-}
-
 bool KeyboardModule::get_key_pressed(Key key) const noexcept
 {
     return key_states[static_cast<int>(key)];

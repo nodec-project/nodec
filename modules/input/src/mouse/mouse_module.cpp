@@ -7,13 +7,6 @@ namespace mouse
 namespace impl
 {
 
-
-MouseModule::MouseModule() :
-    Mouse("nodec_modules::input::MouseModule")
-{
-
-}
-
 nodec::Vector2i MouseModule::position() const noexcept
 {
     return position_;

@@ -3,7 +3,6 @@
 
 #include <input/keyboard/key.hpp>
 
-#include <nodec/module_interface.hpp>
 #include <nodec/event.hpp>
 
 namespace input
@@ -11,12 +10,16 @@ namespace input
 namespace keyboard
 {
 
-class Keyboard : public nodec::ModuleInterface
+class Keyboard
 {
-public:
-    using nodec::ModuleInterface::ModuleInterface;
+private:
+    NODEC_DISABLE_COPY(Keyboard);
 
 public:
+    Keyboard() {};
+
+public:
+
     struct Event
     {
         enum class Type

@@ -17,7 +17,7 @@ namespace impl
 class MouseModule : public Mouse
 {
 public:
-    MouseModule();
+    MouseModule() {};
 
 public:
     nodec::Vector2i position() const noexcept override;

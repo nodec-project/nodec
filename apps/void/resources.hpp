@@ -3,7 +3,7 @@
 
 #include "app.hpp"
 
-class Resources : public nodec_modules::game_engine::interfaces::Behavior
+class Resources : public game_engine::Behavior
 {
     using Material = nodec_modules::rendering::interfaces::Material;
 
