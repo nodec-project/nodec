@@ -3,15 +3,14 @@
 
 #include <imwindow/imwindow.hpp>
 
+#include <unordered_map>
+
 namespace imwindow
 {
 
 namespace impl
 {
 
-void register_window(size_t type_hash);
-
-void show_window_main_menu();
 
 void update_windows();
 

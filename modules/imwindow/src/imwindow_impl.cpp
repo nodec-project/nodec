@@ -3,6 +3,7 @@
 #include <imgui.h>
 
 #include <nodec/nodec_exception.hpp>
+#include <nodec/object.hpp>
 
 #include <vector>
 #include <unordered_map>
@@ -12,41 +13,31 @@
 
 namespace imwindow
 {
+
+namespace detail
+{
+std::unordered_map<size_t, nodec::Object::Holder<ImWindow>> active_windows;
+}
+
 namespace impl
 {
 
-
-std::unordered_map<size_t, std::function<std::shared_ptr<ImWindow>()>> registered_windows;
-
-
-
-void register_window(size_t type_hash, std::function<std::shared_ptr<ImWindow>()> func)
+void update_windows()
 {
-    if (registered_windows.find(type_hash) == registered_windows.end())
+    for (auto& pair : detail::active_windows)
     {
-        throw nodec::NodecException("Already registered.", __FILE__, __LINE__);
-    }
+        auto window = pair.second;
 
-    auto result = registered_windows.emplace(type_hash, func);
-    if (!result.second)
-    {
-        throw nodec::NodecException("Failed to register.", __FILE__, __LINE__);
-    }
-}
-
-
-void show_window_main_menu()
-{
-    if (ImGui::BeginMainMenuBar())
-    {
-        if (ImGui::BeginMenu("Window"))
+        ImGui::SetNextWindowSize(ImVec2(window->init_size.x, window->init_size.y), ImGuiCond_FirstUseEver);
+        if (ImGui::Begin(window->title.c_str()))
         {
-
-            ImGui::EndMenu();
+            window->on_gui();
         }
-        ImGui::EndMainMenuBar();
+        ImGui::End();
+
     }
 }
 
 } // namespace impl
+
 }

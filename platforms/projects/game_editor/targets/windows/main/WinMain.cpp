@@ -49,6 +49,7 @@ int CALLBACK WinMain(
             ImGui::ShowDemoWindow(&showDemoWindow);
 
             game_editor::menu::impl::show_main_menu();
+            imwindow::impl::update_windows();
 
             window.Gfx().EndFrame();
 

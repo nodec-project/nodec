@@ -56,7 +56,7 @@ static void show_menu_items(const MenuItem& item)
         {
             if (ImGui::MenuItem(item.name.c_str()))
             {
-
+                item.func();
             }
 
             continue;

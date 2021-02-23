@@ -1,18 +1,30 @@
 #include <imwindow/imwindow.hpp>
 #include <game_editor/menu.hpp>
 
-class LogWindow : imwindow::ImWindow
+
+#include <nodec/vector2.hpp>
+#include <nodec/logging.hpp>
+
+
+class LogWindow : public imwindow::ImWindow
 {
 public:
+
     static void init()
     {
+        auto window = imwindow::get_window<LogWindow>();
 
+        nodec::logging::info("test", __FILE__, __LINE__);
     }
+
+public:
+    LogWindow() :
+        ImWindow("Log", nodec::Vector2f(500, 400))
+    {
+    };
 };
 
 static bool is_registered_0 = game_editor::menu::register_menu_item("Window/Log", &LogWindow::init);
-static bool is_registered_1 = game_editor::menu::register_menu_item("File/Event", &LogWindow::init);
-static bool is_registered_2 = game_editor::menu::register_menu_item("File/Event/A", &LogWindow::init);
-static bool is_registered_3 = game_editor::menu::register_menu_item("File/Event/B", &LogWindow::init);
+
 //static game_editor::menu::MenuItemRegistration _registration("Test/Func", &LogWindow::init);
 
