@@ -2,7 +2,9 @@
 #define NODEC__ENTITY__REGISTRY_HPP_
 
 #include <nodec/entity/entity.hpp>
+#include <nodec/entity/sparse_set.hpp>
 
+#include <memory>
 #include <vector>
 
 
@@ -11,11 +13,35 @@ namespace nodec
 namespace entity
 {
 
-template<typename EntityT>
+template<typename Entity>
 class BasicRegistry
 {
 private:
-    using entity_traits = entity_traits<EntityT>;
+    using entity_traits = entity_traits<Entity>;
+
+    struct PoolData
+    {
+        std::unique_ptr<BasicSparseSet<Entity>> pool;
+    };
+
+    template<typename Component>
+
+
+    Entity generate_identifier()
+    {
+        return entities.emplace_back(static_cast<Entity>(entities.size()));
+    }
+
+    Entity recycle_identifier()
+    {
+
+    }
+
+    void release_entity(const Entity entity)
+    {
+
+    }
+
 
 public:
     BasicRegistry() = default;
@@ -27,42 +53,29 @@ public:
     BasicRegistry& operator=(BasicRegistry&&) = default;
 
 
-    EntityT create_entity()
+    Entity create_entity()
     {
 
     }
 
-    void destroy_entity(const EntityT entity)
+    void destroy_entity(const Entity entity)
     {
 
     }
+
+
 
 
     template<typename... Components>
-    void remove_components(const EntityT entity)
+    void remove_components(const Entity entity)
     {
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
     }
 
-private:
-    EntityT generate_identifier()
-    {
-        return entities.emplace_back(static_cast<EntityT>(entities.size()));
-    }
-
-    EntityT recycle_identifier()
-    {
-
-    }
-
-    void release_entity(const EntityT entity)
-    {
-
-    }
 
 private:
-    std::vector<EntityT> entities{};
+    std::vector<Entity> entities;
 
 
 };
