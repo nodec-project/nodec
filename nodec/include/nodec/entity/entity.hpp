@@ -1,6 +1,7 @@
 #ifndef NODEC__ENTITY__ENTITY_HPP_
 #define NODEC__ENTITY__ENTITY_HPP_
 
+#include <stdint.h>
 
 namespace nodec
 {
@@ -40,14 +41,14 @@ struct NullEntity
         return Entity{ entity_traits<Entity>::entity_mask };
     }
 
-
-
 };
 
 /**
 * @brief Compile-time constant for null entities.
 */
 constexpr NullEntity null_entity{};
+
+
 
 }
 }

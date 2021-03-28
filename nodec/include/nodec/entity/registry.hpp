@@ -44,13 +44,6 @@ private:
 
 
 public:
-    BasicRegistry() = default;
-    BasicRegistry(BasicRegistry&&) = default;
-
-    /**
-    * @brief Default move assignment operator.
-    */
-    BasicRegistry& operator=(BasicRegistry&&) = default;
 
 
     Entity create_entity()
@@ -60,7 +53,6 @@ public:
 
     void destroy_entity(const Entity entity)
     {
-
     }
 
 
@@ -72,6 +64,8 @@ public:
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
     }
+
+    
 
 
 private:

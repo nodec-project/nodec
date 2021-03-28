@@ -55,6 +55,17 @@ private:
 
 public:
 
+    void shrink_to_fit()
+    {
+        if (packed.empty())
+        {
+            sparse.clear();
+        }
+
+        sparse.shrink_to_fit();
+        packed.shrink_to_fit();
+    }
+
     /**
     * @brief Assigns an entity to a sparse set.
     */
