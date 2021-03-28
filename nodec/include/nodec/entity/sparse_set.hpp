@@ -15,7 +15,7 @@ template<typename Entity>
 class BasicSparseSet
 {
 private:
-    static constexpr auto paze_size = 4096;
+    static constexpr auto page_size = 4096;
 
     using entity_traits = entity_traits<Entity>;
     using Page = std::unique_ptr<Entity[]>;
@@ -28,7 +28,7 @@ private:
 
     size_t offset(const Entity entity) const noexcept
     {
-        return static_cast<size_t>(entity & (paze_size - 1));
+        return static_cast<size_t>(entity & (page_size - 1));
     }
 
     Page& assured_page(const size_t pos)
@@ -40,9 +40,9 @@ private:
 
         if (!sparse[pos])
         {
-            sparse[pos].reset(new Entity[paze_size]);
+            sparse[pos].reset(new Entity[page_size]);
 
-            for (auto* first = sparse[pos].get(), *last = first + paze_size; first != last; ++first)
+            for (auto* first = sparse[pos].get(), *last = first + page_size; first != last; ++first)
             {
                 *first = null_entity;
             }

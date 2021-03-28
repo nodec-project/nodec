@@ -12,6 +12,14 @@ template<typename>
 struct entity_traits;
 
 
+/**
+* @brief Entity traits for a 32 bits entity identifier.
+*   A 32 bits entity identifier gurantees:
+*
+*   * 20 bits for entity number (suitable for almost all the games).
+*   * 12 bits for the version (reset in [0-4095]).
+*
+*/
 template<>
 struct entity_traits<uint32_t>
 {
@@ -26,6 +34,8 @@ struct entity_traits<uint32_t>
     static constexpr Entity entity_mask = 0xFFFFF;
 
     static constexpr Entity version_mask = 0xFFF;
+
+    static constexpr size_t entity_shift = 20u;
 
 };
 

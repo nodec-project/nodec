@@ -2,9 +2,11 @@
 
 #include <nodec/logging.hpp>
 #include <nodec/entity/entity.hpp>
+#include <nodec/entity/registry.hpp>
 
 
 #include <type_traits>
+#include <vector>
 
 
 using namespace nodec;
@@ -40,7 +42,14 @@ call_on_destroy(T&)
     logging::info("no on_destroy()", __FILE__, __LINE__);
 }
 
-
+class Test
+{
+public:
+    ~Test()
+    {
+        logging::info("called", __FILE__, __LINE__);
+    }
+};
 
 class TestComponent
 {
@@ -78,6 +87,20 @@ int main()
     TestComponentWithOnDestroy comB;
     call_on_destroy(comA);
     call_on_destroy(comB);
+
+
+    
+    
+    std::vector<Test> vec;
+    vec.reserve(10);
+    vec.emplace_back();
+    vec.emplace_back();
+    vec.emplace_back();
+
+    vec.pop_back();
+
+    logging::InfoStream(__FILE__, __LINE__) << vec.capacity();
+    logging::info("END", __FILE__, __LINE__);
 
     return 0;
 }

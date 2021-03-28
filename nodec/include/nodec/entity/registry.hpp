@@ -34,12 +34,17 @@ private:
 
     Entity recycle_identifier()
     {
-
+        const auto curr = available;
+        const auto version = entities[curr] & (entity_traits::version_mask << entity_traits::entity_shift);
+        available = entities[curr] & entity_traits::entity_mask;
+        return entities[curr] = curr | version;
     }
 
-    void release_entity(const Entity entity)
+    void release_entity(const Entity entity, const typename entity_traits::Version version)
     {
-
+        const auto entt = entity & entity_traits::entity_mask;
+        entities[entt] = available | (static_cast<Entity>(version) << entity_traits::entity_shift);
+        available = entt;
     }
 
 
@@ -48,7 +53,7 @@ public:
 
     Entity create_entity()
     {
-
+        return available == null_entity ? generate_identifier() : recycle_identifier();
     }
 
     void destroy_entity(const Entity entity)
@@ -70,6 +75,7 @@ public:
 
 private:
     std::vector<Entity> entities;
+    Entity available{ null_entity };
 
 
 };
