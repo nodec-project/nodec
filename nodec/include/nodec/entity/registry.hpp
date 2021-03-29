@@ -51,6 +51,19 @@ private:
 public:
 
 
+    /**
+    * @brief Checks if an entity identifier refers to a valid entity.
+    * @param entity 
+    *   An entity identifier, either valid or not.
+    * @return True if the identifier is valid, false otherwise.
+    */
+    bool is_valid(const Entity entity) const
+    {
+        const auto pos = static_cast<size_t>(entity & entity_traits::entity_mask);
+        return (pos < entities.size() && entities[pos] == entity);
+    }
+
+
     Entity create_entity()
     {
         return available == null_entity ? generate_identifier() : recycle_identifier();
