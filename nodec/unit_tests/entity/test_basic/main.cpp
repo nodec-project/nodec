@@ -98,8 +98,11 @@ int main()
     vec.emplace_back();
 
     vec.pop_back();
-
+    //12638232278978672507
     logging::InfoStream(__FILE__, __LINE__) << vec.capacity();
+
+    logging::InfoStream(__FILE__, __LINE__) << typeid(int).hash_code();
+
     logging::info("END", __FILE__, __LINE__);
 
     return 0;

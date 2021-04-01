@@ -24,7 +24,6 @@ private:
         std::unique_ptr<BasicSparseSet<Entity>> pool;
     };
 
-    template<typename Component>
 
 
     Entity generate_identifier()
