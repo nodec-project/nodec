@@ -18,10 +18,22 @@ public:
     static constexpr uint16_t DEFAULT_GROUP_SIZE = 48;
 
 private:
-    static size_t 
 
-    int bmtest(size_t i) const {return 0x01 << i}
-    void bmset(size_t i) {}
+    /**
+    * @brief i bits to bytes (rounded down) 
+    */
+    static size_t bytebit(size_t i) { return i >> 3; }
+
+    /**
+    * @brief Gets the leftover bits with division by byte.
+    */
+    static size_t modbit(size_t i) { return 1 << (i & 0x07); }
+
+    int bmtest(size_t i) const { return bitmap[bytebit(i)] & modbit(i); }
+
+    void bmset(size_t i) { bitmap[bytebit(i)] |= modbit(i); }
+
+    void bmclear(size_t i) { bitmap[bytebit(i)] &= ~modbit(i); }
 
     static size_t bits_in_byte(uint8_t byte)
     {
