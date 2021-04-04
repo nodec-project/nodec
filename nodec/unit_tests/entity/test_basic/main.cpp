@@ -1,8 +1,10 @@
 
 
 #include <nodec/logging.hpp>
+
 #include <nodec/entity/entity.hpp>
 #include <nodec/entity/registry.hpp>
+#include <nodec/entity/sparse_table.hpp>
 
 
 #include <type_traits>
@@ -83,25 +85,46 @@ int main()
 {
     logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
 
-    TestComponent comA;
-    TestComponentWithOnDestroy comB;
-    call_on_destroy(comA);
-    call_on_destroy(comB);
+
+    entity::SparseTable<uint16_t> table;
+
+    for (auto i = 0; i < 10; ++i)
+    {
+        table[i * 2] = i;
+    }
+
+    table.test();
+    entity::Entity entity = 0;
+
+    //entity::BasicSparseGroup<size_t, entity::DEFAULT_SPARSE_GROUP_SIZE> group;
+    //group[0] = 1;
+    //group[3] = 2;
+    //group[2] = 9;
+    //group.test();
+    //logging::InfoStream(__FILE__, __LINE__) << group[2];
+
+    //group.erase(2);
+    //group.test();
 
 
-    
-    
-    std::vector<Test> vec;
-    vec.reserve(10);
-    vec.emplace_back();
-    vec.emplace_back();
-    vec.emplace_back();
+    //TestComponent comA;
+    //TestComponentWithOnDestroy comB;
+    //call_on_destroy(comA);
+    //call_on_destroy(comB);
 
-    vec.pop_back();
-    //12638232278978672507
-    logging::InfoStream(__FILE__, __LINE__) << vec.capacity();
+    //
+    //
+    //std::vector<Test> vec;
+    //vec.reserve(10);
+    //vec.emplace_back();
+    //vec.emplace_back();
+    //vec.emplace_back();
 
-    logging::InfoStream(__FILE__, __LINE__) << typeid(int).hash_code();
+    //vec.pop_back();
+    ////12638232278978672507
+    //logging::InfoStream(__FILE__, __LINE__) << vec.capacity();
+
+    //logging::InfoStream(__FILE__, __LINE__) << typeid(int).hash_code();
 
     logging::info("END", __FILE__, __LINE__);
 

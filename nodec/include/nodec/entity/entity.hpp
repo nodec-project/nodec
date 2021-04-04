@@ -99,6 +99,10 @@ get_version(const Entity entity)
     return static_cast<Version>(entity >> traits::entity_shift);
 }
 
+
+using Entity = uint32_t;
+
+
 }
 }
 
