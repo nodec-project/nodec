@@ -19,15 +19,87 @@ namespace entity
 */
 constexpr uint16_t DEFAULT_SPARSE_GROUP_SIZE = 48;
 
+template<typename Table>
+class TableIterator
+{
+public:
+    using GroupIterator = typename Table::Group::Iterator;
+    using Value = typename Table::Group::Value;
+
+public:
+    TableIterator(Table* table, size_t group_num, GroupIterator group_iter)
+        : table_(table), group_num_(group_num), group_iter_(group_iter)
+    {
+    }
+
+    TableIterator(const TableIterator& from)
+        : table_(from.table_), group_num_(from.group_num_), group_iter_(from.group_iter_)
+    {
+    }
+
+    Value& operator*() const
+    {
+        return *group_iter_;
+    }
+
+    Value* operator->() const
+    {
+        return group_iter_.operator->();
+    }
+
+    TableIterator& operator++()
+    {
+        ++group_iter_;
+        if (group_iter_ == table_->end(group_num_)
+            && group_num_ + 1 < table_->group_count())
+        {
+            ++group_num_;
+            group_iter_ = table_->begin(group_num_);
+        }
+        return *this;
+    }
+
+    TableIterator& operator--()
+    {
+        if (group_iter_ == table_->begin(group_num_)
+            && group_num_ > 0)
+        {
+            --group_num_;
+            group_iter_ = table_->end(group_num_);
+        }
+        --group_iter_;
+        return *this;
+    }
+
+    bool operator==(const TableIterator& it)
+    {
+        return table_ == it.table_
+            && group_num_ == it.group_num_
+            && group_iter_ == it.group_iter_;
+    }
+    bool operator!=(const TableIterator& it)
+    {
+        return !(*this == it);
+    }
+
+
+private:
+    Table* table_;
+    size_t group_num_;
+    GroupIterator group_iter_;
+
+};
+
+
 template<typename T, uint16_t GROUP_SIZE>
 class BasicSparseGroup
 {
-
 public:
     using size_type = uint16_t;
+    using Value = T;
+    using Iterator = typename std::vector<T>::iterator;
 
 private:
-
     /**
     * @brief i bits to bytes (rounded down)
     */
@@ -89,9 +161,19 @@ public:
     }
 
 public:
+    Iterator begin() { return group.begin(); }
+    Iterator end() { return group.end(); }
+
     size_type num_buckets() { return num_buckets_; }
 
-    T& operator[](size_type i)
+
+    bool contains(const size_type i) const
+    {
+        return bmtest(i) != 0x00;
+    }
+
+    template<typename... Args>
+    Value& try_emplace(const size_type i, Args&&... args)
     {
         if (bmtest(i))
         {
@@ -99,13 +181,14 @@ public:
         }
 
         auto offset = pos_to_offset(bitmap, i);
-        group.insert(group.begin() + offset, T());
+        group.emplace(group.begin() + offset, std::forward<Args>(args)...);
         ++num_buckets_;
         bmset(i);
         return group[offset];
     }
 
-    void erase(size_type i)
+
+    void erase(const size_type i)
     {
         if (!bmtest(i))
         {
@@ -118,49 +201,39 @@ public:
         bmclear(i);
     }
 
-    void test()
-    {
-        nodec::logging::InfoStream info_stream(__FILE__, __LINE__);
-        for (auto& ele : group)
-        {
-             info_stream<< ele << ", ";
-        }
-
-        for (auto& byte : bitmap)
-        {
-            info_stream << static_cast<int>(byte) << ", ";
-        }
-
-    }
-
 
 private:
-    std::vector<T> group;
+    std::vector<Value> group;
     uint8_t bitmap[(GROUP_SIZE - 1) / 8 + 1]; // fancy math is so we round up
     size_type num_buckets_; // limits GROUP_SIZE to 64KB
 
 };
 
 
+
 template<typename T, uint16_t GROUP_SIZE>
 class BasicSparseTable
 {
 public:
-    using Group = BasicSparseGroup<T, GROUP_SIZE>;
+    using Group = BasicSparseGroup<std::pair<size_t, T>, GROUP_SIZE>;
+    using size_type = size_t;
+    using Iterator = TableIterator<BasicSparseTable<T, GROUP_SIZE>>;
+    using LocalIterator = typename Group::Iterator;
+
 
 public:
 
-    uint16_t pos_in_group(size_t i) const
+    uint16_t pos_in_group(const size_type i) const
     {
         return static_cast<uint16_t>(i % GROUP_SIZE);
     }
 
-    size_t group_num(size_t i) const
+    size_type group_num(const size_type i) const
     {
         return i / GROUP_SIZE;
     }
 
-    Group& which_group(size_t i)
+    Group& which_group(size_type i)
     {
         auto num = group_num(i);
 
@@ -173,23 +246,41 @@ public:
     }
 
 
-    T& operator[](size_t i)
+    Iterator begin()
     {
-        return which_group(i)[pos_in_group(i)];
+        return Iterator(this, 0, begin(0));
+    }
+    Iterator end()
+    {
+        auto group_num = groups.size() - 1;
+        return Iterator(this, group_num, end(group_num));
     }
 
-    void erase(size_t i)
+
+    T& operator[](const size_type i)
+    {
+        return which_group(i).try_emplace(pos_in_group(i), i, T{}).second;
+    }
+
+    void erase(const size_type i)
     {
         which_group(i).erase(pos_in_group(i));
     }
 
-
-    void test()
+    bool contains(const size_type i)
     {
-        for (auto& group : groups)
-        {
-            group.test();
-        }
+        return which_group(i).contains(pos_in_group(i));
+    }
+
+    size_type group_count() const noexcept { return groups.size(); }
+
+    LocalIterator begin(size_type n)
+    {
+        return groups[n].begin();
+    }
+    LocalIterator end(size_type n)
+    {
+        return groups[n].end();
     }
 
 

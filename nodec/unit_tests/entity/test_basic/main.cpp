@@ -80,6 +80,22 @@ void test(Component& com)
     com.on_destroy();
 }
 
+template<typename Table>
+void print(Table& table)
+{
+    logging::InfoStream info_stream(__FILE__, __LINE__);
+    for (auto iter = table.begin(); iter != table.end(); ++iter)
+    {
+        info_stream << "( " << iter->first << ", " << iter->second << "), ";
+    }
+
+    info_stream << std::endl;
+
+    for (auto& v : table)
+    {
+        info_stream << "( " << v.first << ", " << v.second << "), ";
+    }
+}
 
 int main()
 {
@@ -87,13 +103,22 @@ int main()
 
 
     entity::SparseTable<uint16_t> table;
-
-    for (auto i = 0; i < 10; ++i)
+    for (auto i = 0; i < 50; ++i)
     {
         table[i * 2] = i;
     }
 
-    table.test();
+    print(table);
+
+    table.erase(6);
+    logging::InfoStream(__FILE__, __LINE__) << table.group_count();
+
+    print(table);
+    auto back = table.end();
+    --back;
+    logging::InfoStream(__FILE__, __LINE__) << back->first << ", " << back->second;
+    
+
     entity::Entity entity = 0;
 
     //entity::BasicSparseGroup<size_t, entity::DEFAULT_SPARSE_GROUP_SIZE> group;
