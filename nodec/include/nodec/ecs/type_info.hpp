@@ -1,5 +1,5 @@
-#ifndef NODEC__ENTITY__TYPE_INFO_HPP_
-#define NODEC__ENTITY__TYPE_INFO_HPP_
+#ifndef NODEC__ECS__TYPE_INFO_HPP_
+#define NODEC__ECS__TYPE_INFO_HPP_
 
 
 #include <stdint.h>
@@ -7,7 +7,7 @@
 
 namespace nodec
 {
-namespace entity
+namespace ecs
 {
 
 using TypeId = uint32_t;

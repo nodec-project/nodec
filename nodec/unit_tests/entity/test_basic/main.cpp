@@ -2,9 +2,9 @@
 
 #include <nodec/logging.hpp>
 
-#include <nodec/entity/entity.hpp>
-#include <nodec/entity/registry.hpp>
-#include <nodec/entity/sparse_table.hpp>
+#include <nodec/ecs/entity.hpp>
+#include <nodec/ecs/registry.hpp>
+#include <nodec/ecs/sparse_table.hpp>
 
 
 #include <type_traits>
@@ -57,7 +57,35 @@ public:
 class TestComponent
 {
 public:
+    TestComponent(int field)
+        :field(field)
+    {
+
+        logging::InfoStream(__FILE__, __LINE__) << "constructed.";
+    }
+
+    TestComponent(const TestComponent& other)
+        :field(other.field)
+    {
+        logging::InfoStream(__FILE__, __LINE__) << "copied.";
+    }
+
+
+    TestComponent(TestComponent&& other) noexcept
+        :field(std::move(other.field))
+    {
+        logging::InfoStream(__FILE__, __LINE__) << "moved.";
+    }
+
+    ~TestComponent()
+    {
+        logging::InfoStream(__FILE__, __LINE__) << "destroyed.";
+    }
+
+public:
     int field;
+
+
 
 };
 
@@ -102,65 +130,88 @@ void print(Table& table)
 
 int main()
 {
-    logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
-
-    
-    //std::unordered_map<int, int> map;
-    //map.emplace(0, 1);
-    //for (auto iter = map.begin(); iter != map.end(); ++iter)
-    //{
-    //    *iter = std::pair<const int, int>(0, 1);
-    //}
-
-    //entity::SparseTable<uint16_t> table;
-    //for (auto i = 0; i < 50; ++i)
-    //{
-    //    table[i * 2] = i;
-    //}
-
-    //print(table);
-
-    //table.erase(6);
-    //logging::InfoStream(__FILE__, __LINE__) << table.group_count();
-
-    //print(table);
-    //auto back = table.end();
-    //--back;
-    ////logging::InfoStream(__FILE__, __LINE__) << back->first << ", " << back->second;
-    //logging::InfoStream(__FILE__, __LINE__) << *back;
-    //
-
-    //entity::Entity entity = 0;
-
-    //entity::BasicSparseGroup<size_t, entity::DEFAULT_SPARSE_GROUP_SIZE> group;
-    //group[0] = 1;
-    //group[3] = 2;
-    //group[2] = 9;
-    //group.test();
-    //logging::InfoStream(__FILE__, __LINE__) << group[2];
-
-    //group.erase(2);
-    //group.test();
+    try
+    {
 
 
-    //TestComponent comA;
-    //TestComponentWithOnDestroy comB;
-    //call_on_destroy(comA);
-    //call_on_destroy(comB);
+        logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
 
-    //
-    //
-    //std::vector<Test> vec;
-    //vec.reserve(10);
-    //vec.emplace_back();
-    //vec.emplace_back();
-    //vec.emplace_back();
+        ecs::Registry registry;
 
-    //vec.pop_back();
-    ////12638232278978672507
-    //logging::InfoStream(__FILE__, __LINE__) << vec.capacity();
+        auto entity = registry.create_entity();
 
-    //logging::InfoStream(__FILE__, __LINE__) << typeid(int).hash_code();
+        logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
+
+        registry.add_component<TestComponent>(entity, 0);
+
+        registry.destroy_entity(entity);
+        logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
+
+        entity = registry.create_entity();
+        throw ecs::InvalidEntityException(entity, __FILE__, __LINE__);
+
+
+        //std::unordered_map<int, int> map;
+        //map.emplace(0, 1);
+        //for (auto iter = map.begin(); iter != map.end(); ++iter)
+        //{
+        //    *iter = std::pair<const int, int>(0, 1);
+        //}
+
+        //entity::SparseTable<uint16_t> table;
+        //for (auto i = 0; i < 50; ++i)
+        //{
+        //    table[i * 2] = i;
+        //}
+
+        //print(table);
+
+        //table.erase(6);
+        //logging::InfoStream(__FILE__, __LINE__) << table.group_count();
+
+        //print(table);
+        //auto back = table.end();
+        //--back;
+        ////logging::InfoStream(__FILE__, __LINE__) << back->first << ", " << back->second;
+        //logging::InfoStream(__FILE__, __LINE__) << *back;
+        //
+
+        //entity::Entity entity = 0;
+
+        //entity::BasicSparseGroup<size_t, entity::DEFAULT_SPARSE_GROUP_SIZE> group;
+        //group[0] = 1;
+        //group[3] = 2;
+        //group[2] = 9;
+        //group.test();
+        //logging::InfoStream(__FILE__, __LINE__) << group[2];
+
+        //group.erase(2);
+        //group.test();
+
+
+        //TestComponent comA;
+        //TestComponentWithOnDestroy comB;
+        //call_on_destroy(comA);
+        //call_on_destroy(comB);
+
+        //
+        //
+        //std::vector<Test> vec;
+        //vec.reserve(10);
+        //vec.emplace_back();
+        //vec.emplace_back();
+        //vec.emplace_back();
+
+        //vec.pop_back();
+        ////12638232278978672507
+        //logging::InfoStream(__FILE__, __LINE__) << vec.capacity();
+
+        //logging::InfoStream(__FILE__, __LINE__) << typeid(int).hash_code();
+    }
+    catch (std::exception& e)
+    {
+        logging::ErrorStream(__FILE__, __LINE__) << e.what();
+    }
 
     logging::info("END", __FILE__, __LINE__);
 

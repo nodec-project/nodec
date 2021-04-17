@@ -1,5 +1,5 @@
-#ifndef NODEC__ENTITY__SPARSE_TABLE_HPP_
-#define NODEC__ENTITY__SPARSE_TABLE_HPP_
+#ifndef NODEC__ECS__SPARSE_TABLE_HPP_
+#define NODEC__ECS__SPARSE_TABLE_HPP_
 
 #include <nodec/logging.hpp>
 
@@ -8,7 +8,7 @@
 
 namespace nodec
 {
-namespace entity
+namespace ecs
 {
 
 
@@ -24,7 +24,7 @@ class TableIterator
 {
 public:
     using GroupIterator = typename Table::Group::Iterator;
-    using ValueT = typename Table::Group::ValueT;
+    using Value = typename Table::Group::Value;
 
 public:
     TableIterator(Table* table, size_t group_num, GroupIterator group_iter)
@@ -37,12 +37,12 @@ public:
     {
     }
 
-    ValueT& operator*() const
+    Value& operator*() const
     {
         return *group_iter_;
     }
 
-    ValueT* operator->() const
+    Value* operator->() const
     {
         return group_iter_.operator->();
     }
@@ -91,13 +91,12 @@ private:
 };
 
 
-template<typename T, uint16_t GROUP_SIZE>
+template<typename Value, uint16_t GROUP_SIZE>
 class BasicSparseGroup
 {
 public:
     using SizeT = uint16_t;
-    using ValueT = T;
-    using Iterator = typename std::vector<T>::iterator;
+    using Iterator = typename std::vector<Value>::iterator;
 
 private:
     /**
@@ -173,7 +172,7 @@ public:
     }
 
     template<typename... Args>
-    ValueT& try_emplace(const SizeT i, Args&&... args)
+    Value& try_emplace(const SizeT i, Args&&... args)
     {
         if (bmtest(i))
         {
@@ -203,7 +202,7 @@ public:
 
 
 private:
-    std::vector<ValueT> group;
+    std::vector<Value> group;
     uint8_t bitmap[(GROUP_SIZE - 1) / 8 + 1]; // fancy math is so we round up
     SizeT num_buckets_; // limits GROUP_SIZE to 64KB
 
@@ -264,7 +263,7 @@ public:
 
     T& operator[](const SizeT i)
     {
-        return which_group(i).try_emplace(pos_in_group(i), T{});
+        return which_group(i).try_emplace(pos_in_group(i));
     }
 
 
@@ -294,7 +293,7 @@ public:
     {
         return groups[n].begin();
     }
-    LocalIterator end(Size n)
+    LocalIterator end(SizeT n)
     {
         return groups[n].end();
     }
