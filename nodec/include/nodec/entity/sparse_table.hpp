@@ -24,7 +24,7 @@ class TableIterator
 {
 public:
     using GroupIterator = typename Table::Group::Iterator;
-    using Value = typename Table::Group::Value;
+    using ValueT = typename Table::Group::ValueT;
 
 public:
     TableIterator(Table* table, size_t group_num, GroupIterator group_iter)
@@ -37,12 +37,12 @@ public:
     {
     }
 
-    Value& operator*() const
+    ValueT& operator*() const
     {
         return *group_iter_;
     }
 
-    Value* operator->() const
+    ValueT* operator->() const
     {
         return group_iter_.operator->();
     }
@@ -95,31 +95,31 @@ template<typename T, uint16_t GROUP_SIZE>
 class BasicSparseGroup
 {
 public:
-    using size_type = uint16_t;
-    using Value = T;
+    using SizeT = uint16_t;
+    using ValueT = T;
     using Iterator = typename std::vector<T>::iterator;
 
 private:
     /**
     * @brief i bits to bytes (rounded down)
     */
-    static size_type bytebit(size_type i) { return i >> 3; }
+    static SizeT bytebit(SizeT i) { return i >> 3; }
 
     /**
     * @brief Gets the leftover bits with division by byte.
     */
-    static size_type modbit(size_type i) { return 1 << (i & 0x07); }
+    static SizeT modbit(SizeT i) { return 1 << (i & 0x07); }
 
     /**
     * @brief Tests bucket i is occuoued or not.
     */
-    int bmtest(size_type i) const { return bitmap[bytebit(i)] & modbit(i); }
+    int bmtest(SizeT i) const { return bitmap[bytebit(i)] & modbit(i); }
 
-    void bmset(size_type i) { bitmap[bytebit(i)] |= modbit(i); }
+    void bmset(SizeT i) { bitmap[bytebit(i)] |= modbit(i); }
 
-    void bmclear(size_type i) { bitmap[bytebit(i)] &= ~modbit(i); }
+    void bmclear(SizeT i) { bitmap[bytebit(i)] &= ~modbit(i); }
 
-    static size_type bits_in_byte(uint8_t byte)
+    static SizeT bits_in_byte(uint8_t byte)
     {
         static const uint8_t bits_in[256]{
             0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4,
@@ -147,9 +147,9 @@ public:
     * @brief We need a small function that tells us how many set bits there are
     *   in position 0..i-1 of the bitmap.
     */
-    static size_type pos_to_offset(const uint8_t* bm, size_type pos)
+    static SizeT pos_to_offset(const uint8_t* bm, SizeT pos)
     {
-        size_type retval = 0;
+        SizeT retval = 0;
 
         // @note Condition pos > 8 is an optimization; convince yourself we
         // give exactly the same result as if we had pos >= 8 here instead.
@@ -164,16 +164,16 @@ public:
     Iterator begin() { return group.begin(); }
     Iterator end() { return group.end(); }
 
-    size_type num_buckets() { return num_buckets_; }
+    SizeT num_buckets() { return num_buckets_; }
 
 
-    bool contains(const size_type i) const
+    bool contains(const SizeT i) const
     {
         return bmtest(i) != 0x00;
     }
 
     template<typename... Args>
-    Value& try_emplace(const size_type i, Args&&... args)
+    ValueT& try_emplace(const SizeT i, Args&&... args)
     {
         if (bmtest(i))
         {
@@ -188,7 +188,7 @@ public:
     }
 
 
-    void erase(const size_type i)
+    void erase(const SizeT i)
     {
         if (!bmtest(i))
         {
@@ -203,9 +203,9 @@ public:
 
 
 private:
-    std::vector<Value> group;
+    std::vector<ValueT> group;
     uint8_t bitmap[(GROUP_SIZE - 1) / 8 + 1]; // fancy math is so we round up
-    size_type num_buckets_; // limits GROUP_SIZE to 64KB
+    SizeT num_buckets_; // limits GROUP_SIZE to 64KB
 
 };
 
@@ -215,25 +215,25 @@ template<typename T, uint16_t GROUP_SIZE>
 class BasicSparseTable
 {
 public:
-    using Group = BasicSparseGroup<std::pair<size_t, T>, GROUP_SIZE>;
-    using size_type = size_t;
+    using Group = BasicSparseGroup<T, GROUP_SIZE>;
+    using SizeT = size_t;
     using Iterator = TableIterator<BasicSparseTable<T, GROUP_SIZE>>;
     using LocalIterator = typename Group::Iterator;
 
 
 public:
 
-    uint16_t pos_in_group(const size_type i) const
+    uint16_t pos_in_group(const SizeT i) const
     {
         return static_cast<uint16_t>(i % GROUP_SIZE);
     }
 
-    size_type group_num(const size_type i) const
+    SizeT group_num(const SizeT i) const
     {
         return i / GROUP_SIZE;
     }
 
-    Group& which_group(size_type i)
+    Group& which_group(SizeT i)
     {
         auto num = group_num(i);
 
@@ -243,6 +243,11 @@ public:
         }
 
         return groups[num];
+    }
+
+    bool has_group(SizeT i) const
+    {
+        return group_num(i) < groups.size();
     }
 
 
@@ -257,28 +262,39 @@ public:
     }
 
 
-    T& operator[](const size_type i)
+    T& operator[](const SizeT i)
     {
-        return which_group(i).try_emplace(pos_in_group(i), i, T{}).second;
+        return which_group(i).try_emplace(pos_in_group(i), T{});
     }
 
-    void erase(const size_type i)
+
+    void erase(const SizeT i)
     {
+        if (!has_group(i))
+        {
+            return;
+        }
+
         which_group(i).erase(pos_in_group(i));
     }
 
-    bool contains(const size_type i)
+    bool contains(const SizeT i)
     {
+        if (!has_group(i))
+        {
+            return false;
+        }
+
         return which_group(i).contains(pos_in_group(i));
     }
 
-    size_type group_count() const noexcept { return groups.size(); }
+    SizeT group_count() const noexcept { return groups.size(); }
 
-    LocalIterator begin(size_type n)
+    LocalIterator begin(SizeT n)
     {
         return groups[n].begin();
     }
-    LocalIterator end(size_type n)
+    LocalIterator end(Size n)
     {
         return groups[n].end();
     }

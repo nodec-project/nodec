@@ -10,46 +10,52 @@ namespace nodec
 namespace entity
 {
 
+template<typename EntityT>
 class BaseStorage
 {
 
 };
 
-template<typename Entity, typename Value>
-class BasicStorage : public BaseStorage
+template<typename EntityT, typename ValueT>
+class BasicStorage : public BaseStorage<EntityT>
 {
 public:
-    using index_type = size_t;
-
-    struct SparseData
+    struct Container
     {
-        size_t index;
-        Entity entity;
+        EntityT entity;
+        ValueT value;
     };
 public:
 
     template<typename... Args>
-    Value& emplace(const Entity entity, Args &&... args)
+    ValueT& emplace(const EntityT entity, Args &&... args)
     {
         sparse_table[entity] = { instances.size(), entity };
-        instances.emplace_back(std::forward<Args>(args)...);
-        return instances.back();
+        instances.emplace_back(entity, std::forward<Args>(args)...);
+        return instances.back().value;
     }
 
-    void remove(const Entity entity)
+    void remove(const EntityT entity)
     {
-        auto& ref_to_remove = sparse_table[entity];
-        instances[ref_to_remove.index] = std::move(instances.back());
+        if (!sparse_table.contains(entity))
+        {
+            return;
+        }
+
+        // move the back of instances to the removed index.
+        auto& index = sparse_table[entity];
+        instances[index] = std::move(instances.back());
         instances.pop_back();
-        auto& other = sparse_table.back();
-        other.index = ref_to_remove.index;
-        sparse_table.erase(ref_to_remove.entity);
+
+        // link the location of the moved instance to the entity number.
+        sparse_table[instances[index].entity] = index;
+        sparse_table.erase(entity);
     }
 
 
 private:
-    SparseTable<SparseData> sparse_table;
-    std::vector<Value> instances;
+    SparseTable<size_t> sparse_table;
+    std::vector<Container> instances;
 };
 
 

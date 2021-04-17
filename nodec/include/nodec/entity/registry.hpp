@@ -2,7 +2,7 @@
 #define NODEC__ENTITY__REGISTRY_HPP_
 
 #include <nodec/entity/entity.hpp>
-#include <nodec/entity/sparse_set.hpp>
+#include <nodec/entity/storage.hpp>
 
 #include <memory>
 #include <vector>
@@ -13,25 +13,25 @@ namespace nodec
 namespace entity
 {
 
-template<typename Entity>
+template<typename EntityT>
 class BasicRegistry
 {
 private:
-    using entity_traits = entity_traits<Entity>;
+    using entity_traits = entity_traits<EntityT>;
 
     struct PoolData
     {
-        std::unique_ptr<BasicSparseSet<Entity>> pool;
+        std::unique_ptr<BaseStorage<EntityT>> pool;
     };
 
 
 
-    Entity generate_identifier()
+    EntityT generate_identifier()
     {
-        return entities.emplace_back(static_cast<Entity>(entities.size()));
+        return entities.emplace_back(static_cast<EntityT>(entities.size()));
     }
 
-    Entity recycle_identifier()
+    EntityT recycle_identifier()
     {
         const auto curr = available;
         const auto version = entities[curr] & (entity_traits::version_mask << entity_traits::entity_shift);
@@ -39,10 +39,10 @@ private:
         return entities[curr] = curr | version;
     }
 
-    void release_entity(const Entity entity, const typename entity_traits::Version version)
+    void release_entity(const EntityT entity, const typename entity_traits::VersionT version)
     {
         const auto entt = entity & entity_traits::entity_mask;
-        entities[entt] = available | (static_cast<Entity>(version) << entity_traits::entity_shift);
+        entities[entt] = available | (static_cast<EntityT>(version) << entity_traits::entity_shift);
         available = entt;
     }
 
@@ -56,27 +56,32 @@ public:
     *   An entity identifier, either valid or not.
     * @return True if the identifier is valid, false otherwise.
     */
-    bool is_valid(const Entity entity) const
+    bool is_valid(const EntityT entity) const
     {
         const auto pos = static_cast<size_t>(entity & entity_traits::entity_mask);
         return (pos < entities.size() && entities[pos] == entity);
     }
 
 
-    Entity create_entity()
+    EntityT create_entity()
     {
         return available == null_entity ? generate_identifier() : recycle_identifier();
     }
 
-    void destroy_entity(const Entity entity)
+    void destroy_entity(const EntityT entity)
     {
+    }
+
+    template<typename Component, typename... Args>
+    Component& emplace(const EntityT entity, Args &&... args)
+    {
+
     }
 
 
 
-
     template<typename... Components>
-    void remove_components(const Entity entity)
+    void remove_components(const EntityT entity)
     {
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
@@ -86,8 +91,8 @@ public:
 
 
 private:
-    std::vector<Entity> entities;
-    Entity available{ null_entity };
+    std::vector<EntityT> entities;
+    EntityT available{ null_entity };
 
 
 };

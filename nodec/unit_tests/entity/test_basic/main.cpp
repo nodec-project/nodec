@@ -10,6 +10,7 @@
 #include <type_traits>
 #include <vector>
 
+#include <cstdlib>
 
 using namespace nodec;
 
@@ -86,14 +87,16 @@ void print(Table& table)
     logging::InfoStream info_stream(__FILE__, __LINE__);
     for (auto iter = table.begin(); iter != table.end(); ++iter)
     {
-        info_stream << "( " << iter->first << ", " << iter->second << "), ";
+        //info_stream << "( " << iter->first << ", " << iter->second << "), ";
+        info_stream << "( " << *iter << "), ";
     }
 
     info_stream << std::endl;
 
     for (auto& v : table)
     {
-        info_stream << "( " << v.first << ", " << v.second << "), ";
+        //info_stream << "( " << v.first << ", " << v.second << "), ";
+        info_stream << "( " << v << "), ";
     }
 }
 
@@ -101,25 +104,33 @@ int main()
 {
     logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
 
-
-    entity::SparseTable<uint16_t> table;
-    for (auto i = 0; i < 50; ++i)
-    {
-        table[i * 2] = i;
-    }
-
-    print(table);
-
-    table.erase(6);
-    logging::InfoStream(__FILE__, __LINE__) << table.group_count();
-
-    print(table);
-    auto back = table.end();
-    --back;
-    logging::InfoStream(__FILE__, __LINE__) << back->first << ", " << back->second;
     
+    //std::unordered_map<int, int> map;
+    //map.emplace(0, 1);
+    //for (auto iter = map.begin(); iter != map.end(); ++iter)
+    //{
+    //    *iter = std::pair<const int, int>(0, 1);
+    //}
 
-    entity::Entity entity = 0;
+    //entity::SparseTable<uint16_t> table;
+    //for (auto i = 0; i < 50; ++i)
+    //{
+    //    table[i * 2] = i;
+    //}
+
+    //print(table);
+
+    //table.erase(6);
+    //logging::InfoStream(__FILE__, __LINE__) << table.group_count();
+
+    //print(table);
+    //auto back = table.end();
+    //--back;
+    ////logging::InfoStream(__FILE__, __LINE__) << back->first << ", " << back->second;
+    //logging::InfoStream(__FILE__, __LINE__) << *back;
+    //
+
+    //entity::Entity entity = 0;
 
     //entity::BasicSparseGroup<size_t, entity::DEFAULT_SPARSE_GROUP_SIZE> group;
     //group[0] = 1;

@@ -26,14 +26,14 @@ struct entity_traits<uint32_t>
     /**
     * @brief Underlying entity type.
     */
-    using Entity = uint32_t;
+    using EntityT = uint32_t;
 
 
-    using Version = uint16_t;
+    using VersionT = uint16_t;
 
-    static constexpr Entity entity_mask = 0xFFFFF;
+    static constexpr EntityT entity_mask = 0xFFFFF;
 
-    static constexpr Entity version_mask = 0xFFF;
+    static constexpr EntityT version_mask = 0xFFF;
 
     static constexpr size_t entity_shift = 20u;
 
@@ -45,10 +45,10 @@ struct NullEntity
     /**
     * @brief Cast the null object to identifiers of any type.
     */
-    template<typename Entity>
-    constexpr operator Entity() const noexcept
+    template<typename EntityT>
+    constexpr operator EntityT() const noexcept
     {
-        return Entity{ entity_traits<Entity>::entity_mask };
+        return EntityT{ entity_traits<EntityT>::entity_mask };
     }
 
     /**
@@ -69,15 +69,15 @@ struct NullEntity
     /**
     * @brief Compares a null object and entity identifier of any type.
     */
-    template<typename Entity>
-    constexpr bool operator==(const Entity& entity) const noexcept
+    template<typename EntityT>
+    constexpr bool operator==(const EntityT& entity) const noexcept
     {
-        return (entity & entity_traits<Entity>::entity_mask) == static_cast<Entity>(*this);
+        return (entity & entity_traits<EntityT>::entity_mask) == static_cast<EntityT>(*this);
     }
 
 
-    template<typename Entity>
-    constexpr bool operator!=(const Entity& entity) const noexcept
+    template<typename EntityT>
+    constexpr bool operator!=(const EntityT& entity) const noexcept
     {
         return !(entity == *this);
     }
@@ -90,12 +90,12 @@ struct NullEntity
 constexpr NullEntity null_entity{};
 
 
-template<typename Entity>
-typename entity_traits<Entity>::Version
-get_version(const Entity entity)
+template<typename EntityT>
+typename entity_traits<EntityT>::VersionT
+get_version(const EntityT entity)
 {
-    using Version = typename entity_traits<Entity>::Version;
-    using traits = entity_traits<Entity>;
+    using Version = typename entity_traits<EntityT>::VersionT;
+    using traits = entity_traits<EntityT>;
     return static_cast<Version>(entity >> traits::entity_shift);
 }
 
