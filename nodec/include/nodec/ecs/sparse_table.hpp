@@ -172,18 +172,18 @@ public:
     }
 
     template<typename... Args>
-    Value& try_emplace(const SizeT i, Args&&... args)
+    std::pair<Value&, bool> emplace(const SizeT i, Args&&... args)
     {
         if (bmtest(i))
         {
-            return group[pos_to_offset(bitmap, i)];
+            return { group[pos_to_offset(bitmap, i)], false };
         }
 
         auto offset = pos_to_offset(bitmap, i);
         group.emplace(group.begin() + offset, std::forward<Args>(args)...);
         ++num_buckets_;
         bmset(i);
-        return group[offset];
+        return { group[offset], true };
     }
 
 
@@ -263,7 +263,7 @@ public:
 
     T& operator[](const SizeT i)
     {
-        return which_group(i).try_emplace(pos_in_group(i));
+        return which_group(i).emplace(pos_in_group(i)).first;
     }
 
 

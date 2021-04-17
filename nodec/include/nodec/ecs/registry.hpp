@@ -20,12 +20,42 @@ class InvalidEntityException : public NodecException
 {
 public:
     template<typename Entity>
-    InvalidEntityException(Entity entity, const char* file, size_t line)
+    InvalidEntityException(const Entity entity, const char* file, size_t line)
         :NodecException(file, line)
     {
         std::ostringstream oss;
         oss << "Invalid entity detected. entity: " << entity 
             << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")";
+        message = oss.str();
+    }
+};
+
+template<typename Component>
+class ComponentAlreadyAssignedException : public NodecException
+{
+public:
+    template<typename Entity>
+    ComponentAlreadyAssignedException(const Entity entity, const char* file, size_t line)
+        :NodecException(file, line)
+    {
+        std::ostringstream oss;
+        oss << "Component(" << typeid(Component).name() << ") has been already assigned at the entity(" << entity
+            << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ").";
+        message = oss.str();
+    }
+};
+
+template<typename Component>
+class NoComponentException : public NodecException
+{
+public:
+    template<typename Entity>
+    NoComponentException(Entity entity, const char* file, size_t line)
+        :NodecException(file, line)
+    {
+        std::ostringstream oss;
+        oss << "Entity(" << entity << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) 
+            << ") doesn't have the component(" << typeid(Component).name() << ")." ;
         message = oss.str();
     }
 };
@@ -73,7 +103,7 @@ private:
 
         if (!(index < pools.size()))
         {
-            pools.resize(index + 1);
+            pools.resize(index + 1u);
         }
 
         auto&& pdata = pools[index];
@@ -83,6 +113,16 @@ private:
         }
 
         return static_cast<BasicStorage<Entity, Component>*>(pools[index].pool.get());
+    }
+
+    template<typename Component>
+    BasicStorage<Entity, Component>* pool_if_exists()
+    {
+        static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
+        const auto index = type_seq<Component>::value();
+        return (index < pools.size() && pools[index].pool)
+            ? static_cast<BasicStorage<Entity, Component>*>(pools[index].pool.get())
+            : nullptr;
     }
 
 public:
@@ -133,7 +173,12 @@ public:
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
-        return which_pool<Component>()->emplace(entity, std::forward<Args>(args)...);
+        auto result = which_pool<Component>()->emplace(entity, std::forward<Args>(args)...);
+        if (!result.second)
+        {
+            throw ComponentAlreadyAssignedException<Component>(entity, __FILE__, __LINE__);
+        }
+        return result.first;
     }
 
 
@@ -145,6 +190,35 @@ public:
 
     }
 
+
+    template<typename Component>
+    decltype(auto) get_component(const Entity entity)
+    {
+        if (!is_valid(entity))
+        {
+            throw InvalidEntityException(entity, __FILE__, __LINE__);
+        }
+
+        auto* cpool = pool_if_exists<Component>();
+        if (!cpool)
+        {
+            throw NoComponentException<Component>(entity, __FILE__, __LINE__);
+        }
+
+        auto* component = cpool->try_get(entity);
+        if (!component)
+        {
+            throw NoComponentException<Component>(entity, __FILE__, __LINE__);
+        }
+
+        return *component;
+    }
+
+    template<typename... Components>
+    decltype(auto) get_components(const Entity entity)
+    {
+        return std::forward_as_tuple(get_component<Components>(entity)...);
+    }
 
 
 

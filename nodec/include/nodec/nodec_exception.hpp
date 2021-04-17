@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <string>
+#include <sstream>
 
 namespace nodec
 {
@@ -31,13 +32,13 @@ public:
     const char* what() const noexcept final;
     const char* type() const noexcept;
 
-    //virtual const char* type() const noexcept { return "NodecException"; }
 
     virtual ~NodecException();
 
 protected:
     std::string file;
     size_t line;
+    //std::ostringstream message;
     std::string message;
 
 private:

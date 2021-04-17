@@ -54,30 +54,30 @@ public:
     }
 };
 
-class TestComponent
+class ComponentA
 {
 public:
-    TestComponent(int field)
+    ComponentA(int field)
         :field(field)
     {
 
         logging::InfoStream(__FILE__, __LINE__) << "constructed.";
     }
 
-    TestComponent(const TestComponent& other)
+    ComponentA(const ComponentA& other)
         :field(other.field)
     {
         logging::InfoStream(__FILE__, __LINE__) << "copied.";
     }
 
 
-    TestComponent(TestComponent&& other) noexcept
+    ComponentA(ComponentA&& other) noexcept
         :field(std::move(other.field))
     {
         logging::InfoStream(__FILE__, __LINE__) << "moved.";
     }
 
-    ~TestComponent()
+    ~ComponentA()
     {
         logging::InfoStream(__FILE__, __LINE__) << "destroyed.";
     }
@@ -89,6 +89,10 @@ public:
 
 };
 
+struct ComponentB
+{
+    std::string field;
+};
 
 class TestComponentWithOnDestroy
 {
@@ -140,15 +144,38 @@ int main()
 
         auto entity = registry.create_entity();
 
+        
         logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
 
-        registry.add_component<TestComponent>(entity, 0);
+        registry.add_component<ComponentA>(entity, 1);
+        registry.add_component<ComponentB>(entity, "HOGE");
+        //registry.add_component<TestComponent>(entity, 0);
+        {
+            auto& componentA = registry.get_component<ComponentA>(entity);
+            logging::InfoStream(__FILE__, __LINE__) << componentA.field;
 
+            auto& componentB = registry.get_component<ComponentB>(entity);
+            logging::InfoStream(__FILE__, __LINE__) << componentB.field;
+        }
+
+        {
+            auto components = registry.get_components<ComponentA, ComponentB>(entity);
+
+            logging::InfoStream(__FILE__, __LINE__) << std::get<0>(components).field;
+            logging::InfoStream(__FILE__, __LINE__) << std::get<1>(components).field;
+            //logging::InfoStream(__FILE__, __LINE__) << std::get<2>(components).field;
+        }
         registry.destroy_entity(entity);
+
+        //{
+        //    auto& componentA = registry.get_component<ComponentA>(entity);
+        //    logging::InfoStream(__FILE__, __LINE__) << componentA.field;
+        //}
+
         logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
 
         entity = registry.create_entity();
-        throw ecs::InvalidEntityException(entity, __FILE__, __LINE__);
+        //throw ecs::InvalidEntityException(entity, __FILE__, __LINE__);
 
 
         //std::unordered_map<int, int> map;

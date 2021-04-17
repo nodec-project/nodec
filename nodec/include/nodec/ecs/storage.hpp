@@ -29,18 +29,31 @@ public:
         Container(Entity entity, Args&& ...args)
             :entity(entity), value{ args... }
         {
-            
         }
     };
 public:
 
     template<typename... Args>
-    Value& emplace(const Entity entity, Args &&... args)
+    std::pair<Value&, bool> emplace(const Entity entity, Args &&... args)
     {
+        if (sparse_table.contains(entity))
+        {
+            return { instances[sparse_table[entity]].value, false };
+        }
+
         sparse_table[entity] = instances.size();
         //instances.push_back({ entity, args... });
         instances.emplace_back(entity, std::forward<Args>(args)... );
-        return instances.back().value;
+        return { instances.back().value, true };
+    }
+
+    Value* try_get(const Entity entity)
+    {
+        if (!sparse_table.contains(entity))
+        {
+            return nullptr;
+        }
+        return &instances[sparse_table[entity]].value;
     }
 
     void remove(const Entity entity)
