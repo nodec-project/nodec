@@ -187,17 +187,18 @@ public:
     }
 
 
-    void erase(const SizeT i)
+    bool erase(const SizeT i)
     {
         if (!bmtest(i))
         {
-            return;
+            return false;
         }
 
         auto offset = pos_to_offset(bitmap, i);
         group.erase(group.begin() + offset);
         --num_buckets_;
         bmclear(i);
+        return true;
     }
 
 
@@ -267,14 +268,14 @@ public:
     }
 
 
-    void erase(const SizeT i)
+    bool erase(const SizeT i)
     {
         if (!has_group(i))
         {
-            return;
+            return false;
         }
 
-        which_group(i).erase(pos_in_group(i));
+        return which_group(i).erase(pos_in_group(i));
     }
 
     bool contains(const SizeT i)

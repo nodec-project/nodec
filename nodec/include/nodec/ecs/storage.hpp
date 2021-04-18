@@ -30,6 +30,21 @@ public:
             :entity(entity), value{ args... }
         {
         }
+
+        Container(Container&& other) noexcept
+            :entity(std::move(entity)), value(std::move(value))
+        {
+        }
+
+        Container& operator=(Container&& other) noexcept
+        {
+            if (this != &other)
+            {
+                entity = std::move(other.entity);
+                value = std::move(other.value);
+            }
+            return *this;
+        }
     };
 public:
 
@@ -56,21 +71,23 @@ public:
         return &instances[sparse_table[entity]].value;
     }
 
-    void remove(const Entity entity)
+    bool erase(const Entity entity)
     {
         if (!sparse_table.contains(entity))
         {
-            return;
+            return false;
         }
 
         // move the back of instances to the removed index.
         auto& index = sparse_table[entity];
+        auto& other_entity = instances.back().entity;
         instances[index] = std::move(instances.back());
         instances.pop_back();
 
         // link the location of the moved instance to the entity number.
-        sparse_table[instances[index].entity] = index;
+        sparse_table[other_entity] = index;
         sparse_table.erase(entity);
+        return true;
     }
 
 

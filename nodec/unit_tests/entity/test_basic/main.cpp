@@ -1,6 +1,7 @@
 
 
 #include <nodec/logging.hpp>
+#include <nodec/stopwatch.hpp>
 
 #include <nodec/ecs/entity.hpp>
 #include <nodec/ecs/registry.hpp>
@@ -67,14 +68,23 @@ public:
     ComponentA(const ComponentA& other)
         :field(other.field)
     {
-        logging::InfoStream(__FILE__, __LINE__) << "copied.";
+        logging::InfoStream(__FILE__, __LINE__) << "copy-contructed.";
     }
 
 
     ComponentA(ComponentA&& other) noexcept
         :field(std::move(other.field))
     {
-        logging::InfoStream(__FILE__, __LINE__) << "moved.";
+        logging::InfoStream(__FILE__, __LINE__) << "move-constructed.";
+    }
+
+    ComponentA& operator=(ComponentA&& other) noexcept
+    {
+        if (this != &other)
+        {
+            field = std::move(other.field);
+        }
+        return *this;
     }
 
     ~ComponentA()
@@ -139,6 +149,7 @@ int main()
 
 
         logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
+        Stopwatch<std::chrono::steady_clock> sw;
 
         ecs::Registry registry;
 
@@ -154,10 +165,21 @@ int main()
             auto& componentA = registry.get_component<ComponentA>(entity);
             logging::InfoStream(__FILE__, __LINE__) << componentA.field;
 
-            auto& componentB = registry.get_component<ComponentB>(entity);
-            logging::InfoStream(__FILE__, __LINE__) << componentB.field;
+            //auto& componentB = registry.get_component<ComponentB>(entity);
+            //logging::InfoStream(__FILE__, __LINE__) << componentB.field;
         }
-
+        {
+            ////sw.restart();
+            //auto is_removed = registry.remove_components<ComponentB, ComponentA, ComponentA, ComponentB>(entity);
+            ////sw.stop();
+            ////logging::InfoStream(__FILE__, __LINE__) << std::chrono::duration<float>(sw.elapsed()).count();
+            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<0>(is_removed);
+            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<1>(is_removed);
+            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<2>(is_removed);
+            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<3>(is_removed);
+            ////logging::InfoStream(__FILE__, __LINE__) << std::get<0>(is_removed);
+            ////logging::InfoStream(__FILE__, __LINE__) << std::get<1>(is_removed);
+        }
         {
             auto components = registry.get_components<ComponentA, ComponentB>(entity);
 
@@ -165,6 +187,7 @@ int main()
             logging::InfoStream(__FILE__, __LINE__) << std::get<1>(components).field;
             //logging::InfoStream(__FILE__, __LINE__) << std::get<2>(components).field;
         }
+
         registry.destroy_entity(entity);
 
         //{

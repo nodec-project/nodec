@@ -24,7 +24,7 @@ public:
         :NodecException(file, line)
     {
         std::ostringstream oss;
-        oss << "Invalid entity detected. entity: " << entity 
+        oss << "Invalid entity detected. entity: " << entity
             << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")";
         message = oss.str();
     }
@@ -54,8 +54,8 @@ public:
         :NodecException(file, line)
     {
         std::ostringstream oss;
-        oss << "Entity(" << entity << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) 
-            << ") doesn't have the component(" << typeid(Component).name() << ")." ;
+        oss << "Entity(" << entity << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
+            << ") doesn't have the component(" << typeid(Component).name() << ").";
         message = oss.str();
     }
 };
@@ -150,7 +150,7 @@ public:
     * @brief Destroys an entity.
     *   When an entity is destroyed, its version is updated and the identifier
     *   can be recycled at any time.
-    * 
+    *
     * @param entity
     *   A valid entity identifier.
     */
@@ -182,12 +182,20 @@ public:
     }
 
 
-
     template<typename... Components>
-    void remove_components(const Entity entity)
+    decltype(auto) remove_components(const Entity entity)
     {
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
+        if (!is_valid(entity))
+        {
+            throw InvalidEntityException(entity, __FILE__, __LINE__);
+        }
+
+        return std::make_tuple(([entity](auto* cpool)
+                                {
+                                    return cpool != nullptr && cpool->erase(entity);
+                                })(pool_if_exists<Components>())...);
     }
 
 
