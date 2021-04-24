@@ -50,9 +50,21 @@ namespace detail
 *       for UTF-16 encoding of the high and low surrogates,
 *       and they will never be assigned a character,
 *       so there should be no reason to encode them.
-*
-*   U+0000, ~ , U+D7FF, U+D800, ~ , U+DC00, U+E000, U+FFFF, ~
-*                     high_begin   low_begin        max_bmp
+*   
+*   | U+0000   |
+*   |   ~      |
+*   | U+D7FF   |
+*   | U+D800   | high_begin
+*   |   ~      |
+*   | U+DBFF   | hight_end
+*   | U+DC00   | low_begin
+*   |   ~      |
+*   | U+DFFF   | low_end
+*   | U+E000   |
+*   |   ~      |
+*   | U+FFFF   | max_bmp
+*   |   ~      |
+*   | U+10FFFF |
 *
 *   <https://en.wikipedia.org/wiki/UTF-16>
 */

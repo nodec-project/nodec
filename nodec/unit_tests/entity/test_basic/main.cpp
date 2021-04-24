@@ -194,6 +194,9 @@ int main()
         //    auto& componentA = registry.get_component<ComponentA>(entity);
         //    logging::InfoStream(__FILE__, __LINE__) << componentA.field;
         //}
+        {
+            auto& component = registry.get_component<ComponentA>(entity);
+        }
 
         logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
 

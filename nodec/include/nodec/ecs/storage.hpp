@@ -13,7 +13,8 @@ namespace ecs
 template<typename Entity>
 class BaseStorage
 {
-
+public:
+    virtual bool erase(const Entity) = 0;
 };
 
 template<typename Entity, typename Value>
@@ -71,7 +72,7 @@ public:
         return &instances[sparse_table[entity]].value;
     }
 
-    bool erase(const Entity entity)
+    bool erase(const Entity entity) override
     {
         if (!sparse_table.contains(entity))
         {

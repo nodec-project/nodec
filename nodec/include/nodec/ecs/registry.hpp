@@ -161,6 +161,7 @@ public:
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
+        remove_all_components(entity);
         release_entity(entity, static_cast<typename entity_traits::Version>(get_version(entity) + 1));
     }
 
@@ -198,6 +199,22 @@ public:
                                 })(pool_if_exists<Components>())...);
     }
 
+    void remove_all_components(const Entity entity)
+    {
+        if (!is_valid(entity))
+        {
+            throw InvalidEntityException(entity, __FILE__, __LINE__);
+        }
+
+        for (auto pos = pools.size(); pos; --pos)
+        {
+            auto& pdata = pools[pos - 1];
+            if (pdata.pool)
+            {
+                pdata.pool->erase(entity);
+            }
+        }
+    }
 
     template<typename Component>
     decltype(auto) get_component(const Entity entity)
@@ -227,6 +244,7 @@ public:
     {
         return std::forward_as_tuple(get_component<Components>(entity)...);
     }
+
 
 
 
