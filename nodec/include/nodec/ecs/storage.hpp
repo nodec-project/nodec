@@ -10,57 +10,45 @@ namespace nodec
 namespace ecs
 {
 
+
 template<typename Entity>
 class BaseStorage
 {
 public:
-    virtual bool erase(const Entity) = 0;
+    using Iterator = typename std::vector<Entity>::iterator;
+    using ConstIterator = typename std::vector<Entity>::const_iterator;
+
+public:
+    virtual bool erase(const Entity entity) = 0;
+
+public:
+    virtual Iterator begin() noexcept = 0;
+    virtual Iterator end() noexcept = 0;
+    virtual ConstIterator cbegin() noexcept = 0;
+    virtual ConstIterator cend() noexcept = 0;
+    virtual size_t size() const noexcept = 0;
+
 };
+
 
 template<typename Entity, typename Value>
 class BasicStorage : public BaseStorage<Entity>
 {
+    using Base = BaseStorage<Entity>;
+
 public:
-    struct Container
-    {
-        Entity entity;
-        Value value;
-
-        template<typename... Args>
-        Container(Entity entity, Args&& ...args)
-            :entity(entity), value{ args... }
-        {
-        }
-
-        Container(Container&& other) noexcept
-            :entity(std::move(entity)), value(std::move(value))
-        {
-        }
-
-        Container& operator=(Container&& other) noexcept
-        {
-            if (this != &other)
-            {
-                entity = std::move(other.entity);
-                value = std::move(other.value);
-            }
-            return *this;
-        }
-    };
-public:
-
     template<typename... Args>
     std::pair<Value&, bool> emplace(const Entity entity, Args &&... args)
     {
         if (sparse_table.contains(entity))
         {
-            return { instances[sparse_table[entity]].value, false };
+            return { instances[sparse_table[entity]], false };
         }
 
         sparse_table[entity] = instances.size();
-        //instances.push_back({ entity, args... });
-        instances.emplace_back(entity, std::forward<Args>(args)... );
-        return { instances.back().value, true };
+        instances.push_back({ args... });
+        packed.emplace_back(entity);
+        return { instances.back(), true };
     }
 
     Value* try_get(const Entity entity)
@@ -69,10 +57,10 @@ public:
         {
             return nullptr;
         }
-        return &instances[sparse_table[entity]].value;
+        return &instances[sparse_table[entity]];
     }
 
-    bool erase(const Entity entity) override
+    bool erase(const Entity entity)
     {
         if (!sparse_table.contains(entity))
         {
@@ -80,21 +68,52 @@ public:
         }
 
         // move the back of instances to the removed index.
-        auto& index = sparse_table[entity];
-        auto& other_entity = instances.back().entity;
-        instances[index] = std::move(instances.back());
+        auto& pos = sparse_table[entity];
+
+        auto& other_entity = packed.back();
+        packed[pos] = other_entity;
+        packed.pop_back();
+
+        instances[pos] = std::move(instances.back());
         instances.pop_back();
 
         // link the location of the moved instance to the entity number.
-        sparse_table[other_entity] = index;
+        sparse_table[other_entity] = pos;
         sparse_table.erase(entity);
+
         return true;
     }
 
+public:
+    Base::Iterator begin() noexcept override
+    {
+        return packed.begin();
+    }
+
+    Base::Iterator end() noexcept override
+    {
+        return packed.end();
+    }
+
+    Base::ConstIterator cbegin() noexcept override
+    {
+        return packed.cbegin();
+    }
+
+    Base::ConstIterator cend() noexcept override
+    {
+        return packed.cend();
+    }
+
+    size_t size() const noexcept override
+    {
+        return packed.size();
+    }
 
 private:
     SparseTable<size_t> sparse_table;
-    std::vector<Container> instances;
+    std::vector<Entity> packed;
+    std::vector<Value> instances;
 };
 
 

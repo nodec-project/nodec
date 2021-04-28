@@ -4,6 +4,7 @@
 #include <nodec/ecs/entity.hpp>
 #include <nodec/ecs/storage.hpp>
 #include <nodec/ecs/type_info.hpp>
+#include <nodec/ecs/view.hpp>
 #include <nodec/nodec_exception.hpp>
 
 #include <sstream>
@@ -245,7 +246,11 @@ public:
         return std::forward_as_tuple(get_component<Components>(entity)...);
     }
 
-
+    template<typename... Components>
+    BasicView<Entity, Components...> view()
+    {
+        return { *which_pool<Components>()... };
+    }
 
 
 private:

@@ -146,8 +146,6 @@ int main()
 {
     try
     {
-
-
         logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
         Stopwatch<std::chrono::steady_clock> sw;
 
@@ -186,6 +184,11 @@ int main()
             logging::InfoStream(__FILE__, __LINE__) << std::get<0>(components).field;
             logging::InfoStream(__FILE__, __LINE__) << std::get<1>(components).field;
             //logging::InfoStream(__FILE__, __LINE__) << std::get<2>(components).field;
+        }
+
+        {
+            auto view = registry.view<ComponentA, ComponentB>();
+            view.test();
         }
 
         registry.destroy_entity(entity);
