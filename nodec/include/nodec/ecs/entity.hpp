@@ -3,10 +3,8 @@
 
 #include <stdint.h>
 
-namespace nodec
-{
-namespace ecs
-{
+namespace nodec {
+namespace ecs {
 
 template<typename>
 struct entity_traits;
@@ -21,8 +19,7 @@ struct entity_traits;
 *
 */
 template<>
-struct entity_traits<uint32_t>
-{
+struct entity_traits<uint32_t> {
     /**
     * @brief Underlying entity type.
     */
@@ -40,28 +37,24 @@ struct entity_traits<uint32_t>
 };
 
 
-struct NullEntity
-{
+struct NullEntity {
     /**
     * @brief Cast the null object to identifiers of any type.
     */
     template<typename Entity>
-    constexpr operator Entity() const noexcept
-    {
+    constexpr operator Entity() const noexcept {
         return Entity{ entity_traits<Entity>::entity_mask };
     }
 
     /**
     * @biref Compares two null objects.
     */
-    constexpr bool operator==(const NullEntity&) const noexcept
-    {
+    constexpr bool operator==(const NullEntity&) const noexcept {
         return true;
     }
 
 
-    constexpr bool operator!=(const NullEntity&) const noexcept
-    {
+    constexpr bool operator!=(const NullEntity&) const noexcept {
         return false;
     }
 
@@ -70,33 +63,29 @@ struct NullEntity
     * @brief Compares a null object and entity identifier of any type.
     */
     template<typename Entity>
-    constexpr bool operator==(const Entity& entity) const noexcept
-    {
+    constexpr bool operator==(const Entity& entity) const noexcept {
         return (entity & entity_traits<Entity>::entity_mask) == static_cast<Entity>(*this);
     }
 
 
     template<typename Entity>
-    constexpr bool operator!=(const Entity& entity) const noexcept
-    {
+    constexpr bool operator!=(const Entity& entity) const noexcept {
         return !(entity == *this);
     }
 };
 
 /**
 * @brief Compares a null object and an entity identifiler of any type.
-* @tparam Entity 
+* @tparam Entity
     Type of entity identifiler.
 */
 template<typename Entity>
-constexpr bool operator==(const Entity& entity, const NullEntity& other) noexcept
-{
+constexpr bool operator==(const Entity& entity, const NullEntity& other) noexcept {
     return other.operator==(entity);
 }
 
 template<typename Entity>
-constexpr bool operator!=(const Entity& entity, const NullEntity& other)
-{
+constexpr bool operator!=(const Entity& entity, const NullEntity& other) {
     return other.operator!=(entity);
 }
 
@@ -109,8 +98,7 @@ constexpr NullEntity null_entity{};
 
 template<typename Entity>
 typename entity_traits<Entity>::Version
-get_version(const Entity entity)
-{
+get_version(const Entity entity) {
     using Version = typename entity_traits<Entity>::Version;
     using traits = entity_traits<Entity>;
     return static_cast<Version>(entity >> traits::entity_shift);

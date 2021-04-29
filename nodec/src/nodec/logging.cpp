@@ -4,10 +4,8 @@
 #include <mutex>
 #include <sstream>
 
-namespace nodec
-{
-namespace logging
-{
+namespace nodec {
+namespace logging {
 static std::mutex io_lock_;
 static Level current_level_ = Level::Debug;
 
@@ -15,18 +13,15 @@ LogRecord::LogRecord(Level level, const std::string& message, const char* file, 
     level(level),
     message(message),
     file(file),
-    line(line)
-{
+    line(line) {
 }
 
 void set_level(Level level) { current_level_ = level; }
 
-std::string default_formatter(const LogRecord& record) noexcept
-{
+std::string default_formatter(const LogRecord& record) noexcept {
     std::ostringstream oss;
     oss << "[" << record.file << " line " << record.line << "]\n";
-    switch (record.level)
-    {
+    switch (record.level) {
     case nodec::logging::Level::Unset:
         oss << "UNSET  : ";
         break;
@@ -55,18 +50,15 @@ std::string default_formatter(const LogRecord& record) noexcept
     return oss.str();
 }
 
-void record_to_stdout_handler(const LogRecord& record) noexcept
-{
+void record_to_stdout_handler(const LogRecord& record) noexcept {
     std::cout << record << std::endl;
 }
 
 std::function <std::string(const LogRecord&)> formatter = default_formatter;
 nodec::event::Event<const LogRecord&> record_handlers;
 
-static void log_generic(const LogRecord& record)
-{
-    if (record.level < current_level_)
-    {
+static void log_generic(const LogRecord& record) {
+    if (record.level < current_level_) {
         // ignore this log
         return;
     }
@@ -79,59 +71,47 @@ static void log_generic(const LogRecord& record)
 }
 
 
-void debug(const std::string& message, const char* file, size_t line)
-{
+void debug(const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ Level::Debug, message, file, line });
 }
 
-void info(const std::string& message, const char* file, size_t line)
-{
+void info(const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ Level::Info, message, file, line });
 }
 
-void warn(const std::string& message, const char* file, size_t line)
-{
+void warn(const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ Level::Warn, message, file, line });
 }
 
-void error(const std::string& message, const char* file, size_t line)
-{
+void error(const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ Level::Error, message, file, line });
 }
 
-void fatal(const std::string& message, const char* file, size_t line)
-{
+void fatal(const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ Level::Fatal, message, file, line });
 }
 
-void log(Level level, const std::string& message, const char* file, size_t line)
-{
+void log(Level level, const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ level, message, file, line });
 }
 
-namespace detail
-{
-class LogStreamBufferGeneric : public std::streambuf
-{
+namespace detail {
+class LogStreamBufferGeneric : public std::streambuf {
     using Base = std::streambuf;
 public:
     LogStreamBufferGeneric(const Level level, const char* file, size_t line) :
         level(level),
         file(file),
-        line(line)
-    {
+        line(line) {
 
     }
 public:
-    int overflow(int ch) override
-    {
+    int overflow(int ch) override {
         message += ch;
         return ch;
     }
-    int sync() override
-    {
-        if (!message.empty())
-        {
+    int sync() override {
+        if (!message.empty()) {
             log_generic(LogRecord{ level, message, file, line });
             message.clear();
         }
@@ -148,44 +128,36 @@ private:
 LogStream::LogStream(Level level, const char* file, size_t line) :
     std::ostream(buffer = new detail::LogStreamBufferGeneric(level, file, line)) {}
 
-LogStream::~LogStream()
-{
+LogStream::~LogStream() {
     buffer->sync();
     delete buffer;
 }
 
 DebugStream::DebugStream(const char* file, size_t line) :
-    LogStream(Level::Debug, file, line)
-{
+    LogStream(Level::Debug, file, line) {
 }
 
 InfoStream::InfoStream(const char* file, size_t line) :
-    LogStream(Level::Info, file, line)
-{
+    LogStream(Level::Info, file, line) {
 }
 
 WarnStream::WarnStream(const char* file, size_t line) :
-    LogStream(Level::Warn, file, line)
-{
+    LogStream(Level::Warn, file, line) {
 }
 
 ErrorStream::ErrorStream(const char* file, size_t line) :
-    LogStream(Level::Error, file, line)
-{
+    LogStream(Level::Error, file, line) {
 }
 
 FatalStream::FatalStream(const char* file, size_t line) :
-    LogStream(Level::Fatal, file, line)
-{
+    LogStream(Level::Fatal, file, line) {
 }
 
 }
 }
 
-std::ostream& operator<<(std::ostream& stream, const nodec::logging::Level& level)
-{
-    switch (level)
-    {
+std::ostream& operator<<(std::ostream& stream, const nodec::logging::Level& level) {
+    switch (level) {
     case nodec::logging::Level::Unset:
         return stream << "Unset";
     case nodec::logging::Level::Debug:
@@ -202,7 +174,6 @@ std::ostream& operator<<(std::ostream& stream, const nodec::logging::Level& leve
     return stream << "Unknown";
 }
 
-std::ostream& operator<<(std::ostream& stream, const nodec::logging::LogRecord& record)
-{
+std::ostream& operator<<(std::ostream& stream, const nodec::logging::LogRecord& record) {
     return stream << nodec::logging::formatter(record);
 }

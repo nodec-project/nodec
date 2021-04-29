@@ -7,12 +7,9 @@
 #include <string>
 #include <ostream>
 
-namespace nodec
-{
-namespace logging
-{
-enum class Level
-{
+namespace nodec {
+namespace logging {
+enum class Level {
     Unset = 0,  //! The unset log level
     Debug = 10, //! The debug log level
     Info = 20,  //! The info log level
@@ -21,8 +18,7 @@ enum class Level
     Fatal = 50  //! The fatal log level
 };
 
-struct LogRecord
-{
+struct LogRecord {
     LogRecord(Level level, const std::string& message, const char* file, size_t line);
     Level level;
     std::string message;
@@ -86,13 +82,11 @@ void fatal(const std::string& message, const char* file, size_t line);
 */
 void log(Level level, const std::string& message, const char* file, size_t line);
 
-namespace detail
-{
+namespace detail {
 class LogStreamBufferGeneric;
 }
 
-class LogStream : public std::ostream
-{
+class LogStream : public std::ostream {
 
 public:
     LogStream(Level level, const char* file, size_t line);
@@ -101,32 +95,27 @@ private:
     detail::LogStreamBufferGeneric* buffer;
 };
 
-class DebugStream : public LogStream
-{
+class DebugStream : public LogStream {
 public:
     DebugStream(const char* file, size_t line);
 };
 
-class InfoStream : public LogStream
-{
+class InfoStream : public LogStream {
 public:
     InfoStream(const char* file, size_t line);
 };
 
-class WarnStream : public LogStream
-{
+class WarnStream : public LogStream {
 public:
     WarnStream(const char* file, size_t line);
 };
 
-class ErrorStream : public LogStream
-{
+class ErrorStream : public LogStream {
 public:
     ErrorStream(const char* file, size_t line);
 };
 
-class FatalStream : public LogStream
-{
+class FatalStream : public LogStream {
 public:
     FatalStream(const char* file, size_t line);
 };

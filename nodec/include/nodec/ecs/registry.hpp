@@ -12,18 +12,14 @@
 #include <vector>
 
 
-namespace nodec
-{
-namespace ecs
-{
+namespace nodec {
+namespace ecs {
 
-class InvalidEntityException : public NodecException
-{
+class InvalidEntityException : public NodecException {
 public:
     template<typename Entity>
     InvalidEntityException(const Entity entity, const char* file, size_t line)
-        :NodecException(file, line)
-    {
+        :NodecException(file, line) {
         std::ostringstream oss;
         oss << "Invalid entity detected. entity: " << entity
             << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")";
@@ -32,13 +28,11 @@ public:
 };
 
 template<typename Component>
-class ComponentAlreadyAssignedException : public NodecException
-{
+class ComponentAlreadyAssignedException : public NodecException {
 public:
     template<typename Entity>
     ComponentAlreadyAssignedException(const Entity entity, const char* file, size_t line)
-        :NodecException(file, line)
-    {
+        :NodecException(file, line) {
         std::ostringstream oss;
         oss << "Component(" << typeid(Component).name() << ") has been already assigned at the entity(" << entity
             << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ").";
@@ -47,13 +41,11 @@ public:
 };
 
 template<typename Component>
-class NoComponentException : public NodecException
-{
+class NoComponentException : public NodecException {
 public:
     template<typename Entity>
     NoComponentException(Entity entity, const char* file, size_t line)
-        :NodecException(file, line)
-    {
+        :NodecException(file, line) {
         std::ostringstream oss;
         oss << "Entity(" << entity << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
             << ") doesn't have the component(" << typeid(Component).name() << ").";
@@ -62,54 +54,45 @@ public:
 };
 
 template<typename Entity>
-class BasicRegistry
-{
+class BasicRegistry {
 private:
     using entity_traits = entity_traits<Entity>;
 
-    struct PoolData
-    {
+    struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
     };
 
 
-
-    Entity generate_identifier()
-    {
+    Entity generate_identifier() {
         auto generated = static_cast<Entity>(entities.size());
         entities.emplace_back(generated);
         return generated;
     }
 
-    Entity recycle_identifier()
-    {
+    Entity recycle_identifier() {
         const auto curr = available;
         const auto version = entities[curr] & (entity_traits::version_mask << entity_traits::entity_shift);
         available = entities[curr] & entity_traits::entity_mask;
         return entities[curr] = curr | version;
     }
 
-    void release_entity(const Entity entity, const typename entity_traits::Version version)
-    {
+    void release_entity(const Entity entity, const typename entity_traits::Version version) {
         const auto entt = entity & entity_traits::entity_mask;
         entities[entt] = available | (static_cast<Entity>(version) << entity_traits::entity_shift);
         available = entt;
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component>* which_pool()
-    {
+    BasicStorage<Entity, Component>* pool_assured() {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
 
-        if (!(index < pools.size()))
-        {
+        if (!(index < pools.size())) {
             pools.resize(index + 1u);
         }
 
         auto&& pdata = pools[index];
-        if (!pdata.pool)
-        {
+        if (!pdata.pool) {
             pdata.pool.reset(new BasicStorage<Entity, Component>());
         }
 
@@ -117,15 +100,22 @@ private:
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component>* pool_if_exists()
-    {
+    const BasicStorage<Entity, Component>* pool_if_exists() const {
+        static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
+        const auto index = type_seq<Component>::value();
+        return (index < pools.size() && pools[index].pool)
+            ? static_cast<const BasicStorage<Entity, Component>*>(pools[index].pool.get())
+            : nullptr;
+    }
+
+    template<typename Component>
+    BasicStorage<Entity, Component>* pool_if_exists() {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
         return (index < pools.size() && pools[index].pool)
             ? static_cast<BasicStorage<Entity, Component>*>(pools[index].pool.get())
             : nullptr;
     }
-
 public:
 
 
@@ -135,15 +125,13 @@ public:
     *   An entity identifier, either valid or not.
     * @return True if the identifier is valid, false otherwise.
     */
-    bool is_valid(const Entity entity) const
-    {
+    bool is_valid(const Entity entity) const {
         const auto pos = static_cast<size_t>(entity & entity_traits::entity_mask);
         return (pos < entities.size() && entities[pos] == entity);
     }
 
 
-    Entity create_entity()
-    {
+    Entity create_entity() {
         return available == null_entity ? generate_identifier() : recycle_identifier();
     }
 
@@ -155,10 +143,8 @@ public:
     * @param entity
     *   A valid entity identifier.
     */
-    void destroy_entity(const Entity entity)
-    {
-        if (!is_valid(entity))
-        {
+    void destroy_entity(const Entity entity) {
+        if (!is_valid(entity)) {
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
@@ -168,16 +154,13 @@ public:
 
 
     template<typename Component, typename... Args>
-    Component& add_component(const Entity entity, Args &&... args)
-    {
-        if (!is_valid(entity))
-        {
+    Component& add_component(const Entity entity, Args &&... args) {
+        if (!is_valid(entity)) {
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
-        auto result = which_pool<Component>()->emplace(entity, std::forward<Args>(args)...);
-        if (!result.second)
-        {
+        auto result = pool_assured<Component>()->emplace(entity, std::forward<Args>(args)...);
+        if (!result.second) {
             throw ComponentAlreadyAssignedException<Component>(entity, __FILE__, __LINE__);
         }
         return result.first;
@@ -185,71 +168,59 @@ public:
 
 
     template<typename... Components>
-    decltype(auto) remove_components(const Entity entity)
-    {
+    decltype(auto) remove_components(const Entity entity) {
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
-        if (!is_valid(entity))
-        {
+        if (!is_valid(entity)) {
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
-        return std::make_tuple(([entity](auto* cpool)
-                                {
-                                    return cpool != nullptr && cpool->erase(entity);
+        return std::make_tuple(([entity](auto* cpool) {
+            return cpool != nullptr && cpool->erase(entity);
                                 })(pool_if_exists<Components>())...);
     }
 
-    void remove_all_components(const Entity entity)
-    {
-        if (!is_valid(entity))
-        {
+    void remove_all_components(const Entity entity) {
+        if (!is_valid(entity)) {
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
-        for (auto pos = pools.size(); pos; --pos)
-        {
+        for (auto pos = pools.size(); pos; --pos) {
             auto& pdata = pools[pos - 1];
-            if (pdata.pool)
-            {
+            if (pdata.pool) {
                 pdata.pool->erase(entity);
             }
         }
     }
 
     template<typename Component>
-    decltype(auto) get_component(const Entity entity)
-    {
-        if (!is_valid(entity))
-        {
+    decltype(auto) get_component(const Entity entity) const {
+        if (!is_valid(entity)) {
             throw InvalidEntityException(entity, __FILE__, __LINE__);
         }
 
-        auto* cpool = pool_if_exists<Component>();
-        if (!cpool)
-        {
-            throw NoComponentException<Component>(entity, __FILE__, __LINE__);
+        using Comp = std::remove_const_t<Component>;
+        auto* cpool = pool_if_exists<Comp>();
+        if (!cpool) {
+            throw NoComponentException<Comp>(entity, __FILE__, __LINE__);
         }
 
         auto* component = cpool->try_get(entity);
-        if (!component)
-        {
-            throw NoComponentException<Component>(entity, __FILE__, __LINE__);
+        if (!component) {
+            throw NoComponentException<Comp>(entity, __FILE__, __LINE__);
         }
 
-        return *component;
+        return const_cast<Component&>(*component);
     }
 
     template<typename... Components>
-    decltype(auto) get_components(const Entity entity)
-    {
+    decltype(auto) get_components(const Entity entity) const {
         return std::forward_as_tuple(get_component<Components>(entity)...);
     }
 
     template<typename... Components>
-    BasicView<Entity, Components...> view()
-    {
-        return { *which_pool<Components>()... };
+    BasicView<Entity, Components...> view() {
+        return { *pool_assured<std::remove_const_t<Components>>()... };
     }
 
 
@@ -257,8 +228,6 @@ private:
     std::vector<Entity> entities;
     Entity available{ null_entity };
     std::vector<PoolData> pools{};
-
-
 };
 
 using Registry = BasicRegistry<Entity>;

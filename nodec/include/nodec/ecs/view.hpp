@@ -3,75 +3,106 @@
 
 #include <nodec/ecs/storage.hpp>
 
-#include <nodec/fold.hpp>
-
 #include <array>
 
-namespace nodec
-{
-namespace ecs
-{
+namespace nodec {
+namespace ecs {
 
-template<typename It>
-class ViewIterator final
-{
-
-public:
-
-
-private:
-    It first;
-    It last;
-    It it;
-
-
-};
 
 template<typename Entity, typename... Components>
-class BasicView final
-{
+class BasicView final {
+
     template<typename Comp>
-    using Storage = BasicStorage<Entity, Comp>;
+    using Storage = BasicStorage<Entity, std::remove_const_t<Comp>>;
 
-    using OtherStorages = std::array<const BaseStorage<Entity>*, (sizeof...(Components) - 1)>;
+    using UncheckedStorages = std::array<const BaseStorage<Entity>*, (sizeof...(Components) - 1)>;
 
-    BaseStorage<Entity>* base_storage_candidate() const noexcept
-    {
-        return (std::min)({ static_cast<BaseStorage<Entity>*>(std::get<Storage<Components>*>(pools))... }, [](const auto* lhs, const auto* rhs)
-                          {
+
+    template<typename It>
+    class ViewIterator final {
+
+        bool valid() const {
+            const auto entt = *it;
+            return std::all_of(unchecked_storages.cbegin(), unchecked_storages.cend(),
+                               [&](const BaseStorage<Entity>* curr) {
+                                   return curr->contains(entt);
+                               });
+        }
+
+    public:
+        using pointer = typename std::iterator_traits<It>::pointer;
+        using reference = typename std::iterator_traits<It>::reference;
+
+
+        ViewIterator(It from, It to, It curr, UncheckedStorages others) noexcept
+            :first{ from },
+            last{ to },
+            it{ curr },
+            unchecked_storages{ others }
+        {
+            if (it != last && !valid()) {
+                ++(*this);
+            }
+        }
+
+        ViewIterator& operator++() noexcept {
+            while (++it != last && !valid());
+            return *this;
+        }
+
+        ViewIterator operator++(int) noexcept {
+            ViewIterator orig = *this;
+            return ++(*this), orig;
+        }
+
+        bool operator==(const ViewIterator& other) const noexcept {
+            return other.it == it;
+        }
+
+        bool operator!=(const ViewIterator& other) const noexcept {
+            return !(*this == other);
+        }
+
+        pointer operator->() const {
+            return &*it;
+        }
+
+        reference operator*() const {
+            return *operator->();
+        }
+
+    private:
+        It first;
+        It last;
+        It it;
+        UncheckedStorages unchecked_storages;
+
+    };
+
+    BaseStorage<Entity>* base_storage_candidate() const noexcept {
+        return (std::min)({ static_cast<BaseStorage<Entity>*>(std::get<Storage<Components>*>(pools))... },
+                          [](const auto* lhs, const auto* rhs) {
                               return lhs->size() < rhs->size();
                           });
     }
 
-    OtherStorages get_other_storages(const BaseStorage<Entity>* cpool) const noexcept
-    {
+    UncheckedStorages get_unchecked_storages(const BaseStorage<Entity>* cpool) const noexcept {
         size_t pos{};
-        OtherStorages others;
+        UncheckedStorages others;
 
         using Expander = int[];
 
-        (void)Expander
-        {
-            [&](auto* pool)
-            {
-                logging::InfoStream(__FILE__, __LINE__) << pool;
+        (void)Expander {
+            [&](auto* pool) {
                 return (pool == cpool ? 0 : (others[pos++] = pool, 0));
-                //return static_cast<void>(pool == cpool ? void() : void(others[pos++] = pool));
             }(std::get<Storage<Components>*>(pools))...
         };
-
-
-        //fold([&](auto* pool)
-        //     {
-        //         return static_cast<void>(pool == cpool ? void() : void(others[pos++] = pool));
-        //     },
-        //     std::get<Storage<Components>*>(pools)...);
 
         return others;
     }
 
 public:
-    using Iterator = ViewIterator<typename BaseStorage<Entity>::Iterator>;
+    using iterator = ViewIterator<typename BaseStorage<Entity>::iterator>;
 
     BasicView(Storage<Components>&... components)
         : pools{ &components... },
@@ -79,16 +110,12 @@ public:
     {
     }
 
-    Iterator begin() noexcept
-    {
-
+    iterator begin() const noexcept {
+        return { base_storage->begin(), base_storage->end(), base_storage->begin(), get_unchecked_storages(base_storage) };
     }
 
-    void test()
-    {
-        auto other_storages = get_other_storages(base_storage);
-
-        logging::InfoStream(__FILE__, __LINE__) << base_storage  << ", " << other_storages[0];
+    iterator end() const noexcept {
+        return { base_storage->begin(), base_storage->end(), base_storage->end(), get_unchecked_storages(base_storage) };
     }
 
 

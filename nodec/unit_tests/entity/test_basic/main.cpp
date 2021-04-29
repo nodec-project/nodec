@@ -30,8 +30,7 @@ struct has_on_destroy <T, decltype(&T::on_destroy, 0)> : std::true_type {};
 
 template<typename T>
 typename std::enable_if<has_on_destroy<T>::value>::type
-call_on_destroy(T& com)
-{
+call_on_destroy(T& com) {
     com.on_destroy();
 
     logging::info("call on_destroy()", __FILE__, __LINE__);
@@ -40,170 +39,200 @@ call_on_destroy(T& com)
 
 template<typename T>
 typename std::enable_if<!has_on_destroy<T>::value>::type
-call_on_destroy(T&)
-{
+call_on_destroy(T&) {
 
     logging::info("no on_destroy()", __FILE__, __LINE__);
 }
 
-class Test
-{
+class Test {
 public:
-    ~Test()
-    {
+    ~Test() {
         logging::info("called", __FILE__, __LINE__);
     }
 };
 
-class ComponentA
-{
+class ComponentA {
 public:
     ComponentA(int field)
-        :field(field)
-    {
+        :field(field) {
 
         logging::InfoStream(__FILE__, __LINE__) << "constructed.";
     }
 
     ComponentA(const ComponentA& other)
-        :field(other.field)
-    {
+        :field(other.field) {
         logging::InfoStream(__FILE__, __LINE__) << "copy-contructed.";
     }
 
 
     ComponentA(ComponentA&& other) noexcept
-        :field(std::move(other.field))
-    {
+        :field(std::move(other.field)) {
         logging::InfoStream(__FILE__, __LINE__) << "move-constructed.";
     }
 
-    ComponentA& operator=(ComponentA&& other) noexcept
-    {
-        if (this != &other)
-        {
+    ComponentA& operator=(ComponentA&& other) noexcept {
+        if (this != &other) {
             field = std::move(other.field);
         }
         return *this;
     }
 
-    ~ComponentA()
-    {
+    ~ComponentA() {
         logging::InfoStream(__FILE__, __LINE__) << "destroyed.";
     }
 
 public:
     int field;
 
-
-
 };
 
-struct ComponentB
-{
+struct ComponentB {
     std::string field;
 };
 
-class TestComponentWithOnDestroy
-{
+struct ComponentC {
+    int field;
+};
+
+class TestComponentWithOnDestroy {
 public:
     int field;
 
-    void on_destroy()
-    {
+    void on_destroy() {
         logging::info("hello!", __FILE__, __LINE__);
     }
 };
 
 template<typename Component>
-void test(Component& com)
-{
+void test(Component& com) {
     com.field;
 
     com.on_destroy();
 }
 
 template<typename Table>
-void print(Table& table)
-{
+void print(Table& table) {
     logging::InfoStream info_stream(__FILE__, __LINE__);
-    for (auto iter = table.begin(); iter != table.end(); ++iter)
-    {
+    for (auto iter = table.begin(); iter != table.end(); ++iter) {
         //info_stream << "( " << iter->first << ", " << iter->second << "), ";
         info_stream << "( " << *iter << "), ";
     }
 
     info_stream << std::endl;
 
-    for (auto& v : table)
-    {
+    for (auto& v : table) {
         //info_stream << "( " << v.first << ", " << v.second << "), ";
         info_stream << "( " << v << "), ";
     }
 }
 
-int main()
-{
-    try
-    {
+int main() {
+    try {
         logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
         Stopwatch<std::chrono::steady_clock> sw;
 
+
         ecs::Registry registry;
 
-        auto entity = registry.create_entity();
+        for (auto i = 0; i < 10; ++i) {
+            const auto entity = registry.create_entity();
+            auto& comB = registry.add_component<ComponentB>(entity, "HOGE");
+            logging::InfoStream info(__FILE__, __LINE__);
+            info << entity << ": " << comB.field;
 
-        
-        logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
-
-        registry.add_component<ComponentA>(entity, 1);
-        registry.add_component<ComponentB>(entity, "HOGE");
-        //registry.add_component<TestComponent>(entity, 0);
-        {
-            auto& componentA = registry.get_component<ComponentA>(entity);
-            logging::InfoStream(__FILE__, __LINE__) << componentA.field;
-
-            //auto& componentB = registry.get_component<ComponentB>(entity);
-            //logging::InfoStream(__FILE__, __LINE__) << componentB.field;
-        }
-        {
-            ////sw.restart();
-            //auto is_removed = registry.remove_components<ComponentB, ComponentA, ComponentA, ComponentB>(entity);
-            ////sw.stop();
-            ////logging::InfoStream(__FILE__, __LINE__) << std::chrono::duration<float>(sw.elapsed()).count();
-            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<0>(is_removed);
-            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<1>(is_removed);
-            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<2>(is_removed);
-            //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<3>(is_removed);
-            ////logging::InfoStream(__FILE__, __LINE__) << std::get<0>(is_removed);
-            ////logging::InfoStream(__FILE__, __LINE__) << std::get<1>(is_removed);
-        }
-        {
-            auto components = registry.get_components<ComponentA, ComponentB>(entity);
-
-            logging::InfoStream(__FILE__, __LINE__) << std::get<0>(components).field;
-            logging::InfoStream(__FILE__, __LINE__) << std::get<1>(components).field;
-            //logging::InfoStream(__FILE__, __LINE__) << std::get<2>(components).field;
+            if (i % 2 == 0) {
+                auto& comA = registry.add_component<ComponentA>(entity, i);
+                info << ", " << comA.field;
+            }
         }
 
-        {
-            auto view = registry.view<ComponentA, ComponentB>();
-            view.test();
-        }
-
-        registry.destroy_entity(entity);
 
         //{
-        //    auto& componentA = registry.get_component<ComponentA>(entity);
-        //    logging::InfoStream(__FILE__, __LINE__) << componentA.field;
+        //    auto view = registry.view<ComponentA>();
+
+        //    for (auto iter = view.begin(); iter != view.end(); ++iter) {
+        //        auto entity = *iter;
+
+        //        logging::InfoStream(__FILE__, __LINE__) << entity;
+        //    }
         //}
         {
-            auto& component = registry.get_component<ComponentA>(entity);
+            auto view = registry.view<ComponentA, const ComponentB>();
+            for (auto entity : view) {
+                auto coms = registry.get_components<ComponentA, ComponentB>(entity);
+
+                //auto& comA = registry.get_component<ComponentA>(entity);
+                //auto& comB = registry.get_component<const ComponentB>(entity);
+                auto& comA = std::get<0>(coms);
+                auto& comB = std::get<1>(coms);
+                
+                comA.field *= 2;
+                logging::InfoStream(__FILE__, __LINE__) << entity << ": " << comA.field << ", " << comB.field;
+            }
         }
 
-        logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
+        {
+            auto view = registry.view<ComponentA>();
+            for (auto entity : view) {
+                auto& comA = registry.get_component<ComponentA>(entity);
 
-        entity = registry.create_entity();
+                logging::InfoStream(__FILE__, __LINE__) << entity << ": " << comA.field;
+            }
+        }
+
+        //auto entity = registry.create_entity();
+
+        //
+        //logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
+
+        //registry.add_component<ComponentA>(entity, 1);
+        //registry.add_component<ComponentB>(entity, "HOGE");
+        ////registry.add_component<TestComponent>(entity, 0);
+        //{
+        //    auto& componentA = registry.get_component<const ComponentA>(entity);
+        //    logging::InfoStream(__FILE__, __LINE__) << componentA.field;
+
+        //    //auto& componentB = registry.get_component<ComponentB>(entity);
+        //    //logging::InfoStream(__FILE__, __LINE__) << componentB.field;
+        //}
+        //{
+        //    ////sw.restart();
+        //    //auto is_removed = registry.remove_components<ComponentB, ComponentA, ComponentA, ComponentB>(entity);
+        //    ////sw.stop();
+        //    ////logging::InfoStream(__FILE__, __LINE__) << std::chrono::duration<float>(sw.elapsed()).count();
+        //    //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<0>(is_removed);
+        //    //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<1>(is_removed);
+        //    //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<2>(is_removed);
+        //    //logging::InfoStream(__FILE__, __LINE__) << std::boolalpha << std::get<3>(is_removed);
+        //    ////logging::InfoStream(__FILE__, __LINE__) << std::get<0>(is_removed);
+        //    ////logging::InfoStream(__FILE__, __LINE__) << std::get<1>(is_removed);
+        //}
+        //{
+        //    auto components = registry.get_components<ComponentA, ComponentB>(entity);
+
+        //    logging::InfoStream(__FILE__, __LINE__) << std::get<0>(components).field;
+        //    logging::InfoStream(__FILE__, __LINE__) << std::get<1>(components).field;
+        //    //logging::InfoStream(__FILE__, __LINE__) << std::get<2>(components).field;
+        //}
+
+        //{
+        //    auto view = registry.view<ComponentA, ComponentB>();
+        //    view.test();
+        //}
+
+        //registry.destroy_entity(entity);
+
+        ////{
+        ////    auto& componentA = registry.get_component<ComponentA>(entity);
+        ////    logging::InfoStream(__FILE__, __LINE__) << componentA.field;
+        ////}
+        //{
+        //    auto& component = registry.get_component<ComponentA>(entity);
+        //}
+
+        //logging::InfoStream(__FILE__, __LINE__) << registry.is_valid(entity);
+
+        //entity = registry.create_entity();
         //throw ecs::InvalidEntityException(entity, __FILE__, __LINE__);
 
 
@@ -214,7 +243,7 @@ int main()
         //    *iter = std::pair<const int, int>(0, 1);
         //}
 
-        //entity::SparseTable<uint16_t> table;
+        //ecs::SparseTable<uint16_t> table;
         //for (auto i = 0; i < 50; ++i)
         //{
         //    table[i * 2] = i;
@@ -264,8 +293,7 @@ int main()
 
         //logging::InfoStream(__FILE__, __LINE__) << typeid(int).hash_code();
     }
-    catch (std::exception& e)
-    {
+    catch (std::exception& e) {
         logging::ErrorStream(__FILE__, __LINE__) << e.what();
     }
 

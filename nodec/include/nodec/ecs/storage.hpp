@@ -5,43 +5,40 @@
 
 #include <vector>
 
-namespace nodec
-{
-namespace ecs
-{
+namespace nodec {
+namespace ecs {
 
 
 template<typename Entity>
-class BaseStorage
-{
+class BaseStorage {
 public:
-    using Iterator = typename std::vector<Entity>::iterator;
-    using ConstIterator = typename std::vector<Entity>::const_iterator;
+    using iterator = typename std::vector<Entity>::iterator;
+    using const_iterator = typename std::vector<Entity>::const_iterator;
 
 public:
+    virtual bool contains(const Entity entity) const = 0;
     virtual bool erase(const Entity entity) = 0;
 
 public:
-    virtual Iterator begin() noexcept = 0;
-    virtual Iterator end() noexcept = 0;
-    virtual ConstIterator cbegin() noexcept = 0;
-    virtual ConstIterator cend() noexcept = 0;
+    virtual iterator begin() noexcept = 0;
+    virtual iterator end() noexcept = 0;
+    virtual const_iterator begin() const noexcept = 0;
+    virtual const_iterator end() const noexcept = 0;
+    virtual const_iterator cbegin() const noexcept = 0;
+    virtual const_iterator cend() const noexcept = 0;
     virtual size_t size() const noexcept = 0;
 
 };
 
 
 template<typename Entity, typename Value>
-class BasicStorage : public BaseStorage<Entity>
-{
+class BasicStorage : public BaseStorage<Entity> {
     using Base = BaseStorage<Entity>;
 
 public:
     template<typename... Args>
-    std::pair<Value&, bool> emplace(const Entity entity, Args &&... args)
-    {
-        if (sparse_table.contains(entity))
-        {
+    std::pair<Value&, bool> emplace(const Entity entity, Args &&... args) {
+        if (sparse_table.contains(entity)) {
             return { instances[sparse_table[entity]], false };
         }
 
@@ -51,62 +48,75 @@ public:
         return { instances.back(), true };
     }
 
-    Value* try_get(const Entity entity)
-    {
-        if (!sparse_table.contains(entity))
-        {
+    const Value* try_get(const Entity entity) const {
+        auto* pos = sparse_table.try_get(entity);
+        if (!pos) {
             return nullptr;
         }
-        return &instances[sparse_table[entity]];
+
+        return &instances[*pos];
     }
 
-    bool erase(const Entity entity)
-    {
-        if (!sparse_table.contains(entity))
-        {
+    Value* try_get(const Entity entity) {
+        auto* pos = sparse_table.try_get(entity);
+        if (!pos) {
+            return nullptr;
+        }
+
+        return &instances[*pos];
+    }
+
+    bool contains(const Entity entity) const override{
+        return sparse_table.contains(entity);
+    }
+
+    bool erase(const Entity entity) {
+        auto* pos = sparse_table.try_get(entity);
+        if (!pos) {
             return false;
         }
 
         // move the back of instances to the removed index.
-        auto& pos = sparse_table[entity];
-
         auto& other_entity = packed.back();
-        packed[pos] = other_entity;
+        packed[*pos] = other_entity;
         packed.pop_back();
 
-        instances[pos] = std::move(instances.back());
+        instances[*pos] = std::move(instances.back());
         instances.pop_back();
 
         // link the location of the moved instance to the entity number.
-        sparse_table[other_entity] = pos;
+        sparse_table[other_entity] = *pos;
         sparse_table.erase(entity);
 
         return true;
     }
 
 public:
-    Base::Iterator begin() noexcept override
-    {
+    Base::iterator begin() noexcept override {
         return packed.begin();
     }
 
-    Base::Iterator end() noexcept override
-    {
+    Base::iterator end() noexcept override {
         return packed.end();
     }
 
-    Base::ConstIterator cbegin() noexcept override
-    {
+    Base::const_iterator begin() const noexcept override {
+        return packed.begin();
+    }
+
+    Base::const_iterator end() const noexcept override {
+        return packed.end();
+    }
+
+    Base::const_iterator cbegin() const noexcept override {
         return packed.cbegin();
     }
 
-    Base::ConstIterator cend() noexcept override
-    {
+    Base::const_iterator cend() const noexcept override {
         return packed.cend();
     }
 
-    size_t size() const noexcept override
-    {
+    size_t size() const noexcept override {
         return packed.size();
     }
 
