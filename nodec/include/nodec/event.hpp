@@ -1,7 +1,7 @@
 #ifndef NODEC__EVENT_HPP_
 #define NODEC__EVENT_HPP_
 
-#include <nodec/nodec_exception.hpp>
+#include <nodec/exception.hpp>
 #include <nodec/macros.hpp>
 
 #include <functional>
@@ -16,8 +16,7 @@
 
 //#include <iostream> // For debuging instead of logging.
 
-namespace nodec
-{
+namespace nodec {
 /**
 * @note WARNING
 *   We cannnot use logging because logging using the event.
@@ -38,33 +37,23 @@ namespace nodec
 *   Event<int, int> int_int_event;
 *
 */
-namespace event
-{
-class ObjectHasBeenDeletedException : public NodecException
-{
+namespace event {
+class ObjectHasBeenDeletedException : public Exception {
 public:
-
     ObjectHasBeenDeletedException(const char* file, size_t line) :
-        NodecException("The owner object of callback func has been deleted.", file, line)
-    {
-
+        Exception("The owner object of callback func has been deleted.", file, line) {
     }
-
-    //const char* type() const noexcept override { return "ObjectHasBeenDeletedException"; }
-
 };
-namespace detail
-{
+
+namespace detail {
 template<int>
 struct placeholder_template {};
 
 template<typename... A>
-class Callback
-{
+class Callback {
 public:
     template<class _Fx>
-    Callback(_Fx&& func)
-    {
+    Callback(_Fx&& func) {
         // Get hash code 
         // XOR(^) function pointer and type hash_code
         // XOR operator is injective function. 
@@ -74,8 +63,7 @@ public:
     }
 
     template<typename T, class _Fx>
-    Callback(T* obj, _Fx&& func)
-    {
+    Callback(T* obj, _Fx&& func) {
         hash_ = reinterpret_cast<size_t>(&this->func) ^ (&typeid(Callback<A...>))->hash_code();
         create(obj, func, std::make_integer_sequence<std::size_t, sizeof...(A)>{});
         //std::cout << typeid(Callback<A...>).name();
@@ -118,15 +106,13 @@ private:
     size_t hash_;
 
     template<typename T, class _Fx, std::size_t... Is>
-    void create(T* obj, _Fx&& func, std::integer_sequence<std::size_t, Is...>)
-    {
+    void create(T* obj, _Fx&& func, std::integer_sequence<std::size_t, Is...>) {
         // argument 1 is obj pointer
         this->func = std::function<void(A...)>(std::bind(func, obj, placeholder_template<Is>()...));
     }
 
     template<class _Fx, std::size_t... Is>
-    void create(_Fx&& func, std::integer_sequence<std::size_t, Is... >)
-    {
+    void create(_Fx&& func, std::integer_sequence<std::size_t, Is... >) {
         // argment 1 is blank.  
         this->func = std::function<void(A...)>(std::bind(func, placeholder_template<Is>()...));
     }
@@ -138,19 +124,16 @@ private:
 }
 
 template<typename... A>
-class StaticCallback : public detail::Callback<A...>
-{
+class StaticCallback : public detail::Callback<A...> {
 public:
     NODEC_SHARED_PTR_DEFINITIONS(StaticCallback);
 
     template<class _Fx>
     StaticCallback(_Fx&& func) :
-        detail::Callback<A...>(func)
-    {
+        detail::Callback<A...>(func) {
     }
 
-    void invoke(A... args) override
-    {
+    void invoke(A... args) override {
         this->func(args...);
     }
 
@@ -161,29 +144,24 @@ public:
 };
 
 template<typename T, typename... A>
-class MemberCallback : public detail::Callback<A...>
-{
+class MemberCallback : public detail::Callback<A...> {
 public:
     NODEC_SHARED_PTR_DEFINITIONS(MemberCallback);
 
     template<class _Fx>
     MemberCallback(std::shared_ptr<T> obj, _Fx&& func) :
-        detail::Callback<A...>(obj.get(), func)
-    {
+        detail::Callback<A...>(obj.get(), func) {
         // shared_ptr obj was copied, it is availble in this scope.
         // now we will refer to the obj through weak_ptr.
         this->obj = obj;
     }
 
-    void invoke(A... args) override
-    {
-        if (auto obj_locked = obj.lock())
-        {
+    void invoke(A... args) override {
+        if (auto obj_locked = obj.lock()) {
             // Now we get the object not to freed in this scope.
             this->func(args...);
         }
-        else
-        {
+        else {
             throw ObjectHasBeenDeletedException(__FILE__, __LINE__);
         }
     }
@@ -196,21 +174,17 @@ private:
 
 
 template<typename... A>
-class Event
-{
+class Event {
 public:
     using CallbackSharedPtr = std::shared_ptr<detail::Callback<A...>>;
 
     Event() :
-        is_in_event_loop(false)
-    {
+        is_in_event_loop(false) {
     }
 
 
-    void hook(CallbackSharedPtr cb)
-    {
-        if (is_in_event_loop.load())
-        {
+    void hook(CallbackSharedPtr cb) {
+        if (is_in_event_loop.load()) {
             std::lock_guard<std::mutex> lock(pending_queue_lock);
             pending_operations.push({ Operation::Type::Hook, cb });
             return;
@@ -219,10 +193,8 @@ public:
         hook_impl(cb);
     }
 
-    void unhook(CallbackSharedPtr cb)
-    {
-        if (is_in_event_loop.load())
-        {
+    void unhook(CallbackSharedPtr cb) {
+        if (is_in_event_loop.load()) {
             std::lock_guard<std::mutex> lock(pending_queue_lock);
             pending_operations.push({ Operation::Type::Unhook, cb });
             return;
@@ -231,10 +203,8 @@ public:
         unhook_impl(cb);
     }
 
-    void unhook_all()
-    {
-        if (is_in_event_loop.load())
-        {
+    void unhook_all() {
+        if (is_in_event_loop.load()) {
             std::lock_guard<std::mutex> lock(pending_queue_lock);
             pending_operations.push({ Operation::Type::UnhookAll, CallbackSharedPtr() });
             return;
@@ -243,26 +213,21 @@ public:
         unhook_all_impl();
     }
 
-    void invoke(A... args)
-    {
+    void invoke(A... args) {
         std::lock_guard<std::mutex> lock(event_lock);
 
         is_in_event_loop = true;
-        for (auto iter = callbacks.begin(); iter != callbacks.end();)
-        {
-            try
-            {
+        for (auto iter = callbacks.begin(); iter != callbacks.end();) {
+            try {
                 iter->second->invoke(args...);
                 ++iter; // OK. nothing to problem. Next to handler.
             }
-            catch (const ObjectHasBeenDeletedException& e)
-            {
+            catch (const ObjectHasBeenDeletedException& e) {
                 // this callback func is dead, so remove it.
                 iter = callbacks.erase(iter);
                 //std::cout << e.what() << std::endl;
             }
-            catch (...)
-            {
+            catch (...) {
                 // Any way to continue...
                 // Should handle error in each callback.
                 ++iter;
@@ -271,12 +236,10 @@ public:
         }
         is_in_event_loop = false;
 
-        while (!pending_operations.empty())
-        {
+        while (!pending_operations.empty()) {
             Operation& operation = pending_operations.front();
 
-            switch (operation.type)
-            {
+            switch (operation.type) {
             case Operation::Type::Hook:
                 hook_impl(operation.cb);
                 break;
@@ -292,23 +255,19 @@ public:
         }
     }
 
-    const Event& operator+= (CallbackSharedPtr cb)
-    {
+    const Event& operator+= (CallbackSharedPtr cb) {
         hook(cb);
         return (*this);
     }
 
-    const Event& operator-= (CallbackSharedPtr cb)
-    {
+    const Event& operator-= (CallbackSharedPtr cb) {
         unhook(cb);
         return (*this);
     }
 
 private:
-    struct Operation
-    {
-        enum class Type
-        {
+    struct Operation {
+        enum class Type {
             Hook,
             Unhook,
             UnhookAll
@@ -316,40 +275,34 @@ private:
 
         Operation(Type type, CallbackSharedPtr cb) :
             type(type),
-            cb(cb)
-        {
+            cb(cb) {
         }
 
         Type type;
         CallbackSharedPtr cb;
     };
 
-    void hook_impl(CallbackSharedPtr cb)
-    {
+    void hook_impl(CallbackSharedPtr cb) {
         std::lock_guard<std::mutex> lock(operation_lock);
 
         auto iter = callbacks.find(cb->hash());
-        if (iter == callbacks.end())
-        {
+        if (iter == callbacks.end()) {
             // not found same callback
             callbacks.insert(std::pair<size_t, CallbackSharedPtr>(cb->hash(), cb));
         }
     }
 
-    void unhook_impl(CallbackSharedPtr cb)
-    {
+    void unhook_impl(CallbackSharedPtr cb) {
         std::lock_guard<std::mutex> lock(operation_lock);
 
         auto iter = callbacks.find(cb->hash());
-        if (iter != callbacks.end())
-        {
+        if (iter != callbacks.end()) {
             // find the callback object.
             callbacks.erase(iter);
         }
     }
 
-    void unhook_all_impl()
-    {
+    void unhook_all_impl() {
         std::lock_guard<std::mutex> lock(operation_lock);
 
         callbacks.clear();
@@ -371,8 +324,7 @@ private:
 }
 }
 
-namespace std
-{
+namespace std {
 template<int N>
 struct is_placeholder<nodec::event::detail::placeholder_template<N>> : integral_constant<int, N + 1> {};
 }

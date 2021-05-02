@@ -1,34 +1,26 @@
 #ifndef NODEC__UNICODE_HPP_
 #define NODEC__UNICODE_HPP_
 
-#include <nodec/nodec_exception.hpp>
+#include <nodec/exception.hpp>
 
 #include <iostream>
 #include <string>
 
-namespace nodec
-{
-namespace unicode
-{
-class IllegalCharacterException : public NodecException
-{
+namespace nodec {
+namespace unicode {
+
+class IllegalCharacterException : public Exception {
 public:
     IllegalCharacterException(const char* file, size_t line) noexcept
-        :NodecException("Illegal character found.", file, line)
-    {
+        :Exception("Illegal character found.", file, line) {
     };
-
-    //const char* type() const noexcept override { return "IllegalCharacterException"; }
 };
 
-class BufferRangeException : public NodecException
-{
+class BufferRangeException : public Exception {
 public:
     BufferRangeException(const char* file, size_t line) noexcept
-        :NodecException("Cannot add characters to buffer, output is too small.", file, line)
-    {
+        :Exception("Cannot add characters to buffer, output is too small.", file, line) {
     };
-    //const char* type() const noexcept override { return "BufferRangeException"; }
 };
 
 /**
@@ -61,8 +53,7 @@ std::string utf8to32(const std::string& string, bool strict = true);
 */
 std::string utf32to8(const std::string& string, bool strict = true);
 
-namespace detail
-{
+namespace detail {
 template<typename Iter16>
 uint32_t code_point_utf16to32(Iter16& begin, Iter16 end, bool strict);
 
@@ -73,13 +64,10 @@ template<typename CodeUnitType>
 struct IterateFunctions {};
 
 template<>
-struct IterateFunctions<uint32_t>
-{
+struct IterateFunctions<uint32_t> {
     using CodeUnitType = uint32_t;
-    static uint32_t iterate(const uint32_t*& iter, const uint32_t* end)
-    {
-        if (iter >= end)
-        {
+    static uint32_t iterate(const uint32_t*& iter, const uint32_t* end) {
+        if (iter >= end) {
             throw IllegalCharacterException(__FILE__, __LINE__);
         }
         return *iter++;
@@ -87,21 +75,17 @@ struct IterateFunctions<uint32_t>
 };
 
 template<>
-struct IterateFunctions<uint8_t>
-{
+struct IterateFunctions<uint8_t> {
     using CodeUnitType = uint8_t;
-    static uint32_t iterate(const uint8_t*& iter, const uint8_t* end)
-    {
+    static uint32_t iterate(const uint8_t*& iter, const uint8_t* end) {
         return code_point_utf8to32(iter, end, true);
     }
 };
 
 template<>
-struct IterateFunctions<uint16_t>
-{
+struct IterateFunctions<uint16_t> {
     using CodeUnitType = uint16_t;
-    static uint32_t iterate(const uint16_t*& iter, const uint16_t* end)
-    {
+    static uint32_t iterate(const uint16_t*& iter, const uint16_t* end) {
         return code_point_utf16to32(iter, end, true);
     }
 };
@@ -109,8 +93,7 @@ struct IterateFunctions<uint16_t>
 }
 
 template <typename C>
-struct CodePoint
-{
+struct CodePoint {
     using CodeUnitType = C;
 
     uint32_t code_point = 0;
@@ -118,8 +101,7 @@ struct CodePoint
 };
 
 template <typename C>
-class Iterator
-{
+class Iterator {
 public:
     using CodeUnitType = typename detail::IterateFunctions<C>::CodeUnitType;
 
@@ -129,15 +111,13 @@ public:
     Iterator()
         :
         iter(nullptr),
-        end(nullptr)
-    {
+        end(nullptr) {
     }
 
     /**
     * @brief Construct start of iterator.
     */
-    Iterator(const std::string& string)
-    {
+    Iterator(const std::string& string) {
         const size_t length = string.size() / sizeof(CodeUnitType);
         iter = reinterpret_cast<const CodeUnitType*>(string.data());
         end = iter + length;
@@ -148,28 +128,24 @@ public:
         :
         iter(iterator.iter),
         end(iterator.end),
-        code_point(iterator.code_point)
-    {
+        code_point(iterator.code_point) {
     }
 
     Iterator& operator=(const Iterator&) = default;
     ~Iterator() = default;
 
-    const CodePoint<CodeUnitType>& operator*() const
-    {
+    const CodePoint<CodeUnitType>& operator*() const {
         return code_point;
     }
 
-    const CodePoint<CodeUnitType>* operator->() const
-    {
+    const CodePoint<CodeUnitType>* operator->() const {
         return std::addressof(operator*());
     }
 
     /**
     * @note Prefix ++ overload.
     */
-    Iterator& operator++()
-    {
+    Iterator& operator++() {
         iterate();
         return *this;
     }
@@ -177,8 +153,7 @@ public:
     /**
     * @note Postfix ++ overload.
     */
-    Iterator operator++(int)
-    {
+    Iterator operator++(int) {
         auto tmp = *this;
         iterate();
         return tmp;
@@ -186,10 +161,8 @@ public:
 
 
 private:
-    void iterate()
-    {
-        if (iter && iter >= end)
-        {
+    void iterate() {
+        if (iter && iter >= end) {
             iter = nullptr;
             return;
         }
@@ -199,8 +172,7 @@ private:
         code_point.bytes.assign(reinterpret_cast<const char*>(byte_begin), (iter - byte_begin) * sizeof(CodeUnitType));
     }
 
-    bool equal(const Iterator& other) const
-    {
+    bool equal(const Iterator& other) const {
         return iter == other.iter;
     }
 
@@ -208,8 +180,7 @@ private:
     * @return true if the iterators refer to the same code unit,
     *   or are both at end-of-string.
     */
-    friend bool operator== (const Iterator& left, const Iterator& right)
-    {
+    friend bool operator== (const Iterator& left, const Iterator& right) {
         return left.equal(right);
     }
 
@@ -217,8 +188,7 @@ private:
     * @return true if the iterators refer to different code unit,
     *   or if one is at end-of-string and the other is not.
     */
-    friend bool operator!= (const Iterator& left, const Iterator& right)
-    {
+    friend bool operator!= (const Iterator& left, const Iterator& right) {
         return !left.equal(right);
     }
 

@@ -1,5 +1,5 @@
-#ifndef NODEC__ECS__SPARSE_TABLE_HPP_
-#define NODEC__ECS__SPARSE_TABLE_HPP_
+#ifndef NODEC__ENTITIES__SPARSE_TABLE_HPP_
+#define NODEC__ENTITIES__SPARSE_TABLE_HPP_
 
 #include <nodec/logging.hpp>
 
@@ -7,7 +7,7 @@
 
 
 namespace nodec {
-namespace ecs {
+namespace entities {
 
 
 /**
@@ -222,7 +222,7 @@ public:
     using local_iterator = typename Group::iterator;
 
 public:
-    
+
     uint16_t pos_in_group(const size_type i) const {
         return static_cast<uint16_t>(i % GROUP_SIZE);
     }

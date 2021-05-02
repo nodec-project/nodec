@@ -1,12 +1,12 @@
-#ifndef NODEC__ECS__VIEW_HPP_
-#define NODEC__ECS__VIEW_HPP_
+#ifndef NODEC__ENTITIES__VIEW_HPP_
+#define NODEC__ENTITIES__VIEW_HPP_
 
-#include <nodec/ecs/storage.hpp>
+#include <nodec/entities/storage.hpp>
 
 #include <array>
 
 namespace nodec {
-namespace ecs {
+namespace entities {
 
 
 template<typename Entity, typename... Components>

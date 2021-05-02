@@ -3,8 +3,7 @@
 
 #include <iostream>
 
-namespace nodec
-{
+namespace nodec {
 
 
 /**
@@ -12,11 +11,9 @@ namespace nodec
 * give just container and basic operation
 */
 template <typename T>
-class Vector2
-{
+class Vector2 {
 public:
-    union
-    {
+    union {
         struct { T x, y; };
         T v[2];
     };
@@ -34,10 +31,6 @@ public:
 public:
     static const Vector2<T> zero;
     static const Vector2<T> ones;
-    //static const Vector2<T> up;
-    //static const Vector2<T> down;
-    //static const Vector2<T> right;
-    //static const Vector2<T> left;
 
 };
 
@@ -61,33 +54,18 @@ const Vector2<T> Vector2<T>::zero(0, 0);
 
 template<typename T>
 const Vector2<T> Vector2<T>::ones(1, 1);
-//
-//template<typename T>
-//const Vector2<T> Vector2<T>::up(0, 1);
-//
-//template<typename T>
-//const Vector2<T> Vector2<T>::down(0, -1);
-//
-//template<typename T>
-//const Vector2<T> Vector2<T>::right(1, 0);
-//
-//template<typename T>
-//const Vector2<T> Vector2<T>::left(-1, 0);
+
 
 template<typename T>
 inline Vector2<T>::Vector2() :
     x(0),
-    y(0)
-{
-
+    y(0) {
 }
 
 template<typename T>
 inline Vector2<T>::Vector2(T x, T y) :
     x(x),
-    y(y)
-{
-
+    y(y) {
 }
 
 template<typename T>
@@ -95,28 +73,24 @@ template<typename U>
 inline Vector2<T>::Vector2(const Vector2<U>& vector)
     :
     x(static_cast<T>(vector.x)),
-    y(static_cast<T>(vector.y))
-{
+    y(static_cast<T>(vector.y)) {
 
 }
 
 
 template<typename T>
-void Vector2<T>::set(T _x, T _y)
-{
+inline void Vector2<T>::set(T _x, T _y) {
     x = _x;
     y = _y;
 }
 
 template<typename T>
-inline Vector2<T> operator-(const Vector2<T>& right)
-{
+inline Vector2<T> operator-(const Vector2<T>& right) {
     return Vector2<T>(-right.x, -right.y);
 }
 
 template<typename T>
-inline Vector2<T>& operator+=(Vector2<T>& left, const Vector2<T>& right)
-{
+inline Vector2<T>& operator+=(Vector2<T>& left, const Vector2<T>& right) {
     left.x += right.x;
     left.y += right.y;
 
@@ -124,8 +98,7 @@ inline Vector2<T>& operator+=(Vector2<T>& left, const Vector2<T>& right)
 }
 
 template<typename T>
-inline Vector2<T>& operator-=(Vector2<T>& left, const Vector2<T>& right)
-{
+inline Vector2<T>& operator-=(Vector2<T>& left, const Vector2<T>& right) {
     left.x -= right.x;
     left.y -= right.y;
 
@@ -134,26 +107,22 @@ inline Vector2<T>& operator-=(Vector2<T>& left, const Vector2<T>& right)
 
 
 template<typename T>
-inline Vector2<T> operator+(const Vector2<T>& left, const Vector2<T>& right)
-{
+inline Vector2<T> operator+(const Vector2<T>& left, const Vector2<T>& right) {
     return Vector2<T>(left.x + right.x, left.y + right.y);
 }
 
 template<typename T>
-inline Vector2<T> operator-(const Vector2<T>& left, const Vector2<T>& right)
-{
+inline Vector2<T> operator-(const Vector2<T>& left, const Vector2<T>& right) {
     return Vector2<T>(left.x - right.x, left.y - right.y);
 }
 
 template <typename T>
-inline Vector2<T> operator* (const Vector2<T>& left, const Vector2<T>& right)
-{
+inline Vector2<T> operator* (const Vector2<T>& left, const Vector2<T>& right) {
     return Vector2<T>(left.x * right.x, left.y * right.y);
 }
 
 template <typename T>
-inline Vector2<T>& operator*=(Vector2<T>& left, const Vector2<T>& right)
-{
+inline Vector2<T>& operator*=(Vector2<T>& left, const Vector2<T>& right) {
     left.x *= right.x;
     left.y *= right.y;
 
@@ -161,20 +130,17 @@ inline Vector2<T>& operator*=(Vector2<T>& left, const Vector2<T>& right)
 }
 
 template<typename T>
-inline Vector2<T> operator*(const Vector2<T>& left, T right)
-{
+inline Vector2<T> operator*(const Vector2<T>& left, T right) {
     return Vector2<T>(left.x * right, left.y * right);
 }
 
 template<typename T>
-inline Vector2<T> operator*(T left, const Vector2<T>& right)
-{
+inline Vector2<T> operator*(T left, const Vector2<T>& right) {
     return Vector2<T>(left * right.x, left * right.y);
 }
 
 template<typename T>
-inline Vector2<T>& operator*=(Vector2<T>& left, T right)
-{
+inline Vector2<T>& operator*=(Vector2<T>& left, T right) {
     left.x *= right;
     left.y *= right;
 
@@ -182,14 +148,12 @@ inline Vector2<T>& operator*=(Vector2<T>& left, T right)
 }
 
 template<typename T>
-inline Vector2<T> operator/(const Vector2<T>& left, T right)
-{
+inline Vector2<T> operator/(const Vector2<T>& left, T right) {
     return Vector2<T>(left.x / right, left.y / right);
 }
 
 template<typename T>
-inline Vector2<T>& operator/=(Vector2<T>& left, T right)
-{
+inline Vector2<T>& operator/=(Vector2<T>& left, T right) {
     left.x /= right;
     left.y /= right;
 
@@ -197,20 +161,17 @@ inline Vector2<T>& operator/=(Vector2<T>& left, T right)
 }
 
 template<typename T>
-inline bool operator==(const Vector2<T>& left, const Vector2<T>& right)
-{
+inline bool operator==(const Vector2<T>& left, const Vector2<T>& right) {
     return (left.x == right.x) && (left.y == right.y);
 }
 
 template<typename T>
-inline bool operator!=(const Vector2<T>& left, const Vector2<T>& right)
-{
+inline bool operator!=(const Vector2<T>& left, const Vector2<T>& right) {
     return (left.x != right.x) || (left.y != right.y);
 }
 
 template<typename T>
-inline std::ostream& operator<<(std::ostream& stream, const Vector2<T>& vec)
-{
+inline std::ostream& operator<<(std::ostream& stream, const Vector2<T>& vec) {
     return stream << "( " << vec.x << ", " << vec.y << " )";
 }
 

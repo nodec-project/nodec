@@ -1,11 +1,11 @@
-#ifndef NODEC__ECS__REGISTRY_HPP_
-#define NODEC__ECS__REGISTRY_HPP_
+#ifndef NODEC__ENTITIES__REGISTRY_HPP_
+#define NODEC__ENTITIES__REGISTRY_HPP_
 
-#include <nodec/ecs/entity.hpp>
-#include <nodec/ecs/storage.hpp>
-#include <nodec/ecs/type_info.hpp>
-#include <nodec/ecs/view.hpp>
-#include <nodec/nodec_exception.hpp>
+#include <nodec/entities/entity.hpp>
+#include <nodec/entities/storage.hpp>
+#include <nodec/entities/type_info.hpp>
+#include <nodec/entities/view.hpp>
+#include <nodec/exception.hpp>
 
 #include <sstream>
 #include <memory>
@@ -13,13 +13,13 @@
 
 
 namespace nodec {
-namespace ecs {
+namespace entities {
 
-class InvalidEntityException : public NodecException {
+class InvalidEntityException : public Exception {
 public:
     template<typename Entity>
     InvalidEntityException(const Entity entity, const char* file, size_t line)
-        :NodecException(file, line) {
+        :Exception(file, line) {
         std::ostringstream oss;
         oss << "Invalid entity detected. entity: " << entity
             << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")";
@@ -28,11 +28,11 @@ public:
 };
 
 template<typename Component>
-class ComponentAlreadyAssignedException : public NodecException {
+class ComponentAlreadyAssignedException : public Exception {
 public:
     template<typename Entity>
     ComponentAlreadyAssignedException(const Entity entity, const char* file, size_t line)
-        :NodecException(file, line) {
+        :Exception(file, line) {
         std::ostringstream oss;
         oss << "Component(" << typeid(Component).name() << ") has been already assigned at the entity(" << entity
             << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ").";
@@ -41,11 +41,11 @@ public:
 };
 
 template<typename Component>
-class NoComponentException : public NodecException {
+class NoComponentException : public Exception {
 public:
     template<typename Entity>
     NoComponentException(Entity entity, const char* file, size_t line)
-        :NodecException(file, line) {
+        :Exception(file, line) {
         std::ostringstream oss;
         oss << "Entity(" << entity << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
             << ") doesn't have the component(" << typeid(Component).name() << ").";

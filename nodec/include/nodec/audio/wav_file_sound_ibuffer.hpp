@@ -3,25 +3,16 @@
 
 #include <nodec/audio/basic_sound_ibuffer.hpp>
 #include <nodec/macros.hpp>
-#include <nodec/nodec_exception.hpp>
+#include <nodec/exception.hpp>
 #include <nodec/audio/wav_format.hpp>
 
 #include <fstream>
 
-namespace nodec
-{
-namespace audio
-{
+namespace nodec {
+namespace audio {
 
 template<typename FloatT>
-class WavFileSoundIBuffer : public BasicSoundIBuffer<FloatT>
-{
-public:
-    class Exception : public NodecException
-    {
-        using NodecException::NodecException;
-    };
-
+class WavFileSoundIBuffer : public BasicSoundIBuffer<FloatT> {
 public:
     WavFileSoundIBuffer();
 

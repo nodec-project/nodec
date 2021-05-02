@@ -1,10 +1,10 @@
-#ifndef NODEC__ECS__ENTITY_HPP_
-#define NODEC__ECS__ENTITY_HPP_
+#ifndef NODEC__ENTITIES__ENTITY_HPP_
+#define NODEC__ENTITIES__ENTITY_HPP_
 
 #include <stdint.h>
 
 namespace nodec {
-namespace ecs {
+namespace entities {
 
 template<typename>
 struct entity_traits;

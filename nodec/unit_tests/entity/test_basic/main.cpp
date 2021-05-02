@@ -90,8 +90,16 @@ struct ComponentB {
     std::string field;
 };
 
-struct ComponentC {
-    int field;
+struct BaseComponent {
+    int bfield;
+};
+
+struct DerivedComponentA : public BaseComponent {
+    int dfield;
+};
+
+struct DerivedComponentB : public BaseComponent {
+    int dfield;
 };
 
 class TestComponentWithOnDestroy {
@@ -134,51 +142,104 @@ int main() {
 
         ecs::Registry registry;
 
+        {
+            ecs::BasicStorage<ecs::Entity, DerivedComponentA> derivedAStorage;
+            auto pair = derivedAStorage.emplace(10);
+            pair.first.bfield = 1;
+            pair.first.dfield = 2;
+
+            auto* baseStorage = static_cast<ecs::BaseStorage<ecs::Entity>*>(&derivedAStorage);
+
+            {
+                auto* storage = dynamic_cast<ecs::BasicStorage<ecs::Entity, DerivedComponentA>*>(baseStorage);
+                logging::InfoStream(__FILE__, __LINE__) << storage;
+            }
+
+            {
+                auto* storage = dynamic_cast<ecs::BasicStorage<ecs::Entity, BaseComponent>*>(baseStorage);
+                logging::InfoStream(__FILE__, __LINE__) << storage;
+            }
+            {
+                auto iter = baseStorage->begin();
+                logging::InfoStream(__FILE__, __LINE__) << *iter;
+
+                auto* com_void = baseStorage->try_get_opaque(*iter);
+                auto* com_base = static_cast<BaseComponent*>(com_void);
+                auto* com_derive_a = static_cast<DerivedComponentA*>(com_void);
+                {
+                    //auto* com_derive_a = dynamic_cast<DerivedComponentA*>(com_base);
+
+                }
+                logging::InfoStream(__FILE__, __LINE__) << com_base->bfield;
+                logging::InfoStream(__FILE__, __LINE__) << com_derive_a->bfield << ", " << com_derive_a->dfield;
+
+
+            }
+        }
         for (auto i = 0; i < 10; ++i) {
             const auto entity = registry.create_entity();
-            auto& comB = registry.add_component<ComponentB>(entity, "HOGE");
+            auto& comA = registry.add_component<DerivedComponentA>(entity);
             logging::InfoStream info(__FILE__, __LINE__);
-            info << entity << ": " << comB.field;
-
+            info << entity << ": " << comA.dfield;
             if (i % 2 == 0) {
-                auto& comA = registry.add_component<ComponentA>(entity, i);
-                info << ", " << comA.field;
+                auto& comB = registry.add_component<DerivedComponentB>(entity);
+                info << ", " << comB.dfield;
             }
         }
 
+        {
+            auto view = registry.view<BaseComponent>();
+            for (auto entity : view) {
+
+                logging::InfoStream(__FILE__, __LINE__) << entity << ": ";
+            }
+        }
+
+        //for (auto i = 0; i < 10; ++i) {
+        //    const auto entity = registry.create_entity();
+        //    auto& comB = registry.add_component<ComponentB>(entity, "HOGE");
+        //    logging::InfoStream info(__FILE__, __LINE__);
+        //    info << entity << ": " << comB.field;
+
+        //    if (i % 2 == 0) {
+        //        auto& comA = registry.add_component<ComponentA>(entity, i);
+        //        info << ", " << comA.field;
+        //    }
+        //}
+
+
+        ////{
+        ////    auto view = registry.view<ComponentA>();
+
+        ////    for (auto iter = view.begin(); iter != view.end(); ++iter) {
+        ////        auto entity = *iter;
+
+        ////        logging::InfoStream(__FILE__, __LINE__) << entity;
+        ////    }
+        ////}
+        //{
+        //    auto view = registry.view<ComponentA, const ComponentB>();
+        //    for (auto entity : view) {
+        //        auto coms = registry.get_components<ComponentA, ComponentB>(entity);
+
+        //        //auto& comA = registry.get_component<ComponentA>(entity);
+        //        //auto& comB = registry.get_component<const ComponentB>(entity);
+        //        auto& comA = std::get<0>(coms);
+        //        auto& comB = std::get<1>(coms);
+        //        
+        //        comA.field *= 2;
+        //        logging::InfoStream(__FILE__, __LINE__) << entity << ": " << comA.field << ", " << comB.field;
+        //    }
+        //}
 
         //{
         //    auto view = registry.view<ComponentA>();
+        //    for (auto entity : view) {
+        //        auto& comA = registry.get_component<ComponentA>(entity);
 
-        //    for (auto iter = view.begin(); iter != view.end(); ++iter) {
-        //        auto entity = *iter;
-
-        //        logging::InfoStream(__FILE__, __LINE__) << entity;
+        //        logging::InfoStream(__FILE__, __LINE__) << entity << ": " << comA.field;
         //    }
         //}
-        {
-            auto view = registry.view<ComponentA, const ComponentB>();
-            for (auto entity : view) {
-                auto coms = registry.get_components<ComponentA, ComponentB>(entity);
-
-                //auto& comA = registry.get_component<ComponentA>(entity);
-                //auto& comB = registry.get_component<const ComponentB>(entity);
-                auto& comA = std::get<0>(coms);
-                auto& comB = std::get<1>(coms);
-                
-                comA.field *= 2;
-                logging::InfoStream(__FILE__, __LINE__) << entity << ": " << comA.field << ", " << comB.field;
-            }
-        }
-
-        {
-            auto view = registry.view<ComponentA>();
-            for (auto entity : view) {
-                auto& comA = registry.get_component<ComponentA>(entity);
-
-                logging::InfoStream(__FILE__, __LINE__) << entity << ": " << comA.field;
-            }
-        }
 
         //auto entity = registry.create_entity();
 

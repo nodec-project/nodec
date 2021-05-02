@@ -1,12 +1,12 @@
-#ifndef NODEC__ENTITY__STORAGE_HPP_
-#define NODEC__ENTITY__STORAGE_HPP_
+#ifndef NODEC__ENTITIES__STORAGE_HPP_
+#define NODEC__ENTITIES__STORAGE_HPP_
 
-#include <nodec/ecs/sparse_table.hpp>
+#include <nodec/entities/sparse_table.hpp>
 
 #include <vector>
 
 namespace nodec {
-namespace ecs {
+namespace entities {
 
 
 template<typename Entity>
@@ -18,6 +18,7 @@ public:
 public:
     virtual bool contains(const Entity entity) const = 0;
     virtual bool erase(const Entity entity) = 0;
+    virtual void* try_get_opaque(const Entity entity) = 0;
 
 public:
     virtual iterator begin() noexcept = 0;
@@ -33,6 +34,9 @@ public:
 
 template<typename Entity, typename Value>
 class BasicStorage : public BaseStorage<Entity> {
+    static_assert(std::is_move_constructible_v<Value>&& std::is_move_assignable_v<Value>,
+                  "The managed value must be at leat move constructible and move assignable.");
+
     using Base = BaseStorage<Entity>;
 
 public:
@@ -66,7 +70,11 @@ public:
         return &instances[*pos];
     }
 
-    bool contains(const Entity entity) const override{
+    void* try_get_opaque(const Entity entity) override {
+        return try_get(entity);
+    }
+
+    bool contains(const Entity entity) const override {
         return sparse_table.contains(entity);
     }
 

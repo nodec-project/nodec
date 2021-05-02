@@ -3,8 +3,7 @@
 
 #include <iostream>
 
-namespace nodec
-{
+namespace nodec {
 
 
 /**
@@ -12,13 +11,10 @@ namespace nodec
  * give just container and basic operation
  */
 template <typename T>
-class Vector3
-{
+class Vector3 {
 public:
-    union
-    {
-        struct
-        {
+    union {
+        struct {
             T x, y, z;
         };
         T v[3];
@@ -53,24 +49,6 @@ const Vector3<T> Vector3<T>::zero(0, 0, 0);
 
 template <typename T>
 const Vector3<T> Vector3<T>::ones(1, 1, 1);
-//
-//template <typename T>
-//const Vector3<T> Vector3<T>::up(0, 1, 0);
-//
-//template <typename T>
-//const Vector3<T> Vector3<T>::down(0, -1, 0);
-//
-//template <typename T>
-//const Vector3<T> Vector3<T>::right(1, 0, 0);
-//
-//template <typename T>
-//const Vector3<T> Vector3<T>::left(-1, 0, 0);
-//
-//template <typename T>
-//const Vector3<T> Vector3<T>::forward(0, 0, 1);
-//
-//template <typename T>
-//const Vector3<T> Vector3<T>::back(0, 0, -1);
 
 template <typename T>
 inline Vector3<T>::Vector3() : x(0), y(0), z(0) {}
@@ -83,27 +61,23 @@ template <typename U>
 inline Vector3<T>::Vector3(const Vector3<U>& vector)
     : x(static_cast<T>(vector.x)),
     y(static_cast<T>(vector.y)),
-    z(static_cast<T>(vector.z))
-{
+    z(static_cast<T>(vector.z)) {
 }
 
 template <typename T>
-void Vector3<T>::set(T _x, T _y, T _z)
-{
+inline void Vector3<T>::set(T _x, T _y, T _z) {
     x = _x;
     y = _y;
     z = _z;
 }
 
 template <typename T>
-inline Vector3<T> operator-(const Vector3<T>& right)
-{
+inline Vector3<T> operator-(const Vector3<T>& right) {
     return Vector3<T>(-right.x, -right.y, -right.z);
 }
 
 template <typename T>
-inline Vector3<T>& operator+=(Vector3<T>& left, const Vector3<T>& right)
-{
+inline Vector3<T>& operator+=(Vector3<T>& left, const Vector3<T>& right) {
     left.x += right.x;
     left.y += right.y;
     left.z += right.z;
@@ -112,8 +86,7 @@ inline Vector3<T>& operator+=(Vector3<T>& left, const Vector3<T>& right)
 }
 
 template <typename T>
-inline Vector3<T>& operator-=(Vector3<T>& left, const Vector3<T>& right)
-{
+inline Vector3<T>& operator-=(Vector3<T>& left, const Vector3<T>& right) {
     left.x -= right.x;
     left.y -= right.y;
     left.z -= right.z;
@@ -122,26 +95,22 @@ inline Vector3<T>& operator-=(Vector3<T>& left, const Vector3<T>& right)
 }
 
 template <typename T>
-inline Vector3<T> operator+ (const Vector3<T>& left, const Vector3<T>& right)
-{
+inline Vector3<T> operator+ (const Vector3<T>& left, const Vector3<T>& right) {
     return Vector3<T>(left.x + right.x, left.y + right.y, left.z + right.z);
 }
 
 template <typename T>
-inline Vector3<T> operator- (const Vector3<T>& left, const Vector3<T>& right)
-{
+inline Vector3<T> operator- (const Vector3<T>& left, const Vector3<T>& right) {
     return Vector3<T>(left.x - right.x, left.y - right.y, left.z - right.z);
 }
 
 template <typename T>
-inline Vector3<T> operator* (const Vector3<T>& left, const Vector3<T>& right)
-{
+inline Vector3<T> operator* (const Vector3<T>& left, const Vector3<T>& right) {
     return Vector3<T>(left.x * right.x, left.y * right.y, left.z * right.z);
 }
 
 template <typename T>
-inline Vector3<T>& operator*=(Vector3<T>& left, const Vector3<T>& right)
-{
+inline Vector3<T>& operator*=(Vector3<T>& left, const Vector3<T>& right) {
     left.x *= right.x;
     left.y *= right.y;
     left.z *= right.z;
@@ -150,20 +119,17 @@ inline Vector3<T>& operator*=(Vector3<T>& left, const Vector3<T>& right)
 }
 
 template <typename T>
-inline Vector3<T> operator* (const Vector3<T>& left, T right)
-{
+inline Vector3<T> operator* (const Vector3<T>& left, T right) {
     return Vector3<T>(left.x * right, left.y * right, left.z * right);
 }
 
 template <typename T>
-inline Vector3<T> operator* (T left, const Vector3<T>& right)
-{
+inline Vector3<T> operator* (T left, const Vector3<T>& right) {
     return Vector3<T>(left * right.x, left * right.y, left * right.z);
 }
 
 template <typename T>
-inline Vector3<T>& operator*= (Vector3<T>& left, T right)
-{
+inline Vector3<T>& operator*= (Vector3<T>& left, T right) {
     left.x *= right;
     left.y *= right;
     left.z *= right;
@@ -172,14 +138,12 @@ inline Vector3<T>& operator*= (Vector3<T>& left, T right)
 }
 
 template <typename T>
-inline Vector3<T> operator/ (const Vector3<T>& left, T right)
-{
+inline Vector3<T> operator/ (const Vector3<T>& left, T right) {
     return Vector3<T>(left.x / right, left.y / right, left.z / right);
 }
 
 template <typename T>
-inline Vector3<T>& operator/= (Vector3<T>& left, T right)
-{
+inline Vector3<T>& operator/= (Vector3<T>& left, T right) {
     left.x /= right;
     left.y /= right;
     left.z /= right;
@@ -188,20 +152,17 @@ inline Vector3<T>& operator/= (Vector3<T>& left, T right)
 }
 
 template <typename T>
-inline bool operator== (const Vector3<T>& left, const Vector3<T>& right)
-{
+inline bool operator== (const Vector3<T>& left, const Vector3<T>& right) {
     return (left.x == right.x) && (left.y == right.y) && (left.z == right.z);
 }
 
 template <typename T>
-inline bool operator!= (const Vector3<T>& left, const Vector3<T>& right)
-{
+inline bool operator!= (const Vector3<T>& left, const Vector3<T>& right) {
     return (left.x != right.x) || (left.y != right.y) || (left.z != right.z);
 }
 
 template <typename T>
-inline std::ostream& operator<< (std::ostream& stream, const Vector3<T>& vec)
-{
+inline std::ostream& operator<< (std::ostream& stream, const Vector3<T>& vec) {
     return stream << "( " << vec.x << ", " << vec.y << ", " << vec.z << " )";
 }
 

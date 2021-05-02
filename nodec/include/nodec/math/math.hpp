@@ -4,6 +4,7 @@
 #include <nodec/vector2.hpp>
 #include <nodec/vector3.hpp>
 #include <nodec/vector4.hpp>
+#include <nodec/matrix4x4.hpp>
 #include <nodec/quaternion.hpp>
 
 #include <cmath>
