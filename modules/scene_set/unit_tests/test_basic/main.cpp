@@ -1,13 +1,16 @@
 
-#include <nodec/scene_set/components/standard.hpp>
+#include <scene_set/components/standard.hpp>
+#include <scene_set/systems/hierarchy_system.hpp>
 
 #include <nodec/logging.hpp>
+#include <nodec/formatter.hpp>
+#include <nodec/error_formatter.hpp>
 
 #include <iostream>
 
 
 using namespace nodec;
-using namespace nodec::scene_set;
+using namespace scene_set;
 
 int main() {
 
@@ -17,47 +20,59 @@ int main() {
     SceneRegistry registry;
 
     try {
+        //logging::info(Formatter() << "test", __FILE__, __LINE__);
 
-        Matrix4x4d mat{
-            0, 1, 2, 3,
-            4, 5, 6, 7,
-            8, 9, 10, 11,
-            12, 13, 14, 15
-        };
+        //throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        //    Formatter() << "This is the test " << 1 << ". Opps!", __FILE__, __LINE__));
 
-        Matrix4x4d mat1{
-            1, 2, 3,
-            4, 5, 6, 7,
-            8, 9, 10, 11,
-            12, 13, 14, 15, 16
-        };
-        //logging::InfoStream(__FILE__, __LINE__) << static_cast<Matrix4x4f>(mat) * Matrix4x4f::identity;
-        logging::InfoStream(__FILE__, __LINE__) << mat * mat1;
-        
-        //Vector3f vec;
-        //auto vec = static_cast<Vector3d>(vec) * Vector3d::ones;
+        //Matrix4x4d mat{
+        //    0, 1, 2, 3,
+        //    4, 5, 6, 7,
+        //    8, 9, 10, 11,
+        //    12, 13, 14, 15
+        //};
+
+        //Matrix4x4d mat1{
+        //    1, 2, 3,
+        //    4, 5, 6, 7,
+        //    8, 9, 10, 11,
+        //    12, 13, 14, 15, 16
+        //};
+        ////logging::InfoStream(__FILE__, __LINE__) << static_cast<Matrix4x4f>(mat) * Matrix4x4f::identity;
+        //logging::InfoStream(__FILE__, __LINE__) << mat * mat1;
+        //logging::InfoStream(__FILE__, __LINE__) << math::gfx::trs({ 0, 1, 2 }, Quaternionf::identity, { 5, 6, 7 });
+        ////Vector3f vec;
+        ////auto vec = static_cast<Vector3d>(vec) * Vector3d::ones;
+
+        //auto trfm = components::Transform();
+        //trfm.set_local_position(trfm.local_position() + Vector3f(1, 0, 0));
+        //logging::InfoStream(__FILE__, __LINE__) << trfm.local_position();
 
         auto entity_root = registry.create_entity();
+        {
+            registry.emplace_component<components::Hierarchy>(entity_root);
+            auto pair = registry.emplace_component<components::Hierarchy>(entity_root);
 
-        {
-            auto& com = registry.add_component<components::Hierarchy>(entity_root);
-        }
-        {
-            auto& com = registry.add_component<components::Name>(entity_root, "ROOT");
+            registry.emplace_component<components::Name>(entity_root, "ROOT");
+            registry.emplace_component<components::Transform>(entity_root);
+
         }
 
         auto entity_child_a = registry.create_entity();
-        registry.add_component<components::Hierarchy>(entity_child_a);
+        registry.emplace_component<components::Hierarchy>(entity_child_a);
+        registry.emplace_component<components::Transform>(entity_child_a);
 
         auto entity_child_a_a = registry.create_entity();
-        registry.add_component<components::Hierarchy>(entity_child_a_a);
+        registry.emplace_component<components::Transform>(entity_child_a_a);
+        //registry.emplace_component<components::Hierarchy>(entity_child_a_a);
 
-        
+
         {
             //components::Hierarchy::append_child(registry, entity_child_a, entity_child_a);
-            components::Hierarchy::append_child(registry, entity_root, entity_child_a);
-            components::Hierarchy::append_child(registry, entity_child_a, entity_child_a_a);
-            components::Hierarchy::remove_child(registry, entity_root, entity_child_a);
+            systems::append_child(registry, entity_root, entity_child_a);
+            systems::append_child(registry, entity_child_a, entity_child_a_a);
+            //systems::remove_child(registry, entity_root, entity_child_a);
+            //systems::append_child(registry, entity_child_a_a, entity_root);
         }
 
         //std::cout << "--- 1 ---" << std::endl;

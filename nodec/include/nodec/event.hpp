@@ -1,9 +1,9 @@
 #ifndef NODEC__EVENT_HPP_
 #define NODEC__EVENT_HPP_
 
-#include <nodec/exception.hpp>
 #include <nodec/macros.hpp>
 
+#include <stdexcept>
 #include <functional>
 #include <type_traits>
 #include <typeinfo>
@@ -38,11 +38,10 @@ namespace nodec {
 *
 */
 namespace event {
-class ObjectHasBeenDeletedException : public Exception {
+
+class InvokeError : public std::runtime_error {
 public:
-    ObjectHasBeenDeletedException(const char* file, size_t line) :
-        Exception("The owner object of callback func has been deleted.", file, line) {
-    }
+    using runtime_error::runtime_error;
 };
 
 namespace detail {
@@ -162,7 +161,7 @@ public:
             this->func(args...);
         }
         else {
-            throw ObjectHasBeenDeletedException(__FILE__, __LINE__);
+            throw InvokeError("The owner object of callback func has been deleted.");
         }
     }
 
@@ -222,7 +221,7 @@ public:
                 iter->second->invoke(args...);
                 ++iter; // OK. nothing to problem. Next to handler.
             }
-            catch (const ObjectHasBeenDeletedException& e) {
+            catch (const InvokeError& e) {
                 // this callback func is dead, so remove it.
                 iter = callbacks.erase(iter);
                 //std::cout << e.what() << std::endl;

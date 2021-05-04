@@ -1,5 +1,5 @@
 #ifndef NODEC__MATRIX4X4_HPP_
-#define NODEC__MATRIX4x4_HPP_
+#define NODEC__MATRIX4X4_HPP_
 
 #include <nodec/vector4.hpp>
 
@@ -153,6 +153,61 @@ inline Matrix4x4<T> operator* (const Matrix4x4<T>& left, const Matrix4x4<T>& rig
         left.m41 * right.m13 + left.m42 * right.m23 + left.m43 * right.m33 + left.m44 * right.m43,
         left.m41 * right.m14 + left.m42 * right.m24 + left.m43 * right.m34 + left.m44 * right.m44
     };
+}
+
+template<typename T>
+inline Matrix4x4<T> operator*(T left, const Matrix4x4<T>& right) {
+    return{
+        {
+            left * right.m[0], left * right.m[1], left * right.m[2], left * right.m[3],
+            left * right.m[4], left * right.m[5], left * right.m[6], left * right.m[7],
+            left * right.m[8], left * right.m[9], left * right.m[10], left * right.m[11],
+            left * right.m[12], left * right.m[13], left * right.m[14], left * right.m[15]
+        }
+    };
+}
+
+template<typename T>
+inline Matrix4x4<T> operator*(const Matrix4x4<T>& left, T right) {
+    return{
+        {
+            left.m[0] * right, left.m[1] * right, left.m[2] * right, left.m[3] * right,
+            left.m[4] * right, left.m[5] * right, left.m[6] * right, left.m[7] * right,
+            left.m[8] * right, left.m[9] * right, left.m[10] * right, left.m[11] * right,
+            left.m[12] * right, left.m[13] * right, left.m[14] * right, left.m[15] * right
+        }
+    };
+}
+
+template<typename T>
+inline Matrix4x4<T>& operator*=(Matrix4x4<T>& left, T right) {
+    left.m[0] *= right; left.m[1] *= right; left.m[2] *= right; left.m[3] *= right;
+    left.m[4] *= right; left.m[5] *= right; left.m[6] *= right; left.m[7] *= right;
+    left.m[8] *= right; left.m[9] *= right; left.m[10] *= right; left.m[11] *= right;
+    left.m[12] *= right; left.m[13] *= right; left.m[14] *= right; left.m[15] *= right;
+    return left;
+}
+
+template<typename T>
+inline Matrix4x4<T> operator/(const Matrix4x4<T>& left, T right) {
+    return{
+        {
+            left.m[0] / right, left.m[1] / right, left.m[2] / right, left.m[3] / right,
+            left.m[4] / right, left.m[5] / right, left.m[6] / right, left.m[7] / right,
+            left.m[8] / right, left.m[9] / right, left.m[10] / right, left.m[11] / right,
+            left.m[12] / right, left.m[13] / right, left.m[14] / right, left.m[15] / right
+        }
+    };
+}
+
+
+template<typename T>
+inline Matrix4x4<T>& operator/=(Matrix4x4<T>& left, T right) {
+    left.m[0] /= right; left.m[1] /= right; left.m[2] /= right; left.m[3] /= right;
+    left.m[4] /= right; left.m[5] /= right; left.m[6] /= right; left.m[7] /= right;
+    left.m[8] /= right; left.m[9] /= right; left.m[10] /= right; left.m[11] /= right;
+    left.m[12] /= right; left.m[13] /= right; left.m[14] /= right; left.m[15] /= right;
+    return left;
 }
 
 

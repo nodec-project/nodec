@@ -1,26 +1,23 @@
 #ifndef NODEC__UNICODE_HPP_
 #define NODEC__UNICODE_HPP_
 
-#include <nodec/exception.hpp>
+#include <nodec/error_formatter.hpp>
 
+#include <stdexcept>
 #include <iostream>
 #include <string>
 
 namespace nodec {
 namespace unicode {
 
-class IllegalCharacterException : public Exception {
+class IllegalCharacterException : public std::runtime_error {
 public:
-    IllegalCharacterException(const char* file, size_t line) noexcept
-        :Exception("Illegal character found.", file, line) {
-    };
+    using runtime_error::runtime_error;
 };
 
-class BufferRangeException : public Exception {
+class BufferRangeException : public  std::runtime_error {
 public:
-    BufferRangeException(const char* file, size_t line) noexcept
-        :Exception("Cannot add characters to buffer, output is too small.", file, line) {
-    };
+    using runtime_error::runtime_error;
 };
 
 /**
@@ -53,7 +50,23 @@ std::string utf8to32(const std::string& string, bool strict = true);
 */
 std::string utf32to8(const std::string& string, bool strict = true);
 
-namespace detail {
+namespace details {
+
+inline void throw_illegal_character_exception(const char* file, size_t line) {
+    throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        "Illegal character found.",
+        file, line
+        ));
+}
+
+
+inline void throw_buffer_range_exception(const char* file, size_t line) {
+    throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        "Cannot add characters to buffer, output is too small.",
+        file, line
+        ));
+}
+
 template<typename Iter16>
 uint32_t code_point_utf16to32(Iter16& begin, Iter16 end, bool strict);
 
@@ -68,7 +81,7 @@ struct IterateFunctions<uint32_t> {
     using CodeUnitType = uint32_t;
     static uint32_t iterate(const uint32_t*& iter, const uint32_t* end) {
         if (iter >= end) {
-            throw IllegalCharacterException(__FILE__, __LINE__);
+            details::throw_illegal_character_exception(__FILE__, __LINE__);
         }
         return *iter++;
     }
@@ -103,7 +116,7 @@ struct CodePoint {
 template <typename C>
 class Iterator {
 public:
-    using CodeUnitType = typename detail::IterateFunctions<C>::CodeUnitType;
+    using CodeUnitType = typename details::IterateFunctions<C>::CodeUnitType;
 
     /**
     * @brief Construct end of iterator.
@@ -168,7 +181,7 @@ private:
         }
 
         auto byte_begin = iter;
-        code_point.code_point = detail::IterateFunctions<CodeUnitType>::iterate(iter, end);
+        code_point.code_point = details::IterateFunctions<CodeUnitType>::iterate(iter, end);
         code_point.bytes.assign(reinterpret_cast<const char*>(byte_begin), (iter - byte_begin) * sizeof(CodeUnitType));
     }
 

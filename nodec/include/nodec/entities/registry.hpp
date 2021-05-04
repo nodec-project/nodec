@@ -5,8 +5,9 @@
 #include <nodec/entities/storage.hpp>
 #include <nodec/entities/type_info.hpp>
 #include <nodec/entities/view.hpp>
-#include <nodec/exception.hpp>
+#include <nodec/error_formatter.hpp>
 
+#include <stdexcept>
 #include <sstream>
 #include <memory>
 #include <vector>
@@ -15,43 +16,36 @@
 namespace nodec {
 namespace entities {
 
-class InvalidEntityException : public Exception {
+class InvalidEntityException : public std::runtime_error {
 public:
-    template<typename Entity>
-    InvalidEntityException(const Entity entity, const char* file, size_t line)
-        :Exception(file, line) {
-        std::ostringstream oss;
-        oss << "Invalid entity detected. entity: " << entity
-            << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")";
-        message = oss.str();
-    }
+    using runtime_error::runtime_error;
 };
 
-template<typename Component>
-class ComponentAlreadyAssignedException : public Exception {
-public:
-    template<typename Entity>
-    ComponentAlreadyAssignedException(const Entity entity, const char* file, size_t line)
-        :Exception(file, line) {
-        std::ostringstream oss;
-        oss << "Component(" << typeid(Component).name() << ") has been already assigned at the entity(" << entity
-            << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ").";
-        message = oss.str();
-    }
-};
 
-template<typename Component>
-class NoComponentException : public Exception {
-public:
-    template<typename Entity>
-    NoComponentException(Entity entity, const char* file, size_t line)
-        :Exception(file, line) {
-        std::ostringstream oss;
-        oss << "Entity(" << entity << "; position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
-            << ") doesn't have the component(" << typeid(Component).name() << ").";
-        message = oss.str();
-    }
-};
+namespace details {
+
+template<typename Entity>
+inline void throw_invalid_entity_exception(const Entity entity, const char* file, size_t line) {
+    throw InvalidEntityException(error_fomatter::type_file_line<InvalidEntityException>(
+        Formatter() << "Invalid entity detected. entity: " << entity
+        << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")",
+        file, line
+        ));
+}
+
+
+template<typename Component, typename Entity>
+inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
+    throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        Formatter() << "Entity(" << entity << "; position: " 
+        << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
+        << ") doesn't have the component(" << typeid(Component).name() << ").",
+        file, line
+        ));
+}
+
+}
+
 
 template<typename Entity>
 class BasicRegistry {
@@ -116,6 +110,7 @@ private:
             ? static_cast<BasicStorage<Entity, Component>*>(pools[index].pool.get())
             : nullptr;
     }
+
 public:
 
 
@@ -145,7 +140,7 @@ public:
     */
     void destroy_entity(const Entity entity) {
         if (!is_valid(entity)) {
-            throw InvalidEntityException(entity, __FILE__, __LINE__);
+            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         remove_all_components(entity);
@@ -154,25 +149,20 @@ public:
 
 
     template<typename Component, typename... Args>
-    Component& add_component(const Entity entity, Args &&... args) {
+    std::pair<Component&, bool> emplace_component(const Entity entity, Args &&... args) {
         if (!is_valid(entity)) {
-            throw InvalidEntityException(entity, __FILE__, __LINE__);
+            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        auto result = pool_assured<Component>()->emplace(entity, std::forward<Args>(args)...);
-        if (!result.second) {
-            throw ComponentAlreadyAssignedException<Component>(entity, __FILE__, __LINE__);
-        }
-        return result.first;
+        return pool_assured<Component>()->emplace(entity, std::forward<Args>(args)...);
     }
-
 
     template<typename... Components>
     decltype(auto) remove_components(const Entity entity) {
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
         if (!is_valid(entity)) {
-            throw InvalidEntityException(entity, __FILE__, __LINE__);
+            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         return std::make_tuple(([entity](auto* cpool) {
@@ -182,7 +172,7 @@ public:
 
     void remove_all_components(const Entity entity) {
         if (!is_valid(entity)) {
-            throw InvalidEntityException(entity, __FILE__, __LINE__);
+            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         for (auto pos = pools.size(); pos; --pos) {
@@ -196,18 +186,18 @@ public:
     template<typename Component>
     decltype(auto) get_component(const Entity entity) const {
         if (!is_valid(entity)) {
-            throw InvalidEntityException(entity, __FILE__, __LINE__);
+            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         using Comp = std::remove_const_t<Component>;
         auto* cpool = pool_if_exists<Comp>();
         if (!cpool) {
-            throw NoComponentException<Comp>(entity, __FILE__, __LINE__);
+            details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
         auto* component = cpool->try_get(entity);
         if (!component) {
-            throw NoComponentException<Comp>(entity, __FILE__, __LINE__);
+            details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
         return const_cast<Component&>(*component);
@@ -217,6 +207,27 @@ public:
     decltype(auto) get_components(const Entity entity) const {
         return std::forward_as_tuple(get_component<Components>(entity)...);
     }
+
+    template<typename Component>
+    Component* try_get_component(const Entity entity) const {
+        if (!is_valid(entity)) {
+            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+        }
+
+        using Comp = std::remove_const_t<Component>;
+        auto* cpool = pool_if_exists<Comp>();
+        if (!cpool) {
+            return nullptr;
+        }
+
+        return const_cast<Component*>(cpool->try_get(entity));
+    }
+
+    template<typename... Components>
+    decltype(auto) try_get_components(const Entity entity) const {
+        return std::forward_as_tuple(try_get_component<Components>(entity)...);
+    }
+
 
     template<typename... Components>
     BasicView<Entity, Components...> view() {

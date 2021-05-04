@@ -2,6 +2,7 @@
 #define NODEC__ENTITIES__STORAGE_HPP_
 
 #include <nodec/entities/sparse_table.hpp>
+#include <nodec/signals.hpp>
 
 #include <vector>
 
@@ -32,12 +33,16 @@ public:
 };
 
 
+template<typename Entity>
+class BasicRegistry;
+
 template<typename Entity, typename Value>
 class BasicStorage : public BaseStorage<Entity> {
     static_assert(std::is_move_constructible_v<Value>&& std::is_move_assignable_v<Value>,
                   "The managed value must be at leat move constructible and move assignable.");
 
     using Base = BaseStorage<Entity>;
+    using StorageSignal = signals::Signal<void(BasicRegistry<Entity>&, const Entity)>;
 
 public:
     template<typename... Args>
@@ -49,6 +54,7 @@ public:
         sparse_table[entity] = instances.size();
         instances.push_back({ args... });
         packed.emplace_back(entity);
+
         return { instances.back(), true };
     }
 
@@ -128,10 +134,21 @@ public:
         return packed.size();
     }
 
+    typename
+    StorageSignal::Interface on_destroy() {
+        on_destroy_.s();
+        return on_destroy_;
+    }
+    
 private:
     SparseTable<size_t> sparse_table;
     std::vector<Entity> packed;
     std::vector<Value> instances;
+
+    StorageSignal on_destroy_;
+    //event::Event<BasicRegistry<Entity>&, const Entity> on_destroy;
+    //event::Event<BasicRegistry<Entity>&, const Entity> on_construct;
+
 };
 
 

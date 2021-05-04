@@ -3,7 +3,6 @@
 
 #include <nodec/audio/basic_sound_ibuffer.hpp>
 #include <nodec/macros.hpp>
-#include <nodec/exception.hpp>
 #include <nodec/audio/wav_format.hpp>
 
 #include <fstream>

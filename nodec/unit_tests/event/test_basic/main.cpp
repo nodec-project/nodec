@@ -1,7 +1,7 @@
 
 
 #include <nodec/event.hpp>
-#include <nodec/nodec_object.hpp>
+#include <nodec/macros.hpp>
 
 #include <iostream>
 #include <memory>
@@ -16,18 +16,20 @@ public:
 
 };
 
-class SampleObject : public nodec::NodecObject
+class SampleObject 
 {
 public:
+    NODEC_SHARED_PTR_DEFINITIONS(SampleObject);
+
+    std::string name;
 
     SampleObject(std::string name)
-        :
-        NodecObject(name)
+        :name(name)
     {
         std::cout << name << ".constructor was called." << std::endl;
     }
 
-    ~SampleObject() override
+    ~SampleObject()
     {
         std::cout << name << ".destructor was called." << std::endl;
     }
@@ -40,10 +42,8 @@ public:
     void OnEventWithException(std::string test_string, int i)
     {
         std::cout << name << ".OnEventWithException() was called. test_string=" << test_string << "; i=" << i << std::endl;
-        throw nodec::NodecException("Unhandled Exception", __FILE__, __LINE__);
+        throw std::runtime_error("Unhandled Exception");
     }
-
-    nodec::NodecObjectHolder<SampleObject> child;
 
 };
 
@@ -66,16 +66,17 @@ int main()
     nodec::event::Event<std::string, int> string_int_event;
 
     {
-        auto sample_object = nodec::make_nodec_object<SampleObject>("sample1");
-        {
-            sample_object->child = nodec::make_nodec_object<SampleObject>("sample-child");
-            nodec::NodecObjectReference<SampleObject> sample_child_object = sample_object->child;
-            auto sample_child_object_callback = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEvent);
-            auto sample_child_object_callback_with_exception = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEventWithException);
-            string_int_event += sample_child_object_callback;
-            string_int_event += sample_child_object_callback_with_exception;
-            string_int_event.invoke("Now lets go", 3000);
-        }
+        auto sample_object = SampleObject::make_shared("sample1");
+
+        //{
+        //    sample_object->child = nodec::make_nodec_object<SampleObject>("sample-child");
+        //    nodec::NodecObjectReference<SampleObject> sample_child_object = sample_object->child;
+        //    auto sample_child_object_callback = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEvent);
+        //    auto sample_child_object_callback_with_exception = std::make_shared<nodec::event::MemberCallback<SampleObject, std::string, int>>(sample_object->child, &SampleObject::OnEventWithException);
+        //    string_int_event += sample_child_object_callback;
+        //    string_int_event += sample_child_object_callback_with_exception;
+        //    string_int_event.invoke("Now lets go", 3000);
+        //}
 
 
         auto static_int_callback = std::make_shared<nodec::event::StaticCallback<int, int>>(static_func_int);

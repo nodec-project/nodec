@@ -47,25 +47,6 @@ inline Matrix4x4f trs(const Vector3f& t, const Quaternionf& r, const Vector3f& s
     };
 }
 
-//
-//inline Matrix4x4f perspective(float fov, float aspect, float znear, float zfar) {
-//    float f = 1.0f / std::tanf(fov / 2.0f * deg2rad<float>);
-//    return{
-//        f / aspect, 0.0f, 0.0f, 0.0f,
-//        0.0f, f, 0.0f, 0.0f,
-//        0.0f, 0.0f, (zfar + znear) / (znear - zfar), 2.0f * (zfar * znear) / (znear - zfar),
-//        0.0f, 0.0f, -1.0f, 0.0f
-//    };
-//}
-//
-//inline Matrix4x4f ortho(float left, float right, float bottom, float top, float znear, float zfar) {
-//    return{
-//        2.0f / (right - left), 0.0f, 0.0f, -1.0f * (right + left) / (right - left),
-//        0.0f, 2.0f / (top - bottom), 0.0f, -1.0f * (top + bottom) / (top - bottom),
-//        0.0f, 0.0f, -2.0f / (zfar - znear), -1.0f * (zfar + znear) / (zfar - znear),
-//        0.0f, 0.0f, 0.0f, 1.0f
-//    };
-//}
 
 } // namespace gfx
 } // namespace math

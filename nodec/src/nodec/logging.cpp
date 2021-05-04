@@ -6,8 +6,16 @@
 
 namespace nodec {
 namespace logging {
-static std::mutex io_lock_;
-static Level current_level_ = Level::Debug;
+
+namespace {
+std::mutex io_lock_;
+Level current_level_ = Level::Debug;
+RecordHandlers record_handlers_;
+}
+
+
+std::function <std::string(const LogRecord&)> formatter = default_formatter;
+
 
 LogRecord::LogRecord(Level level, const std::string& message, const char* file, size_t line) :
     level(level),
@@ -54,10 +62,15 @@ void record_to_stdout_handler(const LogRecord& record) noexcept {
     std::cout << record << std::endl;
 }
 
-std::function <std::string(const LogRecord&)> formatter = default_formatter;
-nodec::event::Event<const LogRecord&> record_handlers;
+RecordHandlers::Interface& record_handlers() {
+    return record_handlers_;
+}
+//nodec::event::Event<const LogRecord&> record_handlers;
 
-static void log_generic(const LogRecord& record) {
+
+
+namespace {
+void log_generic(const LogRecord& record) {
     if (record.level < current_level_) {
         // ignore this log
         return;
@@ -66,10 +79,11 @@ static void log_generic(const LogRecord& record) {
     // while Handler objects are dispatching the appropriate log messages (based on the log messages' severity) 
     // to the handler's specified destination, lock the event to invoke.
     io_lock_.lock();
-    record_handlers.invoke(record);
+    record_handlers_(record);
+    //record_handlers.invoke(record);
     io_lock_.unlock();
 }
-
+}
 
 void debug(const std::string& message, const char* file, size_t line) {
     log_generic(LogRecord{ Level::Debug, message, file, line });
@@ -95,7 +109,7 @@ void log(Level level, const std::string& message, const char* file, size_t line)
     log_generic(LogRecord{ level, message, file, line });
 }
 
-namespace detail {
+namespace details {
 class LogStreamBufferGeneric : public std::streambuf {
     using Base = std::streambuf;
 public:
@@ -126,7 +140,7 @@ private:
 }
 
 LogStream::LogStream(Level level, const char* file, size_t line) :
-    std::ostream(buffer = new detail::LogStreamBufferGeneric(level, file, line)) {}
+    std::ostream(buffer = new details::LogStreamBufferGeneric(level, file, line)) {}
 
 LogStream::~LogStream() {
     buffer->sync();

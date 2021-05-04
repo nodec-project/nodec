@@ -1,7 +1,8 @@
 #ifndef NODEC__LOGGING_HPP_
 #define NODEC__LOGGING_HPP_
 
-#include <nodec/event.hpp>
+//#include <nodec/event.hpp>
+#include <nodec/signals.hpp>
 
 #include <functional>
 #include <string>
@@ -9,6 +10,8 @@
 
 namespace nodec {
 namespace logging {
+
+
 enum class Level {
     Unset = 0,  //! The unset log level
     Debug = 10, //! The debug log level
@@ -18,6 +21,7 @@ enum class Level {
     Fatal = 50  //! The fatal log level
 };
 
+
 struct LogRecord {
     LogRecord(Level level, const std::string& message, const char* file, size_t line);
     Level level;
@@ -26,16 +30,36 @@ struct LogRecord {
     size_t line;
 };
 
-std::string default_formatter(const LogRecord& record) noexcept;
-void record_to_stdout_handler(const LogRecord& record) noexcept;
+
+using RecordHandlers = signals::Signal<void(const LogRecord&)>;
+
 
 extern std::function <std::string(const LogRecord&)> formatter;
-extern nodec::event::Event<const LogRecord&> record_handlers;
 
-using StaticRecordHandler = nodec::event::StaticCallback<const LogRecord&>;
 
-template<typename T>
-using MemberRecordHandler = typename nodec::event::MemberCallback<T, const LogRecord&>;
+std::string default_formatter(const LogRecord& record) noexcept;
+
+/**
+* @brief Record handlers can be connected through this interface.
+* 
+*   Example:      
+*       // connect stdout handler.
+*       record_handlers().connect(logging::record_to_stdout_handler);
+*/
+RecordHandlers::Interface& record_handlers();
+
+/**
+* @brief Output the log record to stdout.
+*/
+void record_to_stdout_handler(const LogRecord& record) noexcept;
+
+
+//extern nodec::event::Event<const LogRecord&> record_handlers;
+//
+//using StaticRecordHandler = nodec::event::StaticCallback<const LogRecord&>;
+//
+//template<typename T>
+//using MemberRecordHandler = typename nodec::event::MemberCallback<T, const LogRecord&>;
 
 
 /**
@@ -82,7 +106,7 @@ void fatal(const std::string& message, const char* file, size_t line);
 */
 void log(Level level, const std::string& message, const char* file, size_t line);
 
-namespace detail {
+namespace details {
 class LogStreamBufferGeneric;
 }
 
@@ -92,7 +116,7 @@ public:
     LogStream(Level level, const char* file, size_t line);
     ~LogStream();
 private:
-    detail::LogStreamBufferGeneric* buffer;
+    details::LogStreamBufferGeneric* buffer;
 };
 
 class DebugStream : public LogStream {
