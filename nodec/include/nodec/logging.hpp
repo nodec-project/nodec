@@ -1,7 +1,6 @@
 #ifndef NODEC__LOGGING_HPP_
 #define NODEC__LOGGING_HPP_
 
-//#include <nodec/event.hpp>
 #include <nodec/signals.hpp>
 
 #include <functional>
@@ -52,14 +51,6 @@ RecordHandlers::Interface& record_handlers();
 * @brief Output the log record to stdout.
 */
 void record_to_stdout_handler(const LogRecord& record) noexcept;
-
-
-//extern nodec::event::Event<const LogRecord&> record_handlers;
-//
-//using StaticRecordHandler = nodec::event::StaticCallback<const LogRecord&>;
-//
-//template<typename T>
-//using MemberRecordHandler = typename nodec::event::MemberCallback<T, const LogRecord&>;
 
 
 /**

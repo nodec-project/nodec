@@ -11,7 +11,7 @@ namespace nodec {
 
 /**
 * @note
-*   This code is based on
+*   This code is based on the followings. Thank you!
 *   * <https://github.com/TheWisp/signals>
 */
 namespace signals {
@@ -43,15 +43,12 @@ public:
 
         BaseConnection(BaseSignal* sig, size_t idx) : sig(sig), idx(idx) {}
         ~BaseConnection() {
-            if (blocked) {
-                delete blocked_conn;
-            }
-            else {
-                if (sig) {
-                    sig->calls[idx] = nullptr;
-                    sig->conns[idx] = nullptr;
-                    sig->dirty = true;
-                }
+            unblock();
+
+            if (sig) {
+                sig->calls[idx] = nullptr;
+                sig->conns[idx] = nullptr;
+                sig->dirty = true;
             }
         }
 
@@ -133,6 +130,11 @@ public:
         calls = std::move(other.calls);
         conns = std::move(other.conns);
         dirty = other.dirty;
+        for (BaseConnection* c : conns) {
+            if (c) {
+                c->set_sig(this);
+            }
+        }
         return *this;
     }
 
@@ -157,30 +159,53 @@ public:
     class Connection;
 
     /**
-    * @brief A connection without auto disconnection.
+    * @brief The temporary connection object. 
+    *   Operations on connections are possible only after they are assigned.
+    *
+    * @warning
+    *   Holding the temporary object for a long time mat destroy the connection it holds.
+    *   If you want to use a connection, you should assign it to the connection object
+    *   as soon as possible.
+    *
     */
-    class RawConnection {
+    class TemporaryConnection {
     public:
-        RawConnection(BaseConnection* ptr)
+        TemporaryConnection(BaseConnection* ptr)
             :ptr(ptr) {
         }
 
-        Connection lock() const {
-            return { ptr };
+        TemporaryConnection(const TemporaryConnection&) = delete;
+        TemporaryConnection& operator=(const TemporaryConnection&) = delete;
+
+        TemporaryConnection(TemporaryConnection&& other) noexcept
+            : ptr(other.ptr) {
+            other.ptr = nullptr;
+        }
+        TemporaryConnection& operator=(TemporaryConnection&& other) noexcept {
+            ptr = other.ptr;
+            other.ptr = nullptr;
+            return *this;
         }
 
-        operator Connection() const {
-            return { ptr };
+        Connection assign() {
+            auto* orig_ptr = ptr;
+            ptr = nullptr;
+            return { orig_ptr };
         }
+
     private:
-        BaseConnection* ptr;
+        BaseConnection* ptr{ nullptr };
     };
 
     class Connection {
     public:
+        Connection() {}
+
         Connection(BaseConnection* ptr)
             :ptr(ptr) {
-            ptr->owned = true;
+            if (ptr) {
+                ptr->owned = true;
+            }
         }
 
         ~Connection() {
@@ -195,10 +220,19 @@ public:
             other.ptr = nullptr;
         }
 
+        Connection(TemporaryConnection&& other) noexcept {
+            *this = std::move(other.assign());
+        }
+
         Connection& operator=(Connection&& other) noexcept {
-            disconnect(); // free ptr
+            disconnect();
             ptr = other.ptr;
             other.ptr = nullptr;
+            return *this;
+        }
+
+        Connection& operator=(TemporaryConnection&& other) noexcept {
+            *this = std::move(other.assign());
             return *this;
         }
 
@@ -226,7 +260,7 @@ public:
 
 
     private:
-        BaseConnection* ptr;
+        BaseConnection* ptr{ nullptr };
     };
 
 
@@ -241,8 +275,10 @@ public:
     SignalInterface& operator= (const BaseSignal&) = delete;
 
 public:
+
+
     template<class F>
-    RawConnection connect(F&& functor) {
+    TemporaryConnection connect(F&& functor) {
         size_t idx = base_sig.conns.size();
         base_sig.calls.emplace_back(functor);
         BaseConnection* conn = new BaseConnection(&base_sig, idx);
@@ -290,9 +326,22 @@ public:
 
         if (!recursion) {
             calling = false;
-
+            if (Interface::base_sig.dirty) {
+                Interface::base_sig.dirty = false;
+                // remove all empty slots while patching the store index in the connection.
+                size_t sz = 0;
+                for (size_t i = 0, n = Interface::base_sig.conns.size(); i < n; ++i) {
+                    if (Interface::base_sig.conns[i]) {
+                        Interface::base_sig.conns[sz] = Interface::base_sig.conns[i];
+                        Interface::base_sig.calls[sz] = Interface::base_sig.calls[i];
+                        Interface::base_sig.conns[sz]->idx = sz;
+                        ++sz;
+                    }
+                }
+                Interface::base_sig.conns.resize(sz);
+                Interface::base_sig.calls.resize(sz);
+            }
         }
-
     }
 
     Interface& interface() {

@@ -65,7 +65,6 @@ void record_to_stdout_handler(const LogRecord& record) noexcept {
 RecordHandlers::Interface& record_handlers() {
     return record_handlers_;
 }
-//nodec::event::Event<const LogRecord&> record_handlers;
 
 
 
@@ -80,7 +79,6 @@ void log_generic(const LogRecord& record) {
     // to the handler's specified destination, lock the event to invoke.
     io_lock_.lock();
     record_handlers_(record);
-    //record_handlers.invoke(record);
     io_lock_.unlock();
 }
 }
