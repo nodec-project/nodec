@@ -81,10 +81,10 @@ private:
 };
 
 
-template<typename TValue, uint16_t GROUP_SIZE>
+template<typename ValueT, uint16_t GROUP_SIZE>
 class BasicSparseGroup {
 public:
-    using Value = TValue;
+    using Value = ValueT;
 
 public:
     using size_type = uint16_t;

@@ -1,18 +1,43 @@
 #include <nodec/unicode.hpp>
+#include <nodec/logging.hpp>
 
 #include <algorithm>
 #include <iostream>
 #include <string>
 
+using namespace nodec;
+
 int main()
 {
+    logging::record_handlers().connect(logging::record_to_stdout_handler);
+    //std::string_view
+    //char16_t* test = u"test";
+
+    //"test" == "test1";
+
+    uint32_t a = 0x01;
+
+    auto b = u8'a';
+    std::string;
+    if (a == b) {
+
+    }
     try
     {
-        std::string utf8 = "あkiT✔✔t";
-        std::cout << "HELLO" << std::endl;
-        std::cout << std::endl;
+        std::string utf8 = u8"ハロー、World 🎉.";
+
+
+        //auto* test = "test";
+        //auto* test1 = "test1";
+        ////test1 = test;
+        //if (test == test1) {
+
+        //}
+
 
         // ---
+
+        nodec::unicode::UTF8View view(utf8);
 
         nodec::unicode::UTF8Iterator utf8_iterator(utf8);
         nodec::unicode::UTF8Iterator utf8_iterator_last;
@@ -22,7 +47,7 @@ int main()
                 //std::cout << ": " << std::endl;
                 std::cout << code_point.code_point << std::endl;
                 if (code_point.bytes == "あ")
-                {
+                {   
                     std::cout << "EQ" << std::endl;
                 }
             });
@@ -81,17 +106,9 @@ int main()
         //std::cout << utf32_iterator.code_point() << std::endl;
     }
 
-    catch (const nodec::NodecException& e)
-    {
-        std::wcout << e.what() << std::endl;
-    }
     catch (const std::exception& e)
     {
-        std::cout << "Standard Exception: " << e.what() << std::endl;
-    }
-    catch (...)
-    {
-        std::cout << "No detail available" << std::endl;
+        logging::FatalStream(__FILE__, __LINE__) << e.what();
     }
     return 0;
 }

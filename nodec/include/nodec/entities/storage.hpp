@@ -29,7 +29,6 @@ public:
     virtual const_iterator cbegin() const noexcept = 0;
     virtual const_iterator cend() const noexcept = 0;
     virtual size_t size() const noexcept = 0;
-
 };
 
 
