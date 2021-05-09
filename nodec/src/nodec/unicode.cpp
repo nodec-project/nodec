@@ -6,7 +6,7 @@ namespace nodec {
 * Unicode
 *   "
 *       The Unicode Standard defines a codespace of numerical values
-*       ranging from 0 through 10FFFF16, called code points and
+*       ranging from 0 through 10FFFF, called code points and
 *       denoted as U+0000 through U+10FFFF respectively.
 *       <https://en.wikipedia.org/wiki/Unicode>
 *   "
@@ -108,81 +108,9 @@ uint32_t check_strict(bool strict) {
         details::throw_illegal_character_exception(__FILE__, __LINE__);
     }
     return replacement;
-
 }
 
 } // namespace details
-
-
-
-template <typename C1, typename C2, typename Function>
-std::string to_narrow(const std::string& string, Function function, bool strict = true) {
-    // types
-    constexpr size_t size1 = sizeof(C1);
-    constexpr size_t size2 = sizeof(C2);
-
-    // arguments
-    const size_t srclen = string.size() / size1;
-    const size_t dstlen = srclen * 4;
-    auto* src = reinterpret_cast<const C1*>(string.data());
-    auto* src_end = src + srclen;
-    auto* dst = reinterpret_cast<C2*>(malloc(dstlen * size2));
-    auto* dst_end = dst + dstlen;
-
-    size_t out = function(src, src_end, dst, dst_end, strict);
-    std::string output(reinterpret_cast<const char*>(dst), out * size2);
-    free(dst);
-
-    return output;
-}
-
-
-std::string utf16to8(const std::string& string, bool strict) {
-    // types
-    using C1 = uint16_t;
-    using C2 = uint8_t;
-    using Function = decltype(details::utf16to8<const C1*, C2*>);
-
-    return to_narrow<C1, C2, Function>(string, details::utf16to8, strict);
-}
-
-
-std::string utf16to32(const std::string& string, bool strict) {
-    // types
-    using C1 = uint16_t;
-    using C2 = uint32_t;
-    using Function = decltype(details::utf16to32<const C1*, C2*>);
-
-    return to_wide<C1, C2, Function>(string, details::utf16to32, strict);
-}
-
-std::string utf32to16(const std::string& string, bool strict) {
-    // types
-    using C1 = uint32_t;
-    using C2 = uint16_t;
-    using Function = decltype(details::utf32to16<const C1*, C2*>);
-
-    return to_narrow<C1, C2, Function>(string, details::utf32to16, strict);
-}
-
-
-std::string utf8to32(const std::string& string, bool strict) {
-    // types
-    using C1 = uint8_t;
-    using C2 = uint32_t;
-    using Function = decltype(details::utf8to32<const C1*, C2*>);
-
-    return to_wide<C1, C2, Function>(string, details::utf8to32, strict);
-}
-
-std::string utf32to8(const std::string& string, bool strict) {
-    // types
-    using C1 = uint32_t;
-    using C2 = uint8_t;
-    using Function = decltype(details::utf32to8<const C1*, C2*>);
-
-    return to_narrow<C1, C2, Function>(string, details::utf32to8, strict);
-}
 
 
 } // namespace unicode

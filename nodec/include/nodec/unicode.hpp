@@ -2,6 +2,7 @@
 #define NODEC__UNICODE_HPP_
 
 #include <nodec/error_formatter.hpp>
+#include <nodec/logging.hpp>
 
 #include <stdexcept>
 #include <iostream>
@@ -9,6 +10,12 @@
 #include <string>
 
 namespace nodec {
+
+/**
+* @note
+*   This code is based on the followings. Thank you!
+*   * <https://github.com/Alexhuszagh/UTFPP>
+*/
 namespace unicode {
 
 class IllegalCharacterException : public std::runtime_error {
@@ -316,55 +323,95 @@ DstString to_wide(const SrcString& string, Function function, bool strict = true
 
     constexpr size_t c1_size = sizeof(C1);
     constexpr size_t c2_size = sizeof(C2);
-    
-    constexpr size_t src_csize = sizeof(SrcChar); // the size of CharT in SrcString 
-    constexpr size_t dst_csize = sizeof(DstChar); // the size of CharT in DstString
 
-    static_assert(src_csize <= c1_size && dst_csize <= c2_size, "A");
+    constexpr size_t src_char_size = sizeof(SrcChar); // the character size of SrcString
+    constexpr size_t dst_char_size = sizeof(DstChar); // the character size of DstString
+
+    constexpr size_t src_chars_per_unit = c1_size / src_char_size;
+    constexpr size_t dst_chars_per_unit = c2_size / dst_char_size;
+
+    static_assert(src_chars_per_unit > 0 && dst_chars_per_unit > 0,
+                  "The character size of the string must be set so that it is exactly divisible by the size of the code unit.");
 
     //arguments
-    const size_t srclen = string.size() * src_csize / c1_size; // source length (the number of code units)
-    const size_t dstlen = srclen;                              // destination length
+    const size_t srclen = string.size() / src_chars_per_unit; // source length (the number of code units)
+    const size_t dstlen = srclen;                             // destination length
     auto* src = reinterpret_cast<const C1*>(string.data());
     auto* src_end = src + srclen;
     auto* dst = reinterpret_cast<C2*>(malloc(dstlen * c2_size));
     auto* dst_end = dst + dstlen;
 
     size_t out = function(src, src_end, dst, dst_end, strict);
-    DstString output(reinterpret_cast<const DstChar*>(dst), out * c2_size / dst_csize);
+    DstString output(reinterpret_cast<const DstChar*>(dst), out * dst_chars_per_unit);
     free(dst);
 
     return output;
 }
 
-//
-//template<typename CodeUnit>
-//struct IterateFunctions {};
-//
-//template<>
-//struct IterateFunctions<uint8_t> {
-//    static uint32_t iterate(const uint8_t*& iter, const uint8_t* end) {
-//        return code_point_utf8to32(iter, end, true);
-//    }
-//};
-//
-//template<>
-//struct IterateFunctions<uint16_t> {
-//    static uint32_t iterate(const uint16_t*& iter, const uint16_t* end) {
-//        return code_point_utf16to32(iter, end, true);
-//    }
-//};
-//
-//template<>
-//struct IterateFunctions<uint32_t> {
-//    static uint32_t iterate(const uint32_t*& iter, const uint32_t* end) {
-//        if (iter >= end) {
-//            details::throw_illegal_character_exception(__FILE__, __LINE__);
-//        }
-//        return *iter++;
-//    }
-//};
-//
+template <typename C1, typename C2, typename Function, typename DstString, typename SrcString>
+DstString to_narrow(const SrcString& string, Function function, bool strict = true) {
+    // types
+    using SrcChar = typename SrcString::value_type;
+    using DstChar = typename DstString::value_type;
+
+    constexpr size_t c1_size = sizeof(C1);
+    constexpr size_t c2_size = sizeof(C2);
+
+    constexpr size_t src_char_size = sizeof(SrcChar); // the character size of SrcString
+    constexpr size_t dst_char_size = sizeof(DstChar); // the character size of DstString
+
+    constexpr size_t src_chars_per_unit = c1_size / src_char_size;
+    constexpr size_t dst_chars_per_unit = c2_size / dst_char_size;
+
+    static_assert(src_chars_per_unit > 0 && dst_chars_per_unit > 0,
+                  "The character size of the string must be set so that it is exactly divisible by the size of the code unit.");
+
+    // arguments
+    const size_t srclen = string.size() / src_chars_per_unit; // source length (the number of code units)
+    const size_t dstlen = srclen * 4;                         // destination length
+    auto* src = reinterpret_cast<const C1*>(string.data());
+    auto* src_end = src + srclen;
+    auto* dst = reinterpret_cast<C2*>(malloc(dstlen * c2_size));
+    auto* dst_end = dst + dstlen;
+
+    size_t out = function(src, src_end, dst, dst_end, strict);
+    DstString output(reinterpret_cast<const DstChar*>(dst), out * dst_chars_per_unit);
+    free(dst);
+
+    return output;
+}
+
+
+template<typename It>
+class IteratorAdapter : public It {
+public:
+    using value_type = std::make_unsigned_t<typename It::value_type>;
+
+public:
+    IteratorAdapter(const It& it) {
+        It::operator=(it);
+    }
+
+    value_type operator*() const noexcept {
+        /*auto value = It::operator*();
+        auto out = static_cast<value_type>(value);
+        return out;*/
+        return static_cast<value_type>(It::operator*());
+    }
+
+    IteratorAdapter operator++(int) noexcept {
+        auto tmp = *this;
+        It::operator++();
+        return tmp;
+    }
+
+    IteratorAdapter operator--(int) noexcept {
+        auto tmp = *this;
+        It::operator--();
+        return tmp;
+    }
+};
+
 
 } // namespace details
 
@@ -379,194 +426,104 @@ U16String utf8to16(const U8String& string, bool strict = true) {
     using C2 = uint16_t;
     using Function = decltype(details::utf8to16<const C1*, C2*>);
 
-    return details::to_wide<C1, C2, Function>(string, details::utf8to16, strict);
+    return details::to_wide<C1, C2, Function, U16String>(string, details::utf8to16, strict);
 }
 
-/**
-* @brief Convert UTF-16 string to UTF-8 string.
-*/
-std::string utf16to8(const std::string& string, bool strict = true);
 
 /**
 * @brief Convert UTF-16 string to UTF-32 string.
 */
-std::string utf16to32(const std::string& string, bool strict = true);
+template<typename U32String, typename U16String>
+U32String utf16to32(const U16String& string, bool strict = true) {
+    // types
+    using C1 = uint16_t;
+    using C2 = uint32_t;
+    using Function = decltype(details::utf16to32<const C1*, C2*>);
 
-/**
-* @brief Convert UTF-32 string to UTF-16 string.
-*/
-std::string utf32to16(const std::string& string, bool strict = true);
+    return details::to_wide<C1, C2, Function, U32String>(string, details::utf16to32, strict);
+}
+
 
 /**
 * @brief Convert UTF-8 string to UTF-32 string.
 */
-std::string utf8to32(const std::string& string, bool strict = true);
+template<typename U32String, typename U8String>
+U32String utf8to32(const U8String& string, bool strict = true) {
+    // types
+    using C1 = uint8_t;
+    using C2 = uint32_t;
+    using Function = decltype(details::utf8to32<const C1*, C2*>);
+
+    return details::to_wide<C1, C2, Function, U32String>(string, details::utf8to32, strict);
+}
+
+
+/**
+* @brief Convert UTF-16 string to UTF-8 string.
+*/
+template<typename U8String, typename U16String>
+U8String utf16to8(const U16String& string, bool strict = true) {
+    // types
+    using C1 = uint16_t;
+    using C2 = uint8_t;
+    using Function = decltype(details::utf16to8<const C1*, C2*>);
+
+    return details::to_narrow<C1, C2, Function, U8String>(string, details::utf16to8, strict);
+}
+
+
+/**
+* @brief Convert UTF-32 string to UTF-16 string.
+*/
+template<typename U16String, typename U32String>
+U16String utf32to16(const U32String& string, bool strict = true) {
+    // types
+    using C1 = uint32_t;
+    using C2 = uint16_t;
+    using Function = decltype(details::utf32to16<const C1*, C2*>);
+
+    return details::to_narrow<C1, C2, Function, U16String>(string, details::utf32to16, strict);
+}
+
 
 /**
 * @brief Convert UTF-32 string to UTF-8 string.
 */
-std::string utf32to8(const std::string& string, bool strict = true);
+template<typename U8String, typename U32String>
+U8String utf32to8(const U32String& string, bool strict = true) {
+    // types
+    using C1 = uint32_t;
+    using C2 = uint8_t;
+    using Function = decltype(details::utf32to8<const C1*, C2*>);
+
+    return details::to_narrow<C1, C2, Function, U8String>(string, details::utf32to8, strict);
+}
 
 
-//
-//struct CodePoint {
-//    uint32_t value{ 0 };
-//    const char bytes[4];
-//
-//    ////const char[5] bytes{};
-//    //std::string bytes;
-//};
-//
-//template <typename C>
-//class CodePointViewIterator {
-//public:
-//    using CodeUnit = C;
-//
-//    using value_type = uint32_t;
-//    using pointer = const value_type*;
-//    using reference = const value_type&;
-//
-//    /**
-//    * @brief Construct end of iterator.
-//    */
-//    CodePointViewIterator()
-//        : iter(nullptr), end(nullptr) {
-//    }
-//
-//    CodePointViewIterator(const CodeUnit* iter, const CodeUnit* end)
-//        : iter(iter), end(end) {
-//    }
-//
-//
-//    /**
-//    * @brief Construct start of iterator.
-//    */
-//    Iterator(const std::string& string) {
-//        const size_t length = string.size() / sizeof(CodeUnitType);
-//        iter = reinterpret_cast<const CodeUnitType*>(string.data());
-//        end = iter + length;
-//        iterate();
-//    }
-//
-//    Iterator(const Iterator& iterator)
-//        : iter(iterator.iter)
-//        , end(iterator.end)
-//        , code_point(iterator.code_point) {
-//    }
-//
-//    CodePointViewIterator& operator=(const CodePointViewIterator&) = default;
-//    ~CodePointViewIterator() = default;
-//
-//    reference operator*() const {
-//        return code_point;
-//    }
-//
-//    pointer operator->() const {
-//        return &code_point;
-//    }
-//
-//
-//    /**
-//    * @note Prefix ++ overload.
-//    */
-//    Iterator& operator++() {
-//        iterate();
-//        return *this;
-//    }
-//
-//    /**
-//    * @note Postfix ++ overload.
-//    */
-//    Iterator operator++(int) {
-//        auto tmp = *this;
-//        iterate();
-//        return tmp;
-//    }
-//
-//
-//private:
-//    void iterate() {
-//        if (iter && iter >= end) {
-//            iter = nullptr;
-//            return;
-//        }
-//
-//        auto byte_begin = iter;
-//        code_point.code_point = details::IterateFunctions<CodeUnitType>::iterate(iter, end);
-//        code_point.bytes.assign(reinterpret_cast<const char*>(byte_begin), (iter - byte_begin) * sizeof(CodeUnitType));
-//    }
-//
-//    bool equal(const Iterator& other) const {
-//        return iter == other.iter;
-//    }
-//
-//    /**
-//    * @return true if the iterators refer to the same code unit,
-//    *   or are both at end-of-string.
-//    */
-//    friend bool operator== (const Iterator& left, const Iterator& right) {
-//        return left.equal(right);
-//    }
-//
-//    /**
-//    * @return true if the iterators refer to different code unit,
-//    *   or if one is at end-of-string and the other is not.
-//    */
-//    friend bool operator!= (const Iterator& left, const Iterator& right) {
-//        return !left.equal(right);
-//    }
-//
-//private:
-//    // const pointer:
-//    //  A pointer to const data does not allow modification of the data through the pointer.
-//
-//    const CodeUnit* iter;
-//    const CodeUnit* end;
-//    uint32_t code_point;
-//};
-//
-//template<typename C>
-//class BasicCodePointView {
-//public:
-//    using CodeUnit = C;
-//
-//    using iterator = CodePointViewIterator<C>;
-//    using const_iterator = iterator;
-//
-//    BasicCodePointView(const std::string& str) {
-//        size_t length = str.size() / sizeof(CodeUnitType);
-//        iter = reinterpret_cast<const CodeUnitType*>(string.data());
-//        end = iter + length;
-//        iterate();
-//    }
-//
-//    BasicCodePointView(const char* str, size_t len) {
-//
-//    }
-//
-//    const_iterator begin() const noexcept {
-//
-//    }
-//
-//    const_iterator end() const noexcept {
-//
-//    }
-//
-//private:
-//
-//
-//
-//};
-//
-//using UTF8CodePoint = CodePoint<uint8_t>;
-//using UTF16CodePoint = CodePoint<uint16_t>;
-//using UTF32CodePoint = CodePoint<uint32_t>;
-//
-//using UTF8Iterator = Iterator<uint8_t>;
-//using UTF16Iterator = Iterator<uint16_t>;
-//using UTF32Iterator = Iterator<uint32_t>;
-//
-//using UTF8CodePointView = CodePointView<UTF8Iterator>;
+template<typename Iter8>
+uint32_t iterate_utf8(Iter8& iter, const Iter8& end, bool strict = true) {
+    static_assert(sizeof(typename Iter8::value_type) == 1, "The element size of a UTF-8 iterator must be one byte.");
+
+    details::IteratorAdapter<Iter8> iter_adapter(iter);
+    auto code_point = details::code_point_utf8to32(iter_adapter,
+                                                   details::IteratorAdapter<Iter8>(end),
+                                                   strict);
+
+    iter = iter_adapter;
+    return code_point;
+}
+
+template<typename Iter16>
+uint32_t iterate_utf16(Iter16& iter, const Iter16& end, bool strict = true) {
+    static_assert(sizeof(typename Iter16::value_type) == 2, "The element size of a UTF-16 iterator must be two bytes.");
+
+    details::IteratorAdapter<Iter16> iter_adapter(iter);
+    auto code_point = details::code_point_utf16to32(iter_adapter,
+                                                    details::IteratorAdapter<Iter16>(end),
+                                                    strict);
+    iter = iter_adapter;
+    return code_point;
+}
 
 } // namespace unicode
 }

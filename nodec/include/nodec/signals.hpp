@@ -145,7 +145,7 @@ public:
     bool dirty{ false };
 };
 
-}
+} // namespace details
 
 
 template<typename> class SignalInterface;
