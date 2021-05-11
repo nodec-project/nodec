@@ -393,9 +393,6 @@ public:
     }
 
     value_type operator*() const noexcept {
-        /*auto value = It::operator*();
-        auto out = static_cast<value_type>(value);
-        return out;*/
         return static_cast<value_type>(It::operator*());
     }
 
@@ -500,6 +497,19 @@ U8String utf32to8(const U32String& string, bool strict = true) {
 }
 
 
+/**
+* @param iter
+*   Iterator with an iterate size of 1 byte.
+*   After function execution, this iterator points to the first code unit of the next code point.
+* 
+* @param end
+*   The end iterator of the string.
+* 
+* @param strict
+*   If enabled, raise an exception when an illegal character is found.
+* 
+* @return code point
+*/
 template<typename Iter8>
 uint32_t iterate_utf8(Iter8& iter, const Iter8& end, bool strict = true) {
     static_assert(sizeof(typename Iter8::value_type) == 1, "The element size of a UTF-8 iterator must be one byte.");
@@ -513,6 +523,20 @@ uint32_t iterate_utf8(Iter8& iter, const Iter8& end, bool strict = true) {
     return code_point;
 }
 
+
+/**
+* @param iter
+*   Iterator with an iterate size of 2 bytes.
+*   After function execution, this iterator points to the first code unit of the next code point.
+*
+* @param end
+*   The end iterator of the string.
+*
+* @param strict
+*   If enabled, raise an exception when an illegal character is found.
+*
+* @return code point
+*/
 template<typename Iter16>
 uint32_t iterate_utf16(Iter16& iter, const Iter16& end, bool strict = true) {
     static_assert(sizeof(typename Iter16::value_type) == 2, "The element size of a UTF-16 iterator must be two bytes.");

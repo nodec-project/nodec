@@ -50,11 +50,22 @@ int main(int argc, char* argv[]) {
 
     try {
         {
-            //std::u16string utf8(u"Hello, ワールド! 🎉");
-            std::string utf8("Hello, ワールド! 🎉");
 
             //logging::InfoStream(__FILE__, __LINE__) << utf8;
 
+            /*{
+                std::string utf8("Hello, ワールド! 🎉");
+                writefile("out.utf8", utf8);
+                return 0;
+            }*/
+
+            //{
+            //    std::string utf8 = readfile("hello_world.utf8");
+            //    return 0;
+            //}
+
+            //std::u16string utf8(u"Hello, ワールド! 🎉");
+            std::string utf8("Hello, ワールド! 🎉");
             {
                 logging::InfoStream info(__FILE__, __LINE__);
                 for (auto iter = utf8.begin(); iter != utf8.end(); ) {
@@ -72,12 +83,14 @@ int main(int argc, char* argv[]) {
                 auto pos = utf8.find("🎉");
                 if (pos != utf8.npos) {
                     logging::InfoStream(__FILE__, __LINE__) << "Find tada!";
-                    auto iter = utf8.begin() + pos;
-                    auto begin = iter;
-                    unicode::iterate_utf8(iter, utf8.end());
-                    logging::InfoStream(__FILE__, __LINE__) << "tada size = " << iter -begin << " bytes";
 
+                    auto begin = utf8.begin() + pos;
+                    auto iter = begin;
+                    unicode::iterate_utf8(iter, utf8.end());
+
+                    logging::InfoStream(__FILE__, __LINE__) << "tada size = " << iter - begin << " bytes";
                     logging::InfoStream(__FILE__, __LINE__) << "Replace tada with sushi.";
+
                     utf8.replace(begin, iter, "🍣");
                 }
             }
@@ -101,7 +114,7 @@ int main(int argc, char* argv[]) {
             {
                 logging::InfoStream info(__FILE__, __LINE__);
                 for (auto c : utf32) {
-                    info << std::hex <<  c << " ";
+                    info << std::hex << c << " ";
                 }
             }
 
@@ -140,11 +153,7 @@ int main(int argc, char* argv[]) {
         //    writefile("hello_world_from_file.out.utf32", out_utf32);
         //    return 0;
         //}
-        //{
-        //    std::string utf8_string;
-        //    utf8_string = readfile("hello_world_from_file.utf8");
-        //    return 0;
-        //}
+
 
         //{
         //    std::string out_utf16, out_utf32;
