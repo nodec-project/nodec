@@ -26,10 +26,10 @@ inline void throw_broken_connection_exception(const char* file, size_t line) {
 }
 
 template<typename> class BaseSignal;
-template<typename... As>
-class BaseSignal<void(As...)> {
+template<typename... Args>
+class BaseSignal<void(Args...)> {
 public:
-    using Callback = std::function<void(As...)>;
+    using Callback = std::function<void(Args...)>;
 
     struct BlockedConnection {
         BaseSignal* sig{ nullptr };
@@ -149,9 +149,9 @@ public:
 
 
 template<typename> class SignalInterface;
-template<typename... As>
-class SignalInterface<void(As...)> {
-    using BaseSignal = details::BaseSignal<void(As...)>;
+template<typename... Args>
+class SignalInterface<void(Args...)> {
+    using BaseSignal = details::BaseSignal<void(Args...)>;
     using BaseConnection = typename BaseSignal::BaseConnection;
 
 public:
@@ -291,13 +291,13 @@ protected:
 };
 
 template<typename> class Signal;
-template<typename... As>
-class Signal<void(As...)> : public SignalInterface<void(As...)> {
-    using BaseSignal = details::BaseSignal<void(As...)>;
+template<typename... Args>
+class Signal<void(Args...)> : public SignalInterface<void(Args...)> {
+    using BaseSignal = details::BaseSignal<void(Args...)>;
     using BaseConnection = typename BaseSignal::BaseConnection;
 
 public:
-    using Interface = SignalInterface<void(As...)>;
+    using Interface = SignalInterface<void(Args...)>;
 
 public:
     Signal() = default;
@@ -313,14 +313,15 @@ public:
         return *this;
     }
 
-    void operator()(As&&... args) {
+    //template<typename... ActualArgs>
+    void operator()(Args... args) {
         bool recursion = calling;
         calling = true;
 
         for (size_t i = 0, n = Interface::base_sig.calls.size(); i < n; ++i) {
             auto& cb = Interface::base_sig.calls[i];
             if (cb) {
-                cb(std::forward<As>(args)...);
+                cb(std::forward<Args>(args)...);
             }
         }
 

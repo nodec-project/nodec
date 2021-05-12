@@ -50,7 +50,6 @@ int main(int argc, char* argv[]) {
 
     try {
         {
-
             //logging::InfoStream(__FILE__, __LINE__) << utf8;
 
             /*{

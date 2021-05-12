@@ -25,82 +25,111 @@ public:
     }
 };
 
+template<typename>
+class TypeTest;
+
+template<typename ...Args>
+class TypeTest<void(Args...)> {
+
+};
+
+void func_const(const int v) {
+    logging::InfoStream(__FILE__, __LINE__) << v;
+}
+
 int main() {
     logging::record_handlers().connect(logging::record_to_stdout_handler);
-    
-    //logging::record_handlers += event::StaticCallback<const logging::LogRecord&>::make_shared(&logging::record_to_stdout_handler);
+
     logging::info("Start", __FILE__, __LINE__);
 
     try {
-        using UpdateSignal = signals::Signal<void(float)>;
-        UpdateSignal update_;
-        UpdateSignal update; update = std::move(update_);
-        //auto update = signals::Signal<void(float)>();
-        //signals::SignalInterface<void(float)>& update_interface_ = update;
-        //UpdateSignal::Interface& update_interface_ = update;
-        auto& update_interface = update.interface();
 
-        //auto update_interface = std::move(update_interface_);
-
-        //auto connection = update.connect(on_update).assign();
         //{
-        //    auto connection_ = update.connect(on_update);
-        //    auto connection = connection_.assign();
+        //    TypeTest<void(const int&)> test;
+        //    signals::Signal<void(const int)> sig;
+
+        //    sig.connect(func_const);
+        //    
+        //    const float cv = 1;
+        //    sig(cv);
+
+        //    //std::function<void(const int)> func;
+        //    //func(cv);
+        //    ////func(1.9f);
+        //    //func_const(1.0f);
+        //    return 0;
         //}
 
-        //auto connection = static_cast<UpdateSignal::Interface::Connection>(update.connect(on_update));
-        //UpdateSignal::Interface::Connection connection = update.connect(on_update);
-        update_interface.connect(on_update);
-
-        //auto connection_ = update.connect(on_update);
-        //UpdateSignal::Interface::Connection connection(nullptr);
-        //connection.block();
-        //connection = std::move(connection_);
-        //UpdateSignal::Interface::Connection connection = std::move(connection_);
         {
-            MyClass my_obj;
-            int cnt = 0;
-            UpdateSignal::Interface::Connection connection = update.connect(
-                [&](float delta) {
-                    my_obj.on_update(delta); 
-                    connection.block();
-                    update((float)++cnt);
-                    connection.unblock();
-                });
+            using UpdateSignal = signals::Signal<void(float)>;
+            UpdateSignal update_;
+            UpdateSignal update; update = std::move(update_);
+            //auto update = signals::Signal<void(float)>();
+            //signals::SignalInterface<void(float)>& update_interface_ = update;
+            //UpdateSignal::Interface& update_interface_ = update;
+            auto& update_interface = update.interface();
+
+            //auto update_interface = std::move(update_interface_);
+
+            //auto connection = update.connect(on_update).assign();
+            //{
+            //    auto connection_ = update.connect(on_update);
+            //    auto connection = connection_.assign();
+            //}
+
+            //auto connection = static_cast<UpdateSignal::Interface::Connection>(update.connect(on_update));
+            //UpdateSignal::Interface::Connection connection = update.connect(on_update);
+            update_interface.connect(on_update);
+
+            //auto connection_ = update.connect(on_update);
+            //UpdateSignal::Interface::Connection connection(nullptr);
+            //connection.block();
+            //connection = std::move(connection_);
+            //UpdateSignal::Interface::Connection connection = std::move(connection_);
+            {
+                MyClass my_obj;
+                int cnt = 0;
+                UpdateSignal::Interface::Connection connection = update.connect(
+                    [&](float delta) {
+                        my_obj.on_update(delta);
+                        connection.block();
+                        update((float)++cnt);
+                        connection.unblock();
+                    });
 
                 update(3.14);
-        }
-        //connection = update.connect(on_update);
-        update(3.14);
-        {
-
-            //auto connection = update.connect([](float delta) {logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 0. " << delta; }).lock();
-            //UpdateSignal::Interface::Connection connection = update.connect(
-            //    [](float delta) {
-            //        std::cout << "Hello in lambda 0. " << delta << std::endl;
-            //        //logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 0. " << delta;
-
-            //    });
+            }
+            //connection = update.connect(on_update);
             update(3.14);
-            //connection.disconnect();
-            //connection.unblock();
-        }
-        {
-            auto connection = update.connect(
-                [](float delta) {
-                    //std::cout << "Hello in lambda 1. " << delta << std::endl;
-                    logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 1. " << delta;
-                    
-                });
-        }
+            {
 
-        MyClass my_obj;
-        //update.connect(&my_obj, &MyClass::on_update);
-        auto connection = update.connect([&](float delta) {my_obj.on_update(delta); }).assign();
-        connection.disconnect();
-        //connection.block();
-        update(3.14);
+                //auto connection = update.connect([](float delta) {logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 0. " << delta; }).lock();
+                //UpdateSignal::Interface::Connection connection = update.connect(
+                //    [](float delta) {
+                //        std::cout << "Hello in lambda 0. " << delta << std::endl;
+                //        //logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 0. " << delta;
 
+                //    });
+                update(3.14);
+                //connection.disconnect();
+                //connection.unblock();
+            }
+            {
+                auto connection = update.connect(
+                    [](float delta) {
+                        //std::cout << "Hello in lambda 1. " << delta << std::endl;
+                        logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 1. " << delta;
+
+                    });
+            }
+
+            MyClass my_obj;
+            //update.connect(&my_obj, &MyClass::on_update);
+            auto connection = update.connect([&](float delta) {my_obj.on_update(delta); }).assign();
+            connection.disconnect();
+            //connection.block();
+            update(3.14);
+        }
 
     }
     catch (std::exception& e) {

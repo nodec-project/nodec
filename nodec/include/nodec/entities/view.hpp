@@ -3,6 +3,7 @@
 
 #include <nodec/entities/storage.hpp>
 
+#include <algorithm>
 #include <array>
 
 namespace nodec {

@@ -13,8 +13,8 @@ using namespace nodec;
 using namespace scene_set;
 
 int main() {
-
-    logging::record_handlers += event::StaticCallback<const logging::LogRecord&>::make_shared(&logging::record_to_stdout_handler);
+    logging::record_handlers().connect(logging::record_to_stdout_handler);
+    //logging::record_handlers += event::StaticCallback<const logging::LogRecord&>::make_shared(&logging::record_to_stdout_handler);
     logging::info("Start", __FILE__, __LINE__);
 
     SceneRegistry registry;

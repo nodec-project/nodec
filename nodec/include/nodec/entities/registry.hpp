@@ -37,7 +37,7 @@ inline void throw_invalid_entity_exception(const Entity entity, const char* file
 template<typename Component, typename Entity>
 inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
     throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
-        Formatter() << "Entity(" << entity << "; position: " 
+        Formatter() << "Entity(" << entity << "; position: "
         << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
         << ") doesn't have the component(" << typeid(Component).name() << ").",
         file, line
@@ -154,7 +154,7 @@ public:
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        return pool_assured<Component>()->emplace(entity, std::forward<Args>(args)...);
+        return pool_assured<Component>()->emplace(*this, entity, std::forward<Args>(args)...);
     }
 
     template<typename... Components>
@@ -166,7 +166,7 @@ public:
         }
 
         return std::make_tuple(([entity](auto* cpool) {
-            return cpool != nullptr && cpool->erase(entity);
+            return cpool != nullptr && cpool->erase(*this, entity);
                                 })(pool_if_exists<Components>())...);
     }
 
@@ -178,7 +178,7 @@ public:
         for (auto pos = pools.size(); pos; --pos) {
             auto& pdata = pools[pos - 1];
             if (pdata.pool) {
-                pdata.pool->erase(entity);
+                pdata.pool->erase(*this, entity);
             }
         }
     }

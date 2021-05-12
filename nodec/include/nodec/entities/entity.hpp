@@ -33,7 +33,6 @@ struct entity_traits<uint32_t> {
     static constexpr Entity version_mask = 0xFFF;
 
     static constexpr size_t entity_shift = 20u;
-
 };
 
 

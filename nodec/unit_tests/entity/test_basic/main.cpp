@@ -1,19 +1,19 @@
 
-
 #include <nodec/logging.hpp>
 #include <nodec/stopwatch.hpp>
 
-#include <nodec/ecs/entity.hpp>
-#include <nodec/ecs/registry.hpp>
-#include <nodec/ecs/sparse_table.hpp>
-
+#include <nodec/entities/entity.hpp>
+#include <nodec/entities/registry.hpp>
+#include <nodec/entities/sparse_table.hpp>
 
 #include <type_traits>
 #include <vector>
 
 #include <cstdlib>
 
+
 using namespace nodec;
+using namespace nodec::entities;
 
 
 /**
@@ -136,64 +136,76 @@ void print(Table& table) {
 
 int main() {
     try {
-        logging::record_handlers += logging::StaticRecordHandler::make_shared(&logging::record_to_stdout_handler);
+        logging::record_handlers().connect(logging::record_to_stdout_handler);
+
         Stopwatch<std::chrono::steady_clock> sw;
 
-
-        ecs::Registry registry;
-
         {
-            ecs::BasicStorage<ecs::Entity, DerivedComponentA> derivedAStorage;
-            auto pair = derivedAStorage.emplace(10);
-            pair.first.bfield = 1;
-            pair.first.dfield = 2;
+            Registry registry;
 
-            auto* baseStorage = static_cast<ecs::BaseStorage<ecs::Entity>*>(&derivedAStorage);
+            for (auto i = 0; i < 10; ++i) {
+                const auto entity = registry.create_entity();
+                auto pair = registry.emplace_component<ComponentA>(entity, i);
 
-            {
-                auto* storage = dynamic_cast<ecs::BasicStorage<ecs::Entity, DerivedComponentA>*>(baseStorage);
-                logging::InfoStream(__FILE__, __LINE__) << storage;
-            }
-
-            {
-                auto* storage = dynamic_cast<ecs::BasicStorage<ecs::Entity, BaseComponent>*>(baseStorage);
-                logging::InfoStream(__FILE__, __LINE__) << storage;
-            }
-            {
-                auto iter = baseStorage->begin();
-                logging::InfoStream(__FILE__, __LINE__) << *iter;
-
-                auto* com_void = baseStorage->try_get_opaque(*iter);
-                auto* com_base = static_cast<BaseComponent*>(com_void);
-                auto* com_derive_a = static_cast<DerivedComponentA*>(com_void);
-                {
-                    //auto* com_derive_a = dynamic_cast<DerivedComponentA*>(com_base);
-
+                if (i % 2) {
+                    auto pair = registry.emplace_component<ComponentB>(entity, Formatter() << i);
                 }
-                logging::InfoStream(__FILE__, __LINE__) << com_base->bfield;
-                logging::InfoStream(__FILE__, __LINE__) << com_derive_a->bfield << ", " << com_derive_a->dfield;
-
-
             }
         }
-        for (auto i = 0; i < 10; ++i) {
-            const auto entity = registry.create_entity();
-            auto& comA = registry.add_component<DerivedComponentA>(entity);
-            logging::InfoStream info(__FILE__, __LINE__);
-            info << entity << ": " << comA.dfield;
-            if (i % 2 == 0) {
-                auto& comB = registry.add_component<DerivedComponentB>(entity);
-                info << ", " << comB.dfield;
-            }
-        }
+        //ecs::Registry registry;
 
-        {
-            auto view = registry.view<BaseComponent>();
-            for (auto entity : view) {
+        //{
+        //    ecs::BasicStorage<ecs::Entity, DerivedComponentA> derivedAStorage;
+        //    auto pair = derivedAStorage.emplace(10);
+        //    pair.first.bfield = 1;
+        //    pair.first.dfield = 2;
 
-                logging::InfoStream(__FILE__, __LINE__) << entity << ": ";
-            }
-        }
+        //    auto* baseStorage = static_cast<ecs::BaseStorage<ecs::Entity>*>(&derivedAStorage);
+
+        //    {
+        //        auto* storage = dynamic_cast<ecs::BasicStorage<ecs::Entity, DerivedComponentA>*>(baseStorage);
+        //        logging::InfoStream(__FILE__, __LINE__) << storage;
+        //    }
+
+        //    {
+        //        auto* storage = dynamic_cast<ecs::BasicStorage<ecs::Entity, BaseComponent>*>(baseStorage);
+        //        logging::InfoStream(__FILE__, __LINE__) << storage;
+        //    }
+        //    {
+        //        auto iter = baseStorage->begin();
+        //        logging::InfoStream(__FILE__, __LINE__) << *iter;
+
+        //        auto* com_void = baseStorage->try_get_opaque(*iter);
+        //        auto* com_base = static_cast<BaseComponent*>(com_void);
+        //        auto* com_derive_a = static_cast<DerivedComponentA*>(com_void);
+        //        {
+        //            //auto* com_derive_a = dynamic_cast<DerivedComponentA*>(com_base);
+
+        //        }
+        //        logging::InfoStream(__FILE__, __LINE__) << com_base->bfield;
+        //        logging::InfoStream(__FILE__, __LINE__) << com_derive_a->bfield << ", " << com_derive_a->dfield;
+
+
+        //    }
+        //}
+        //for (auto i = 0; i < 10; ++i) {
+        //    const auto entity = registry.create_entity();
+        //    auto& comA = registry.add_component<DerivedComponentA>(entity);
+        //    logging::InfoStream info(__FILE__, __LINE__);
+        //    info << entity << ": " << comA.dfield;
+        //    if (i % 2 == 0) {
+        //        auto& comB = registry.add_component<DerivedComponentB>(entity);
+        //        info << ", " << comB.dfield;
+        //    }
+        //}
+
+        //{
+        //    auto view = registry.view<BaseComponent>();
+        //    for (auto entity : view) {
+
+        //        logging::InfoStream(__FILE__, __LINE__) << entity << ": ";
+        //    }
+        //}
 
         //for (auto i = 0; i < 10; ++i) {
         //    const auto entity = registry.create_entity();

@@ -11,14 +11,18 @@ namespace entities {
 
 
 template<typename Entity>
+class BasicRegistry;
+
+
+template<typename Entity>
 class BaseStorage {
 public:
     using iterator = typename std::vector<Entity>::iterator;
     using const_iterator = typename std::vector<Entity>::const_iterator;
 
 public:
+    virtual bool erase(BasicRegistry<Entity>& registry, const Entity entity) = 0;
     virtual bool contains(const Entity entity) const = 0;
-    virtual bool erase(const Entity entity) = 0;
     virtual void* try_get_opaque(const Entity entity) = 0;
 
 public:
@@ -32,9 +36,6 @@ public:
 };
 
 
-template<typename Entity>
-class BasicRegistry;
-
 template<typename Entity, typename Value>
 class BasicStorage : public BaseStorage<Entity> {
     static_assert(std::is_move_constructible_v<Value>&& std::is_move_assignable_v<Value>,
@@ -45,7 +46,7 @@ class BasicStorage : public BaseStorage<Entity> {
 
 public:
     template<typename... Args>
-    std::pair<Value&, bool> emplace(const Entity entity, Args &&... args) {
+    std::pair<Value&, bool> emplace(BasicRegistry<Entity>& registry, const Entity entity, Args &&... args) {
         if (sparse_table.contains(entity)) {
             return { instances[sparse_table[entity]], false };
         }
@@ -54,6 +55,7 @@ public:
         instances.push_back({ args... });
         packed.emplace_back(entity);
 
+        on_construct_(registry, entity);
         return { instances.back(), true };
     }
 
@@ -83,11 +85,13 @@ public:
         return sparse_table.contains(entity);
     }
 
-    bool erase(const Entity entity) {
+    bool erase(BasicRegistry<Entity>& registry, const Entity entity) {
         auto* pos = sparse_table.try_get(entity);
         if (!pos) {
             return false;
         }
+
+        on_destroy_(registry, entity);
 
         // move the back of instances to the removed index.
         auto& other_entity = packed.back();
@@ -133,10 +137,12 @@ public:
         return packed.size();
     }
 
-    typename
-    StorageSignal::Interface on_destroy() {
-        on_destroy_.s();
-        return on_destroy_;
+    decltype(auto) on_destroy() {
+        return on_destroy_.interface();
+    }
+
+    decltype(auto) on_construct() {
+        return on_construct_.interface();
     }
     
 private:
@@ -144,9 +150,8 @@ private:
     std::vector<Entity> packed;
     std::vector<Value> instances;
 
+    StorageSignal on_construct_;
     StorageSignal on_destroy_;
-    //event::Event<BasicRegistry<Entity>&, const Entity> on_destroy;
-    //event::Event<BasicRegistry<Entity>&, const Entity> on_construct;
 
 };
 
