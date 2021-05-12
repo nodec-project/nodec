@@ -1,6 +1,7 @@
 
 #include <scene_set/components/standard.hpp>
 #include <scene_set/systems/hierarchy_system.hpp>
+#include <scene_set/systems/impl/impl_hierarchy_system.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/formatter.hpp>
@@ -12,14 +13,75 @@
 using namespace nodec;
 using namespace scene_set;
 
+void print_hierarchy(SceneRegistry& registry) {
+    auto view = registry.view<components::Hierarchy>();
+
+    for (auto entity : view) {
+        auto& hier = registry.get_component<const components::Hierarchy>(entity);
+        logging::InfoStream info(__FILE__, __LINE__);
+        info << "\n" << entity << ": \n";
+        info << "  parent  : " << hier.parent << "\n";
+        info << "  children: ";
+        for (auto child : hier.children) {
+            info << child << ", ";
+        }
+    }
+}
+
 int main() {
     logging::record_handlers().connect(logging::record_to_stdout_handler);
     //logging::record_handlers += event::StaticCallback<const logging::LogRecord&>::make_shared(&logging::record_to_stdout_handler);
     logging::info("Start", __FILE__, __LINE__);
 
-    SceneRegistry registry;
 
     try {
+
+        SceneRegistry registry;
+
+        {
+            systems::impl::init_hierarchy_system(registry);
+        }
+
+        auto entity_root = registry.create_entity();
+        {
+            registry.emplace_component<components::Hierarchy>(entity_root);
+            //auto pair = registry.emplace_component<components::Hierarchy>(entity_root);
+            //logging::InfoStream(__FILE__, __LINE__) << "added hierarch?: " << pair.second;
+
+            registry.emplace_component<components::Name>(entity_root, "ROOT");
+            registry.emplace_component<components::Transform>(entity_root);
+        }
+
+        
+        {
+            auto entity_child_a = registry.create_entity();
+            registry.emplace_component<components::Hierarchy>(entity_child_a);
+            registry.emplace_component<components::Transform>(entity_child_a);
+
+            auto entity_child_a_a = registry.create_entity();
+            registry.emplace_component<components::Transform>(entity_child_a_a);
+            //registry.emplace_component<components::Hierarchy>(entity_child_a_a);
+
+            {
+                //components::Hierarchy::append_child(registry, entity_child_a, entity_child_a);
+                systems::append_child(registry, entity_root, entity_child_a);
+                systems::append_child(registry, entity_child_a, entity_child_a_a);
+                //systems::remove_child(registry, entity_root, entity_child_a);
+                //systems::append_child(registry, entity_child_a_a, entity_root);
+            }
+        }
+    /*    {
+            print_hierarchy(registry);
+        }
+        */
+        {
+
+        }
+
+        {
+            print_hierarchy(registry);
+        }
+
         //logging::info(Formatter() << "test", __FILE__, __LINE__);
 
         //throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
@@ -47,33 +109,6 @@ int main() {
         //auto trfm = components::Transform();
         //trfm.set_local_position(trfm.local_position() + Vector3f(1, 0, 0));
         //logging::InfoStream(__FILE__, __LINE__) << trfm.local_position();
-
-        auto entity_root = registry.create_entity();
-        {
-            registry.emplace_component<components::Hierarchy>(entity_root);
-            auto pair = registry.emplace_component<components::Hierarchy>(entity_root);
-
-            registry.emplace_component<components::Name>(entity_root, "ROOT");
-            registry.emplace_component<components::Transform>(entity_root);
-
-        }
-
-        auto entity_child_a = registry.create_entity();
-        registry.emplace_component<components::Hierarchy>(entity_child_a);
-        registry.emplace_component<components::Transform>(entity_child_a);
-
-        auto entity_child_a_a = registry.create_entity();
-        registry.emplace_component<components::Transform>(entity_child_a_a);
-        //registry.emplace_component<components::Hierarchy>(entity_child_a_a);
-
-
-        {
-            //components::Hierarchy::append_child(registry, entity_child_a, entity_child_a);
-            systems::append_child(registry, entity_root, entity_child_a);
-            systems::append_child(registry, entity_child_a, entity_child_a_a);
-            //systems::remove_child(registry, entity_root, entity_child_a);
-            //systems::append_child(registry, entity_child_a_a, entity_root);
-        }
 
         //std::cout << "--- 1 ---" << std::endl;
         //auto root_object = NodecObject::instanciate<SceneObject>("root");

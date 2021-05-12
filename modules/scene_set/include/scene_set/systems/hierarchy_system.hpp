@@ -6,8 +6,8 @@
 namespace scene_set {
 namespace systems {
 
-void remove_child(SceneRegistry& registry, const SceneEntity& parent, const SceneEntity& child);
 void append_child(SceneRegistry& registry, const SceneEntity parent, const SceneEntity child);
+void remove_child(SceneRegistry& registry, const SceneEntity parent, const SceneEntity child);
 
 }
 }

@@ -1,5 +1,6 @@
-#include <scene_set/systems/hierarchy_system.hpp>
 
+#include <scene_set/systems/hierarchy_system.hpp>
+#include <scene_set/systems/impl/impl_hierarchy_system.hpp>
 
 namespace scene_set {
 namespace systems {
@@ -49,7 +50,7 @@ void append_child(SceneRegistry& registry, const SceneEntity parent, const Scene
     }
 }
 
-void remove_child(SceneRegistry& registry, const SceneEntity& parent, const SceneEntity& child) {
+void remove_child(SceneRegistry& registry, const SceneEntity parent, const SceneEntity child) {
     auto& parent_hier = registry.get_component<components::Hierarchy>(parent);
     auto& child_hier = registry.get_component<components::Hierarchy>(child);
 
@@ -72,7 +73,30 @@ void remove_child(SceneRegistry& registry, const SceneEntity& parent, const Scen
     }
 }
 
+namespace impl {
+
+namespace {
+void handle_hierarchy_remove(SceneRegistry& registry, const SceneEntity entity) {
+    auto& hier = registry.get_component<components::Hierarchy>(entity);
+    
+    if (hier.parent != entities::null_entity) {
+        auto& parent_hier = registry.get_component<components::Hierarchy>(hier.parent);
+        remove_child(registry, hier.parent, entity);
+    }
+    
+    for (auto child : hier.children) {
+
+    }
+}
+} // unnameed namespace
 
 
+void init_hierarchy_system(SceneRegistry& registry) {
+    registry.on_destroy<components::Hierarchy>().connect(handle_hierarchy_remove);
 }
-}
+
+} // namespace impl
+
+
+} // namespace systems
+} // namespace scene_set

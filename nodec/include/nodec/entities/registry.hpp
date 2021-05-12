@@ -234,6 +234,15 @@ public:
         return { *pool_assured<std::remove_const_t<Components>>()... };
     }
 
+    template<typename Component>
+    decltype(auto) on_destroy() {
+        return pool_assured<Component>()->on_destroy();
+    }
+
+    template<typename Component>
+    decltype(auto) on_construct() {
+        return pool_assured<Component>()->on_construct();
+    }
 
 private:
     std::vector<Entity> entities;

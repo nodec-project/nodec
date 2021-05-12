@@ -137,6 +137,7 @@ public:
         return packed.size();
     }
 
+public:
     decltype(auto) on_destroy() {
         return on_destroy_.interface();
     }
