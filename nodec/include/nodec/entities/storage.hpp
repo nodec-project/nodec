@@ -46,9 +46,9 @@ class BasicStorage : public BaseStorage<Entity> {
 
 public:
     template<typename... Args>
-    std::pair<Value&, bool> emplace(BasicRegistry<Entity>& registry, const Entity entity, Args &&... args) {
+    bool emplace(BasicRegistry<Entity>& registry, const Entity entity, Args &&... args) {
         if (sparse_table.contains(entity)) {
-            return { instances[sparse_table[entity]], false };
+            return false;
         }
 
         sparse_table[entity] = instances.size();
@@ -56,7 +56,8 @@ public:
         packed.emplace_back(entity);
 
         on_construct_(registry, entity);
-        return { instances.back(), true };
+
+        return true;
     }
 
     const Value* try_get(const Entity entity) const {
@@ -86,12 +87,17 @@ public:
     }
 
     bool erase(BasicRegistry<Entity>& registry, const Entity entity) {
-        auto* pos = sparse_table.try_get(entity);
-        if (!pos) {
+        if (!sparse_table.contains(entity)) {
             return false;
         }
 
-        on_destroy_(registry, entity);
+        on_destroy_(registry, entity); // cause structual changes.
+
+        auto *pos = sparse_table.try_get(entity);
+        if (!pos) {
+            // maybe someone delete this entity while on_destroy_() runnring.
+            return true;
+        }
 
         // move the back of instances to the removed index.
         auto& other_entity = packed.back();

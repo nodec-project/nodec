@@ -159,7 +159,7 @@ public:
     class Connection;
 
     /**
-    * @brief The temporary connection object. 
+    * @brief The temporary connection object.
     *   Operations on connections are possible only after they are assigned.
     *
     * @warning
@@ -351,12 +351,32 @@ public:
 
 private:
     bool calling{ false };
-
-
 };
 
+template<typename Connection>
+class ScopedBlock {
+public:
+    /**
+    * @brief Construct and block
+    */
+    explicit ScopedBlock(Connection& conn)
+        : conn(conn) {
+        conn.block();
+    }
 
-}
+    ~ScopedBlock() noexcept {
+        conn.unblock();
+    }
+
+
+    ScopedBlock(const ScopedBlock&) = delete;
+    ScopedBlock& operator=(const ScopedBlock&) = delete;
+
+private:
+    Connection& conn;
+};
+
+} // namespace signals
 }
 
 

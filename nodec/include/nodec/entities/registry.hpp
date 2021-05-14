@@ -149,7 +149,7 @@ public:
 
 
     template<typename Component, typename... Args>
-    std::pair<Component&, bool> emplace_component(const Entity entity, Args &&... args) {
+    decltype(auto) emplace_component(const Entity entity, Args &&... args) {
         if (!is_valid(entity)) {
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }

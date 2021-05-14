@@ -75,25 +75,6 @@ void remove_child(SceneRegistry& registry, const SceneEntity parent, const Scene
 
 namespace impl {
 
-namespace {
-void handle_hierarchy_remove(SceneRegistry& registry, const SceneEntity entity) {
-    auto& hier = registry.get_component<components::Hierarchy>(entity);
-    
-    if (hier.parent != entities::null_entity) {
-        auto& parent_hier = registry.get_component<components::Hierarchy>(hier.parent);
-        remove_child(registry, hier.parent, entity);
-    }
-    
-    for (auto child : hier.children) {
-
-    }
-}
-} // unnameed namespace
-
-
-void init_hierarchy_system(SceneRegistry& registry) {
-    registry.on_destroy<components::Hierarchy>().connect(handle_hierarchy_remove);
-}
 
 } // namespace impl
 

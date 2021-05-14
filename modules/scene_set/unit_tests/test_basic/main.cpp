@@ -37,9 +37,10 @@ int main() {
     try {
 
         SceneRegistry registry;
+        systems::impl::HierarchySystem hierarchySystem;
 
         {
-            systems::impl::init_hierarchy_system(registry);
+            hierarchySystem.init(registry);
         }
 
         auto entity_root = registry.create_entity();
@@ -52,11 +53,12 @@ int main() {
             registry.emplace_component<components::Transform>(entity_root);
         }
 
-        
+
         {
             auto entity_child_a = registry.create_entity();
             registry.emplace_component<components::Hierarchy>(entity_child_a);
             registry.emplace_component<components::Transform>(entity_child_a);
+
 
             auto entity_child_a_a = registry.create_entity();
             registry.emplace_component<components::Transform>(entity_child_a_a);
@@ -69,14 +71,16 @@ int main() {
                 //systems::remove_child(registry, entity_root, entity_child_a);
                 //systems::append_child(registry, entity_child_a_a, entity_root);
             }
-        }
-    /*    {
+            {
+                auto entity = registry.create_entity();
+                systems::append_child(registry, entity_child_a_a, entity);
+                systems::append_child(registry, entity_root, entity);
+            }
             print_hierarchy(registry);
-        }
-        */
-        {
 
+            registry.destroy_entity(entity_child_a);
         }
+
 
         {
             print_hierarchy(registry);
