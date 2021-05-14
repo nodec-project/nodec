@@ -7,17 +7,13 @@
 #include <bitset>
 
 
-namespace input
-{
-namespace mouse
-{
-namespace impl
-{
+namespace input {
+namespace mouse {
+namespace impl {
 
-class MouseModule : public Mouse
-{
+class MouseModule : public Mouse {
 public:
-    MouseModule() {};
+    MouseModule() = default;
 
 public:
     nodec::Vector2i position() const noexcept override;
@@ -25,12 +21,19 @@ public:
     bool get_button_up(MouseButton button) override;
     bool get_button_pressed(MouseButton button) override;
 
+    MouseEventSignal::Interface& on_mouse_event() override {
+        return on_mouse_event_;
+    }
+
 public:
     void flush();
 
     void handle_mouse_move(nodec::Vector2i position);
     void handle_button_press(MouseButton button, nodec::Vector2i position);
     void handle_button_release(MouseButton button, nodec::Vector2i position);
+
+private:
+    MouseEventSignal on_mouse_event_;
 
 private:
     static constexpr unsigned int num_buttons = 32;

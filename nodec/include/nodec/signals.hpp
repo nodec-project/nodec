@@ -19,7 +19,7 @@ namespace signals {
 namespace details {
 
 inline void throw_broken_connection_exception(const char* file, size_t line) {
-    throw std::logic_error(error_fomatter::type_file_line<std::logic_error>(
+    throw std::logic_error(error_fomatter::with_type_file_line<std::logic_error>(
         "This connection is broken.",
         file, line
         ));
@@ -171,7 +171,7 @@ public:
     class TemporaryConnection {
     public:
         TemporaryConnection(BaseConnection* ptr)
-            :ptr(ptr) {
+            : ptr(ptr) {
         }
 
         TemporaryConnection(const TemporaryConnection&) = delete;
@@ -275,8 +275,6 @@ public:
     SignalInterface& operator= (const BaseSignal&) = delete;
 
 public:
-
-
     template<class F>
     TemporaryConnection connect(F&& functor) {
         size_t idx = base_sig.conns.size();
@@ -343,10 +341,6 @@ public:
                 Interface::base_sig.calls.resize(sz);
             }
         }
-    }
-
-    Interface& interface() {
-        return *this;
     }
 
 private:

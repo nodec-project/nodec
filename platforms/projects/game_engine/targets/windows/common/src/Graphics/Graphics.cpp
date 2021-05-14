@@ -4,9 +4,6 @@
 
 #include <d3dcompiler.h>
 
-#include <nodec/nodec_exception.hpp>
-
-
 #include <sstream>
 
 #pragma comment(lib, "d3d11.lib")
@@ -16,10 +13,8 @@
 namespace wrl = Microsoft::WRL;
 //namespace dx = DirectX;
 
-void Graphics::ThrowIfError(HRESULT hr, const char* file, size_t line)
-{
-    if (FAILED(hr))
-    {
+void Graphics::ThrowIfError(HRESULT hr, const char* file, size_t line) {
+    if (FAILED(hr)) {
         infoLogger.Dump(nodec::logging::Level::Error);
         throw HrException(hr, file, line);
     }
@@ -27,8 +22,7 @@ void Graphics::ThrowIfError(HRESULT hr, const char* file, size_t line)
 
 Graphics::Graphics(HWND hWnd, int width, int height) :
     width(width),
-    height(height)
-{
+    height(height) {
     DXGI_SWAP_CHAIN_DESC sd = {};
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
@@ -129,8 +123,7 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> Successfully initialized." << std::flush;
 }
 
-Graphics::~Graphics()
-{
+Graphics::~Graphics() {
     infoLogger.DumpIfAny(nodec::logging::Level::Info);
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> End Graphics." << std::flush;
 }
@@ -143,8 +136,7 @@ UINT Graphics::GetWidth() noexcept { return width; }
 UINT Graphics::GetHeight() noexcept { return height; }
 
 
-void Graphics::BeginFrame() noexcept
-{
+void Graphics::BeginFrame() noexcept {
     ImGui_ImplDX11_NewFrame();
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
@@ -153,11 +145,9 @@ void Graphics::BeginFrame() noexcept
 
     pContext->ClearRenderTargetView(pTarget.Get(), color);
     pContext->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
-
 }
 
-void Graphics::EndFrame()
-{
+void Graphics::EndFrame() {
     ImGui::Render();
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
@@ -170,33 +160,27 @@ void Graphics::EndFrame()
 
     HRESULT hr;
     infoLogger.SetLatest();
-    if (FAILED(hr = pSwap->Present(1u, 0u)))
-    {
+    if (FAILED(hr = pSwap->Present(1u, 0u))) {
         infoLogger.Dump(nodec::logging::Level::Fatal);
-        if (hr == DXGI_ERROR_DEVICE_REMOVED)
-        {
+        if (hr == DXGI_ERROR_DEVICE_REMOVED) {
             throw DeviceRemovedException(pDevice->GetDeviceRemovedReason(), __FILE__, __LINE__);
         }
-        else
-        {
+        else {
             throw HrException(hr, __FILE__, __LINE__);
         }
     }
 }
 
-void Graphics::DrawIndexed(UINT count)
-{
+void Graphics::DrawIndexed(UINT count) {
     infoLogger.SetLatest();
     pContext->DrawIndexed(count, 0u, 0u);
     infoLogger.DumpIfAny(nodec::logging::Level::Warn);
 }
 
-void Graphics::DrawTestTriangle()
-{
+void Graphics::DrawTestTriangle() {
     namespace wrl = Microsoft::WRL;
 
-    struct Vertex
-    {
+    struct Vertex {
         float x;
         float y;
     };
@@ -268,17 +252,4 @@ void Graphics::DrawTestTriangle()
 
     //infoLogger.Dump(nodec::logging::Level::Debug);
 }
-// === Exception ===
-Graphics::HrException::HrException(HRESULT hr, const char* file, size_t line) noexcept :
-    Exception(file, line)
-{
 
-    std::ostringstream oss;
-    oss << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
-        << " (" << (unsigned long)hr << ")" << std::endl;
-
-    message = oss.str();
-}
-
-
-// End Exception ===

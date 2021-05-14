@@ -3,27 +3,17 @@
 
 #include <input/mouse/mouse_button.hpp>
 
-#include <nodec/event.hpp>
+#include <nodec/signals.hpp>
+#include <nodec/macros.hpp>
 #include <nodec/vector2.hpp>
 
-namespace input
-{
-namespace mouse
-{
+namespace input {
+namespace mouse {
 
-class Mouse
-{
-private:
-    NODEC_DISABLE_COPY(Mouse);
-
+class Mouse {
 public:
-    Mouse() {}
-
-public:
-    struct Event
-    {
-        enum class Type
-        {
+    struct Event {
+        enum class Type {
             Press,
             Release,
             Move
@@ -32,15 +22,16 @@ public:
         Event(Type type, MouseButton button, nodec::Vector2i position) :
             type(type),
             button(button),
-            position(position)
-        {
+            position(position) {
         }
 
         Type type;
         MouseButton button;
         nodec::Vector2i position;
-
     };
+
+public:
+    Mouse() = default;
 
 public:
     virtual nodec::Vector2i position() const noexcept = 0;
@@ -49,11 +40,15 @@ public:
     virtual bool get_button_pressed(MouseButton button) = 0;
 
 public:
-    nodec::event::Event<const Event&> on_mouse_event;
+    using MouseEventSignal = nodec::signals::Signal<void(const Event&)>;
 
+    virtual MouseEventSignal::Interface& on_mouse_event() = 0;
+
+private:
+    NODEC_DISABLE_COPY(Mouse);
 };
 
-} 
+}
 }
 
 #endif

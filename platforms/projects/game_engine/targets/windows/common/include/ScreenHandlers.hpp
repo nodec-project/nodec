@@ -2,86 +2,68 @@
 
 #include "Window.hpp"
 
-#include <nodec_modules/screen/screen_module.hpp>
+#include <screen/impl/screen_module.hpp>
 
 #include <nodec/macros.hpp>
-#include <nodec/event.hpp>
+#include <nodec/signals.hpp>
 
-class ScreenHandlers
-{
-    using ResolutionChangeCallback
-        = nodec::event::MemberCallback<
-        ScreenHandlers,
-        nodec_modules::screen::ScreenModule&, const nodec::Vector2i&
-        >;
-
-    using SizeChangeCallback
-        = nodec::event::MemberCallback<
-        ScreenHandlers,
-        nodec_modules::screen::ScreenModule&, const nodec::Vector2i&
-        >;
-
-    using TitleChangeCallback
-        = nodec::event::MemberCallback<
-        ScreenHandlers,
-        nodec_modules::screen::ScreenModule&, const std::string&
-        >;
-
+class ScreenHandlers {
 public:
-    static void SetupOnBootingHandlers(
-        std::shared_ptr<ScreenHandlers> handlers,
-        nodec_modules::screen::ScreenModule& screenModule
+    void SetupOnBootingHandlers(
+        screen::impl::ScreenModule& screenModule
     );
 
-    static void SetupRuntimeHandlers(
-        std::shared_ptr<ScreenHandlers> handlers,
-        Window* pWindow,
-        nodec_modules::screen::ScreenModule& screenModule
+    void SetupRuntimeHandlers(
+        screen::impl::ScreenModule& screenModule,
+        Window* pWindow
     );
 
 public:
     ScreenHandlers();
 
 
-    void HandleResolutionChangeOnBoot(
-        nodec_modules::screen::ScreenModule& screenModule,
+    virtual void HandleResolutionChangeOnBoot(
+        screen::impl::ScreenModule& screenModule,
         const nodec::Vector2i& resolution
     );
 
-    void HandleSizeChangeOnBoot(
-        nodec_modules::screen::ScreenModule& screenModule,
+    virtual void HandleSizeChangeOnBoot(
+        screen::impl::ScreenModule& screenModule,
         const nodec::Vector2i& size
     );
 
-    void HandleTitleChangeOnBoot(
-        nodec_modules::screen::ScreenModule& screenModule,
+    virtual void HandleTitleChangeOnBoot(
+        screen::impl::ScreenModule& screenModule,
         const std::string& title
     );
 
 
-    void HandleResolutionChangeOnRuntime(
-        nodec_modules::screen::ScreenModule& screenModule,
+    virtual void HandleResolutionChangeOnRuntime(
+        screen::impl::ScreenModule& screenModule,
         const nodec::Vector2i& resolution
     );
 
-    void HandleSizeChangeOnRuntime(
-        nodec_modules::screen::ScreenModule& screenModule,
+    virtual void HandleSizeChangeOnRuntime(
+        screen::impl::ScreenModule& screenModule,
         const nodec::Vector2i& size
     );
 
-    void HandleTitleChangeOnRuntime(
-        nodec_modules::screen::ScreenModule& screenModule,
+    virtual void HandleTitleChangeOnRuntime(
+        screen::impl::ScreenModule& screenModule,
         const std::string& title
     );
 
 private:
     Window* pWindow;
 
-    ResolutionChangeCallback::SharedPtr resolutionChangeCallback;
+    screen::impl::ScreenModule::ResolutionChangeSignal::Connection
+        resolutionChangeConnection;
 
-    SizeChangeCallback::SharedPtr sizeChangeCallback;
+    screen::impl::ScreenModule::SizeChangeSignal::Connection
+        sizeChangeConnection;
 
-    TitleChangeCallback::SharedPtr titleChangeCallback;
+    screen::impl::ScreenModule::TitleChangeSignal::Connection
+        titleChangeConnection;
 
 private:
     NODEC_DISABLE_COPY(ScreenHandlers);

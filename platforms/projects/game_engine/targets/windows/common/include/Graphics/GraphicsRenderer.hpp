@@ -5,7 +5,7 @@
 #include "ConstantBuffer.hpp"
 #include "Sampler.hpp"
 
-#include <nodec_modules/rendering/interfaces/rendering.hpp>
+//#include <nodec_modules/rendering/interfaces/rendering.hpp>
 
 #include <DirectXMath.h>
 #include <unordered_map>

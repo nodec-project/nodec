@@ -5,11 +5,9 @@
 
 #include <unordered_map>
 
-namespace imwindow
-{
+namespace imwindow {
 
-namespace impl
-{
+namespace impl {
 
 
 void update_windows();

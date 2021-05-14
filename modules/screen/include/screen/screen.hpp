@@ -1,20 +1,16 @@
-#ifndef NODEC_MODULES__SCREEN__INTERFACES__SCREEN_HPP_
-#define NODEC_MODULES__SCREEN__INTERFACES__SCREEN_HPP_
+#ifndef SCREEN__SCREEN_HPP_
+#define SCREEN__SCREEN_HPP_
 
 #include <nodec/vector2.hpp>
-#include <nodec/module_interface.hpp>
+#include <nodec/macros.hpp>
 
-namespace nodec_modules {
 namespace screen {
-namespace interfaces {
 
 
-class Screen : public nodec::ModuleInterface
-{
+class Screen {
 public:
-    using ModuleInterface::ModuleInterface;
+    Screen() = default;
 
-public:
     virtual nodec::Vector2i resolution() const noexcept = 0;
     virtual void set_resolution(const nodec::Vector2i& resolution) = 0;
 
@@ -24,12 +20,12 @@ public:
     virtual std::string title() const noexcept = 0;
     virtual void set_title(const std::string& title) = 0;
 
+private:
+    NODEC_DISABLE_COPY(Screen);
 };
 
 
-} // namespace interfaces
 } // namespace screen
-} // namespace nodec_modules
 
 
 #endif

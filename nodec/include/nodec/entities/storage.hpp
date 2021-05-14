@@ -144,13 +144,14 @@ public:
     }
 
 public:
-    decltype(auto) on_destroy() {
-        return on_destroy_.interface();
+    typename StorageSignal::Interface& on_construct() {
+        return on_construct_;
     }
 
-    decltype(auto) on_construct() {
-        return on_construct_.interface();
+    typename StorageSignal::Interface& on_destroy() {
+        return on_destroy_;
     }
+
     
 private:
     SparseTable<size_t> sparse_table;
@@ -159,7 +160,6 @@ private:
 
     StorageSignal on_construct_;
     StorageSignal on_destroy_;
-
 };
 
 

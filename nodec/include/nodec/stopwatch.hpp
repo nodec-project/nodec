@@ -4,27 +4,21 @@
 
 #include <chrono>
 
-namespace nodec
-{
+namespace nodec {
 template<typename ClockT>
-class Stopwatch
-{
+class Stopwatch {
 public:
-    Stopwatch() :
-        is_running_(false)
-    {
+    Stopwatch()
+        : is_running_(false) {
     }
 
     ~Stopwatch() {}
 
 public:
-
     bool is_running() const noexcept { return is_running_; }
 
-    void start()
-    {
-        if (is_running_)
-        {
+    void start() {
+        if (is_running_) {
             return;
         }
         start_time = ClockT::now();
@@ -32,50 +26,42 @@ public:
         is_running_ = true;
     }
 
-    void stop()
-    {
+    void stop() {
         //std::chrono::system_clock::
-        if (!is_running_)
-        {
+        if (!is_running_) {
             return;
         }
         stop_time = ClockT::now();
         is_running_ = false;
     }
 
-    void reset()
-    {
+    void reset() {
         stop();
         start_time = ClockT::time_point();
         stop_time = ClockT::time_point();
         checkpoint_time = ClockT::time_point();
     }
 
-    void restart()
-    {
+    void restart() {
         reset();
         start();
     }
 
-    typename ClockT::duration lap()
-    {
+    typename ClockT::duration lap() {
         auto current_time_ = current_time();
         auto lap_time = current_time_ - checkpoint_time;
         checkpoint_time = current_time_;
         return lap_time;
     }
 
-    typename ClockT::duration elapsed() const
-    {
+    typename ClockT::duration elapsed() const {
         return current_time() - start_time;
     }
 
 private:
-    std::chrono::time_point<ClockT> current_time() const
-    {
+    std::chrono::time_point<ClockT> current_time() const {
         auto current_time_ = stop_time;
-        if (is_running_)
-        {
+        if (is_running_) {
             current_time_ = ClockT::now();
         }
         return current_time_;

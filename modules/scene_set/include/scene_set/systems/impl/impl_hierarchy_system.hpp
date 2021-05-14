@@ -13,7 +13,8 @@ namespace impl {
 
 
 class HierarchySystem {
-    using RegistryConnection = nodec::signals::SignalInterface<void(SceneRegistry&, const SceneEntity)>::Connection;
+    using RegistryConnection = nodec::signals::Signal<void(SceneRegistry&, const SceneEntity)>::Connection;
+
 public:
     void init(SceneRegistry& registry) {
         on_destroy_connection

@@ -78,9 +78,11 @@ int main() {
             }
             print_hierarchy(registry);
 
+            logging::info("Destroy", __FILE__, __LINE__);
             registry.destroy_entity(entity_child_a);
         }
 
+        
 
         {
             print_hierarchy(registry);

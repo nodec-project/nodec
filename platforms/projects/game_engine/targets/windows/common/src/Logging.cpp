@@ -2,35 +2,40 @@
 
 #include "Logging.hpp"
 
-#include <nodec/nodec_exception.hpp>
+#include <nodec/error_formatter.hpp>
+
 #include <fstream>
 #include <sstream>
 
-static std::ofstream logFile;
-static bool initialized = false;
+namespace {
 
-static void RecordToFileHandler(const nodec::logging::LogRecord& record)
-{
+std::ofstream logFile;
+bool initialized = false;
+
+void RecordToFileHandler(const nodec::logging::LogRecord& record) {
     logFile << record << "\n";
 }
 
-static auto handler = nodec::logging::StaticRecordHandler::make_shared(RecordToFileHandler);
+}
 
-void InitLogging(nodec::logging::Level level)
-{
+
+void InitLogging(nodec::logging::Level level) {
     if (initialized) return;
 
     logFile.open("output.log", std::ios::binary);
-    if (!logFile)
-    {
-        throw nodec::NodecException("Logging initialize failed. cannot open the log file.", __FILE__, __LINE__);
+    if (!logFile) {
+        throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
+            "Logging initialize failed. cannot open the log file.",
+            __FILE__, __LINE__
+            ));
     }
 
     nodec::logging::set_level(level);
-    nodec::logging::record_handlers += handler;
+    nodec::logging::record_handlers().connect(RecordToFileHandler);
 
     nodec::logging::InfoStream info_stream(__FILE__, __LINE__);
-    info_stream << "[Logging] >>> Logging successfully initiallized.\n"
+    info_stream
+        << "[Logging] >>> Logging successfully initiallized.\n"
         << "log_level: " << level
         << std::flush;
 

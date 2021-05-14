@@ -18,21 +18,11 @@ namespace nodec {
 */
 namespace unicode {
 
-class IllegalCharacterException : public std::runtime_error {
-public:
-    using runtime_error::runtime_error;
-};
-
-class BufferRangeException : public  std::runtime_error {
-public:
-    using runtime_error::runtime_error;
-};
-
 
 namespace details {
 
 inline void throw_illegal_character_exception(const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
         "Illegal character found.",
         file, line
         ));
@@ -40,7 +30,7 @@ inline void throw_illegal_character_exception(const char* file, size_t line) {
 
 
 inline void throw_buffer_range_exception(const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
         "Cannot add characters to buffer, output is too small.",
         file, line
         ));

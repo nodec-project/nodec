@@ -1,6 +1,8 @@
 #include "Application.hpp"
-#include "Window.hpp"
-#include "Logging.hpp"
+#include "EditorScreenHandlers.hpp"
+
+#include <Window.hpp>
+#include <Logging.hpp>
 
 #include <input/keyboard/impl/keyboard_module.hpp>
 #include <input/mouse/impl/mouse_module.hpp>
@@ -9,35 +11,52 @@
 #include <game_engine/impl/game_engine_module.hpp>
 #include <game_editor/impl/menu_impl.hpp>
 
-#include <nodec/object.hpp>
+#include <nodec/error_formatter.hpp>
 
 
-int Application::main_impl()
-{
+int Application::main_impl() {
+    using namespace nodec;
 
-    auto gameEngineModule = nodec::Object::make_holder<game_engine::impl::GameEngineModule>();
-    game_engine::impl::current = gameEngineModule;
+    logging::InfoStream(__FILE__, __LINE__)
+        << "[Main] >>> launch the Engine.";
+
+    game_engine::impl::GameEngineModule gameEngineModule;
+    game_engine::impl::set_current(&gameEngineModule);
+
+    EditorScreenHandlers screenHandlers;
+    screenHandlers.SetupOnBootingHandlers(gameEngineModule.screen_module());
+
+    logging::InfoStream(__FILE__, __LINE__)
+        << "[Main] >>> boot the Engine.";
+
+    if (!game_engine::impl::boot(gameEngineModule)) {
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
+            "Failed to boot the engine.",
+            __FILE__, __LINE__
+            ));
+    }
 
 
-
-    Window window(1280, 720,
-                  1280, 720,
+    Window window(gameEngineModule.screen_module().size_internal.x, 
+                  gameEngineModule.screen_module().size_internal.y,
+                  gameEngineModule.screen_module().resolution_internal.x,
+                  gameEngineModule.screen_module().resolution_internal.y,
                   L"Nodec Game Editor",
-                  &(gameEngineModule->keyboard_module()),
-                  &(gameEngineModule->mouse_module())
+                  &(gameEngineModule.keyboard_module()),
+                  &(gameEngineModule.mouse_module())
     );
+    window.SetTitle(gameEngineModule.screen_module().title_internal + " - Editor Mode");
 
-
+    screenHandlers.SetupRuntimeHandlers(gameEngineModule.screen_module(), &window);
+    
     int exitCode;
-    while (true)
-    {
-        if (!Window::ProcessMessages(exitCode))
-        {
+    while (true) {
+        if (!Window::ProcessMessages(exitCode)) {
             break;
         }
 
         window.Gfx().BeginFrame();
-
+        
         bool showDemoWindow = true;
         ImGui::ShowDemoWindow(&showDemoWindow);
 

@@ -8,9 +8,6 @@ namespace nodec
 
 class Application
 {
-private:
-    NODEC_DISABLE_COPY(Application);
-
 public:
     Application() {};
     virtual ~Application() {};
@@ -21,6 +18,8 @@ protected:
     virtual int main() = 0;
     virtual int on_error_exit() = 0;
 
+private:
+    NODEC_DISABLE_COPY(Application);
 };
 
 }

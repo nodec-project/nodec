@@ -3,35 +3,26 @@
 
 #include <input/keyboard/key.hpp>
 
-#include <nodec/event.hpp>
+#include <nodec/macros.hpp>
+#include <nodec/signals.hpp>
 
-namespace input
-{
-namespace keyboard
-{
+namespace input {
+namespace keyboard {
 
-class Keyboard
-{
-private:
-    NODEC_DISABLE_COPY(Keyboard);
+class Keyboard {
+public:
+    Keyboard() = default;
 
 public:
-    Keyboard() {};
-
-public:
-
-    struct Event
-    {
-        enum class Type
-        {
+    struct Event {
+        enum class Type {
             Press,
             Release
         };
 
-        Event(Type type, Key key):
+        Event(Type type, Key key) :
             type(type),
-            key(key)
-        {
+            key(key) {
         }
 
         Type type;
@@ -44,12 +35,17 @@ public:
     virtual bool get_key_up(Key key) const noexcept = 0;
 
 public:
-    nodec::event::Event<unsigned char> on_text_input;
-    nodec::event::Event<const Event&> on_keyboard_event;
+    using TextInputSignal = nodec::signals::Signal<void(unsigned char)>;
+    using KeyboardEventSignal = nodec::signals::Signal<void(const Event&)>;
 
+    virtual TextInputSignal::Interface& on_text_input() = 0;
+    virtual KeyboardEventSignal::Interface& on_keyboard_event() = 0;
+
+private:
+    NODEC_DISABLE_COPY(Keyboard);
 };
 
-} 
-} 
+}
+}
 
 #endif

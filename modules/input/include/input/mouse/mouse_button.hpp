@@ -2,13 +2,10 @@
 #define INPUT__MOUSE__MOUSE_BUTTON_HPP_
 
 
-namespace input
-{
-namespace mouse
-{
+namespace input {
+namespace mouse {
 
-enum class MouseButton
-{
+enum class MouseButton {
     None,
     Left,
     Right,

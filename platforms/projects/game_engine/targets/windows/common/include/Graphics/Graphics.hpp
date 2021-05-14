@@ -2,34 +2,51 @@
 
 #include "DxgiInfoLogger.hpp"
 
-#include <nodec/nodec_exception.hpp>
+#include <nodec/error_formatter.hpp>
 #include <nodec/macros.hpp>
 
 #include <Windows.h>
 #include <d3d11.h>
 #include <wrl.h>
 
-class Graphics
-{
+#include <stdexcept>
+
+
+class Graphics {
 public:
-    class Exception : public nodec::NodecException
-    {
-        using NodecException::NodecException;
-    };
-
-    class HrException : public Exception
-    {
+    class HrException : public std::runtime_error {
     public:
-        HrException(HRESULT hr, const char* file, size_t line) noexcept;
-        //const char* type() const noexcept override { return "Graphics::HrException"; }
+        /*static void Throw(HRESULT hr, const char* file, size_t line) {
+            throw HrException(hr, typeid(HrException).name(), file, line);
+        }*/
 
+        HrException(HRESULT hr, const char* file, size_t line)
+            : HrException(hr, typeid(HrException).name(), file, line) {
+        };
+
+        HrException(HRESULT hr, const char* type, const char* file, size_t line) noexcept
+            : errorCode(hr)
+            , runtime_error(nodec::error_fomatter::with_type_file_line(
+                nodec::Formatter() 
+                << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
+                << " (" << (unsigned long)hr << ")",
+                type, file, line
+            )) {
+        }
+
+    public:
+        HRESULT ErrorCode() const noexcept { return errorCode; }
+
+    private:
+        const HRESULT errorCode;
     };
 
-    class DeviceRemovedException : public HrException
-    {
-        using HrException::HrException;
-        //const char* type() const noexcept override { return "Graphics::DeviceRemovedException";  }
+    class DeviceRemovedException : public HrException {
+    public:
+        DeviceRemovedException(HRESULT hr, const char* file, size_t line)
+            : HrException(hr, typeid(DeviceRemovedException).name(), file, line) {
 
+        }
     };
 
 public:
@@ -60,7 +77,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
     Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView>pDSV;
-    
+
 private:
     NODEC_DISABLE_COPY(Graphics);
 };

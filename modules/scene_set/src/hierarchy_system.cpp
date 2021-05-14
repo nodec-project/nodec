@@ -22,7 +22,7 @@ void append_child(SceneRegistry& registry, const SceneEntity parent, const Scene
     auto grand = parent;
     while (grand != entities::null_entity) {
         if (grand == child) {
-            throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+            throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
                 Formatter() << "Circular reference detected. The given child (entity: " << child
                 << ") was detected in the parents of given parent (entity: " << parent << ").",
                 __FILE__, __LINE__
@@ -58,7 +58,7 @@ void remove_child(SceneRegistry& registry, const SceneEntity parent, const Scene
                                 parent_hier.children.end(),
                                 child);
     if (pos == parent_hier.children.end() || *pos != child) {
-        throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             Formatter() << "The child (entity: " << child << ") is not a child of the given parent (entity: " << parent << ").",
             __FILE__, __LINE__
             ));

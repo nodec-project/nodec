@@ -2,134 +2,102 @@
 
 #include <nodec/logging.hpp>
 
+using namespace nodec;
+
 ScreenHandlers::ScreenHandlers() :
-    pWindow(nullptr)
-{
+    pWindow(nullptr) {
 };
 
 void ScreenHandlers::SetupOnBootingHandlers(
-    std::shared_ptr<ScreenHandlers> handlers,
-    nodec_modules::screen::ScreenModule& screenModule
-)
-{
-    if (handlers->resolutionChangeCallback)
-    {
-        screenModule.on_submit_resolution_change -= handlers->resolutionChangeCallback;
-    }
-
-    if (handlers->sizeChangeCallback)
-    {
-        screenModule.on_submit_size_change -= handlers->sizeChangeCallback;
-    }
-
-    if (handlers->titleChangeCallback)
-    {
-        screenModule.on_submit_title_change -= handlers->titleChangeCallback;
-    }
-
-    handlers->resolutionChangeCallback = ResolutionChangeCallback::make_shared(handlers, &ScreenHandlers::HandleResolutionChangeOnBoot);
-    handlers->sizeChangeCallback = SizeChangeCallback::make_shared(handlers, &ScreenHandlers::HandleSizeChangeOnBoot);
-    handlers->titleChangeCallback = TitleChangeCallback::make_shared(handlers, &ScreenHandlers::HandleTitleChangeOnBoot);
-
-    screenModule.on_submit_resolution_change += handlers->resolutionChangeCallback;
-    screenModule.on_submit_size_change += handlers->sizeChangeCallback;
-    screenModule.on_submit_title_change += handlers->titleChangeCallback;
+    screen::impl::ScreenModule& screenModule
+) {
+    resolutionChangeConnection = screenModule.on_resolution_change().connect(
+        [&](screen::impl::ScreenModule& screen, const Vector2i& resolution) {
+            HandleResolutionChangeOnBoot(screen, resolution);
+        }
+    );
+    sizeChangeConnection = screenModule.on_size_change().connect(
+        [&](screen::impl::ScreenModule& screen, const Vector2i& size) {
+            HandleSizeChangeOnBoot(screen, size);
+        }
+    );
+    titleChangeConnection = screenModule.on_title_change().connect(
+        [&](screen::impl::ScreenModule& screen, const std::string& title) {
+            HandleTitleChangeOnBoot(screen, title);
+        }
+    );
 }
 
 void ScreenHandlers::SetupRuntimeHandlers(
-    std::shared_ptr<ScreenHandlers> handlers, 
-    Window* pWindow,
-    nodec_modules::screen::ScreenModule& screenModule
-)
-{
-    if (handlers->resolutionChangeCallback)
-    {
-        screenModule.on_submit_resolution_change -= handlers->resolutionChangeCallback;
-    }
-
-    if (handlers->sizeChangeCallback)
-    {
-        screenModule.on_submit_size_change -= handlers->sizeChangeCallback;
-    }
-
-    if (handlers->titleChangeCallback)
-    {
-        screenModule.on_submit_title_change -= handlers->titleChangeCallback;
-    }
-    handlers->pWindow = pWindow;
-
-    handlers->resolutionChangeCallback = ResolutionChangeCallback::make_shared(handlers, &ScreenHandlers::HandleResolutionChangeOnRuntime);
-    handlers->sizeChangeCallback = SizeChangeCallback::make_shared(handlers, &ScreenHandlers::HandleSizeChangeOnRuntime);
-    handlers->titleChangeCallback = TitleChangeCallback::make_shared(handlers, &ScreenHandlers::HandleTitleChangeOnRuntime);
-
-    screenModule.on_submit_resolution_change += handlers->resolutionChangeCallback;
-    screenModule.on_submit_size_change += handlers->sizeChangeCallback;
-    screenModule.on_submit_title_change += handlers->titleChangeCallback;
+    screen::impl::ScreenModule& screenModule,
+    Window* pWindow
+) {
+    this->pWindow = pWindow;
+    resolutionChangeConnection = screenModule.on_resolution_change().connect(
+        [&](screen::impl::ScreenModule& screen, const Vector2i& resolution) {
+            HandleResolutionChangeOnRuntime(screen, resolution);
+        }
+    );
+    sizeChangeConnection = screenModule.on_size_change().connect(
+        [&](screen::impl::ScreenModule& screen, const Vector2i& size) {
+            HandleSizeChangeOnRuntime(screen, size);
+        }
+    );
+    titleChangeConnection = screenModule.on_title_change().connect(
+        [&](screen::impl::ScreenModule& screen, const std::string& title) {
+            HandleTitleChangeOnRuntime(screen, title);
+        }
+    );
 }
 
 
 void ScreenHandlers::HandleResolutionChangeOnBoot(
-    nodec_modules::screen::ScreenModule& screenModule,
+    screen::impl::ScreenModule& screenModule,
     const nodec::Vector2i& resolution
-)
-{
-    screenModule.resolution_ = resolution;
+) {
+    screenModule.resolution_internal = resolution;
 }
 void ScreenHandlers::HandleSizeChangeOnBoot(
-    nodec_modules::screen::ScreenModule& screenModule,
+    screen::impl::ScreenModule& screenModule,
     const nodec::Vector2i& size
-)
-{
-    screenModule.size_ = size;
+) {
+    screenModule.size_internal = size;
 }
 void ScreenHandlers::HandleTitleChangeOnBoot(
-    nodec_modules::screen::ScreenModule& screenModule,
+    screen::impl::ScreenModule& screenModule,
     const std::string& title
-)
-{
-    screenModule.title_ = title;
+) {
+    screenModule.title_internal = title;
 }
 
 
 void ScreenHandlers::HandleResolutionChangeOnRuntime(
-    nodec_modules::screen::ScreenModule& screenModule, 
+    screen::impl::ScreenModule& screenModule,
     const nodec::Vector2i& resolution
-)
-{
+) {
 
 }
 void ScreenHandlers::HandleSizeChangeOnRuntime(
-    nodec_modules::screen::ScreenModule& screenModule, 
+    screen::impl::ScreenModule& screenModule,
     const nodec::Vector2i& size
-)
-{
+) {
 
 }
 void ScreenHandlers::HandleTitleChangeOnRuntime(
-    nodec_modules::screen::ScreenModule& screenModule, 
+    screen::impl::ScreenModule& screenModule,
     const std::string& title
-)
-{
-    if (pWindow)
-    {
-        try
-        {
+) {
+    if (pWindow) {
+        try {
             pWindow->SetTitle(title);
+            screenModule.title_internal = title;
         }
-        catch (const nodec::NodecException& e)
-        {
+        catch (const std::exception& e) {
             nodec::logging::ErrorStream(__FILE__, __LINE__)
-                << "[ScreenHandlers] >>> Nodec Exception has been occured while Window::SetTitle().\n"
+                << "[ScreenHandlers] >>> Exception has been occured while Window::SetTitle().\n"
                 << "detail: " << e.what() << std::flush;
         }
-        catch (const std::exception& e)
-        {
-            nodec::logging::ErrorStream(__FILE__, __LINE__)
-                << "[ScreenHandlers] >>> Std Exception has been occured while Window::SetTitle().\n"
-                << "detail: " << e.what() << std::flush;
-        }
-        catch (...)
-        {
+        catch (...) {
             nodec::logging::ErrorStream(__FILE__, __LINE__)
                 << "[ScreenHandlers] >>> Unknown Exception has been occured while Window::SetTitle().\n"
                 << "detail: Unavailable." << std::flush;

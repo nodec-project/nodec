@@ -23,7 +23,7 @@ template<typename FloatT>
 void WavFileSoundIBuffer<FloatT>::open(const std::string& path) {
     file.open(path, std::ios::binary);
     if (!file) {
-        throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             Formatter() << "Cannot open sound file. path: " << path,
             __FILE__, __LINE__
             ));
@@ -32,7 +32,7 @@ void WavFileSoundIBuffer<FloatT>::open(const std::string& path) {
     wav_format::HeaderInfo header_info;
 
     if (!wav_format::parse_header(file, header_info, data_start, data_end)) {
-        throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             Formatter()
             << "Failed to read header (invalid or unsupported file). path: "
             << path,
@@ -43,7 +43,7 @@ void WavFileSoundIBuffer<FloatT>::open(const std::string& path) {
     if ((header_info.format != wav_format::Format::PCM_Integer)
         && (header_info.format != wav_format::Format::PCM_Float)
         && (header_info.format != wav_format::Format::Extensible)) {
-        throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             Formatter()
             << "Unsupported format: format tag (" << std::hex << std::uppercase
             << static_cast<int>(header_info.format) << std::dec << ") is not supported.",
@@ -56,7 +56,7 @@ void WavFileSoundIBuffer<FloatT>::open(const std::string& path) {
         && header_info.bits_per_sample != 16
         && header_info.bits_per_sample != 24
         && header_info.bits_per_sample != 32) {
-        throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             Formatter()
             << "Unsupported sample size: " << header_info.bits_per_sample
             << " bit (Supported sample size are 8/16/24/32 bit)",
@@ -68,14 +68,14 @@ void WavFileSoundIBuffer<FloatT>::open(const std::string& path) {
 
     if (header_info.format == wav_format::Format::Extensible) {
         if (header_info.sub_format == wav_format::SubFormat::None) {
-            throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+            throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
                 "Unsupported format: extensible format with unkown sub format.",
                 __FILE__, __LINE__
                 ));
         }
 
         if (header_info.valid_bits_per_sample != header_info.bits_per_sample) {
-            throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+            throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
                 Formatter()
                 << "Unsupported format: sample size ("
                 << header_info.valid_bits_per_sample << " bits) and "
@@ -90,7 +90,7 @@ void WavFileSoundIBuffer<FloatT>::open(const std::string& path) {
 
     if (format == wav_format::Format::PCM_Float
         && bytes_per_sample != 4) {
-        throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+        throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             Formatter()
             << "Unsupported format: float " << header_info.bits_per_sample << " bit not supported. "
             << "(supported format is 32bit float)",

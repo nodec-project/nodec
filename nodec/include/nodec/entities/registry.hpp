@@ -16,27 +16,21 @@
 namespace nodec {
 namespace entities {
 
-class InvalidEntityException : public std::runtime_error {
-public:
-    using runtime_error::runtime_error;
-};
-
 
 namespace details {
 
 template<typename Entity>
 inline void throw_invalid_entity_exception(const Entity entity, const char* file, size_t line) {
-    throw InvalidEntityException(error_fomatter::type_file_line<InvalidEntityException>(
+    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
         Formatter() << "Invalid entity detected. entity: " << entity
         << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")",
         file, line
         ));
 }
 
-
 template<typename Component, typename Entity>
 inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::type_file_line<std::runtime_error>(
+    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
         Formatter() << "Entity(" << entity << "; position: "
         << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
         << ") doesn't have the component(" << typeid(Component).name() << ").",
@@ -112,7 +106,21 @@ private:
     }
 
 public:
+    /**
+    * @brief Default constructor.
+    */
+    BasicRegistry() = default;
 
+    /**
+    * @brief Default move constructor.
+    */
+    BasicRegistry(BasicRegistry&&) = default;
+
+    /**
+    * @brief Default move assignment operator.
+    * @return This registry.
+    */
+    BasicRegistry& operator=(BasicRegistry&&) = default;
 
     /**
     * @brief Checks if an entity identifier refers to a valid entity.

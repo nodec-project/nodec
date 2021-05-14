@@ -27,22 +27,20 @@ Texture::Texture(Graphics* graphics, const std::string& path)
         }
     }
 
-    std::wstring widePath;
-    Utils::UTF8ToUTF16WString(path, widePath);
-
-
+    std::wstring pathW = nodec::unicode::utf8to16<std::wstring>(path);
+    
     DirectX::ScratchImage image;
     DirectX::TexMetadata metadata;
     switch (imageType)
     {
     case ImageType::TGA:
-        graphics->ThrowIfError(DirectX::LoadFromTGAFile(widePath.c_str(), &metadata, image),
+        graphics->ThrowIfError(DirectX::LoadFromTGAFile(pathW.c_str(), &metadata, image),
                                __FILE__, __LINE__);
         break;
 
     default:
     case ImageType::WIC:
-        graphics->ThrowIfError(DirectX::LoadFromWICFile(widePath.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
+        graphics->ThrowIfError(DirectX::LoadFromWICFile(pathW.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
                                __FILE__, __LINE__);
         break;
     }

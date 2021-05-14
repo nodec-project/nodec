@@ -16,9 +16,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 Window::WindowClass Window::WindowClass::wndClass;
 
 Window::WindowClass::WindowClass()
-    :
-    hInst(GetModuleHandle(nullptr))
-{
+    : hInst(GetModuleHandle(nullptr)) {
     WNDCLASSEX wc = { 0 };
     wc.cbSize = sizeof(wc);
     wc.style = CS_OWNDC;
@@ -36,18 +34,15 @@ Window::WindowClass::WindowClass()
     RegisterClassEx(&wc);
 }
 
-Window::WindowClass::~WindowClass()
-{
+Window::WindowClass::~WindowClass() {
     UnregisterClass(wndClassName, GetInstance());
 }
 
-const wchar_t* Window::WindowClass::GetName() noexcept
-{
+const wchar_t* Window::WindowClass::GetName() noexcept {
     return wndClassName;
 }
 
-HINSTANCE Window::WindowClass::GetInstance() noexcept
-{
+HINSTANCE Window::WindowClass::GetInstance() noexcept {
     return wndClass.hInst;
 }
 
@@ -62,15 +57,13 @@ Window::Window(int width, int height,
     width(width),
     height(height),
     keyboardModule(keyboardModule),
-    mouseModule(mouseModule)
-{
+    mouseModule(mouseModule) {
     RECT wr;
     wr.left = 100;
     wr.right = width + wr.left;
     wr.top = 100;
     wr.bottom = height + wr.top;
-    if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0)
-    {
+    if (AdjustWindowRect(&wr, WS_CAPTION | WS_MINIMIZEBOX | WS_SYSMENU, FALSE) == 0) {
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }
 
@@ -84,8 +77,7 @@ Window::Window(int width, int height,
     );
 
     // create for error.
-    if (hWnd == nullptr)
-    {
+    if (hWnd == nullptr) {
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }
 
@@ -114,49 +106,38 @@ Window::Window(int width, int height,
     ImGui_ImplDX11_Init(pGfx->GetDevice(), pGfx->GetContext());
 }
 
-Window::~Window()
-{
+Window::~Window() {
     // Cleanup
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 
     DestroyWindow(hWnd);
-    
+
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Window] >>> End Window." << std::flush;
 }
 
-void Window::SetTitle(const std::string& title)
-{
-    //std::string wideTitleBytes = nodec::unicode::utf8to16(title);
+void Window::SetTitle(const std::string& title) {
+    std::wstring titleW = nodec::unicode::utf8to16<std::wstring>(title);
 
-    ////nodec::logging::DebugStream(__FILE__, __LINE__) << title.size() << ", " << wideTitleBytes.size() << std::flush;
-
-    //std::wstring wideTitle(reinterpret_cast<wchar_t*>(&wideTitleBytes[0]), wideTitleBytes.size() / 2);
-
-    std::wstring wideTitle;
-    Utils::UTF8ToUTF16WString(title, wideTitle);
-
-    if (SetWindowText(hWnd, wideTitle.c_str()) == 0)
-    {
+    if (SetWindowText(hWnd, titleW.c_str()) == 0) {
         throw HrException(GetLastError(), __FILE__, __LINE__);
     }
 }
 
-Graphics& Window::Gfx()
-{
-    if (!pGfx)
-    {
-        throw NoGfxException(__FILE__, __LINE__);
+Graphics& Window::Gfx() {
+    if (!pGfx) {
+        throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
+            "No Graphics.",
+            __FILE__, __LINE__
+            ));
     }
     return *pGfx;
 }
 
-LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
-{
+LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
     // use create parameter passed in from CreateWindow() to store window class pointer at WinAPI side.
-    if (msg == WM_NCCREATE)
-    {
+    if (msg == WM_NCCREATE) {
         // extract ptr to window class from creation data.
         const CREATESTRUCTW* const pCreate = reinterpret_cast<CREATESTRUCTW*>(lParam);
         Window* const pWnd = static_cast<Window*>(pCreate->lpCreateParams);
@@ -177,8 +158,7 @@ LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPAR
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
-{
+LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
     // retrieve ptr to window instance
     //  pointer is const, value not const
     Window* const pWnd = reinterpret_cast<Window*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
@@ -186,15 +166,12 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
     return pWnd->HandleMsg(hWnd, msg, wParam, lParam);
 }
 
-LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept
-{
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam))
-    {
+LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
         return true;
     }
 
-    switch (msg)
-    {
+    switch (msg) {
         // We don't want the DefProc to handle this message because
         // we want our destructor to destoroy the window, so return 0 instead of break.
     case WM_CLOSE:
@@ -208,14 +185,12 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
         // on window to foreground/background
     case WM_ACTIVATE:
-        if (wParam & WA_ACTIVE)
-        {
+        if (wParam & WA_ACTIVE) {
             // active by keyboard not mouse
             //SetTitle("b");
 
         }
-        else
-        {
+        else {
             // active by mouse
             //SetTitle("c");
         }
@@ -226,8 +201,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // syskey commands need to be handled to track ALT key (VK_MENU) and F10
     case WM_SYSKEYDOWN:
         // filter autorepeat
-        if (!(lParam & 0x40000000))
-        {
+        if (!(lParam & 0x40000000)) {
             keyboardModule->handle_key_press(static_cast<input::keyboard::Key>(wParam));
         }
         break;
@@ -259,7 +233,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     case WM_LBUTTONDOWN:
     {
         const POINTS pt = MAKEPOINTS(lParam);
-        
+
         mouseModule->handle_button_press(input::mouse::MouseButton::Left,
                                          { pt.x, pt.y });
 
@@ -279,7 +253,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         const POINTS pt = MAKEPOINTS(lParam);
 
         mouseModule->handle_button_release(input::mouse::MouseButton::Left,
-                                         { pt.x, pt.y });
+                                           { pt.x, pt.y });
 
         break;
     }
@@ -303,15 +277,12 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
-bool Window::ProcessMessages(int& exit_code) noexcept
-{
+bool Window::ProcessMessages(int& exit_code) noexcept {
     MSG msg;
 
     // while queue has message, remove and dispatch them (but do not block on empty queue)
-    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-    {
-        if (msg.message == WM_QUIT)
-        {
+    while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
+        if (msg.message == WM_QUIT) {
             exit_code = (int)msg.wParam;
             // signals quit
             return false;
@@ -329,8 +300,7 @@ bool Window::ProcessMessages(int& exit_code) noexcept
 /**
 * <https://docs.microsoft.com/en-us/windows/win32/seccrypto/retrieving-error-messages>
 */
-std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
-{
+std::string Window::HrException::TranslateErrorCode(HRESULT hr) noexcept {
     char* pMsgBuf = nullptr;
 
     // windows will allocate memory for err string and make point to it
@@ -344,26 +314,12 @@ std::string Window::Exception::TranslateErrorCode(HRESULT hr) noexcept
     );
 
     // 0 string length returned indicates a failure
-    if (nMsgLen == 0)
-    {
+    if (nMsgLen == 0) {
         return "Undefined error code";
     }
 
     // copy error string from windows-allocated buffer to std::string
-    std::string errorString = nodec::unicode::utf16to8(pMsgBuf);
+    std::string errorString = nodec::unicode::utf16to8<std::string>(std::string(pMsgBuf));
     LocalFree(pMsgBuf);
     return errorString;
-}
-
-Window::HrException::HrException(HRESULT hr, const char* file, size_t line) noexcept
-    :
-    Exception(file, line),
-    hr(hr)
-{
-    std::ostringstream oss;
-    oss << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
-        << " (" << (unsigned long)hr << ")" << std::endl
-        << "[Description] " << Exception::TranslateErrorCode(hr) << std::endl;
-
-    message = oss.str();
 }

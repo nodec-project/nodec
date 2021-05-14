@@ -5,39 +5,39 @@
 #include <input/keyboard/impl/keyboard_module.hpp>
 #include <input/mouse/impl/mouse_module.hpp>
 
-#include <nodec/nodec_exception.hpp>
+#include <nodec/error_formatter.hpp>
 #include <nodec/macros.hpp>
 
 #include <Windows.h>
+
+#include <stdexcept>
 
 
 class Window
 {
 public:
-    class Exception : public nodec::NodecException
+    class HrException : public std::runtime_error
     {
-        using NodecException::NodecException;
     public:
         static std::string TranslateErrorCode(HRESULT hr) noexcept;
-    };
-
-    class HrException : public Exception
-    {
+        
     public:
-        HrException(HRESULT hr, const char* file, size_t line) noexcept;
-        HRESULT error_code() const noexcept { return hr; }
+        HrException(HRESULT hr, const char* file, size_t line) noexcept
+            : errorCode(hr)
+            , runtime_error(nodec::error_fomatter::with_type_file_line<HrException>(
+                nodec::Formatter()
+                << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
+                << " (" << (unsigned long)hr << ")\n"
+                << "[Description] " << TranslateErrorCode(hr),
+                file, line)) {
+        };
+
+        HRESULT ErrorCode() const noexcept { return errorCode; }
+
     private:
-        HRESULT hr;
+        const HRESULT errorCode;
     };
 
-    class NoGfxException : public Exception
-    {
-    public:
-        NoGfxException(const char* file, size_t line) :
-            Exception("No Graphics.", file, line)
-        {
-        }
-    };
 
 private:
     /**
@@ -56,6 +56,7 @@ private:
         static WindowClass wndClass;
         HINSTANCE hInst;
 
+    private:
         NODEC_DISABLE_COPY(WindowClass);
     };
 
@@ -88,5 +89,6 @@ private:
     input::mouse::impl::MouseModule* mouseModule;
     std::unique_ptr<Graphics> pGfx;
 
+private:
     NODEC_DISABLE_COPY(Window);
 };

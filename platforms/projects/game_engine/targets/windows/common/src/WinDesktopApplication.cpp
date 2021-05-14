@@ -6,7 +6,6 @@
 #include "Logging.hpp"
 
 
-#include <nodec/nodec_exception.hpp>
 #include <nodec/logging.hpp>
 
 #include <Windows.h>
@@ -44,10 +43,6 @@ int WinDesktopApplication::on_error_exit()
     try
     {
         throw;
-    }
-    catch (const nodec::NodecException& e)
-    {
-        nodec::logging::fatal(e.what(), __FILE__, __LINE__);
     }
     catch (const std::exception& e)
     {
