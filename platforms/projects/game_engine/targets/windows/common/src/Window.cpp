@@ -1,7 +1,7 @@
 #include "Window.hpp"
 #include "Utils.hpp"
-#include "imgui_backend/imgui_impl_win32.h"
-#include "imgui_backend/imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
 
 #include <nodec/unicode.hpp>
 
@@ -100,10 +100,20 @@ Window::Window(int width, int height,
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
 
+    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    ImGuiStyle& style = ImGui::GetStyle();
+    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        style.WindowRounding = 0.0f;
+        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    }
+
+
     // Init ImGUI Win32 Impl
     ImGui_ImplWin32_Init(hWnd);
     // init imgui d3d impl
     ImGui_ImplDX11_Init(pGfx->GetDevice(), pGfx->GetContext());
+    //io.DisplaySize = ImVec2(gfxWidth / io.DisplayFramebufferScale.x, gfxHeight / io.DisplayFramebufferScale.y);
+
 }
 
 Window::~Window() {
@@ -227,7 +237,10 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         const POINTS pt = MAKEPOINTS(lParam);
 
         mouseModule->handle_mouse_move({ pt.x, pt.y });
+        /*if (ImGui::GetCurrentContext()) {
 
+            ImGui::GetIO().MousePos = ImVec2(pt.x / 1.5, pt.y / 1.5);
+        }*/
         break;
     }
     case WM_LBUTTONDOWN:

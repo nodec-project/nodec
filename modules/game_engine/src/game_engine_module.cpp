@@ -26,7 +26,7 @@ GameEngineModule::GameEngineModule() {
     engine_time_stopwatch_.start();
 
     nodec::logging::InfoStream(__FILE__, __LINE__)
-        << "[GameEngineModule] >>> Sucessfully start up.\n"
+        << "[GameEngineModule] >>> Startup completed successfully.\n"
         << "engine_time: " << engine_time() << "[s]" << std::flush;
 }
 
