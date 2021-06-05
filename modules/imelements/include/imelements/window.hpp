@@ -13,16 +13,28 @@ namespace imelements {
 
 class BaseWindow {
 public:
-    std::string title;
     nodec::Vector2f init_size;
 
 public:
-    BaseWindow(const std::string& title, const nodec::Vector2f& init_size) :
-        title(title),
-        init_size(init_size) {
+    BaseWindow(const char *name, const nodec::Vector2f& init_size)
+        : name_(name)
+        , init_size(init_size)
+        , is_closed_(false)     {
     };
+    virtual ~BaseWindow() {}
 
     virtual void on_gui() {};
+
+    void close() {
+        is_closed_ = true;
+    }
+
+    bool is_closed() { return is_closed_; }
+    const char* name() { return name_; }
+
+private:
+    const char* name_;
+    bool is_closed_;
 
 private:
     NODEC_DISABLE_COPY(BaseWindow)

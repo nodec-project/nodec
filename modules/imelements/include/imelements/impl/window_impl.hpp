@@ -15,14 +15,25 @@ public:
 
 public:
     void update_windows() {
-        for (auto& pair : active_windows) {
-            auto& window = pair.second;
+        for (auto iter = active_windows.begin(); iter != active_windows.end();) {
+            auto& window = iter->second;
 
+            if (window->is_closed()) {
+                iter = active_windows.erase(iter);
+                continue;
+            }
+
+            bool is_shown;
             ImGui::SetNextWindowSize(ImVec2(window->init_size.x, window->init_size.y), ImGuiCond_FirstUseEver);
-            if (ImGui::Begin(window->title.c_str())) {
+            if (ImGui::Begin(window->name(), &is_shown)) {
                 window->on_gui();
             }
             ImGui::End();
+
+            if (!is_shown) {
+                window->close();
+            }
+            ++iter;
         }
     }
 };

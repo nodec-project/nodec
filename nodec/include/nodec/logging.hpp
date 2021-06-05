@@ -135,11 +135,12 @@ public:
     FatalStream(const char* file, size_t line);
 };
 
-}
-}
-
 std::ostream& operator<<(std::ostream& stream, const nodec::logging::Level& level);
 
 std::ostream& operator<<(std::ostream& stream, const nodec::logging::LogRecord& record);
+
+} // namespace logging
+} // namespace nodec
+
 
 #endif

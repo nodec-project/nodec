@@ -1,4 +1,4 @@
-// dear imgui, v1.83 WIP
+// dear imgui, v1.84 WIP
 // (headers)
 
 // Help:
@@ -61,8 +61,8 @@ Index of this file:
 
 // Version
 // (Integer encoded as XYYZZ for use in #if preprocessor conditionals. Work in progress versions typically starts at XYY99 then bounce up to XYY00, XYY01 etc. when release tagging happens)
-#define IMGUI_VERSION               "1.83 WIP"
-#define IMGUI_VERSION_NUM           18209
+#define IMGUI_VERSION               "1.84 WIP"
+#define IMGUI_VERSION_NUM           18304
 #define IMGUI_CHECKVERSION()        ImGui::DebugCheckVersionAndDataLayout(IMGUI_VERSION, sizeof(ImGuiIO), sizeof(ImGuiStyle), sizeof(ImVec2), sizeof(ImVec4), sizeof(ImDrawVert), sizeof(ImDrawIdx))
 #define IMGUI_HAS_TABLE
 #define IMGUI_HAS_VIEWPORT          // Viewport WIP branch
@@ -92,15 +92,24 @@ Index of this file:
 #endif
 
 // Helper Macros - IM_FMTARGS, IM_FMTLIST: Apply printf-style warnings to our formatting functions.
-#if !defined(IMGUI_USE_STB_SPRINTF) && defined(__clang__)
-#define IM_FMTARGS(FMT)             __attribute__((format(printf, FMT, FMT+1)))
-#define IM_FMTLIST(FMT)             __attribute__((format(printf, FMT, 0)))
-#elif !defined(IMGUI_USE_STB_SPRINTF) && defined(__GNUC__) && defined(__MINGW32__)
+#if !defined(IMGUI_USE_STB_SPRINTF) && defined(__MINGW32__)
 #define IM_FMTARGS(FMT)             __attribute__((format(gnu_printf, FMT, FMT+1)))
 #define IM_FMTLIST(FMT)             __attribute__((format(gnu_printf, FMT, 0)))
+#elif !defined(IMGUI_USE_STB_SPRINTF) && (defined(__clang__) || defined(__GNUC__))
+#define IM_FMTARGS(FMT)             __attribute__((format(printf, FMT, FMT+1)))
+#define IM_FMTLIST(FMT)             __attribute__((format(printf, FMT, 0)))
 #else
 #define IM_FMTARGS(FMT)
 #define IM_FMTLIST(FMT)
+#endif
+
+// Disable some of MSVC most aggressive Debug runtime checks in function header/footer (used in some simple/low-level functions)
+#if defined(_MSC_VER) && !defined(__clang__) && !defined(IMGUI_DEBUG_PARANOID)
+#define IM_MSVC_RUNTIME_CHECKS_OFF      __pragma(runtime_checks("",off))     __pragma(check_stack(off)) __pragma(strict_gs_check(push,off))
+#define IM_MSVC_RUNTIME_CHECKS_RESTORE  __pragma(runtime_checks("",restore)) __pragma(check_stack())    __pragma(strict_gs_check(pop))
+#else
+#define IM_MSVC_RUNTIME_CHECKS_OFF
+#define IM_MSVC_RUNTIME_CHECKS_RESTORE
 #endif
 
 // Warnings
@@ -238,6 +247,7 @@ typedef unsigned long long  ImU64;  // 64-bit unsigned integer (post C++11)
 #endif
 
 // 2D vector (often used to store positions or sizes)
+IM_MSVC_RUNTIME_CHECKS_OFF
 struct ImVec2
 {
     float                                   x, y;
@@ -260,6 +270,7 @@ struct ImVec4
     IM_VEC4_CLASS_EXTRA     // Define additional constructors and implicit cast operators in imconfig.h to convert back and forth between your math types and ImVec4.
 #endif
 };
+IM_MSVC_RUNTIME_CHECKS_RESTORE
 
 //-----------------------------------------------------------------------------
 // [SECTION] Dear ImGui end-user API functions
@@ -768,13 +779,17 @@ namespace ImGui
     // Note: You can use most Docking facilities without calling any API. You DO NOT need to call DockSpace() to use Docking!
     // - Drag from window title bar or their tab to dock/undock. Hold SHIFT to disable docking.
     // - Drag from window menu button (upper-left button) to undock an entire node (all windows).
-    // About DockSpace:
+    // About dockspaces:
     // - Use DockSpace() to create an explicit dock node _within_ an existing window. See Docking demo for details.
-    // - DockSpace() needs to be submitted _before_ any window they can host. If you use a dockspace, submit it early in your app.
+    // - Use DockSpaceOverViewport() to create an explicit dock node covering the screen or a specific viewport.
+    //   This is often used with ImGuiDockNodeFlags_PassthruCentralNode.
+    // - Important: Dockspaces need to be submitted _before_ any window they can host. Submit it early in your frame!
+    // - Important: Dockspaces need to be kept alive if hidden, otherwise windows docked into it will be undocked.
+    //   e.g. if you have multiple tabs with a dockspace inside each tab: submit the non-visible dockspaces with ImGuiDockNodeFlags_KeepAliveOnly.
     IMGUI_API ImGuiID       DockSpace(ImGuiID id, const ImVec2& size = ImVec2(0, 0), ImGuiDockNodeFlags flags = 0, const ImGuiWindowClass* window_class = NULL);
     IMGUI_API ImGuiID       DockSpaceOverViewport(const ImGuiViewport* viewport = NULL, ImGuiDockNodeFlags flags = 0, const ImGuiWindowClass* window_class = NULL);
-    IMGUI_API void          SetNextWindowDockID(ImGuiID dock_id, ImGuiCond cond = 0);           // set next window dock id (FIXME-DOCK)
-    IMGUI_API void          SetNextWindowClass(const ImGuiWindowClass* window_class);           // set next window class (rare/advanced uses: provide hints to the platform backend via altered viewport flags and parent/child info)
+    IMGUI_API void          SetNextWindowDockID(ImGuiID dock_id, ImGuiCond cond = 0);           // set next window dock id
+    IMGUI_API void          SetNextWindowClass(const ImGuiWindowClass* window_class);           // set next window class (control docking compatibility + provide hints to platform backend via custom viewport flags and platform parent/child relationship)
     IMGUI_API ImGuiID       GetWindowDockID();
     IMGUI_API bool          IsWindowDocked();                                                   // is current window docked into another window?
 
@@ -1709,6 +1724,7 @@ template<typename T> void IM_DELETE(T* p)   { if (p) { p->~T(); ImGui::MemFree(p
 //   Do NOT use this class as a std::vector replacement in your own code! Many of the structures used by dear imgui can be safely initialized by a zero-memset.
 //-----------------------------------------------------------------------------
 
+IM_MSVC_RUNTIME_CHECKS_OFF
 template<typename T>
 struct ImVector
 {
@@ -1767,6 +1783,7 @@ struct ImVector
     inline bool         find_erase_unsorted(const T& v)     { const T* it = find(v); if (it < Data + Size) { erase_unsorted(it); return true; } return false; }
     inline int          index_from_ptr(const T* it) const   { IM_ASSERT(it >= Data && it < Data + Size); const ptrdiff_t off = it - Data; return (int)off; }
 };
+IM_MSVC_RUNTIME_CHECKS_RESTORE
 
 //-----------------------------------------------------------------------------
 // [SECTION] ImGuiStyle
@@ -1930,7 +1947,7 @@ struct ImGuiIO
     bool        WantSaveIniSettings;            // When manual .ini load/save is active (io.IniFilename == NULL), this will be set to notify your application that you can call SaveIniSettingsToMemory() and save yourself. Important: clear io.WantSaveIniSettings yourself after saving!
     bool        NavActive;                      // Keyboard/Gamepad navigation is currently allowed (will handle ImGuiKey_NavXXX events) = a window is focused and it doesn't use the ImGuiWindowFlags_NoNavInputs flag.
     bool        NavVisible;                     // Keyboard/Gamepad navigation is visible and allowed (will handle ImGuiKey_NavXXX events).
-    float       Framerate;                      // Application framerate estimate, in frame per second. Solely for convenience. Rolling average estimation based on io.DeltaTime over 120 frames.
+    float       Framerate;                      // Rough estimate of application framerate, in frame per second. Solely for convenience. Rolling average estimation based on io.DeltaTime over 120 frames.
     int         MetricsRenderVertices;          // Vertices output during last call to Render()
     int         MetricsRenderIndices;           // Indices output during last call to Render() = number of triangles * 3
     int         MetricsRenderWindows;           // Number of visible windows
@@ -2331,6 +2348,9 @@ struct ImDrawCmd
     void*           UserCallbackData;   // 4-8  // The draw callback code can access this.
 
     ImDrawCmd() { memset(this, 0, sizeof(*this)); } // Also ensure our padding fields are zeroed
+
+    // Since 1.83: returns ImTextureID associated with this draw call. Warning: DO NOT assume this is always same as 'TextureId' (we will change this function for an upcoming feature)
+    inline ImTextureID GetTexID() const { return TextureId; }
 };
 
 // Vertex index, default to 16-bit

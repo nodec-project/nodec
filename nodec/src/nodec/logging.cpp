@@ -8,7 +8,6 @@ namespace nodec {
 namespace logging {
 
 namespace {
-std::mutex io_lock_;
 Level current_level_ = Level::Debug;
 RecordHandlers record_handlers_;
 }
@@ -59,6 +58,8 @@ std::string default_formatter(const LogRecord& record) noexcept {
 }
 
 void record_to_stdout_handler(const LogRecord& record) noexcept {
+    static std::mutex io_lock_mtx_;
+    std::lock_guard<std::mutex> lock(io_lock_mtx_);
     std::cout << record << std::endl;
 }
 
@@ -75,11 +76,9 @@ void log_generic(const LogRecord& record) {
         return;
     }
 
-    // while Handler objects are dispatching the appropriate log messages (based on the log messages' severity) 
-    // to the handler's specified destination, lock the event to invoke.
-    io_lock_.lock();
+    // Handler objects are dispatching the appropriate log messages (based on the log messages' severity) 
+    // to the handler's specified destination.
     record_handlers_(record);
-    io_lock_.unlock();
 }
 }
 
@@ -165,9 +164,6 @@ FatalStream::FatalStream(const char* file, size_t line) :
     LogStream(Level::Fatal, file, line) {
 }
 
-}
-}
-
 std::ostream& operator<<(std::ostream& stream, const nodec::logging::Level& level) {
     switch (level) {
     case nodec::logging::Level::Unset:
@@ -189,3 +185,6 @@ std::ostream& operator<<(std::ostream& stream, const nodec::logging::Level& leve
 std::ostream& operator<<(std::ostream& stream, const nodec::logging::LogRecord& record) {
     return stream << nodec::logging::formatter(record);
 }
+
+} // namespace logging
+} // namespace nodec
