@@ -67,19 +67,13 @@ void show_main_menu() {
 
     if (ImGui::BeginMainMenuBar()) {
         show_menu_items(*root_menu_item);
-
-
-        //if (ImGui::BeginMenu("Window"))         {
-
-        //    ImGui::EndMenu();
-        //}
         ImGui::EndMainMenuBar();
     }
 }
 
-void set_menu_item_order(int order) {
-
-}
+//void set_menu_item_order(int order) {
+//
+//}
 
 }
 

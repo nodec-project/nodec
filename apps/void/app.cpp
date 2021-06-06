@@ -47,5 +47,11 @@ void game_engine::on_boot(game_engine::GameEngine& engine) {
     engine.screen().set_size({ 1280, 720 });
     engine.screen().set_resolution({ 1280, 720 });
     engine.screen().set_title("[ void ]");
+
+    auto root = engine.scene_registry().create_entity();
+    auto child = engine.scene_registry().create_entity();
+
+    scene_set::systems::append_child(engine.scene_registry(), root, child);
+    
     
 }

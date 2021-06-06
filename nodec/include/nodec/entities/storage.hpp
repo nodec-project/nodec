@@ -55,7 +55,7 @@ public:
         instances.push_back({ args... });
         packed.emplace_back(entity);
 
-        on_construct_(registry, entity);
+        element_constructed_(registry, entity);
 
         return true;
     }
@@ -91,7 +91,7 @@ public:
             return false;
         }
 
-        on_destroy_(registry, entity); // cause structual changes.
+        element_destroyed_(registry, entity); // cause structual changes.
 
         auto *pos = sparse_table.try_get(entity);
         if (!pos) {
@@ -144,12 +144,12 @@ public:
     }
 
 public:
-    typename StorageSignal::Interface& on_construct() {
-        return on_construct_;
+    typename StorageSignal::Interface& element_constructed() {
+        return element_constructed_;
     }
 
-    typename StorageSignal::Interface& on_destroy() {
-        return on_destroy_;
+    typename StorageSignal::Interface& element_destroyed() {
+        return element_destroyed_;
     }
 
     
@@ -158,8 +158,8 @@ private:
     std::vector<Entity> packed;
     std::vector<Value> instances;
 
-    StorageSignal on_construct_;
-    StorageSignal on_destroy_;
+    StorageSignal element_constructed_;
+    StorageSignal element_destroyed_;
 };
 
 

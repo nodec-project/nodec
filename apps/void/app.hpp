@@ -9,6 +9,11 @@
 
 #include <nodec/logging.hpp>
 
+#include <scene_set/scene_registry.hpp>
+#include <scene_set/components/standard.hpp>
+#include <scene_set/systems/hierarchy_system.hpp>
+#include <scene_set/systems/transform_system.hpp>
+
 //
 //#include <game_engine/game_engine.hpp>
 //#include <game_engine/behavior.hpp>

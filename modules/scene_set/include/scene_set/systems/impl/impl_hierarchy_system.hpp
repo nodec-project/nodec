@@ -18,7 +18,7 @@ class HierarchySystem {
 public:
     void init(SceneRegistry& registry) {
         on_destroy_connection
-            = registry.on_destroy<components::Hierarchy>().connect(
+            = registry.component_destroyed<components::Hierarchy>().connect(
                 [&](SceneRegistry& registry, const SceneEntity entity) {
                     handle_hierarchy_remove(registry, entity);
                 })

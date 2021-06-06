@@ -14,25 +14,12 @@ GameEngineModule* current{ nullptr };
 
 GameEngineModule::GameEngineModule() {
     nodec::logging::InfoStream(__FILE__, __LINE__)
-        << "[GameEngineModule] >>> Engine strat up..." << std::flush;
-
-
-    screen_module_.size_internal.set(1920, 1080);
-    screen_module_.resolution_internal.set(1920, 1080);
-    screen_module_.title_internal = "Nodec Game Engine";
-
-
-    engine_time_stopwatch_.reset();
-    engine_time_stopwatch_.start();
-
-    nodec::logging::InfoStream(__FILE__, __LINE__)
-        << "[GameEngineModule] >>> Startup completed successfully.\n"
-        << "engine_time: " << engine_time() << "[s]" << std::flush;
+        << "[GameEngineModule] >>> The engine is created!" << std::flush;
 }
 
 GameEngineModule::~GameEngineModule() {
     nodec::logging::InfoStream(__FILE__, __LINE__)
-        << "[GameEngineModule] >>> Engine now shuting down.\n"
+        << "[GameEngineModule] >>> The engine is destroyed.\n"
         << "engine_time: " << engine_time() << "[s]" << std::flush;
 
     if (current == this) {
@@ -40,17 +27,30 @@ GameEngineModule::~GameEngineModule() {
     }
 }
 
+void GameEngineModule::initialize() {
+    nodec::logging::InfoStream(__FILE__, __LINE__)
+        << "[GameEngineModule] >>> Initializing..." << std::flush;
 
+    screen_module_.size_internal.set(1920, 1080);
+    screen_module_.resolution_internal.set(1920, 1080);
+    screen_module_.title_internal = "Nodec Game Engine";
 
-void set_current(GameEngineModule* engine) {
-    current = engine;
+    
+
+    engine_time_stopwatch_.reset();
+
+    nodec::logging::InfoStream(__FILE__, __LINE__)
+        << "[GameEngineModule] >>> Initialization has been completed successfully.";
+    return;
 }
 
-bool boot(GameEngineModule& game_engine_module) noexcept {
-    nodec::logging::InfoStream(__FILE__, __LINE__) << "[GameEngineModule] >>> Booting..." << std::flush;
+
+bool GameEngineModule::boot() noexcept {
+    nodec::logging::InfoStream(__FILE__, __LINE__) 
+        << "[GameEngineModule] >>> Booting..." << std::flush;
     bool success = false;
     try {
-        on_boot(game_engine_module);
+        on_boot(*this);
         success = true;
     }
     catch (const std::exception& e) {
@@ -67,9 +67,27 @@ bool boot(GameEngineModule& game_engine_module) noexcept {
     nodec::logging::InfoStream(__FILE__, __LINE__)
         << "[GameEngineModule] >>> Booting finished.\n"
         << "success: " << success << "\n"
-        << "engine_time: " << game_engine_module.engine_time() << "[s]" << std::flush;
+        << "engine_time: " << this->engine_time() << "[s]" << std::flush;
 
     return success;
+}
+
+void GameEngineModule::start() {
+    nodec::logging::InfoStream(__FILE__, __LINE__)
+        << "[GameEngineModule] >>> Starting..." ;
+
+
+    engine_time_stopwatch_.start();
+
+    nodec::logging::InfoStream(__FILE__, __LINE__)
+        << "[GameEngineModule] >>> The engine started successfully.\n"
+        << "engine_time: " << engine_time() << "[s]" << std::flush;
+    return;
+}
+
+
+void set_current(GameEngineModule* engine) {
+    current = engine;
 }
 
 } // namespace impl

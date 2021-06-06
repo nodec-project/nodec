@@ -39,6 +39,10 @@ public:
     }
 
 public:
+    void initialize();
+    bool boot() noexcept;
+    void start();
+    
     input::keyboard::impl::KeyboardModule& keyboard_module() noexcept {
         return keyboard_module_;
     };
@@ -68,7 +72,6 @@ private:
 };
 
 void set_current(GameEngineModule* engine);
-bool boot(GameEngineModule& game_engine_module) noexcept;
 
 }  // namespace impl
 }  // namespace game_engine

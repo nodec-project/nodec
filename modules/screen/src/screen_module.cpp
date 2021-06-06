@@ -10,7 +10,7 @@ nodec::Vector2i ScreenModule::resolution() const noexcept {
 }
 
 void ScreenModule::set_resolution(const nodec::Vector2i& resolution) {
-    on_resolution_change_(*this, resolution);
+    resolution_change_(*this, resolution);
 }
 
 nodec::Vector2i ScreenModule::size() const noexcept {
@@ -18,7 +18,7 @@ nodec::Vector2i ScreenModule::size() const noexcept {
 }
 
 void ScreenModule::set_size(const nodec::Vector2i& size) {
-    on_size_change_(*this, size);
+    size_change_(*this, size);
 }
 
 std::string ScreenModule::title() const noexcept {
@@ -26,7 +26,7 @@ std::string ScreenModule::title() const noexcept {
 }
 
 void ScreenModule::set_title(const std::string& title) {
-    on_title_change_(*this, title);
+    title_change_(*this, title);
 }
 
 }

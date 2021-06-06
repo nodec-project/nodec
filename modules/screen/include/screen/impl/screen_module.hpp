@@ -27,11 +27,11 @@ public:
     void set_title(const std::string& title) override;
 
 public:
-    ResolutionChangeSignal::Interface& on_resolution_change() { return on_resolution_change_; }
+    ResolutionChangeSignal::Interface& resolution_change() { return resolution_change_; }
 
-    SizeChangeSignal::Interface& on_size_change() { return on_size_change_; }
+    SizeChangeSignal::Interface& size_change() { return size_change_; }
 
-    TitleChangeSignal::Interface& on_title_change() { return on_title_change_; }
+    TitleChangeSignal::Interface& title_change() { return title_change_; }
 
 public:
     nodec::Vector2i size_internal;
@@ -39,9 +39,9 @@ public:
     std::string title_internal;
 
 private:
-    ResolutionChangeSignal on_resolution_change_;
-    SizeChangeSignal on_size_change_;
-    TitleChangeSignal on_title_change_;
+    ResolutionChangeSignal resolution_change_;
+    SizeChangeSignal size_change_;
+    TitleChangeSignal title_change_;
 };
 
 }

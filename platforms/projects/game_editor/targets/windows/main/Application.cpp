@@ -21,19 +21,19 @@ int Application::main_impl() {
     game_editor::impl::GameEditorModule editorModule;
 
 
-    logging::InfoStream(__FILE__, __LINE__)
-        << "[Main] >>> launch the Engine.";
-    game_engine::impl::GameEngineModule engineModule;
-    game_engine::impl::set_current(&engineModule);
+    //logging::InfoStream(__FILE__, __LINE__)
+    //    << "[Main] >>> launch the Engine.";
+    //game_engine::impl::GameEngineModule engineModule;
+    //game_engine::impl::set_current(&engineModule);
 
     
     EditorScreenHandlers screenHandlers;
-    screenHandlers.SetupOnBootingHandlers(engineModule.screen_module());
+    screenHandlers.SetupOnBootingHandlers(editorModule.engine_module().screen_module());
 
     logging::InfoStream(__FILE__, __LINE__)
         << "[Main] >>> boot the Engine.";
 
-    if (!game_engine::impl::boot(engineModule)) {
+    if (!editorModule.engine_module().boot()) {
         throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
             "Failed to boot the Engine.",
             __FILE__, __LINE__
@@ -41,17 +41,17 @@ int Application::main_impl() {
     }
 
 
-    Window window(engineModule.screen_module().resolution_internal.x,
-                  engineModule.screen_module().resolution_internal.y,
-                  engineModule.screen_module().resolution_internal.x,
-                  engineModule.screen_module().resolution_internal.y,
+    Window window(editorModule.engine_module().screen_module().resolution_internal.x,
+                  editorModule.engine_module().screen_module().resolution_internal.y,
+                  editorModule.engine_module().screen_module().resolution_internal.x,
+                  editorModule.engine_module().screen_module().resolution_internal.y,
                   L"Nodec Game Editor",
-                  &(engineModule.keyboard_module()),
-                  &(engineModule.mouse_module())
+                  &(editorModule.engine_module().keyboard_module()),
+                  &(editorModule.engine_module().mouse_module())
     );
-    window.SetTitle(engineModule.screen_module().title_internal + " - Editor Mode");
+    window.SetTitle(editorModule.engine_module().screen_module().title_internal + " - Editor Mode");
 
-    screenHandlers.SetupRuntimeHandlers(engineModule.screen_module(), &window);
+    screenHandlers.SetupRuntimeHandlers(editorModule.engine_module().screen_module(), &window);
     
     int exitCode;
     while (true) {

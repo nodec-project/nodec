@@ -1,5 +1,5 @@
-#ifndef IMELEMENTS__IMPL__LOG_WINDOW_HPP_
-#define IMELEMENTS__IMPL__LOG_WINDOW_HPP_
+#ifndef IMWINDOWS__IMPL__LOG_WINDOW_HPP_
+#define IMWINDOWS__IMPL__LOG_WINDOW_HPP_
 
 #include <imelements/window.hpp>
 
@@ -11,14 +11,14 @@
 #include <queue>
 
 
-namespace imelements {
+namespace imwindows {
 namespace impl {
 
-class LogWindow : public BaseWindow {
+class LogWindow : public imelements::BaseWindow {
     const int MAX_RECORDS = 100;
 
 public:
-    static void init(WindowManager& manager) {
+    static void init(imelements::WindowManager& manager) {
         auto& window = manager.get_window<LogWindow>();
 
         ImGui::SetWindowFocus(window.name());

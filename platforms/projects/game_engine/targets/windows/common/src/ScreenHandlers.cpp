@@ -11,17 +11,17 @@ ScreenHandlers::ScreenHandlers() :
 void ScreenHandlers::SetupOnBootingHandlers(
     screen::impl::ScreenModule& screenModule
 ) {
-    resolutionChangeConnection = screenModule.on_resolution_change().connect(
+    resolutionChangeConnection = screenModule.resolution_change().connect(
         [&](screen::impl::ScreenModule& screen, const Vector2i& resolution) {
             HandleResolutionChangeOnBoot(screen, resolution);
         }
     );
-    sizeChangeConnection = screenModule.on_size_change().connect(
+    sizeChangeConnection = screenModule.size_change().connect(
         [&](screen::impl::ScreenModule& screen, const Vector2i& size) {
             HandleSizeChangeOnBoot(screen, size);
         }
     );
-    titleChangeConnection = screenModule.on_title_change().connect(
+    titleChangeConnection = screenModule.title_change().connect(
         [&](screen::impl::ScreenModule& screen, const std::string& title) {
             HandleTitleChangeOnBoot(screen, title);
         }
@@ -33,17 +33,17 @@ void ScreenHandlers::SetupRuntimeHandlers(
     Window* pWindow
 ) {
     this->pWindow = pWindow;
-    resolutionChangeConnection = screenModule.on_resolution_change().connect(
+    resolutionChangeConnection = screenModule.resolution_change().connect(
         [&](screen::impl::ScreenModule& screen, const Vector2i& resolution) {
             HandleResolutionChangeOnRuntime(screen, resolution);
         }
     );
-    sizeChangeConnection = screenModule.on_size_change().connect(
+    sizeChangeConnection = screenModule.size_change().connect(
         [&](screen::impl::ScreenModule& screen, const Vector2i& size) {
             HandleSizeChangeOnRuntime(screen, size);
         }
     );
-    titleChangeConnection = screenModule.on_title_change().connect(
+    titleChangeConnection = screenModule.title_change().connect(
         [&](screen::impl::ScreenModule& screen, const std::string& title) {
             HandleTitleChangeOnRuntime(screen, title);
         }
