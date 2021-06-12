@@ -71,7 +71,7 @@ private:
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component>* pool_assured() {
+    BasicStorage<Entity, Component>* pool_assured() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
 
@@ -155,6 +155,11 @@ public:
         release_entity(entity, static_cast<typename entity_traits::Version>(get_version(entity) + 1));
     }
 
+    //void clear() {
+    //    for (auto pos = pools.size(); pos; --pos) {
+
+    //    }
+    //}
 
     template<typename Component, typename... Args>
     decltype(auto) emplace_component(const Entity entity, Args &&... args) {
@@ -208,7 +213,12 @@ public:
             details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
-        return const_cast<Component&>(*component);
+        return *component;
+    }
+
+    template<typename Component>
+    decltype(auto) get_component(const Entity entity) {
+        return const_cast<Component&>(std::as_const(*this).get_component<Component>(entity));
     }
 
     template<typename... Components>
@@ -216,26 +226,43 @@ public:
         return std::forward_as_tuple(get_component<Components>(entity)...);
     }
 
+    template<typename... Components>
+    decltype(auto) get_components(const Entity entity) {
+        return std::forward_as_tuple(get_component<Components>(entity)...);
+    }
+
     template<typename Component>
-    Component* try_get_component(const Entity entity) const {
+    auto try_get_component(const Entity entity) const {
         if (!is_valid(entity)) {
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
-
-        using Comp = std::remove_const_t<Component>;
-        auto* cpool = pool_if_exists<Comp>();
-        if (!cpool) {
-            return nullptr;
-        }
-
-        return const_cast<Component*>(cpool->try_get(entity));
+        auto* cpool = pool_if_exists<std::remove_const_t<Component>>();
+        return cpool ? cpool->try_get(entity) : nullptr;
     }
+
+    template<typename Component>
+    Component* try_get_component(const Entity entity) {
+        return const_cast<Component*>(std::as_const(*this).try_get_component<Component>(entity));
+    }
+    
 
     template<typename... Components>
     decltype(auto) try_get_components(const Entity entity) const {
-        return std::forward_as_tuple(try_get_component<Components>(entity)...);
+        return std::make_tuple(try_get_component<Components>(entity)...);
     }
 
+    template<typename... Components>
+    decltype(auto) try_get_components(const Entity entity) {
+        return std::make_tuple(try_get_component<Components>(entity)...);
+    }
+
+    template<typename... Components>
+    BasicView<Entity, Components...> view() const {
+        static_assert((std::min)({ std::is_const_v<Components> ... }), "Invalid non-const type");
+        //static_assert((std::is_const_v<Components> && ...), "Invalid non-const type"); // For over C++17
+
+        return { *pool_assured<std::remove_const_t<Components>>()... };
+    }
 
     template<typename... Components>
     BasicView<Entity, Components...> view() {
@@ -258,7 +285,7 @@ public:
 private:
     std::vector<Entity> entities;
     Entity available{ null_entity };
-    std::vector<PoolData> pools{};
+    mutable std::vector<PoolData> pools{};
 };
 
 using Registry = BasicRegistry<Entity>;

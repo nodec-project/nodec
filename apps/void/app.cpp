@@ -49,9 +49,16 @@ void game_engine::on_boot(game_engine::GameEngine& engine) {
     engine.screen().set_title("[ void ]");
 
     auto root = engine.scene_registry().create_entity();
-    auto child = engine.scene_registry().create_entity();
+    auto child1 = engine.scene_registry().create_entity();
+    auto child1_1 = engine.scene_registry().create_entity();
+    auto child2 = engine.scene_registry().create_entity();
 
-    scene_set::systems::append_child(engine.scene_registry(), root, child);
+    scene_set::systems::append_child(engine.scene_registry(), root, child1);
+    scene_set::systems::append_child(engine.scene_registry(), root, child2);
+    scene_set::systems::append_child(engine.scene_registry(), child1, child1_1);
+
+    engine.scene_registry().emplace_component<scene_set::components::Name>(root);
+    engine.scene_registry().get_component<scene_set::components::Name>(root).name = "root";
     
     
 }
