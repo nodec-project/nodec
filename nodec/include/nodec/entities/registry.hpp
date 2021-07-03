@@ -155,11 +155,35 @@ public:
         release_entity(entity, static_cast<typename entity_traits::Version>(get_version(entity) + 1));
     }
 
-    //void clear() {
-    //    for (auto pos = pools.size(); pos; --pos) {
+    template<typename Func>
+    void each_entity(Func func) const {
+        if (available == null_entity) {
+            for (auto pos = entities.size(); pos; --pos) {
+                func(entities[pos - 1]);
+            }
+        }
+        else {
+            for (auto pos = entities.size(); pos; --pos) {
+                const auto entity = entities[pos - 1];
+                if ((entity & entity_traits::entity_mask) == (pos - 1)) {
+                    func(entity);
+                }
+            }
+        }
+    }
 
-    //    }
-    //}
+    void clear() {
+        for (auto pos = pools.size(); pos; --pos) {
+            auto& pdata = pools[pos - 1];
+            if (pdata.pool) {
+                pdata.pool->clear(*this);
+            }
+        }
+        each_entity(
+            [this](const auto entity) {
+                release_entity(entity, get_version(entity) + 1u);
+            });
+    }
 
     template<typename Component, typename... Args>
     decltype(auto) emplace_component(const Entity entity, Args &&... args) {
@@ -244,7 +268,7 @@ public:
     Component* try_get_component(const Entity entity) {
         return const_cast<Component*>(std::as_const(*this).try_get_component<Component>(entity));
     }
-    
+
 
     template<typename... Components>
     decltype(auto) try_get_components(const Entity entity) const {

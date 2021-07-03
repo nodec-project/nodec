@@ -21,9 +21,10 @@ public:
     using const_iterator = typename std::vector<Entity>::const_iterator;
 
 public:
-    virtual bool erase(BasicRegistry<Entity>& registry, const Entity entity) = 0;
+    virtual bool erase(BasicRegistry<Entity>& owner, const Entity entity) = 0;
+    virtual void clear(BasicRegistry<Entity>& owner) = 0;
     virtual bool contains(const Entity entity) const = 0;
-    virtual void* try_get_opaque(const Entity entity) = 0;
+    //virtual void* try_get_opaque(const Entity entity) = 0;
 
 public:
     virtual iterator begin() noexcept = 0;
@@ -46,7 +47,7 @@ class BasicStorage : public BaseStorage<Entity> {
 
 public:
     template<typename... Args>
-    bool emplace(BasicRegistry<Entity>& registry, const Entity entity, Args &&... args) {
+    bool emplace(BasicRegistry<Entity>& owner, const Entity entity, Args &&... args) {
         if (sparse_table.contains(entity)) {
             return false;
         }
@@ -55,7 +56,7 @@ public:
         instances.push_back({ args... });
         packed.emplace_back(entity);
 
-        element_constructed_(registry, entity);
+        element_constructed_(owner, entity);
 
         return true;
     }
@@ -78,22 +79,22 @@ public:
         return &instances[*pos];
     }
 
-    void* try_get_opaque(const Entity entity) override {
-        return try_get(entity);
-    }
+    //void* try_get_opaque(const Entity entity) override {
+    //    return try_get(entity);
+    //}
 
     bool contains(const Entity entity) const override {
         return sparse_table.contains(entity);
     }
 
-    bool erase(BasicRegistry<Entity>& registry, const Entity entity) {
+    bool erase(BasicRegistry<Entity>& owner, const Entity entity) override {
         if (!sparse_table.contains(entity)) {
             return false;
         }
 
-        element_destroyed_(registry, entity); // cause structual changes.
+        element_destroyed_(owner, entity); // cause structual changes.
 
-        auto *pos = sparse_table.try_get(entity);
+        auto* pos = sparse_table.try_get(entity);
         if (!pos) {
             // maybe someone delete this entity while on_destroy_() runnring.
             return true;
@@ -112,6 +113,12 @@ public:
         sparse_table.erase(entity);
 
         return true;
+    }
+
+    void clear(BasicRegistry<Entity>& owner) {
+        while (packed.size() > 0) {
+            erase(owner, packed.front());
+        }
     }
 
 public:
@@ -152,7 +159,7 @@ public:
         return element_destroyed_;
     }
 
-    
+
 private:
     SparseTable<size_t> sparse_table;
     std::vector<Entity> packed;

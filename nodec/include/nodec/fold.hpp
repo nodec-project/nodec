@@ -1,4 +1,5 @@
-
+#ifndef NODEC__FOLD_HPP_
+#define NODEC__FOLD_HPP_
 
 #include <functional>
 
@@ -21,3 +22,5 @@ auto fold(F&& f, A0&& a0, As&&... as) {
 
 
 }
+
+#endif

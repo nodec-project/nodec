@@ -35,7 +35,7 @@ void GameEngineModule::initialize() {
     screen_module_.resolution_internal.set(1920, 1080);
     screen_module_.title_internal = "Nodec Game Engine";
 
-    
+    scene_registry_.clear();
 
     engine_time_stopwatch_.reset();
 

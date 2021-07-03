@@ -40,7 +40,6 @@ public:
 
             show_entity_node(entity);
         }
-
     }
 
 private:

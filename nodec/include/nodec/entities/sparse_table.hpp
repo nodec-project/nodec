@@ -236,7 +236,7 @@ public:
         if (!(num < groups.size())) {
             groups.resize(num + 1);
         }
-
+        //nodec:logging::DebugStream(__FILE__, __LINE__) << sizeof(Group) << " * " << groups.size();
         return &groups[num];
     }
 

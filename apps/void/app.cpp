@@ -39,9 +39,12 @@ using namespace nodec;
 //
 //}
 
+
 void game_engine::on_boot(game_engine::GameEngine& engine) {
     logging::info("booting... in application layer", __FILE__, __LINE__);
     logging::info("HELLO WORLD!", __FILE__, __LINE__);
+
+    
 
     //engine.screen().set_size({ 1920, 1080 });
     engine.screen().set_size({ 1280, 720 });
@@ -62,3 +65,4 @@ void game_engine::on_boot(game_engine::GameEngine& engine) {
     
     
 }
+
