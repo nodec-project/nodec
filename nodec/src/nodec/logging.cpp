@@ -63,8 +63,8 @@ void record_to_stdout_handler(const LogRecord& record) noexcept {
     std::cout << record << std::endl;
 }
 
-RecordHandlers::Interface& record_handlers() {
-    return record_handlers_;
+RecordHandlers::ConnectionPoint record_handlers() {
+    return record_handlers_.connection_point();
 }
 
 

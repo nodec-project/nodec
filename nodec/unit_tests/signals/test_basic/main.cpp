@@ -67,7 +67,7 @@ int main() {
             //auto update = signals::Signal<void(float)>();
             //signals::SignalInterface<void(float)>& update_interface_ = update;
             //UpdateSignal::Interface& update_interface_ = update;
-            auto& update_interface = update.interface();
+            auto update_interface = update.connection_point();
 
             //auto update_interface = std::move(update_interface_);
 
@@ -89,7 +89,7 @@ int main() {
             {
                 MyClass my_obj;
                 int cnt = 0;
-                UpdateSignal::Interface::Connection connection = update.connect(
+                UpdateSignal::Connection connection = update.connection_point().connect(
                     [&](float delta) {
                         my_obj.on_update(delta);
                         connection.block();
@@ -115,7 +115,7 @@ int main() {
                 //connection.unblock();
             }
             {
-                auto connection = update.connect(
+                auto connection = update.connection_point().connect(
                     [](float delta) {
                         //std::cout << "Hello in lambda 1. " << delta << std::endl;
                         logging::InfoStream(__FILE__, __LINE__) << "Hello in lambda 1. " << delta;
@@ -125,7 +125,7 @@ int main() {
 
             MyClass my_obj;
             //update.connect(&my_obj, &MyClass::on_update);
-            auto connection = update.connect([&](float delta) {my_obj.on_update(delta); }).assign();
+            auto connection = update.connection_point().connect([&](float delta) {my_obj.on_update(delta); }).assign();
             connection.disconnect();
             //connection.block();
             update(3.14);

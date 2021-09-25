@@ -148,9 +148,9 @@ public:
 } // namespace details
 
 
-template<typename> class SignalInterface;
+template<typename> class Signal;
 template<typename... Args>
-class SignalInterface<void(Args...)> {
+class Signal<void(Args...)> {
     using BaseSignal = details::BaseSignal<void(Args...)>;
     using BaseConnection = typename BaseSignal::BaseConnection;
 
@@ -236,7 +236,6 @@ public:
             return *this;
         }
 
-
         void disconnect() {
             delete ptr;
             ptr = nullptr;
@@ -262,51 +261,37 @@ public:
     private:
         BaseConnection* ptr{ nullptr };
     };
+    
+    class ConnectionPoint {
+    public:
+        ConnectionPoint(BaseSignal& base_sig)
+            : base_sig{ base_sig } {
 
+        }
 
+        template<class F>
+        TemporaryConnection connect(F&& functor) {
+            size_t idx = base_sig.conns.size();
+            base_sig.calls.emplace_back(functor);
+            BaseConnection* conn = new BaseConnection(&base_sig, idx);
+            base_sig.conns.emplace_back(conn);
+            return { conn };
+        }
 
-public:
-    SignalInterface() = default;
-
-    SignalInterface(SignalInterface&& other) = delete;
-    SignalInterface& operator= (SignalInterface&& other) = delete;
-
-    SignalInterface(const BaseSignal&) = delete;
-    SignalInterface& operator= (const BaseSignal&) = delete;
-
-public:
-    template<class F>
-    TemporaryConnection connect(F&& functor) {
-        size_t idx = base_sig.conns.size();
-        base_sig.calls.emplace_back(functor);
-        BaseConnection* conn = new BaseConnection(&base_sig, idx);
-        base_sig.conns.emplace_back(conn);
-        return { conn };
-    }
-
-protected:
-    BaseSignal base_sig;
-};
-
-template<typename> class Signal;
-template<typename... Args>
-class Signal<void(Args...)> : public SignalInterface<void(Args...)> {
-    using BaseSignal = details::BaseSignal<void(Args...)>;
-    using BaseConnection = typename BaseSignal::BaseConnection;
-
-public:
-    using Interface = SignalInterface<void(Args...)>;
+    private:
+        BaseSignal &base_sig;
+    };
 
 public:
     Signal() = default;
 
     Signal(Signal&& other) noexcept
-        : Interface::base_sig(std::move(other.base_sig))
+        : base_sig(std::move(other.base_sig))
         , calling(other.calling) {
     }
 
     Signal& operator= (Signal&& other) noexcept {
-        Interface::base_sig = std::move(other.base_sig);
+        base_sig = std::move(other.base_sig);
         calling = other.calling;
         return *this;
     }
@@ -316,8 +301,8 @@ public:
         bool recursion = calling;
         calling = true;
 
-        for (size_t i = 0, n = Interface::base_sig.calls.size(); i < n; ++i) {
-            auto& cb = Interface::base_sig.calls[i];
+        for (size_t i = 0, n = base_sig.calls.size(); i < n; ++i) {
+            auto& cb = base_sig.calls[i];
             if (cb) {
                 cb(std::forward<Args>(args)...);
             }
@@ -325,25 +310,30 @@ public:
 
         if (!recursion) {
             calling = false;
-            if (Interface::base_sig.dirty) {
-                Interface::base_sig.dirty = false;
+            if (base_sig.dirty) {
+                base_sig.dirty = false;
                 // remove all empty slots while patching the store index in the connection.
                 size_t sz = 0;
-                for (size_t i = 0, n = Interface::base_sig.conns.size(); i < n; ++i) {
-                    if (Interface::base_sig.conns[i]) {
-                        Interface::base_sig.conns[sz] = Interface::base_sig.conns[i];
-                        Interface::base_sig.calls[sz] = Interface::base_sig.calls[i];
-                        Interface::base_sig.conns[sz]->idx = sz;
+                for (size_t i = 0, n = base_sig.conns.size(); i < n; ++i) {
+                    if (base_sig.conns[i]) {
+                        base_sig.conns[sz] = base_sig.conns[i];
+                        base_sig.calls[sz] = base_sig.calls[i];
+                        base_sig.conns[sz]->idx = sz;
                         ++sz;
                     }
                 }
-                Interface::base_sig.conns.resize(sz);
-                Interface::base_sig.calls.resize(sz);
+                base_sig.conns.resize(sz);
+                base_sig.calls.resize(sz);
             }
         }
     }
 
+    ConnectionPoint connection_point() {
+        return ConnectionPoint(base_sig);
+    }
+
 private:
+    BaseSignal base_sig;
     bool calling{ false };
 };
 
