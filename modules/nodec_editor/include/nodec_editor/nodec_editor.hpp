@@ -7,11 +7,11 @@
 #include <game_engine/game_engine.hpp>
 
 
-namespace game_editor {
+namespace nodec_editor {
 
-class GameEditor {
+class NodecEditor {
 public:
-    GameEditor() = default;
+    NodecEditor() = default;
 
 public:
     virtual void reset() = 0;

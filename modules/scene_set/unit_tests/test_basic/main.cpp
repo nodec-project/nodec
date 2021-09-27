@@ -1,4 +1,5 @@
 
+#include <scene_set/impl/scene_module.hpp>
 #include <scene_set/components/standard.hpp>
 #include <scene_set/systems/hierarchy_system.hpp>
 #include <scene_set/systems/impl/impl_hierarchy_system.hpp>
@@ -35,58 +36,74 @@ int main() {
 
 
     try {
+        scene_set::impl::SceneModule scene_module;
 
-        SceneRegistry registry;
-        systems::impl::HierarchySystem hierarchySystem;
+        Scene& scene = scene_module;
 
-        {
-            hierarchySystem.init(registry);
-        }
+        auto entity_root = scene.registry().create_entity();
+        auto entity_child_1 = scene.registry().create_entity();
+        auto entity_child_1_1 = scene.registry().create_entity();
 
-        auto entity_root = registry.create_entity();
-        {
-            registry.emplace_component<components::Hierarchy>(entity_root);
-            //auto pair = registry.emplace_component<components::Hierarchy>(entity_root);
-            //logging::InfoStream(__FILE__, __LINE__) << "added hierarch?: " << pair.second;
-
-            registry.emplace_component<components::Name>(entity_root, "ROOT");
-            registry.emplace_component<components::Transform>(entity_root);
-        }
+        scene_set::systems::append_child(scene.registry(), entity_root, entity_child_1);
+        scene_set::systems::append_child(scene.registry(), entity_child_1, entity_root);
 
 
-        {
-            auto entity_child_a = registry.create_entity();
-            registry.emplace_component<components::Hierarchy>(entity_child_a);
-            registry.emplace_component<components::Transform>(entity_child_a);
-
-
-            auto entity_child_a_a = registry.create_entity();
-            registry.emplace_component<components::Transform>(entity_child_a_a);
-            //registry.emplace_component<components::Hierarchy>(entity_child_a_a);
-
-            {
-                //components::Hierarchy::append_child(registry, entity_child_a, entity_child_a);
-                systems::append_child(registry, entity_root, entity_child_a);
-                systems::append_child(registry, entity_child_a, entity_child_a_a);
-                //systems::remove_child(registry, entity_root, entity_child_a);
-                //systems::append_child(registry, entity_child_a_a, entity_root);
-            }
-            {
-                auto entity = registry.create_entity();
-                systems::append_child(registry, entity_child_a_a, entity);
-                systems::append_child(registry, entity_root, entity);
-            }
-            print_hierarchy(registry);
-
-            logging::info("Destroy", __FILE__, __LINE__);
-            registry.destroy_entity(entity_child_a);
-        }
+        //scene_set::systems::append_child(scene.registry())
 
         
 
-        {
-            print_hierarchy(registry);
-        }
+
+        //SceneRegistry registry;
+        //systems::impl::HierarchySystem hierarchySystem;
+
+        //{
+        //    hierarchySystem.init(registry);
+        //}
+
+        //auto entity_root = registry.create_entity();
+        //{
+        //    registry.emplace_component<components::Hierarchy>(entity_root);
+        //    //auto pair = registry.emplace_component<components::Hierarchy>(entity_root);
+        //    //logging::InfoStream(__FILE__, __LINE__) << "added hierarch?: " << pair.second;
+
+        //    registry.emplace_component<components::Name>(entity_root, "ROOT");
+        //    registry.emplace_component<components::Transform>(entity_root);
+        //}
+
+
+        //{
+        //    auto entity_child_a = registry.create_entity();
+        //    registry.emplace_component<components::Hierarchy>(entity_child_a);
+        //    registry.emplace_component<components::Transform>(entity_child_a);
+
+
+        //    auto entity_child_a_a = registry.create_entity();
+        //    registry.emplace_component<components::Transform>(entity_child_a_a);
+        //    //registry.emplace_component<components::Hierarchy>(entity_child_a_a);
+
+        //    {
+        //        //components::Hierarchy::append_child(registry, entity_child_a, entity_child_a);
+        //        systems::append_child(registry, entity_root, entity_child_a);
+        //        systems::append_child(registry, entity_child_a, entity_child_a_a);
+        //        //systems::remove_child(registry, entity_root, entity_child_a);
+        //        //systems::append_child(registry, entity_child_a_a, entity_root);
+        //    }
+        //    {
+        //        auto entity = registry.create_entity();
+        //        systems::append_child(registry, entity_child_a_a, entity);
+        //        systems::append_child(registry, entity_root, entity);
+        //    }
+        //    print_hierarchy(registry);
+
+        //    logging::info("Destroy", __FILE__, __LINE__);
+        //    registry.destroy_entity(entity_child_a);
+        //}
+
+        //
+
+        //{
+        //    print_hierarchy(registry);
+        //}
 
         //logging::info(Formatter() << "test", __FILE__, __LINE__);
 

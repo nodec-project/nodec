@@ -3,9 +3,9 @@
 
 #include <nodec/entities/entity.hpp>
 #include <nodec/entities/storage.hpp>
-#include <nodec/entities/type_info.hpp>
 #include <nodec/entities/view.hpp>
 #include <nodec/error_formatter.hpp>
+#include <nodec/type_info.hpp>
 
 #include <stdexcept>
 #include <sstream>

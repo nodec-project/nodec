@@ -4,44 +4,62 @@
 #include <screen/screen.hpp>
 
 #include <nodec/signals.hpp>
+#include <nodec/logging.hpp>
 
 namespace screen {
 namespace impl {
 
 class ScreenModule : public Screen {
 public:
-    using ResolutionChangeSignal = nodec::signals::Signal<void(ScreenModule&, const nodec::Vector2i&)>;
-    using SizeChangeSignal = nodec::signals::Signal<void(ScreenModule&, const nodec::Vector2i&)>;
-    using TitleChangeSignal = nodec::signals::Signal<void(ScreenModule&, const std::string&)>;
+    using ResolutionChangedSignal = nodec::signals::Signal<void(ScreenModule&, const nodec::Vector2i&)>;
+    using SizeChangedSignal = nodec::signals::Signal<void(ScreenModule&, const nodec::Vector2i&)>;
+    using TitleChangedSignal = nodec::signals::Signal<void(ScreenModule&, const std::string&)>;
 
 public:
-    ScreenModule() = default;
+    ScreenModule() {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[ScreenModule] >>> Created!";
+    };
 
-    nodec::Vector2i resolution() const noexcept override;
-    void set_resolution(const nodec::Vector2i& resolution) override;
+    nodec::Vector2i resolution() const noexcept override {
+        return internal_resolution;
+    };
 
-    nodec::Vector2i size() const noexcept override;
-    void set_size(const nodec::Vector2i& size) override;
+    void set_resolution(const nodec::Vector2i& resolution) override {
+        resolution_changed_(*this, resolution);
+    }
 
-    std::string title() const noexcept override;
-    void set_title(const std::string& title) override;
+    nodec::Vector2i size() const noexcept override {
+        return internal_size;
+    }
+
+    void set_size(const nodec::Vector2i& size) override {
+        size_changed_(*this, size);
+    }
+
+    std::string title() const noexcept override {
+        return internal_title;
+    }
+
+    void set_title(const std::string& title) override {
+        title_changed_(*this, title);
+    }
 
 public:
-    ResolutionChangeSignal::Interface& resolution_change() { return resolution_change_; }
+    decltype(auto) resolution_changed() { return resolution_changed_.connection_point(); }
 
-    SizeChangeSignal::Interface& size_change() { return size_change_; }
+    decltype(auto) size_changed() { return size_changed_.connection_point(); }
 
-    TitleChangeSignal::Interface& title_change() { return title_change_; }
+    decltype(auto) title_changed() { return title_changed_.connection_point(); }
 
 public:
-    nodec::Vector2i size_internal;
-    nodec::Vector2i resolution_internal;
-    std::string title_internal;
+    nodec::Vector2i internal_size;
+    nodec::Vector2i internal_resolution;
+    std::string internal_title;
 
 private:
-    ResolutionChangeSignal resolution_change_;
-    SizeChangeSignal size_change_;
-    TitleChangeSignal title_change_;
+    ResolutionChangedSignal resolution_changed_;
+    SizeChangedSignal size_changed_;
+    TitleChangedSignal title_changed_;
 };
 
 }

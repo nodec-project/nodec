@@ -1,14 +1,13 @@
 #include "Window.hpp"
-#include "Utils.hpp"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
+//#include "imgui_impl_win32.h"
+//#include "imgui_impl_dx11.h"
 
 #include <nodec/unicode.hpp>
 
 #include <string>
 #include <sstream>
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
 // === Window Class ====
@@ -50,14 +49,8 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept {
 
 Window::Window(int width, int height,
                int gfxWidth, int gfxHeight,
-               const wchar_t* name,
-               input::keyboard::impl::KeyboardModule* keyboardModule,
-               input::mouse::impl::MouseModule* mouseModule)
-    :
-    width(width),
-    height(height),
-    keyboardModule(keyboardModule),
-    mouseModule(mouseModule) {
+               const wchar_t* name)
+    : width(width), height(height) {
     RECT wr;
     wr.left = 100;
     wr.right = width + wr.left;
@@ -88,39 +81,41 @@ Window::Window(int width, int height,
     pGfx = std::make_unique<Graphics>(hWnd, gfxWidth, gfxHeight);
 
 
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
-    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
-    //io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+    //// Setup Dear ImGui context
+    //IMGUI_CHECKVERSION();
+    //ImGui::CreateContext();
+    //ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+    ////io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+    ////io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
 
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    //// Setup Dear ImGui style
+    //ImGui::StyleColorsDark();
 
-    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
+    //// When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
+    //ImGuiStyle& style = ImGui::GetStyle();
+    //if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    //    style.WindowRounding = 0.0f;
+    //    style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+    //}
 
 
-    // Init ImGUI Win32 Impl
-    ImGui_ImplWin32_Init(hWnd);
-    // init imgui d3d impl
-    ImGui_ImplDX11_Init(pGfx->GetDevice(), pGfx->GetContext());
+    //// Init ImGUI Win32 Impl
+    //ImGui_ImplWin32_Init(hWnd);
+    //// init imgui d3d impl
+    //ImGui_ImplDX11_Init(pGfx->GetDevice(), pGfx->GetContext());
     //io.DisplaySize = ImVec2(gfxWidth / io.DisplayFramebufferScale.x, gfxHeight / io.DisplayFramebufferScale.y);
 
 }
 
 Window::~Window() {
     // Cleanup
-    ImGui_ImplDX11_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
+    //ImGui_ImplDX11_Shutdown();
+    //ImGui_ImplWin32_Shutdown();
+    //ImGui::DestroyContext();
+
+    mWindowDestroyed(*this);
 
     DestroyWindow(hWnd);
 
@@ -177,116 +172,116 @@ LRESULT CALLBACK Window::HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPAR
 }
 
 LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
-    if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
-        return true;
-    }
+    //if (ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam)) {
+    //    return true;
+    //}
 
-    switch (msg) {
-        // We don't want the DefProc to handle this message because
-        // we want our destructor to destoroy the window, so return 0 instead of break.
-    case WM_CLOSE:
-        PostQuitMessage(0);
-        return 0;
+    //switch (msg) {
+    //    // We don't want the DefProc to handle this message because
+    //    // we want our destructor to destoroy the window, so return 0 instead of break.
+    //case WM_CLOSE:
+    //    PostQuitMessage(0);
+    //    return 0;
 
-        // when window loses funcs to prevent input
-    case WM_KILLFOCUS:
-        //SetTitle("A");
-        break;
+    //    // when window loses funcs to prevent input
+    //case WM_KILLFOCUS:
+    //    //SetTitle("A");
+    //    break;
 
-        // on window to foreground/background
-    case WM_ACTIVATE:
-        if (wParam & WA_ACTIVE) {
-            // active by keyboard not mouse
-            //SetTitle("b");
+    //    // on window to foreground/background
+    //case WM_ACTIVATE:
+    //    if (wParam & WA_ACTIVE) {
+    //        // active by keyboard not mouse
+    //        //SetTitle("b");
 
-        }
-        else {
-            // active by mouse
-            //SetTitle("c");
-        }
-        break;
+    //    }
+    //    else {
+    //        // active by mouse
+    //        //SetTitle("c");
+    //    }
+    //    break;
 
-        // --- KEYBOARD MESSAGE ---
-    case WM_KEYDOWN:
-        // syskey commands need to be handled to track ALT key (VK_MENU) and F10
-    case WM_SYSKEYDOWN:
-        // filter autorepeat
-        if (!(lParam & 0x40000000)) {
-            keyboardModule->handle_key_press(static_cast<input::keyboard::Key>(wParam));
-        }
-        break;
+    //    // --- KEYBOARD MESSAGE ---
+    //case WM_KEYDOWN:
+    //    // syskey commands need to be handled to track ALT key (VK_MENU) and F10
+    //case WM_SYSKEYDOWN:
+    //    // filter autorepeat
+    //    if (!(lParam & 0x40000000)) {
+    //        keyboardModule->handle_key_press(static_cast<input::keyboard::Key>(wParam));
+    //    }
+    //    break;
 
-    case WM_KEYUP:
-    case WM_SYSKEYUP:
+    //case WM_KEYUP:
+    //case WM_SYSKEYUP:
 
-        keyboardModule->handle_key_release(static_cast<input::keyboard::Key>(wParam));
+    //    keyboardModule->handle_key_release(static_cast<input::keyboard::Key>(wParam));
 
-        break;
+    //    break;
 
-    case WM_CHAR:
+    //case WM_CHAR:
 
-        keyboardModule->handle_text_input(static_cast<unsigned char>(wParam));
+    //    keyboardModule->handle_text_input(static_cast<unsigned char>(wParam));
 
-        break;
+    //    break;
 
-        // END KEYBOARD MESSAGE ---
+    //    // END KEYBOARD MESSAGE ---
 
-        // --- MOUSE MESSAGE ---
-    case WM_MOUSEMOVE:
-    {
-        const POINTS pt = MAKEPOINTS(lParam);
+    //    // --- MOUSE MESSAGE ---
+    //case WM_MOUSEMOVE:
+    //{
+    //    const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_mouse_move({ pt.x, pt.y });
-        /*if (ImGui::GetCurrentContext()) {
+    //    mouseModule->handle_mouse_move({ pt.x, pt.y });
+    //    /*if (ImGui::GetCurrentContext()) {
 
-            ImGui::GetIO().MousePos = ImVec2(pt.x / 1.5, pt.y / 1.5);
-        }*/
-        break;
-    }
-    case WM_LBUTTONDOWN:
-    {
-        const POINTS pt = MAKEPOINTS(lParam);
+    //        ImGui::GetIO().MousePos = ImVec2(pt.x / 1.5, pt.y / 1.5);
+    //    }*/
+    //    break;
+    //}
+    //case WM_LBUTTONDOWN:
+    //{
+    //    const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_press(input::mouse::MouseButton::Left,
-                                         { pt.x, pt.y });
+    //    mouseModule->handle_button_press(input::mouse::MouseButton::Left,
+    //                                     { pt.x, pt.y });
 
-        break;
-    }
-    case WM_RBUTTONDOWN:
-    {
-        const POINTS pt = MAKEPOINTS(lParam);
+    //    break;
+    //}
+    //case WM_RBUTTONDOWN:
+    //{
+    //    const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_press(input::mouse::MouseButton::Right,
-                                         { pt.x, pt.y });
+    //    mouseModule->handle_button_press(input::mouse::MouseButton::Right,
+    //                                     { pt.x, pt.y });
 
-        break;
-    }
-    case WM_LBUTTONUP:
-    {
-        const POINTS pt = MAKEPOINTS(lParam);
+    //    break;
+    //}
+    //case WM_LBUTTONUP:
+    //{
+    //    const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_release(input::mouse::MouseButton::Left,
-                                           { pt.x, pt.y });
+    //    mouseModule->handle_button_release(input::mouse::MouseButton::Left,
+    //                                       { pt.x, pt.y });
 
-        break;
-    }
-    case WM_RBUTTONUP:
-    {
-        const POINTS pt = MAKEPOINTS(lParam);
+    //    break;
+    //}
+    //case WM_RBUTTONUP:
+    //{
+    //    const POINTS pt = MAKEPOINTS(lParam);
 
-        mouseModule->handle_button_release(input::mouse::MouseButton::Right,
-                                           { pt.x, pt.y });
+    //    mouseModule->handle_button_release(input::mouse::MouseButton::Right,
+    //                                       { pt.x, pt.y });
 
-        break;
-    }
-    case WM_MOUSEWHEEL:
-    {
+    //    break;
+    //}
+    //case WM_MOUSEWHEEL:
+    //{
 
-        break;
-    }
-    // END MOUSE MESSAGE ---
+    //    break;
+    //}
+    //// END MOUSE MESSAGE ---
 
-    }
+    //}
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 

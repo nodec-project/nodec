@@ -1,6 +1,11 @@
 #pragma once
 
+#include "Window.hpp"
+
 #include <nodec/application.hpp>
+
+#include <memory>
+
 
 class WinDesktopApplication : public nodec::Application {
 public:
@@ -12,4 +17,7 @@ protected:
 
     int main() final;
     int on_error_exit() final;
+
+    std::unique_ptr<Window> mpWindow;
+    
 };

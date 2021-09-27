@@ -24,9 +24,7 @@ class NodecEngine {
     template<typename T>
     class ModuleContainer : public BaseContainer {
     public:
-        ~ModuleContainer() {
-            nodec::logging::InfoStream(__FILE__, __LINE__) << "destroyed";
-        }
+        ~ModuleContainer() {}
         std::unique_ptr<T> module;
     };
 

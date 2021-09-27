@@ -3,8 +3,23 @@
 //#include "test_cube.hpp"
 //#include "player.hpp"
 
+class Test {};
+
+void nodec_engine::on_boot(NodecEngine& engine) {
+    using namespace nodec;
+    logging::InfoStream(__FILE__, __LINE__) << "[App] >>> booting...";
+    logging::InfoStream(__FILE__, __LINE__) << "[App] >>> Hello world!";
+
+    auto& screen = engine.get_module<Screen>();
+
+    screen.set_size({ 1280, 720 });
+    screen.set_resolution({ 1920, 1080 });
+    
+
+}
+
 //
-using namespace nodec;
+//using namespace nodec;
 //using namespace game_engine;
 //using namespace nodec_modules::rendering::interfaces;
 //using namespace nodec_modules::screen::interfaces;
@@ -39,30 +54,30 @@ using namespace nodec;
 //
 //}
 
-
-void game_engine::on_boot(game_engine::GameEngine& engine) {
-    logging::info("booting... in application layer", __FILE__, __LINE__);
-    logging::info("HELLO WORLD!", __FILE__, __LINE__);
-
-    
-
-    //engine.screen().set_size({ 1920, 1080 });
-    engine.screen().set_size({ 1280, 720 });
-    engine.screen().set_resolution({ 1280, 720 });
-    engine.screen().set_title("[ void ]");
-
-    auto root = engine.scene_registry().create_entity();
-    auto child1 = engine.scene_registry().create_entity();
-    auto child1_1 = engine.scene_registry().create_entity();
-    auto child2 = engine.scene_registry().create_entity();
-
-    scene_set::systems::append_child(engine.scene_registry(), root, child1);
-    scene_set::systems::append_child(engine.scene_registry(), root, child2);
-    scene_set::systems::append_child(engine.scene_registry(), child1, child1_1);
-
-    engine.scene_registry().emplace_component<scene_set::components::Name>(root);
-    engine.scene_registry().get_component<scene_set::components::Name>(root).name = "root";
-    
-    
-}
+//
+//void game_engine::on_boot(game_engine::GameEngine& engine) {
+//    logging::info("booting... in application layer", __FILE__, __LINE__);
+//    logging::info("HELLO WORLD!", __FILE__, __LINE__);
+//
+//    
+//
+//    //engine.screen().set_size({ 1920, 1080 });
+//    engine.screen().set_size({ 1280, 720 });
+//    engine.screen().set_resolution({ 1280, 720 });
+//    engine.screen().set_title("[ void ]");
+//
+//    auto root = engine.scene_registry().create_entity();
+//    auto child1 = engine.scene_registry().create_entity();
+//    auto child1_1 = engine.scene_registry().create_entity();
+//    auto child2 = engine.scene_registry().create_entity();
+//
+//    scene_set::systems::append_child(engine.scene_registry(), root, child1);
+//    scene_set::systems::append_child(engine.scene_registry(), root, child2);
+//    scene_set::systems::append_child(engine.scene_registry(), child1, child1_1);
+//
+//    engine.scene_registry().emplace_component<scene_set::components::Name>(root);
+//    engine.scene_registry().get_component<scene_set::components::Name>(root).name = "root";
+//    
+//    
+//}
 

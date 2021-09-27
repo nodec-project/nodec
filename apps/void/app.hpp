@@ -5,14 +5,25 @@
 #ifndef APP__APP_HPP_
 #define APP__APP_HPP_
 
-#include <game_engine/game_engine.hpp>
+#include <nodec_engine/nodec_engine.hpp>
+#include <screen/screen.hpp>
+
 
 #include <nodec/logging.hpp>
 
-#include <scene_set/scene_registry.hpp>
-#include <scene_set/components/standard.hpp>
-#include <scene_set/systems/hierarchy_system.hpp>
-#include <scene_set/systems/transform_system.hpp>
+using NodecEngine = nodec_engine::NodecEngine;
+using Screen = screen::Screen;
+
+
+//
+//#include <game_engine/game_engine.hpp>
+//
+
+//
+//#include <scene_set/scene_registry.hpp>
+//#include <scene_set/components/standard.hpp>
+//#include <scene_set/systems/hierarchy_system.hpp>
+//#include <scene_set/systems/transform_system.hpp>
 
 //
 //#include <game_engine/game_engine.hpp>

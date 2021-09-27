@@ -151,12 +151,12 @@ public:
     }
 
 public:
-    typename StorageSignal::Interface& element_constructed() {
-        return element_constructed_;
+    decltype(auto) element_constructed() {
+        return element_constructed_.connection_point();
     }
 
-    typename StorageSignal::Interface& element_destroyed() {
-        return element_destroyed_;
+    decltype(auto) element_destroyed() {
+        return element_destroyed_.connection_point();
     }
 
 

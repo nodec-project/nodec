@@ -17,6 +17,8 @@ class HierarchySystem {
 
 public:
     void init(SceneRegistry& registry) {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[HierarchySystem] >>> init()";
+
         on_destroy_connection
             = registry.component_destroyed<components::Hierarchy>().connect(
                 [&](SceneRegistry& registry, const SceneEntity entity) {

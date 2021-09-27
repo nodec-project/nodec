@@ -2,11 +2,9 @@
 
 #include "Graphics/Graphics.hpp"
 
-#include <input/keyboard/impl/keyboard_module.hpp>
-#include <input/mouse/impl/mouse_module.hpp>
-
 #include <nodec/error_formatter.hpp>
 #include <nodec/macros.hpp>
+#include <nodec/signals.hpp>
 
 #include <Windows.h>
 
@@ -63,10 +61,7 @@ private:
 public:
     Window(int width, int height, 
            int gfxWidth, int gfxHeight, 
-           const wchar_t* name, 
-           input::keyboard::impl::KeyboardModule* keyboardModule,
-           input::mouse::impl::MouseModule* mouseModule
-           );
+           const wchar_t* name);
 
     ~Window();
 
@@ -75,6 +70,14 @@ public:
     void SetTitle(const std::string& title);
 
     Graphics& Gfx();
+
+public:
+    using WindowSignal = nodec::signals::Signal<void(Window&)>;
+    
+    decltype(auto) WindowDestroyed() { return mWindowDestroyed.connection_point(); }
+
+private:
+    WindowSignal mWindowDestroyed;
 
 private:
     static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -85,8 +88,6 @@ private:
     int width;
     int height;
     HWND hWnd;
-    input::keyboard::impl::KeyboardModule* keyboardModule;
-    input::mouse::impl::MouseModule* mouseModule;
     std::unique_ptr<Graphics> pGfx;
 
 private:

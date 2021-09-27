@@ -1,6 +1,6 @@
 #include "Graphics/Graphics.hpp"
-#include "imgui_impl_dx11.h"
-#include "imgui_impl_win32.h"
+//#include "imgui_impl_dx11.h"
+//#include "imgui_impl_win32.h"
 
 #include <d3dcompiler.h>
 
@@ -137,8 +137,8 @@ UINT Graphics::GetHeight() noexcept { return height; }
 
 
 void Graphics::BeginFrame() noexcept {
-    ImGui_ImplDX11_NewFrame();
-    ImGui_ImplWin32_NewFrame();
+    //ImGui_ImplDX11_NewFrame();
+    //ImGui_ImplWin32_NewFrame();
 
     //auto& io = ImGui::GetIO();
     //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplaySize.x << ", " << io.DisplaySize.y;
@@ -147,7 +147,7 @@ void Graphics::BeginFrame() noexcept {
     //io.DisplayFramebufferScale = ImVec2(1280 / (float)1920, 1080 / (float)720);
     //io.DisplayFramebufferScale = ImVec2(0.6, 0.6);
 
-    ImGui::NewFrame();
+    //ImGui::NewFrame();
     //io.MousePos.x *=  width / io.DisplaySize.x; io.MousePos.y *= height / io.DisplaySize.y;
     //io.DisplayFramebufferScale = ImVec2(io.DisplaySize.x/ width, io.DisplaySize.y / height );
     //nodec::logging::InfoStream(__FILE__, __LINE__) << io.MousePos.x;
@@ -162,15 +162,15 @@ void Graphics::EndFrame() {
     //auto& io = ImGui::GetIO();
     //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
 
-    ImGui::Render();
-    //nodec::logging::InfoStream(__FILE__, __LINE__) << ImGui::GetDrawData()->DisplaySize.x << ", " << ImGui::GetDrawData()->DisplaySize.y;
-    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    //ImGui::Render();
+    ////nodec::logging::InfoStream(__FILE__, __LINE__) << ImGui::GetDrawData()->DisplaySize.x << ", " << ImGui::GetDrawData()->DisplaySize.y;
+    //ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    // Update and Render additional Platform Windows
-    if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-        ImGui::UpdatePlatformWindows();
-        ImGui::RenderPlatformWindowsDefault();
-    }
+    //// Update and Render additional Platform Windows
+    //if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+    //    ImGui::UpdatePlatformWindows();
+    //    ImGui::RenderPlatformWindowsDefault();
+    //}
 
 
     HRESULT hr;

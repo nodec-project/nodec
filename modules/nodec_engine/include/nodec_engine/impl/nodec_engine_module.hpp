@@ -43,7 +43,7 @@ public:
     }
 
 public:
-    using EngineSignal = nodec::signals::Signal<void(NodecEngine&)>;
+    using EngineSignal = nodec::signals::Signal<void(NodecEngineModule&)>;
 
     decltype(auto) initialized() {
         return initialized_.connection_point();
