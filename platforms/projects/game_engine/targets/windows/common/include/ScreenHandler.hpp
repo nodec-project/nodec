@@ -28,11 +28,47 @@ public:
 
 private:
     void OnEngineInitialized(NodecEngineModule& engine) {
+        using namespace nodec;
+        mResolutionChangedConnection = mpScreenModule->resolution_changed().connect(
+            [&](ScreenModule& screen, const Vector2i& resolution) {
+                screen.internal_resolution = resolution;
+            });
+
+        mSizeChangedConnection = mpScreenModule->size_changed().connect(
+            [&](ScreenModule& screen, const Vector2i& size) {
+                screen.internal_size = size;
+            });
+
+        mTitleChangedConnection = mpScreenModule->title_changed().connect(
+            [&](ScreenModule& screen, const std::string& title) {
+                screen.internal_title = title;
+            });
 
     }
 
     void OnEngineStarted(NodecEngineModule& engine) {
         assert(mpWindow);
+
+        mResolutionChangedConnection.disconnect();
+        mSizeChangedConnection.disconnect();
+
+        mTitleChangedConnection = mpScreenModule->title_changed().connect(
+            [&](ScreenModule& screen, const std::string& title) {
+                try {
+                    mpWindow->SetTitle(title);
+                    screen.internal_title = title;
+                }
+                catch (const std::exception& e) {
+                    nodec::logging::ErrorStream(__FILE__, __LINE__)
+                        << "[ScreenHandlers] >>> Exception has been occured while Window::SetTitle().\n"
+                        << "detail: " << e.what() << std::flush;
+                }
+                catch (...) {
+                    nodec::logging::ErrorStream(__FILE__, __LINE__)
+                        << "[ScreenHandlers] >>> Unknown Exception has been occured while Window::SetTitle().\n"
+                        << "detail: Unavailable." << std::flush;
+                }
+            });
     }
 
 
@@ -89,13 +125,13 @@ private:
     Window* mpWindow{ nullptr };
 
     ScreenModule::ResolutionChangedSignal::Connection
-        resolutionChangedConnection;
+        mResolutionChangedConnection;
 
     ScreenModule::SizeChangedSignal::Connection
-        sizeChangedConnection;
+        mSizeChangedConnection;
 
     ScreenModule::TitleChangedSignal::Connection
-        titleChangedConnection;
+        mTitleChangedConnection;
 
 private:
     NODEC_DISABLE_COPY(ScreenHandler);

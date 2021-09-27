@@ -23,8 +23,8 @@ public:
     void step();
 
 public:
-    template<typename Module, typename... Args>
-    decltype(auto) add_module(Args &&... args) {
+    template<typename Module>
+    decltype(auto) register_module(Module* module) {
         const auto index = nodec::type_seq<Module>::value();
 
         if (!(index < modules.size())) {
@@ -34,12 +34,12 @@ public:
         auto&& mData = modules[index];
         if (!mData.container) {
             auto container = new ModuleContainer<Module>();
-            container->module.reset(new Module(args...));
-            
+            container->module = module;
+
             mData.container.reset(container);
         }
 
-        return *static_cast<ModuleContainer<Module>*>(mData.container.get())->module.get();
+        return *static_cast<ModuleContainer<Module>*>(mData.container.get())->module;
     }
 
 public:
@@ -69,7 +69,7 @@ private:
     void step_first();
     void step_cycle();
 
-    void (NodecEngineModule::* step_func)() {&NodecEngineModule::step_first};
+    void (NodecEngineModule::* step_func)() { &NodecEngineModule::step_first };
 
 private:
     EngineSignal initialized_;

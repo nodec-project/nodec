@@ -20,23 +20,34 @@ int Application::main_impl() {
     using namespace nodec;
 
     Engine engine;
-    engine.Configure();
+    engine.configure();
 
-    mpWindow.reset(new Window(engine.screenModule().internal_resolution.x, engine.screenModule().internal_resolution.y,
-                              engine.screenModule().internal_resolution.x, engine.screenModule().internal_resolution.y, 
-                              unicode::utf8to16<std::wstring>(engine.screenModule().internal_title).c_str()));
+    mpWindow.reset(new Window(engine.screen_module().internal_resolution.x, engine.screen_module().internal_resolution.y,
+                              engine.screen_module().internal_resolution.x, engine.screen_module().internal_resolution.y,
+                              unicode::utf8to16<std::wstring>(engine.screen_module().internal_title).c_str()));
 
 
     //mpWindow.reset(new Window(1280, 720,
     //                          1280, 720,
     //                          unicode::utf8to16<std::wstring>(engine.screenModule().internal_title).c_str()));
 
-    engine.Setup(mpWindow.get());
+    engine.setup(mpWindow.get());
 
-    
+    int exitCode;
+    while (true) {
+        if (!Window::ProcessMessages(exitCode)) {
+            break;
+        }
+
+        //window.Gfx().BeginFrame();
+        //
+
+        //window.Gfx().EndFrame();
+
+    }
 
 
-    return 0;
+    return exitCode;
 
     //logging::InfoStream(__FILE__, __LINE__)
     //    << "[Main] >>> Launch the Editor.";

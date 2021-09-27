@@ -10,7 +10,7 @@
 
 
 class Engine : public nodec_engine::impl::NodecEngineModule {
-    //using NodecEngineModule = nodec_engine::impl::NodecEngineModule;
+    using Screen = screen::Screen;
     using ScreenModule = screen::impl::ScreenModule;
 
 public:
@@ -29,16 +29,18 @@ public:
 
         nodec_engine::impl::set_current(this);
 
-        mpScreenModule = &mEngineModule.add_module<ScreenModule>();
-        mpScreenHandler.reset(new ScreenHandler(mpScreenModule, mEngineModule));
+        screen_module_.reset(new ScreenModule());
+        register_module<Screen>(screen_module_.get());
 
-        mEngineModule.reset();
+        screen_handler_.reset(new ScreenHandler(screen_module_.get(), *this));
+
+        reset();
     }
 
-    void setup(Window* pWindow) {
-        mpWindow = pWindow;
+    void setup(Window* window) {
+        window_ = window;
 
-        mpScreenHandler->Setup(pWindow);
+        screen_handler_->Setup(window);
 
     }
 
@@ -48,10 +50,10 @@ public:
 
 
 
-private
+private:
     std::unique_ptr<ScreenModule> screen_module_;
 
     std::unique_ptr<ScreenHandler> screen_handler_;
-    Window* mpWindow{ nullptr };
+    Window* window_{ nullptr };
 
 };

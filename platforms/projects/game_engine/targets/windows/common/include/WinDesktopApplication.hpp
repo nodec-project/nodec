@@ -9,8 +9,9 @@
 
 class WinDesktopApplication : public nodec::Application {
 public:
-    WinDesktopApplication() {
-    }
+    WinDesktopApplication() {}
+
+
 
 protected:
     virtual int main_impl() = 0;

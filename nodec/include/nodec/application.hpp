@@ -3,16 +3,21 @@
 
 #include <nodec/macros.hpp>
 
-namespace nodec
-{
+namespace nodec {
 
-class Application
-{
+class Application {
 public:
     Application() {};
     virtual ~Application() {};
 
-    int run();
+    int run() {
+        try {
+            return main();
+        }
+        catch (...) {
+            return on_error_exit();
+        }
+    }
 
 protected:
     virtual int main() = 0;

@@ -176,12 +176,12 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
     //    return true;
     //}
 
-    //switch (msg) {
-    //    // We don't want the DefProc to handle this message because
-    //    // we want our destructor to destoroy the window, so return 0 instead of break.
-    //case WM_CLOSE:
-    //    PostQuitMessage(0);
-    //    return 0;
+    switch (msg) {
+        // We don't want the DefProc to handle this message because
+        // we want our destructor to destoroy the window, so return 0 instead of break.
+    case WM_CLOSE:
+        PostQuitMessage(0);
+        return 0;
 
     //    // when window loses funcs to prevent input
     //case WM_KILLFOCUS:
@@ -279,9 +279,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
     //    break;
     //}
-    //// END MOUSE MESSAGE ---
+    // END MOUSE MESSAGE ---
 
-    //}
+    }
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }
 
