@@ -1,5 +1,5 @@
 [submodule "3rd_party/libs/cereal"]
-	path = extentions/cereal/cereal
+	path = modules/serialization/cereal
 	url = https://github.com/USCiLab/cereal.git
 [submodule "3rd_party/assimp/assimp"]
 	path = extentions/assimp/assimp
