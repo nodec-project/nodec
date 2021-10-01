@@ -46,7 +46,8 @@ public:
     }
 };
 
-class TestB {
+struct TestB {
+    std::string field;
 
 };
 
@@ -72,12 +73,13 @@ int main() {
         engine.initialized().connect([](auto& engine) {logging::debug("initialized", __FILE__, __LINE__); });
         engine.stepped().connect([](auto& engine) {logging::debug("stepped", __FILE__, __LINE__); });
 
+        std::unique_ptr<DerivedModule> derived(new DerivedModule(100));
+        engine.register_module<TestModule>(derived.get());
+        logging::DebugStream(__FILE__, __LINE__) << derived->field;
 
 
-        auto& derived = engine.add_module<DerivedModule>(100);
-        logging::DebugStream(__FILE__, __LINE__) << derived.field;
-
-
+        std::unique_ptr<TestB> test_b(new TestB{"hoge"});
+        engine.register_module<TestB>(test_b.get());
         engine.reset();
 
 
@@ -85,9 +87,14 @@ int main() {
             engine.step();
         }
         {
-            auto& module = engine.get_module<DerivedModule>();
+            auto& module = engine.get_module<TestModule>();
             logging::InfoStream(__FILE__, __LINE__) << module.field;
 
+        }
+        {
+
+            auto& module = engine.get_module<TestB>();
+            logging::InfoStream(__FILE__, __LINE__) << module.field;
         }
     }
     catch (std::exception& e) {

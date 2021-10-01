@@ -27,19 +27,19 @@ public:
     decltype(auto) register_module(Module* module) {
         const auto index = nodec::type_seq<Module>::value();
 
-        if (!(index < modules.size())) {
-            modules.resize(index + 1u);
+        if (!(index < moduleReferences.size())) {
+            moduleReferences.resize(index + 1u);
         }
 
-        auto&& mData = modules[index];
-        if (!mData.container) {
-            auto container = new ModuleContainer<Module>();
-            container->module = module;
+        auto&& refData = moduleReferences[index];
+        if (!refData.reference) {
+            auto reference = new ModuleReference<Module>();
+            reference->ptr = module;
 
-            mData.container.reset(container);
+            refData.reference.reset(reference);
         }
 
-        return *static_cast<ModuleContainer<Module>*>(mData.container.get())->module;
+        return *static_cast<ModuleReference<Module>*>(refData.reference.get())->ptr;
     }
 
 public:

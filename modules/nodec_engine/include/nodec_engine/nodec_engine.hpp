@@ -16,20 +16,20 @@ namespace nodec_engine {
 
 class NodecEngine {
 
-    class BaseContainer {
+    class BaseModuleReference {
     public:
-        virtual ~BaseContainer() {};
+        virtual ~BaseModuleReference() {};
     };
 
     template<typename T>
-    class ModuleContainer : public BaseContainer {
+    class ModuleReference : public BaseModuleReference {
     public:
-        ~ModuleContainer() {}
-        T* module{ nullptr };
+        ~ModuleReference() {}
+        T* ptr{ nullptr };
     };
 
-    struct ModuleData {
-        std::unique_ptr<BaseContainer> container;
+    struct ModuleReferenceData {
+        std::unique_ptr<BaseModuleReference> reference;
     };
 
 public:
@@ -42,8 +42,8 @@ public:
     template<typename Module>
     decltype(auto) get_module() const {
         const auto index = nodec::type_seq<Module>::value();
-        if (index < modules.size() && modules[index].container) {
-            return *static_cast<ModuleContainer<Module>*>(modules[index].container.get())->module;
+        if (index < moduleReferences.size() && moduleReferences[index].reference) {
+            return *static_cast<ModuleReference<Module>*>(moduleReferences[index].reference.get())->ptr;
         }
 
         throw std::runtime_error(
@@ -53,7 +53,7 @@ public:
 
 protected:
     nodec::Stopwatch<std::chrono::steady_clock> engine_timer_;
-    std::vector<ModuleData> modules;
+    std::vector<ModuleReferenceData> moduleReferences;
 
 private:
     NODEC_DISABLE_COPY(NodecEngine);
