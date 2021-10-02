@@ -11,7 +11,11 @@ public:
 
     }
 
+    virtual ~Resource() {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[~Resource()]";
+    }
     const std::string name;
+
 };
 
 class TestResource : public Resource {
@@ -20,6 +24,21 @@ public:
 
     int field;
 
+    ~TestResource() {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[~TestResource()]";
+    }
+
+};
+
+class ImplTestResource : public TestResource {
+public:
+    using TestResource::TestResource;
+
+    int impl_filed;
+
+    ~ImplTestResource() {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[~ImplTestResource()]";
+    }
 };
 
 class TestResourceHandler {
@@ -38,7 +57,8 @@ public:
         nodec::logging::InfoStream(__FILE__, __LINE__) << name;
 
         std::promise<std::shared_ptr<TestResource>> promise;
-        auto resource = std::make_shared<TestResource>(name);
+        auto resource = std::make_shared<ImplTestResource>(name);
+        resource->impl_filed = 999;
 
         access.register_resource(resource);
         promise.set_value(resource);
@@ -79,9 +99,34 @@ int main() {
         hoge_resource->field = 100;
 
         {
-            logging::InfoStream(__FILE__, __LINE__) << registry.get_resource<TestResource>("hoge").get()->field;
+            auto hoge_resource = registry.get_resource<TestResource>("hoge").get();
+            logging::InfoStream(__FILE__, __LINE__) << hoge_resource->field;
+            {
+                auto impl_hoge_resource = static_cast<ImplTestResource*>(hoge_resource.get());
+                logging::InfoStream(__FILE__, __LINE__) << impl_hoge_resource->impl_filed;
+            }
+            {
+                auto impl_hoge_resource = dynamic_cast<ImplTestResource*>(hoge_resource.get());
+                logging::InfoStream(__FILE__, __LINE__) << impl_hoge_resource->impl_filed;
+            }
+
+            {
+                auto impl_hoge_resource = std::dynamic_pointer_cast<ImplTestResource>(hoge_resource);
+                logging::InfoStream(__FILE__, __LINE__) << impl_hoge_resource->impl_filed;
+            }
+
+            
+
+            //registry.apply_changes<TestResource>("huga");
+            //registry.new_resource<TestResource>("hoge");
         }
 
+        logging::InfoStream(__FILE__, __LINE__) << "test";
+        {
+            std::unique_ptr<TestResource> resource(new ImplTestResource("test"));
+
+        }
+        logging::InfoStream(__FILE__, __LINE__) << "test";
     }
     catch (std::exception& e) {
         logging::FatalStream(__FILE__, __LINE__) << e.what();

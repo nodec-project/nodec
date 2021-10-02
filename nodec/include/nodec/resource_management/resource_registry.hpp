@@ -2,6 +2,7 @@
 #define NODEC__RESOURCE_MANAGEMENT__RESOURCE_REGISTRY_HPP_
 
 #include <nodec/type_info.hpp>
+#include <nodec/error_formatter.hpp>
 
 #include <type_traits>
 #include <string>
@@ -11,10 +12,38 @@
 #include <functional>
 #include <future>
 #include <mutex>
+#include <stdexcept>
 
 
 namespace nodec {
 namespace resource_management {
+
+namespace details {
+
+// Note-2021-10-03 <IOE>:
+//  * I wonder about making an exception class for each exception content.
+//  * An exception class should be created for each error type.
+
+template<typename Type>
+inline void throw_no_resource_exception(const std::string& resource_name, const char* file, size_t line) {
+    throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
+        nodec::Formatter()
+        << "No resource named '" << resource_name << " (type: " << typeid(Type).name() << ")'",
+        file, line));
+}
+
+
+template<typename Type>
+inline void throw_resource_already_exists_exception(const std::string& resource_name, const char* file, size_t line) {
+    throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
+        nodec::Formatter()
+        << "The resource named '" << resource_name << " (type: " << typeid(Type).name() << ")' already exisis.",
+        file, line));
+}
+
+}
+
+
 
 class ResourceRegistry {
     template<typename Type>
@@ -126,11 +155,34 @@ public:
     template<typename Type>
     ResourceFuture<Type> new_resource(const std::string& name) {
         auto* block = resource_block_assured<Type>();
+
+        Resource<Type> resource;
+        {
+            std::lock_guard<std::mutex> lock(block->dict_mutex);
+            resource = block->dict[name].lock();
+        }
+
+        if (resource) {
+            details::throw_resource_already_exists_exception<Type>(name, __FILE__, __LINE__);
+        }
+
         return block->creator(name, { block });
     }
 
     template<typename Type>
-    decltype(auto) apply_changes(Resource<Type> resource) {
+    decltype(auto) apply_changes(const std::string& name) {
+        auto* block = resource_block_assured<Type>();
+
+        Resource<Type> resource;
+        {
+            std::lock_guard<std::mutex> lock(block->dict_mutex);
+            resource = block->dict[name].lock();
+        }
+
+        if (!resource) {
+            details::throw_no_resource_exception<Type>(name, __FILE__, __LINE__);
+        }
+
         return resource_block_assured<Type>()->writer(resource);
     }
 
