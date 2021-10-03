@@ -44,13 +44,14 @@ int main() {
         }
 
         {
-            auto future = executor.submit([]() {
+            auto future = executor.submit([&]() {
                 logging::InfoStream(__FILE__, __LINE__) << std::this_thread::get_id();
+                //executor.submit(counter, 12);
                 counter(10);
                 return std::this_thread::get_id();
                                           });
 
-            logging::InfoStream(__FILE__, __LINE__) << future.get();
+            //logging::InfoStream(__FILE__, __LINE__) << future.get();
         }
 
         //std::this_thread::yield();

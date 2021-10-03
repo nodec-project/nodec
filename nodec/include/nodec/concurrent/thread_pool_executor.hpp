@@ -20,6 +20,7 @@ namespace concurrent {
 // This code based on 
 //  * <https://github.com/bshoshany/thread-pool>
 //  * <https://github.com/progschj/ThreadPool>
+//  * <https://github.com/SandSnip3r/thread-pool>
 // Thank you! :)
 
 
@@ -50,15 +51,11 @@ public:
             running = false;
         }
 
-        logging::InfoStream(__FILE__, __LINE__) << "shuting down";
         // Wake up all threads so that they may exist
         condition.notify_all();
 
         for (ui32 i = 0; i < thread_count_; ++i) {
-            logging::InfoStream info(__FILE__, __LINE__);
-            info << threads[i].get_id();
             threads[i].join();
-            info << " >>> joined!";
         }
     }
 
@@ -107,8 +104,6 @@ private:
                 throw std::runtime_error("Cannot schedule new task after shutdown.");
             }
 
-            logging::InfoStream(__FILE__, __LINE__) << "push";
-
             tasks.push(std::function<void()>(task));
         }
 
@@ -155,8 +150,6 @@ private:
                 if (!running && tasks.empty()) {
                     return;
                 }
-
-                logging::InfoStream(__FILE__, __LINE__) << "pop";
 
                 task = std::move(tasks.front());
                 tasks.pop();
