@@ -9,6 +9,10 @@
 namespace nodec {
 namespace entities {
 
+// This code based on
+//  * <https://github.com/sparsehash/sparsehash/blob/master/src/sparsehash/sparsetable>
+// Thank you! :)
+
 
 /**
 * The smaller this is, the faster lookup is (because the group bitmap is

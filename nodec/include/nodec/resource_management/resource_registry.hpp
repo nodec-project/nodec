@@ -183,7 +183,7 @@ public:
             details::throw_no_resource_exception<Type>(name, __FILE__, __LINE__);
         }
 
-        return resource_block_assured<Type>()->writer(resource);
+        return block->writer(resource);
     }
 
     template<typename Type, typename Creator, typename Loader, typename Writer>

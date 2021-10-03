@@ -58,8 +58,6 @@ std::string default_formatter(const LogRecord& record) noexcept {
 }
 
 void record_to_stdout_handler(const LogRecord& record) noexcept {
-    static std::mutex io_lock_mtx_;
-    std::lock_guard<std::mutex> lock(io_lock_mtx_);
     std::cout << record << std::endl;
 }
 
@@ -71,6 +69,11 @@ RecordHandlers::ConnectionPoint record_handlers() {
 
 namespace {
 void log_generic(const LogRecord& record) {
+
+    // Wait until one record handled.
+    static std::mutex io_lock_mtx_;
+    std::lock_guard<std::mutex> lock(io_lock_mtx_);
+
     if (record.level < current_level_) {
         // ignore this log
         return;
