@@ -3,6 +3,7 @@
 
 
 #include <stdint.h>
+#include <atomic>
 
 
 namespace nodec {
@@ -14,12 +15,12 @@ namespace internal {
 struct type_seq final {
     static TypeId next() {
         // Since a function is defined only once, there is only one static variable.
-        static TypeId value{};
+        static std::atomic<TypeId> value{};
         return value++;
     }
 };
 
-}
+} // namespace internal
 
 
 template<typename T>
@@ -30,7 +31,7 @@ struct type_seq final {
     }
 };
 
-}
+} // namespace nodec
 
 
 #endif

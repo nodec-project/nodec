@@ -66,8 +66,11 @@ public:
         }
 
         void register_resource(Resource<Type> resource) {
-            std::lock_guard<std::mutex> lock(block_->dict_mutex);
-            block_->dict[resource->name] = resource;
+            {
+                std::lock_guard<std::mutex> lock(block_->dict_mutex);
+                block_->dict[resource->name] = resource;
+            }
+            block_->condition.notify_all();
         }
 
     private:
@@ -85,20 +88,23 @@ private:
         static_assert(std::is_const_v<decltype(Type::name)>,
                       "The type of the resource name must be const.");
 
-        using Creator = std::function<ResourceFuture<Type>(const std::string&, ResourceBlockAccess<Type>)>;
-        using Loader = std::function<ResourceFuture<Type>(const std::string&, ResourceBlockAccess<Type>)>;
-        using Writer = std::function<std::future<bool>(Resource<Type>)>;
+        using Creator = std::function<void(const std::string&)>;
+        using Loader = std::function<Resource<Type>(const std::string&, ResourceBlockAccess<Type>)>;
+        using Writer = std::function<void(Resource<Type>)>;
+        using Deleter = std::function<void(const std::string&)>;
 
 
         ~ResourceBlock() {}
 
         std::unordered_map<std::string, std::weak_ptr<Type>> dict;
 
+        std::condition_variable condition;
         std::mutex dict_mutex;
 
         Creator creator;
         Loader loader;
         Writer writer;
+        Deleter deleter;
     };
 
     struct ResourceBlockData {
@@ -108,6 +114,8 @@ private:
 
     template<typename Type>
     ResourceBlock<Type>* resource_block_assured() {
+        std::lock_guard<std::mutex> lock(resource_blocks_mutex);
+
         const auto index = type_seq<Type>::value();
 
         if (!(index < resource_blocks.size())) {
@@ -131,9 +139,18 @@ public:
 
     ResourceRegistry& operator=(ResourceRegistry&&) = default;
 
+    template<typename Type, typename Creator, typename Loader, typename Writer, typename Deleter>
+    void register_resource_handlers(Creator&& creator, Loader&& loader, Writer&& writer, Deleter&& deleter) {
+        auto* block = resource_block_assured<Type>();
+
+        block->creator = creator;
+        block->loader = loader;
+        block->writer = writer;
+        block->deleter = deleter;
+    }
 
     template<typename Type>
-    ResourceFuture<Type> get_resource(const std::string& name) {
+    Resource<Type> get_resource(const std::string& name) {
         auto* block = resource_block_assured<Type>();
 
         Resource<Type> resource;
@@ -144,16 +161,27 @@ public:
         }
 
         if (resource) {
-            std::promise<Resource<Type>> promise;
-            promise.set_value(resource);
-            return promise.get_future().share();
+            return resource;
         }
 
-        return block->loader(name, { block });
+        resource = block->loader(name, { block });
+        if (resource) {
+            return resource;
+        }
+
+        {
+            std::unique_lock<std::mutex> lock(block->dict_mutex);
+            block->condition.wait(lock, [&]() {
+                resource = block->dict[name].lock();
+                return resource;
+                                  });
+        }
+
+        return resource;
     }
 
     template<typename Type>
-    ResourceFuture<Type> new_resource(const std::string& name) {
+    decltype(auto) new_resource(const std::string& name) {
         auto* block = resource_block_assured<Type>();
 
         Resource<Type> resource;
@@ -166,7 +194,9 @@ public:
             details::throw_resource_already_exists_exception<Type>(name, __FILE__, __LINE__);
         }
 
-        return block->creator(name, { block });
+        block->creator(name);
+
+        return get_resource<Type>(name);
     }
 
     template<typename Type>
@@ -186,16 +216,24 @@ public:
         return block->writer(resource);
     }
 
-    template<typename Type, typename Creator, typename Loader, typename Writer>
-    void register_resource_handlers(Creator&& creator, Loader&& loader, Writer&& writer) {
+    template<typename Type>
+    decltype(auto) delete_resource(const std::string& name) {
         auto* block = resource_block_assured<Type>();
 
-        block->creator = creator;
-        block->loader = loader;
-        block->writer = writer;
+        block->deleter(name);
+
+        {
+            std::lock_guard<std::mutex> lock(block->dict_mutex);
+            block->dict.erase(name);
+        }
+
+        return;
     }
 
+
+
 private:
+    std::mutex resource_blocks_mutex;
     std::vector<ResourceBlockData> resource_blocks;
 };
 
