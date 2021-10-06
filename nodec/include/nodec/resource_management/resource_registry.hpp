@@ -51,17 +51,14 @@ class ResourceRegistry {
 
 public:
     template<typename Type>
-    using ResourceFuture = std::shared_future<Resource<Type>>;
-
-    template<typename Type>
     class ResourceBlock;
 
     template<typename Type>
-    class ResourceBlockAccess {
+    class ResourceBlockAccessor {
         using ResourceBlock = ResourceBlock<Type>;
 
     public:
-        ResourceBlockAccess(ResourceBlock* block)
+        ResourceBlockAccessor(ResourceBlock* block)
             : block_{ block } {
         }
 
@@ -70,7 +67,6 @@ public:
                 std::lock_guard<std::mutex> lock(block_->dict_mutex);
                 block_->dict[resource->name] = resource;
             }
-            block_->condition.notify_all();
         }
 
     private:
@@ -89,7 +85,7 @@ private:
                       "The type of the resource name must be const.");
 
         using Creator = std::function<void(const std::string&)>;
-        using Loader = std::function<Resource<Type>(const std::string&, ResourceBlockAccess<Type>)>;
+        using Loader = std::function<Resource<Type>(const std::string&, ResourceBlockAccessor<Type>)>;
         using Writer = std::function<void(Resource<Type>)>;
         using Deleter = std::function<void(const std::string&)>;
 
@@ -97,9 +93,10 @@ private:
         ~ResourceBlock() {}
 
         std::unordered_map<std::string, std::weak_ptr<Type>> dict;
+        std::unordered_map<std::string, std::shared_future<Resource<Type>>> loading_futures;
 
-        std::condition_variable condition;
         std::mutex dict_mutex;
+        std::mutex loading_futures_mutex;
 
         Creator creator;
         Loader loader;
@@ -164,20 +161,40 @@ public:
             return resource;
         }
 
-        resource = block->loader(name, { block });
-        if (resource) {
-            return resource;
+        std::shared_future<Resource<Type>> future;
+        std::promise<Resource<Type>> promise;
+
+        {
+            std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
+            auto iter = block->loading_futures.find(name);
+            if (iter != block->loading_futures.end()) {
+                future = iter->second;
+            }
+            else {
+                block->loading_futures[name] = promise.get_future().share();
+            }
+        }
+
+        if (future.valid()) {
+            return future.get();
+        }
+
+        try {
+            resource = block->loader(name, { block });
+            promise.set_value(resource);
+        }
+        catch (...) {
+            promise.set_exception(std::current_exception());
         }
 
         {
-            std::unique_lock<std::mutex> lock(block->dict_mutex);
-            block->condition.wait(lock, [&]() {
-                resource = block->dict[name].lock();
-                return resource;
-                                  });
+            std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
+            auto iter = block->loading_futures.find(name);
+            future = iter->second;
+            block->loading_futures.erase(iter);
         }
 
-        return resource;
+        return future.get();
     }
 
     template<typename Type>

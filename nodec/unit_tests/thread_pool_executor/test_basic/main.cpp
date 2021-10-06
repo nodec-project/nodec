@@ -36,18 +36,19 @@ int main() {
 
         //counter(5);
         {
-            auto future = executor.submit(counter, 5);
+            auto future = executor.submit(counter, 10);
         }
         {
 
             auto future = executor.submit(counter, 5);
+            logging::InfoStream(__FILE__, __LINE__) << future.get();
         }
 
         {
             auto future = executor.submit([&]() {
                 logging::InfoStream(__FILE__, __LINE__) << std::this_thread::get_id();
                 //executor.submit(counter, 12);
-                counter(10);
+                counter(3);
                 return std::this_thread::get_id();
                                           });
 

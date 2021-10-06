@@ -61,7 +61,7 @@ public:
 
 class TestResourceHandler {
 public:
-    using ResourceBlockAccess = nodec::resource_management::ResourceRegistry::ResourceBlockAccess<TestResource>;
+    using ResourceBlockAccess = nodec::resource_management::ResourceRegistry::ResourceBlockAccessor<TestResource>;
 
 
     void create_resource(const std::string& name) {
@@ -72,26 +72,12 @@ public:
     std::shared_ptr<TestResource> load_resource(const std::string& name, ResourceBlockAccess access) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[load_resource()] >>> " << name;
 
-        {
-            std::lock_guard<std::mutex> lock(is_loading_mutex);
-            auto is_loading = loading_set.find(name) != loading_set.end();
-            if (is_loading) {
-                nodec::logging::InfoStream(__FILE__, __LINE__) << "[load_resource()] >>> loading... " << name;
-                return {};
-            }
-            loading_set.emplace(name);
-        }
         counter(5, name);
-
         auto resource = std::make_shared<ImplTestResource>(name);
         resource->impl_filed = 999;
 
         access.register_resource(resource);
 
-        {
-            std::lock_guard<std::mutex> lock(is_loading_mutex);
-            loading_set.erase(name);
-        }
         return resource;
     }
 
@@ -106,10 +92,6 @@ public:
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[delete_resource()] >>> " << name;
         return;
     }
-
-private:
-    std::unordered_set<std::string> loading_set;
-    std::mutex is_loading_mutex;
 };
 
 int main() {
@@ -133,11 +115,18 @@ int main() {
             [&](const std::string& name) {return handler.delete_resource(name); }
         );
 
-        auto hoge_resource_future = executor.submit([&]() {return  registry.get_resource<TestResource>("hoge"); });
-        auto huga_resource_future = executor.submit([&]() {return  registry.get_resource<TestResource>("huga"); });
 
         std::shared_ptr<TestResource> hoge_resource;
         std::shared_ptr<TestResource> huga_resource;
+
+        {
+            hoge_resource = registry.get_resource<TestResource>("hoge");
+            huga_resource = registry.get_resource<TestResource>("huga");
+        }
+
+        auto hoge_resource_future = executor.submit([&]() {return  registry.get_resource<TestResource>("hoge"); });
+        auto huga_resource_future = executor.submit([&]() {return  registry.get_resource<TestResource>("huga"); });
+
 
         //
         //auto hoge_resource = registry.get_resource<TestResource>("hoge");

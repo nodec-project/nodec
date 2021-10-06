@@ -72,24 +72,13 @@ public:
 #else
     template <typename F, typename... Args, typename R = typename std::result_of<std::decay_t<F>(std::decay_t<Args>...)>::type>
 #endif
-    std::future<R> submit(const F& task, const Args&... args) {
-        std::shared_ptr<std::promise<R>> task_promise(new std::promise<R>);
-        auto future = task_promise->get_future();
-
-        push_task([task, args..., task_promise]()
-        {
-            try {
-                task_promise->set_value(task(args...));
-            }
-            catch (...) {
-                try {
-                    task_promise->set_exception(std::current_exception());
-                }
-                catch (...) {
-
-                }
-            }
+    std::future<R> submit(const F& func, const Args&... args) {
+        auto task = std::make_shared<std::packaged_task<R()>>([func, args...]() {
+            return func(args...);
         });
+        auto future = task->get_future();
+
+        push_task([task]() { (*task)(); });
         return future;
     }
 
@@ -108,11 +97,6 @@ private:
         }
 
         condition.notify_one();
-    }
-
-    template <typename F, typename... Args>
-    void push_task(const F& task, const Args& ...args) {
-        push_task([task, args...]{ task(args...); });
     }
 
 
