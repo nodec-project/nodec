@@ -72,7 +72,7 @@ public:
 #else
     template <typename F, typename... Args, typename R = typename std::result_of<std::decay_t<F>(std::decay_t<Args>...)>::type>
 #endif
-    std::future<R> submit(const F& func, const Args&... args) {
+    std::future<R> submit(F&& func, const Args&&... args) {
         auto task = std::make_shared<std::packaged_task<R()>>([func, args...]() {
             return func(args...);
         });
@@ -99,24 +99,6 @@ private:
         condition.notify_one();
     }
 
-
-    /**
-    * @brief Try to pop a new task out of the queue.
-    *
-    * @param task A reference to the task. Will be populated with a function if the queue is not empty.
-    * @return true if a task was found, falsse if the queue is empty.
-    */
-    bool pop_task(std::function<void()>& task) {
-        const std::lock_guard<std::mutex> lock(tasks_mutex);
-
-        if (tasks.empty()) {
-            return false;
-        }
-
-        task = std::move(tasks.front());
-        tasks.pop();
-        return true;
-    }
 
     /**
     * @brief A worker function to be assigned to each thread in the pool.

@@ -13,6 +13,7 @@
 #include <future>
 #include <mutex>
 #include <stdexcept>
+#include <cassert>
 
 
 namespace nodec {
@@ -49,23 +50,54 @@ class ResourceRegistry {
     template<typename Type>
     using Resource = std::shared_ptr<Type>;
 
+    template<typename Type>
+    using ResourceSharedFuture = std::shared_future<std::shared_ptr<Type>>;
+
+    template <typename Type>
+    using ResourceFuture = std::future<std::shared_ptr<Type>>;
+
 public:
     template<typename Type>
     class ResourceBlock;
 
     template<typename Type>
-    class ResourceBlockAccessor {
+    class ResourceLoadBridge {
         using ResourceBlock = ResourceBlock<Type>;
 
     public:
-        ResourceBlockAccessor(ResourceBlock* block)
+        ResourceLoadBridge(ResourceBlock* block)
             : block_{ block } {
         }
 
-        void register_resource(Resource<Type> resource) {
+        void on_resource_loaded(Resource<Type> resource) const  {
             {
                 std::lock_guard<std::mutex> lock(block_->dict_mutex);
                 block_->dict[resource->name] = resource;
+            }
+
+            {
+                std::lock_guard<std::mutex> lock(block_->loading_futures_mutex);
+                block_->loading_futures.erase(resource->name);
+            }
+        }
+
+    private:
+        ResourceBlock* block_{ nullptr };
+    };
+
+    template<typename Type>
+    class ResourceDeleteBridge {
+        using ResourceBlock = ResourceBlock<Type>;
+
+    public:
+        ResourceDeleteBridge(ResourceBlock* block)
+            : block_{ block } {
+        }
+
+        void delete_resource(const std::string& name) const {
+            {
+                std::lock_guard<std::mutex> lock(block_->dict_mutex);
+                block_->dict.erase(name);
             }
         }
 
@@ -84,16 +116,20 @@ private:
         static_assert(std::is_const_v<decltype(Type::name)>,
                       "The type of the resource name must be const.");
 
-        using Creator = std::function<void(const std::string&)>;
-        using Loader = std::function<Resource<Type>(const std::string&, ResourceBlockAccessor<Type>)>;
-        using Writer = std::function<void(Resource<Type>)>;
-        using Deleter = std::function<void(const std::string&)>;
+        // if error in creating, throw exception. no need to return result as like bool.
+        using Creator = std::function<std::future<void>(const std::string&)>;
+
+        using Loader = std::function<ResourceFuture<Type>(const std::string&, ResourceLoadBridge<Type>)>;
+
+        using Writer = std::function<std::future<void>(Resource<Type>)>;
+        
+        using Deleter = std::function<std::future<void>(const std::string&, ResourceDeleteBridge<Type>)>;
 
 
         ~ResourceBlock() {}
 
         std::unordered_map<std::string, std::weak_ptr<Type>> dict;
-        std::unordered_map<std::string, std::shared_future<Resource<Type>>> loading_futures;
+        std::unordered_map<std::string, ResourceSharedFuture<Type>> loading_futures;
 
         std::mutex dict_mutex;
         std::mutex loading_futures_mutex;
@@ -128,6 +164,7 @@ private:
     }
 
 
+
 public:
 
     ResourceRegistry() = default;
@@ -147,7 +184,7 @@ public:
     }
 
     template<typename Type>
-    Resource<Type> get_resource(const std::string& name) {
+    ResourceSharedFuture<Type> get_resource(const std::string& name) {
         auto* block = resource_block_assured<Type>();
 
         Resource<Type> resource;
@@ -158,43 +195,28 @@ public:
         }
 
         if (resource) {
-            return resource;
-        }
-
-        std::shared_future<Resource<Type>> future;
-        std::promise<Resource<Type>> promise;
-
-        {
-            std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
-            auto iter = block->loading_futures.find(name);
-            if (iter != block->loading_futures.end()) {
-                future = iter->second;
-            }
-            else {
-                block->loading_futures[name] = promise.get_future().share();
-            }
-        }
-
-        if (future.valid()) {
-            return future.get();
-        }
-
-        try {
-            resource = block->loader(name, { block });
+            std::promise<Resource<Type>> promise;
             promise.set_value(resource);
+
+            return promise.get_future().share();
         }
-        catch (...) {
-            promise.set_exception(std::current_exception());
-        }
+
+        bool is_loading = false;
+        ResourceSharedFuture<Type> *future;
 
         {
             std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
-            auto iter = block->loading_futures.find(name);
-            future = iter->second;
-            block->loading_futures.erase(iter);
+            is_loading = block->loading_futures.find(name) != block->loading_futures.end();
+            future = &block->loading_futures[name];
         }
 
-        return future.get();
+        if (is_loading) {
+            assert(future->valid());
+            return *future;
+        }
+
+        *future = block->loader(name, { block }).share();
+        return *future;
     }
 
     template<typename Type>
@@ -211,9 +233,7 @@ public:
             details::throw_resource_already_exists_exception<Type>(name, __FILE__, __LINE__);
         }
 
-        block->creator(name);
-
-        return get_resource<Type>(name);
+        return block->creator(name);
     }
 
     template<typename Type>
@@ -237,16 +257,8 @@ public:
     decltype(auto) delete_resource(const std::string& name) {
         auto* block = resource_block_assured<Type>();
 
-        block->deleter(name);
-
-        {
-            std::lock_guard<std::mutex> lock(block->dict_mutex);
-            block->dict.erase(name);
-        }
-
-        return;
+        return block->deleter(name, { block });
     }
-
 
 
 private:

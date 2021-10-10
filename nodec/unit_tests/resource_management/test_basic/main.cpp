@@ -59,39 +59,69 @@ public:
     }
 };
 
+class Test {
+public:
+    void test() {
+
+    }
+};
+
 class TestResourceHandler {
 public:
-    using ResourceBlockAccess = nodec::resource_management::ResourceRegistry::ResourceBlockAccessor<TestResource>;
+    using ResourceLoadBridge = nodec::resource_management::ResourceRegistry::ResourceLoadBridge<TestResource>;
+    using ResourceDeleteBridge = nodec::resource_management::ResourceRegistry::ResourceDeleteBridge<TestResource>;
 
 
-    void create_resource(const std::string& name) {
+    decltype(auto) create_resource(const std::string& name) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[create_resource()] >>> " << name;
-        return;
+
+        return executor.submit([=]() {
+            
+                               });
     }
 
-    std::shared_ptr<TestResource> load_resource(const std::string& name, ResourceBlockAccess access) {
+    decltype(auto) load_resource(const std::string& name, ResourceLoadBridge bridge) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[load_resource()] >>> " << name;
 
-        counter(5, name);
-        auto resource = std::make_shared<ImplTestResource>(name);
-        resource->impl_filed = 999;
-
-        access.register_resource(resource);
-
-        return resource;
+        return executor.submit([=]() {
+            counter(5, name);
+            auto resource = std::make_shared<ImplTestResource>(name);
+            resource->impl_filed = 999;
+            bridge.on_resource_loaded(resource);
+            return std::static_pointer_cast<TestResource>(resource);
+                               });
     }
 
-    void write_resource(std::shared_ptr<TestResource> resource) {
+    decltype(auto) write_resource(std::shared_ptr<TestResource> resource) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[write_resource()] >>> " << resource->name;
 
-        counter(5, nodec::Formatter() << "writing... " << resource->name);
-        return;
+        return executor.submit([=]() {
+            counter(5, nodec::Formatter() << "writing... " << resource->name);
+                               });
     }
 
-    void delete_resource(const std::string& name) {
+    decltype(auto) delete_resource(const std::string& name, ResourceDeleteBridge bridge) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[delete_resource()] >>> " << name;
-        return;
+        auto cb = bridge;
+        cb.delete_resource(name);
+        Test test;
+        test.test();
+        // https://stackoverflow.com/questions/2835626/c0x-lambda-capture-by-value-always-const
+        // https://stackoverflow.com/questions/5501959/why-does-c11s-lambda-require-mutable-keyword-for-capture-by-value-by-defau
+        auto f = [=]() mutable {
+            counter(5, nodec::Formatter() << "deleting... " << name);
+            test;
+            bridge.delete_resource(name);
+        };
+
+        return executor.submit([=]() {
+            counter(5, nodec::Formatter() << "deleting... " << name);
+            bridge.delete_resource(name);
+                               });
     }
+
+private:
+    nodec::concurrent::ThreadPoolExecutor executor;
 };
 
 int main() {
@@ -103,29 +133,28 @@ int main() {
     try {
         logging::InfoStream(__FILE__, __LINE__) << "Start";
 
-        concurrent::ThreadPoolExecutor executor;
-
         ResourceRegistry registry;
         TestResourceHandler handler;
 
         registry.register_resource_handlers<TestResource>(
             [&](const std::string& name) {return handler.create_resource(name); },
-            [&](const std::string& name, TestResourceHandler::ResourceBlockAccess access) {return handler.load_resource(name, access); },
+            [&](const std::string& name, TestResourceHandler::ResourceLoadBridge bridge) {return handler.load_resource(name, bridge); },
             [&](std::shared_ptr<TestResource> resource) {return handler.write_resource(resource); },
-            [&](const std::string& name) {return handler.delete_resource(name); }
+            [&](const std::string& name, TestResourceHandler::ResourceDeleteBridge bridge) {return handler.delete_resource(name, bridge); }
         );
 
 
         std::shared_ptr<TestResource> hoge_resource;
         std::shared_ptr<TestResource> huga_resource;
 
+
         {
-            hoge_resource = registry.get_resource<TestResource>("hoge");
-            huga_resource = registry.get_resource<TestResource>("huga");
+            hoge_resource = registry.get_resource<TestResource>("hoge").get();
+            huga_resource = registry.get_resource<TestResource>("huga").get();
         }
 
-        auto hoge_resource_future = executor.submit([&]() {return  registry.get_resource<TestResource>("hoge"); });
-        auto huga_resource_future = executor.submit([&]() {return  registry.get_resource<TestResource>("huga"); });
+        auto hoge_resource_future = registry.get_resource<TestResource>("hoge");
+        auto huga_resource_future = registry.get_resource<TestResource>("huga");
 
 
         //
@@ -141,7 +170,7 @@ int main() {
         }
 
         {
-            auto hoge_resource = registry.get_resource<TestResource>("hoge");
+            auto hoge_resource = registry.get_resource<TestResource>("hoge").get();
             logging::InfoStream(__FILE__, __LINE__) << hoge_resource->field;
             {
                 auto impl_hoge_resource = static_cast<ImplTestResource*>(hoge_resource.get());
@@ -176,7 +205,8 @@ int main() {
         }
         logging::InfoStream(__FILE__, __LINE__) << "test";
 
-        executor.submit([&]() {return registry.apply_changes<TestResource>(hoge_resource->name); });
+        registry.apply_changes<TestResource>(hoge_resource->name);
+
     }
     catch (std::exception& e) {
         logging::FatalStream(__FILE__, __LINE__) << e.what();
