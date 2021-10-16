@@ -37,7 +37,10 @@ public:
         scene_module_.reset(new SceneModule());
         add_module<Scene>(scene_module_);
 
-        configure();
+
+        initialized().connect([=](NodecEngine&) {
+            scene_module_->registry().clear();
+                              });
     }
 
     ~Engine() {

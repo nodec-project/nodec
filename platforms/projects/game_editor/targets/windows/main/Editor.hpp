@@ -76,7 +76,10 @@ public:
 
 
         imelements::impl::show_main_menu();
+
+
         window_manager_impl().update_windows();
+
 
         bool showDemoWindow = true;
         ImGui::ShowDemoWindow(&showDemoWindow);
@@ -101,6 +104,7 @@ public:
     Mode mode() const {
         return mode_;
     }
+
 
 private:
     Engine* engine_;

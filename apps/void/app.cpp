@@ -3,6 +3,10 @@
 //#include "test_cube.hpp"
 //#include "player.hpp"
 
+using namespace nodec_engine;
+using namespace scene_set;
+using namespace screen;
+
 
 class HelloWorld {
 
@@ -18,12 +22,21 @@ public:
     }
 private:
     void on_step(NodecEngine& engine) {
+
+        //auto& scene = engine.get_module<Scene>();
+        //auto entity = scene.create_entity("OOO");
         //nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_step] engine time: " << engine.engine_time();
     }
 
     void on_initialized(NodecEngine& engine) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
+        
+        auto& scene = engine.get_module<Scene>();
+        auto entity = scene.create_entity("Hello World!!");
+
+        
     }
+
 
 };
 
@@ -36,6 +49,8 @@ void nodec_engine::on_boot(NodecEngine& engine) {
 
     screen.set_size({ 1920, 1080 });
     screen.set_resolution({ 1280, 720 });
+
+    screen.set_title("[ void ]");
 
     engine.add_module(std::make_shared<HelloWorld>(engine));
 

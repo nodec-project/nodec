@@ -24,10 +24,13 @@ protected:
 
         engine.reset(new Engine);
 
-        engine->setup();
-
         editor.reset(new Editor(engine.get()));
         engine->add_module<SceneEditor>(editor);
+
+        engine->configure();
+        
+        engine->setup();
+
     }
 
     void loop() {

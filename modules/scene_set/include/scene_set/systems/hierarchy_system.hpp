@@ -17,6 +17,13 @@ public:
         : registry_{registry} {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HierarchySystem] >>> init()";
 
+        hierarchy_created_connection_
+            = registry_->component_constructed<components::Hierarchy>().connect(
+                [&](SceneRegistry& registry, const SceneEntity entity) {
+                    on_hierarchy_created(registry, entity);
+                })
+            .assign();
+
         hierarchy_destroyed_connection_
             = registry_->component_destroyed<components::Hierarchy>().connect(
                 [&](SceneRegistry& registry, const SceneEntity entity) {
@@ -24,12 +31,6 @@ public:
                 })
             .assign();
 
-        hierarchy_created_connection_
-            = registry_->component_destroyed<components::Hierarchy>().connect(
-                [&](SceneRegistry& registry, const SceneEntity entity) {
-                    on_hierarchy_created(registry, entity);
-                })
-            .assign();
     }
 
     const std::vector<SceneEntity>& root_entities() const {
@@ -155,8 +156,12 @@ private:
 
         {
             nodec::signals::ScopedBlock<RegistryConnection> block(hierarchy_destroyed_connection_);
-            for (auto entt : to_deletes) {
-                registry.destroy_entity(entt);
+            auto iter = to_deletes.begin();
+            remove_root(*iter);
+            ++iter;
+            for (; iter != to_deletes.end(); ++iter) {
+                registry.destroy_entity(*iter);
+                remove_root(*iter);
             }
         }
     }

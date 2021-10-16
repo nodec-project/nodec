@@ -95,10 +95,7 @@ public:
         element_destroyed_(owner, entity); // cause structual changes.
 
         auto* pos = sparse_table.try_get(entity);
-        if (!pos) {
-            // maybe someone delete this entity while on_destroy_() runnring.
-            return true;
-        }
+        assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
 
         // move the back of instances to the removed index.
         auto& other_entity = packed.back();

@@ -7,12 +7,10 @@
 
 #include <nodec_engine/nodec_engine.hpp>
 #include <screen/screen.hpp>
+#include <scene_set/scene.hpp>
 
 
 #include <nodec/logging.hpp>
-
-using NodecEngine = nodec_engine::NodecEngine;
-using Screen = screen::Screen;
 
 
 //
