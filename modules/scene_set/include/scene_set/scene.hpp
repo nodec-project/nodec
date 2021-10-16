@@ -12,14 +12,15 @@ class Scene {
 
 public:
     Scene() {}
-
-    SceneRegistry& registry() {
-        return registry_;
-    }
+    virtual ~Scene() {}
 
 
-protected:
-    SceneRegistry registry_;
+    virtual SceneRegistry& registry() = 0;
+
+    virtual void append_child(const SceneEntity parent, const SceneEntity child) = 0;
+    virtual void remove_child(const SceneEntity parent, const SceneEntity child) = 0;
+
+
 
 private:
     NODEC_DISABLE_COPY(Scene);

@@ -8,6 +8,7 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <cassert>
 
 
 namespace nodec_engine {
@@ -15,47 +16,94 @@ namespace impl {
 
 class NodecEngineModule : public NodecEngine {
 public:
-    NodecEngineModule();
+    NodecEngineModule() {
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[NodecEngineModule] >>> The engine is created!";
+
+    }
+
     ~NodecEngineModule();
 
 public:
-    void reset();
-    void step();
+    void configure() {
+        assert(state_ == State::Unconfigured);
 
-public:
-    template<typename Module>
-    decltype(auto) register_module(Module* module) {
-        const auto index = nodec::type_seq<Module>::value();
+        engine_timer_.start();
 
-        if (!(index < moduleReferences.size())) {
-            moduleReferences.resize(index + 1u);
-        }
+        boot();
+        initialize();
 
-        auto&& refData = moduleReferences[index];
-        if (!refData.reference) {
-            auto reference = new ModuleReference<Module>();
-            reference->ptr = module;
+        state_ = State::Inactive;
+    }
 
-            refData.reference.reset(reference);
-        }
+    void step() {
+        assert(state_ != State::Unconfigured);
 
-        return *static_cast<ModuleReference<Module>*>(refData.reference.get())->ptr;
+        (this->*step_func)();
+    }
+
+    void reset() {
+        assert(state_ != State::Unconfigured);
+
+        step_func = &NodecEngineModule::step_first;
+        initialize();
+
+        state_ = State::Inactive;
     }
 
 public:
-    using EngineSignal = nodec::signals::Signal<void(NodecEngineModule&)>;
 
-    decltype(auto) initialized() {
-        return initialized_.connection_point();
+    float engine_time() const noexcept override {
+        return std::chrono::duration<float>(engine_timer_.elapsed()).count();
     }
 
-    decltype(auto) started() {
-        return started_.connection_point();
+
+    EngineSignal::SignalInterface initialized() override {
+        return initialized_.signal_interface();
     }
 
-    decltype(auto) stepped() {
-        return stepped_.connection_point();
+    EngineSignal::SignalInterface stepped() override {
+        return stepped_.signal_interface();
     }
+
+private:
+    void initialize() {
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[NodecEngineModule] >>> Initializing...";
+        {
+            initialized_(*this);
+        }
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[NodecEngineModule] >>> Initializing finished.";
+    }
+
+    void boot() {
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[NodecEngineModule] >>> Booting...";
+        {
+            on_boot(*this);
+        }
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[NodecEngineModule] >>> Booting finished.";
+    }
+
+    void step_first() {
+        assert(state_ == State::Inactive);
+
+        state_ = State::Active;
+        step_func = &NodecEngineModule::step_cycle;
+
+        //nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_first]";
+        stepped_(*this);
+    }
+
+    void step_cycle() {
+        assert(state_ == State::Active);
+
+        //nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_cycle]";
+        stepped_(*this);
+    }
+
 
 private:
     enum class State {
@@ -66,15 +114,12 @@ private:
 
     State state_{ State::Unconfigured };
 
-    void step_first();
-    void step_cycle();
-
     void (NodecEngineModule::* step_func)() { &NodecEngineModule::step_first };
 
-private:
     EngineSignal initialized_;
-    EngineSignal started_;
     EngineSignal stepped_;
+
+    nodec::Stopwatch<std::chrono::steady_clock> engine_timer_;
 };
 
 void set_current(NodecEngineModule* engine);

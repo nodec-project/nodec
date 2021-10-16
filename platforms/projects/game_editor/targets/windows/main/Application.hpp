@@ -23,12 +23,11 @@ protected:
         using namespace scene_editor;
 
         engine.reset(new Engine);
-        engine->configure();
 
         engine->setup();
 
         editor.reset(new Editor(engine.get()));
-        engine->register_module<SceneEditor>(editor.get());
+        engine->add_module<SceneEditor>(editor);
     }
 
     void loop() {
@@ -41,7 +40,7 @@ protected:
 
 private:
     std::unique_ptr<Engine> engine;
-    std::unique_ptr<Editor> editor;
+    std::shared_ptr<Editor> editor;
 
 
 };

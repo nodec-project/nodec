@@ -3,7 +3,7 @@
 
 #include <scene_set/scene.hpp>
 
-#include <scene_set/systems/impl/impl_hierarchy_system.hpp>
+#include <scene_set/systems/hierarchy_system.hpp>
 
 
 namespace scene_set {
@@ -11,12 +11,26 @@ namespace impl {
 
 class SceneModule : public Scene {
 public:
-    SceneModule() {
-        hierarchySystem.init(registry_);
+    SceneModule()
+        : hierarchy_system_{ &registry_ } {
     }
 
+    SceneRegistry& registry() {
+        return registry_;
+    }
+
+    void append_child(const SceneEntity parent, const SceneEntity child) {
+        hierarchy_system_.append_child(parent, child);
+    }
+
+    void remove_child(const SceneEntity parent, const SceneEntity child) {
+        hierarchy_system_.remove_child(parent, child);
+    }
+
+
 private:
-    systems::impl::HierarchySystem hierarchySystem;
+    SceneRegistry registry_;
+    systems::HierarchySystem hierarchy_system_;
 
 
 };

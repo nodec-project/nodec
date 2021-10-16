@@ -3,7 +3,29 @@
 //#include "test_cube.hpp"
 //#include "player.hpp"
 
-class Test {};
+
+class HelloWorld {
+
+public:
+    HelloWorld(NodecEngine& engine) {
+        engine.stepped().connect([=](NodecEngine& engine) { on_step(engine); });
+        engine.initialized().connect([=](NodecEngine& engine) { on_initialized(engine); });
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
+    }
+
+    ~HelloWorld() {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::~HelloWorld] >>> See you ;)";
+    }
+private:
+    void on_step(NodecEngine& engine) {
+        //nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_step] engine time: " << engine.engine_time();
+    }
+
+    void on_initialized(NodecEngine& engine) {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
+    }
+
+};
 
 void nodec_engine::on_boot(NodecEngine& engine) {
     using namespace nodec;
@@ -14,7 +36,8 @@ void nodec_engine::on_boot(NodecEngine& engine) {
 
     screen.set_size({ 1920, 1080 });
     screen.set_resolution({ 1280, 720 });
-    
+
+    engine.add_module(std::make_shared<HelloWorld>(engine));
 
 }
 

@@ -16,34 +16,32 @@ namespace nodec_engine {
 
 class NodecEngine {
 
-    class BaseModuleReference {
+    class BaseModuleContainer {
     public:
-        virtual ~BaseModuleReference() {};
+        virtual ~BaseModuleContainer() {};
     };
 
     template<typename T>
-    class ModuleReference : public BaseModuleReference {
+    class ModuleContainer : public BaseModuleContainer {
     public:
-        ~ModuleReference() {}
-        T* ptr{ nullptr };
+        ~ModuleContainer() {}
+        std::shared_ptr<T> data;
     };
 
-    struct ModuleReferenceData {
-        std::unique_ptr<BaseModuleReference> reference;
+    struct ModuleContainerData {
+        std::unique_ptr<BaseModuleContainer> container;
     };
 
 public:
     NodecEngine() = default;
 
-    float engine_time() const noexcept {
-        return std::chrono::duration<float>(engine_timer_.elapsed()).count();
-    }
+public:
 
     template<typename Module>
     decltype(auto) get_module() const {
         const auto index = nodec::type_seq<Module>::value();
-        if (index < moduleReferences.size() && moduleReferences[index].reference) {
-            return *static_cast<ModuleReference<Module>*>(moduleReferences[index].reference.get())->ptr;
+        if (index < modules.size() && modules[index].container) {
+            return *static_cast<ModuleContainer<Module>*>(modules[index].container.get())->data;
         }
 
         throw std::runtime_error(
@@ -51,9 +49,37 @@ public:
             << typeid(Module).name() << "'");
     }
 
-protected:
-    nodec::Stopwatch<std::chrono::steady_clock> engine_timer_;
-    std::vector<ModuleReferenceData> moduleReferences;
+    template<typename Module>
+    decltype(auto) add_module(std::shared_ptr<Module> module) {
+        const auto index = nodec::type_seq<Module>::value();
+
+        if (!(index < modules.size())) {
+            modules.resize(index + 1u);
+        }
+
+        auto&& cdata = modules[index];
+        if (!cdata.container) {
+            auto container = new ModuleContainer<Module>();
+            container->data = module;
+
+            cdata.container.reset(container);
+        }
+
+        return *static_cast<ModuleContainer<Module>*>(cdata.container.get())->data;
+    }
+
+    virtual float engine_time() const noexcept = 0;
+
+public:
+    using EngineSignal = nodec::signals::Signal<void(NodecEngine&)>;
+
+    virtual EngineSignal::SignalInterface initialized() = 0;
+
+    virtual EngineSignal::SignalInterface stepped() = 0;
+
+
+private:
+    std::vector<ModuleContainerData> modules;
 
 private:
     NODEC_DISABLE_COPY(NodecEngine);

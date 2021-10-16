@@ -262,9 +262,9 @@ public:
         BaseConnection* ptr{ nullptr };
     };
     
-    class ConnectionPoint {
+    class SignalInterface {
     public:
-        ConnectionPoint(BaseSignal& base_sig)
+        SignalInterface(BaseSignal& base_sig)
             : base_sig{ base_sig } {
 
         }
@@ -328,8 +328,8 @@ public:
         }
     }
 
-    ConnectionPoint connection_point() {
-        return ConnectionPoint(base_sig);
+    SignalInterface signal_interface() {
+        return SignalInterface(base_sig);
     }
 
 private:

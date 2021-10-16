@@ -74,7 +74,7 @@ public:
 public:
     using WindowSignal = nodec::signals::Signal<void(Window&)>;
     
-    decltype(auto) WindowDestroyed() { return mWindowDestroyed.connection_point(); }
+    decltype(auto) WindowDestroyed() { return mWindowDestroyed.signal_interface(); }
 
 private:
     WindowSignal mWindowDestroyed;

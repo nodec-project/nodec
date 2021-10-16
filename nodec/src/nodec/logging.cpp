@@ -61,8 +61,8 @@ void record_to_stdout_handler(const LogRecord& record) noexcept {
     std::cout << record << std::endl;
 }
 
-RecordHandlers::ConnectionPoint record_handlers() {
-    return record_handlers_.connection_point();
+RecordHandlers::SignalInterface record_handlers() {
+    return record_handlers_.signal_interface();
 }
 
 

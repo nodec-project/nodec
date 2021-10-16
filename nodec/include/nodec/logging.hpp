@@ -45,7 +45,7 @@ std::string default_formatter(const LogRecord& record) noexcept;
 *       // connect stdout handler.
 *       record_handlers().connect(logging::record_to_stdout_handler);
 */
-RecordHandlers::ConnectionPoint record_handlers();
+RecordHandlers::SignalInterface record_handlers();
 
 /**
 * @brief Output the log record to stdout.

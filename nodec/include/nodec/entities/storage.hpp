@@ -152,11 +152,11 @@ public:
 
 public:
     decltype(auto) element_constructed() {
-        return element_constructed_.connection_point();
+        return element_constructed_.signal_interface();
     }
 
     decltype(auto) element_destroyed() {
-        return element_destroyed_.connection_point();
+        return element_destroyed_.signal_interface();
     }
 
 

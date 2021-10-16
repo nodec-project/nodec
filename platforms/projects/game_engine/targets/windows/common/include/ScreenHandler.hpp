@@ -12,22 +12,21 @@
 
 class ScreenHandler {
     using ScreenModule = screen::impl::ScreenModule;
-    using NodecEngineModule = nodec_engine::impl::NodecEngineModule;
 
 public:
-    ScreenHandler(ScreenModule* pScreenModule, NodecEngineModule& engine)
+    ScreenHandler(ScreenModule* pScreenModule)
         : mpScreenModule{ pScreenModule } {
-        engine.initialized().connect([&](NodecEngineModule& engine) {OnEngineInitialized(engine); });
-        engine.started().connect([&](NodecEngineModule& engine) {OnEngineStarted(engine); });
+        BindHandlersOnBoot();
     }
 
     void Setup(Window* pWindow) {
         mpWindow = pWindow;
+        BindHandlersOnRuntime();
     }
 
 
 private:
-    void OnEngineInitialized(NodecEngineModule& engine) {
+    void BindHandlersOnBoot() {
         using namespace nodec;
         mResolutionChangedConnection = mpScreenModule->resolution_changed().connect(
             [&](ScreenModule& screen, const Vector2i& resolution) {
@@ -46,7 +45,7 @@ private:
 
     }
 
-    void OnEngineStarted(NodecEngineModule& engine) {
+    void BindHandlersOnRuntime() {
         assert(mpWindow);
 
         mResolutionChangedConnection.disconnect();

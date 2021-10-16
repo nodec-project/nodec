@@ -45,11 +45,11 @@ public:
     }
 
 public:
-    decltype(auto) resolution_changed() { return resolution_changed_.connection_point(); }
+    decltype(auto) resolution_changed() { return resolution_changed_.signal_interface(); }
 
-    decltype(auto) size_changed() { return size_changed_.connection_point(); }
+    decltype(auto) size_changed() { return size_changed_.signal_interface(); }
 
-    decltype(auto) title_changed() { return title_changed_.connection_point(); }
+    decltype(auto) title_changed() { return title_changed_.signal_interface(); }
 
 public:
     nodec::Vector2i internal_size;
