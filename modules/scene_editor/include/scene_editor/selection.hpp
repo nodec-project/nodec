@@ -1,9 +1,9 @@
-#ifndef GAME_EDITOR__SELECTION_HPP_
-#define GAME_EDITOR__SELECTION_HPP_
+#ifndef SCENE_EDITOR__SELECTION_HPP_
+#define SCENE_EDITOR__SELECTION_HPP_
 
 #include <scene_set/scene_registry.hpp>
 
-namespace game_editor {
+namespace scene_editor {
 
 
 struct Selection {

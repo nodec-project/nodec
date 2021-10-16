@@ -8,7 +8,6 @@
 #include <imgui.h>
 
 namespace imwindows {
-namespace impl {
 
 class HierarchyWindow : public imelements::BaseWindow {
 
@@ -74,7 +73,6 @@ private:
 
 };
 
-}
 }
 
 #endif

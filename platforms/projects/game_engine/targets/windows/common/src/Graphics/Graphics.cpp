@@ -1,6 +1,6 @@
 #include "Graphics/Graphics.hpp"
-//#include "imgui_impl_dx11.h"
-//#include "imgui_impl_win32.h"
+#include "imgui_impl_dx11.h"
+#include "imgui_impl_win32.h"
 
 #include <d3dcompiler.h>
 
@@ -118,12 +118,17 @@ Graphics::Graphics(HWND hWnd, int width, int height) :
     vp.TopLeftY = 0.0f;
     pContext->RSSetViewports(1u, &vp);
 
+    // init imgui d3d impl
+    ImGui_ImplDX11_Init(pDevice.Get(), pContext.Get());
 
     infoLogger.Dump(nodec::logging::Level::Info);
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> Successfully initialized." << std::flush;
 }
 
 Graphics::~Graphics() {
+
+    ImGui_ImplDX11_Shutdown();
+
     infoLogger.DumpIfAny(nodec::logging::Level::Info);
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> End Graphics." << std::flush;
 }
@@ -137,20 +142,10 @@ UINT Graphics::GetHeight() noexcept { return height; }
 
 
 void Graphics::BeginFrame() noexcept {
-    //ImGui_ImplDX11_NewFrame();
-    //ImGui_ImplWin32_NewFrame();
+    ImGui_ImplDX11_NewFrame();
+    ImGui_ImplWin32_NewFrame();
+    ImGui::NewFrame();
 
-    //auto& io = ImGui::GetIO();
-    //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplaySize.x << ", " << io.DisplaySize.y;
-    //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
-    //io.DisplaySize = ImVec2(1920, 1080);
-    //io.DisplayFramebufferScale = ImVec2(1280 / (float)1920, 1080 / (float)720);
-    //io.DisplayFramebufferScale = ImVec2(0.6, 0.6);
-
-    //ImGui::NewFrame();
-    //io.MousePos.x *=  width / io.DisplaySize.x; io.MousePos.y *= height / io.DisplaySize.y;
-    //io.DisplayFramebufferScale = ImVec2(io.DisplaySize.x/ width, io.DisplaySize.y / height );
-    //nodec::logging::InfoStream(__FILE__, __LINE__) << io.MousePos.x;
     const float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
     pContext->ClearRenderTargetView(pTarget.Get(), color);
@@ -162,15 +157,14 @@ void Graphics::EndFrame() {
     //auto& io = ImGui::GetIO();
     //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
 
-    //ImGui::Render();
-    ////nodec::logging::InfoStream(__FILE__, __LINE__) << ImGui::GetDrawData()->DisplaySize.x << ", " << ImGui::GetDrawData()->DisplaySize.y;
-    //ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-    //// Update and Render additional Platform Windows
-    //if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
-    //    ImGui::UpdatePlatformWindows();
-    //    ImGui::RenderPlatformWindowsDefault();
-    //}
+    // Update and Render additional Platform Windows
+    if (ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+        ImGui::UpdatePlatformWindows();
+        ImGui::RenderPlatformWindowsDefault();
+    }
 
 
     HRESULT hr;

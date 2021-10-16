@@ -12,7 +12,6 @@
 
 
 namespace imwindows {
-namespace impl {
 
 class LogWindow : public imelements::BaseWindow {
     const int MAX_RECORDS = 100;
@@ -94,7 +93,6 @@ private:
 //
 //inline static bool registered = game_editor::menu::register_menu_item("Window/Log", LogWindow::init);
 
-}
 }
 
 #endif

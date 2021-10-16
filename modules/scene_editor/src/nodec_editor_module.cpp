@@ -9,16 +9,6 @@
 using namespace nodec;
 
 game_editor::impl::GameEditorModule::GameEditorModule() {
-    logging::InfoStream(__FILE__, __LINE__)
-        << "[GameEditorModule] >>> Start the setup...";
-
-
-    logging::InfoStream(__FILE__, __LINE__)
-        << "[GameEditorModule] >>> launch the Engine.";
-    engine_module_.reset(new game_engine::impl::GameEngineModule);
-    engine_module_->initialize();
-    game_engine::impl::set_current(engine_module_.get());
-
 
     logging::InfoStream(__FILE__, __LINE__)
         << "[GameEditorModule] >>> Register the editor windows.";
@@ -37,11 +27,4 @@ game_editor::impl::GameEditorModule::GameEditorModule() {
 
 
     logging::InfoStream(__FILE__, __LINE__) << "[GameEditorModule] >>> Setup completed successfully.";
-}
-
-void game_editor::impl::GameEditorModule::reset() {
-    engine_module_->initialize();
-    if (!engine_module_->boot()) {
-        logging::ErrorStream(__FILE__, __LINE__) << "[GameEditorModule] >>> Failed to boot the engine.";
-    }
 }
