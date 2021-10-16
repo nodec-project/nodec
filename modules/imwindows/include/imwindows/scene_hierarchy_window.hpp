@@ -42,7 +42,6 @@ public:
         // Iterator may be invalidated by adding or deleting elements while iterating.
         auto roots = scene_->root_entites();
 
-
         for (auto& root : roots) {
             show_entity_node(root);
         }
@@ -95,12 +94,16 @@ private:
 
             ImGui::TreePop();
         }
+    }
+
+    void set_selection(SceneEntity entity) {
 
     }
 
 private:
     Scene* scene_{ nullptr };
     SceneEntity selected_entity_{ nodec::entities::null_entity };
+
 
 };
 

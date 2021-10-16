@@ -11,6 +11,7 @@
 #include <sstream>
 #include <memory>
 #include <vector>
+#include <cassert>
 
 
 namespace nodec {
@@ -23,7 +24,7 @@ template<typename Entity>
 inline void throw_invalid_entity_exception(const Entity entity, const char* file, size_t line) {
     throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
         Formatter() << "Invalid entity detected. entity: " << entity
-        << "(position: " << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity) << ")",
+        << "(entity: " << to_entity(entity) << "; version: " << to_version(entity) << ")",
         file, line
         ));
 }
@@ -31,8 +32,7 @@ inline void throw_invalid_entity_exception(const Entity entity, const char* file
 template<typename Component, typename Entity>
 inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
     throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        Formatter() << "Entity(" << entity << "; position: "
-        << (entity_traits<Entity>::entity_mask & entity) << "; version: " << get_version(entity)
+        Formatter() << "Entity(" << entity << "; entity: " << to_entity(entity) << "; version: " << to_version(entity)
         << ") doesn't have the component(" << typeid(Component).name() << ").",
         file, line
         ));
@@ -44,30 +44,29 @@ inline void throw_no_component_exception(const Entity entity, const char* file, 
 template<typename Entity>
 class BasicRegistry {
 private:
-    using entity_traits = entity_traits<Entity>;
+    using entt_traits = entity_traits<Entity>;
 
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
     };
 
-
-    Entity generate_identifier() {
-        auto generated = static_cast<Entity>(entities.size());
-        entities.emplace_back(generated);
-        return generated;
+    decltype(auto) generate_identifier(const std::size_t pos) noexcept {
+        assert(pos < entt_traits::to_integral(null_entity) && "No entities available");
+        return entt_traits::combine(static_cast<typename entt_traits::Entity>(pos), {});
     }
 
-    Entity recycle_identifier() {
-        const auto curr = available;
-        const auto version = entities[curr] & (entity_traits::version_mask << entity_traits::entity_shift);
-        available = entities[curr] & entity_traits::entity_mask;
-        return entities[curr] = curr | version;
+    decltype(auto) recycle_identifier() {
+        assert(free_list != null_entity && "No entities available");
+        const auto curr = entt_traits::to_entity(free_list);
+        free_list = entt_traits::combine(entt_traits::to_integral(entities[curr]), tombstone_entity);
+        return (entities[curr] = entt_traits::combine(curr, entt_traits::to_integral(entities[curr])));
     }
 
-    void release_entity(const Entity entity, const typename entity_traits::Version version) {
-        const auto entt = entity & entity_traits::entity_mask;
-        entities[entt] = available | (static_cast<Entity>(version) << entity_traits::entity_shift);
-        available = entt;
+    decltype(auto) release_entity(const Entity entity, const typename entt_traits::Version version) {
+        const typename entt_traits::Version vers = version + (version == entt_traits::to_version(tombstone_entity));
+        entities[entt_traits::to_entity(entity)] = entt_traits::construct(entt_traits::to_integral(free_list), vers);
+        free_list = entt_traits::combine(entt_traits::to_integral(entity), tombstone_entity);
+        return vers;
     }
 
     template<typename Component>
@@ -123,19 +122,27 @@ public:
     BasicRegistry& operator=(BasicRegistry&&) = default;
 
     /**
-    * @brief Checks if an entity identifier refers to a valid entity.
-    * @param entity
-    *   An entity identifier, either valid or not.
-    * @return True if the identifier is valid, false otherwise.
-    */
+     * @brief Checks if an identifier refers to a valid entity.
+     * @param entity An identifier, either valid or not.
+     * @return True if the identifier is valid, false otherwise.
+     */
     bool is_valid(const Entity entity) const {
-        const auto pos = static_cast<size_t>(entity & entity_traits::entity_mask);
+        const auto pos = std::size_t(entt_traits::to_entity(entity));
         return (pos < entities.size() && entities[pos] == entity);
     }
 
-
+    /**
+     * @brief Creates a new entity and returns it.
+     *
+     * There are two kinds of possible identifiers:
+     *
+     * * Newly created ones in case no entities have been previously destroyed.
+     * * Recycled ones with updated versions.
+     *
+     * @return A valid identifier.
+     */
     Entity create_entity() {
-        return available == null_entity ? generate_identifier() : recycle_identifier();
+        return (free_list == null_entity) ? (entities.emplace_back(generate_identifier(entities.size())), entities.back()) : recycle_identifier();
     }
 
     /**
@@ -152,12 +159,29 @@ public:
         }
 
         remove_all_components(entity);
-        release_entity(entity, static_cast<typename entity_traits::Version>(get_version(entity) + 1));
+        release_entity(entity, entt_traits::to_version(entity) + 1u);
     }
 
+    /**
+     * @brief Iterates all the entities that are still in use.
+     *
+     * The function object is invoked for each entity that is still in use.<br/>
+     * The signature of the function should be equivalent to the following:
+     *
+     * @code{.cpp}
+     * void(const Entity);
+     * @endcode
+     *
+     * This function is fairly slow and should not be used frequently. However,
+     * it's useful for iterating all the entities still in use, regardless of
+     * their components.
+     *
+     * @tparam Func Type of the function object to invoke.
+     * @param func A valid function object.
+     */
     template<typename Func>
     void each_entity(Func func) const {
-        if (available == null_entity) {
+        if (free_list == null_entity) {
             for (auto pos = entities.size(); pos; --pos) {
                 func(entities[pos - 1]);
             }
@@ -165,7 +189,7 @@ public:
         else {
             for (auto pos = entities.size(); pos; --pos) {
                 const auto entity = entities[pos - 1];
-                if ((entity & entity_traits::entity_mask) == (pos - 1)) {
+                if (entt_traits::to_entity(entity) == (pos - 1)) {
                     func(entity);
                 }
             }
@@ -181,7 +205,7 @@ public:
         }
         each_entity(
             [this](const auto entity) {
-                release_entity(entity, get_version(entity) + 1u);
+                release_entity(entity, entt_traits::to_version(entity) + 1u);
             });
     }
 
@@ -293,13 +317,17 @@ public:
         return { *pool_assured<std::remove_const_t<Components>>()... };
     }
 
-
+    /**
+    * @brief Returns signal interface for the given component.
+    */
     template<typename Component>
     decltype(auto) component_constructed() {
         return pool_assured<Component>()->element_constructed();
     }
 
-
+    /**
+    * @brief Returns signal interface for the given component.
+    */
     template<typename Component>
     decltype(auto) component_destroyed() {
         return pool_assured<Component>()->element_destroyed();
@@ -307,9 +335,9 @@ public:
 
 
 private:
-    std::vector<Entity> entities;
-    Entity available{ null_entity };
     mutable std::vector<PoolData> pools{};
+    std::vector<Entity> entities;
+    Entity free_list{ tombstone_entity };
 };
 
 using Registry = BasicRegistry<Entity>;
