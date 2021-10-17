@@ -5,10 +5,11 @@
 
 #include <imgui.h>
 
+#include <nodec/logging.hpp>
+
+
 namespace imelements {
-
 namespace impl {
-
 
 
 class WindowManagerImpl : public WindowManager {
@@ -25,14 +26,15 @@ public:
                 continue;
             }
 
-            bool is_shown;
+            bool is_shown = true;
             ImGui::SetNextWindowSize(ImVec2(window->init_size.x, window->init_size.y), ImGuiCond_Once);
             if (ImGui::Begin(window->name(), &is_shown)) {
-
-                // ToDO: Error handling
-                window->on_gui();
-
-
+                try {
+                    window->on_gui();
+                }
+                catch (...) {
+                    handle_exception(window->name());
+                }
             }
             ImGui::End();
 
@@ -40,6 +42,23 @@ public:
                 window->close();
             }
             ++iter;
+        }
+    }
+
+private:
+    static void handle_exception(const char* name) {
+        try {
+            throw;
+        }
+        catch (std::exception& e) {
+            nodec::logging::ErrorStream(__FILE__, __LINE__)
+                << "An exception was thrown in '" << name << "'\n"
+                << "details: \n"
+                << e.what();
+        }
+        catch (...) {
+            nodec::logging::ErrorStream(__FILE__, __LINE__)
+                << "An unknown exception was thrown in '" << name;
         }
     }
 };

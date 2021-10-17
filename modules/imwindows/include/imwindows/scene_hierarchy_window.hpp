@@ -1,9 +1,8 @@
-#ifndef IMWINDOWS__IMPL__HIERARCHY_WINDOW_HPP_
-#define IMWINDOWS__IMPL__HIERARCHY_WINDOW_HPP_
+#ifndef IMWINDOWS__SCENE_HIERARCHY_WINDOW_HPP_
+#define IMWINDOWS__SCENE_HIERARCHY_WINDOW_HPP_
 
 #include <imelements/window.hpp>
 #include <scene_set/scene.hpp>
-
 
 #include <imgui.h>
 
@@ -14,10 +13,11 @@ class SceneHierarchyWindow : public imelements::BaseWindow {
     using SceneEntity = scene_set::SceneEntity;
 
 public:
-    static void init(imelements::WindowManager& manager, Scene* scene) {
+    static decltype(auto) init(imelements::WindowManager& manager, Scene* scene) {
         auto& window = manager.get_window<SceneHierarchyWindow>();
         window.scene_ = scene;
         ImGui::SetWindowFocus(window.name());
+        return window;
     }
 
 public:
@@ -47,6 +47,10 @@ public:
         }
     }
 
+    decltype(auto) selected_entity_changed() {
+        return selected_entity_changed_.signal_interface();
+    }
+
 private:
     void show_entity_node(const scene_set::SceneEntity entity) {
         using namespace scene_set::components;
@@ -64,7 +68,7 @@ private:
             node_open = ImGui::TreeNodeEx(label.c_str(), flags);
 
             if (ImGui::IsItemClicked()) {
-                selected_entity_ = entity;
+                select(entity);
             }
         }
 
@@ -83,7 +87,6 @@ private:
 
         if (node_open) {
 
-            //nodec::logging::InfoStream(__FILE__, __LINE__) << "open";
             if (scene_->registry().is_valid(entity)) {
                 auto& hier = scene_->registry().get_component<Hierarchy>(entity);
 
@@ -96,13 +99,20 @@ private:
         }
     }
 
-    void set_selection(SceneEntity entity) {
 
+    void select(SceneEntity entity) {
+        if (entity == selected_entity_) {
+            return;
+        }
+        selected_entity_ = entity;
+        selected_entity_changed_(selected_entity_);
     }
 
 private:
     Scene* scene_{ nullptr };
     SceneEntity selected_entity_{ nodec::entities::null_entity };
+
+    nodec::signals::Signal<void(SceneEntity selected)> selected_entity_changed_;
 
 
 };

@@ -26,17 +26,14 @@ public:
         return window_manager_impl_;
     }
 
-    const Selection& selection() override {
-        return internal_selection;
+    Selection& selection() override {
+        return selection_;
     }
-
-
-public:
-    Selection internal_selection;
 
 
 private:
     imelements::impl::WindowManagerImpl window_manager_impl_;
+    Selection selection_;
     
 
 

@@ -23,7 +23,7 @@ public:
     };
     virtual ~BaseWindow() {}
 
-    virtual void on_gui() {};
+    virtual void on_gui() = 0;
 
     void close() {
         is_closed_ = true;

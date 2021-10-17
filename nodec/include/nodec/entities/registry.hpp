@@ -23,8 +23,8 @@ namespace details {
 template<typename Entity>
 inline void throw_invalid_entity_exception(const Entity entity, const char* file, size_t line) {
     throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        Formatter() << "Invalid entity detected. entity: " << entity
-        << "(entity: " << to_entity(entity) << "; version: " << to_version(entity) << ")",
+        Formatter() << "Invalid entity detected. entity: 0x" << std::hex << entity
+        << "(entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << ")",
         file, line
         ));
 }
@@ -32,8 +32,8 @@ inline void throw_invalid_entity_exception(const Entity entity, const char* file
 template<typename Component, typename Entity>
 inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
     throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        Formatter() << "Entity(" << entity << "; entity: " << to_entity(entity) << "; version: " << to_version(entity)
-        << ") doesn't have the component(" << typeid(Component).name() << ").",
+        Formatter() << "Entity {0x" << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity)
+        << "} doesn't have the component {" << typeid(Component).name() << "}.",
         file, line
         ));
 }

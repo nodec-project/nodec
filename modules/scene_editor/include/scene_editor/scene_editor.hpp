@@ -14,7 +14,7 @@ public:
 
 public:
     virtual imelements::WindowManager& window_manager() = 0;
-    virtual const Selection& selection() = 0;
+    virtual Selection& selection() = 0;
 
 };
 

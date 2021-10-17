@@ -8,25 +8,32 @@
 
 
 
-Editor::Editor(Engine* engine) 
-    : engine_{ engine } 
-{
+Editor::Editor(Engine* engine)
+    : engine_{ engine } {
 
     using namespace imwindows;
+    using namespace imelements;
 
-    imelements::register_menu_item("Window/Log",
-                                   [=]() {LogWindow::init(window_manager()); });
+    register_menu_item("Window/Control",
+                       [=]() { ControlWindow::init(window_manager(), this); });
 
-    imelements::register_menu_item("Window/Hierarchy",
-                                   [=]() {
-                                       SceneHierarchyWindow::init(window_manager(), &engine->scene_module());
-                                   });
+    register_menu_item("Window/Inspector",
+                       [=]() {
+                           InspectorWindow::init(window_manager(), &engine->scene_module().registry(), selection().active_scene_entity_changed());
+                       });
 
-    imelements::register_menu_item("Window/Control",
-                                   [=]() { ControlWindow::init(window_manager(), this); });
+    register_menu_item("Window/Log",
+                       [=]() {LogWindow::init(window_manager()); });
+
+    register_menu_item("Window/Hierarchy",
+                       [=]() {
+                           auto& window = SceneHierarchyWindow::init(window_manager(), &engine->scene_module());
+                           window.selected_entity_changed().connect([=](auto entity) {selection().select(entity); });
+                       });
 
 
 
-    
+
+
 
 }
