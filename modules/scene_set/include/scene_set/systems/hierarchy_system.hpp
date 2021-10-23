@@ -1,7 +1,7 @@
 #ifndef SCENE_SET__SYSTEMS__HIERARCHY_SYSTEM_HPP_
 #define SCENE_SET__SYSTEMS__HIERARCHY_SYSTEM_HPP_
 
-#include <scene_set/components/standard.hpp>
+#include <scene_set/components/basic.hpp>
 
 #include <cassert>
 

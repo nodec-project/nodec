@@ -30,10 +30,18 @@ public:
         return selection_;
     }
 
+    EntityInspectorWindow::ComponentRegistry::RegistryInterface inspector_component_registry() override {
+        return inspector_component_registry_.registry_interface();
+    }
+
+    EntityInspectorWindow::ComponentRegistry& inspector_component_registry_impl() {
+        return inspector_component_registry_;
+    }
 
 private:
     imelements::impl::WindowManagerImpl window_manager_impl_;
     Selection selection_;
+    EntityInspectorWindow::ComponentRegistry inspector_component_registry_;
     
 
 

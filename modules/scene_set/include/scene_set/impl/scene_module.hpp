@@ -2,7 +2,7 @@
 #define SCENE_SET__IMPL__SCENE_HPP_
 
 #include <scene_set/scene.hpp>
-#include <scene_set/components/standard.hpp>
+#include <scene_set/components/basic.hpp>
 #include <scene_set/systems/hierarchy_system.hpp>
 
 

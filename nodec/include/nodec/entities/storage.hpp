@@ -5,6 +5,8 @@
 #include <nodec/signals.hpp>
 
 #include <vector>
+#include <cassert>
+
 
 namespace nodec {
 namespace entities {
@@ -24,7 +26,7 @@ public:
     virtual bool erase(BasicRegistry<Entity>& owner, const Entity entity) = 0;
     virtual void clear(BasicRegistry<Entity>& owner) = 0;
     virtual bool contains(const Entity entity) const = 0;
-    //virtual void* try_get_opaque(const Entity entity) = 0;
+    virtual void* try_get_opaque(const Entity entity) = 0;
 
 public:
     virtual iterator begin() noexcept = 0;
@@ -79,9 +81,9 @@ public:
         return &instances[*pos];
     }
 
-    //void* try_get_opaque(const Entity entity) override {
-    //    return try_get(entity);
-    //}
+    void* try_get_opaque(const Entity entity) override {
+        return try_get(entity);
+    }
 
     bool contains(const Entity entity) const override {
         return sparse_table.contains(entity);

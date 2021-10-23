@@ -226,7 +226,7 @@ public:
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        return std::make_tuple(([entity](auto* cpool) {
+        return std::make_tuple(([this, entity](auto* cpool) {
             return cpool != nullptr && cpool->erase(*this, entity);
                                 })(pool_if_exists<Components>())...);
     }
@@ -315,6 +315,32 @@ public:
     template<typename... Components>
     BasicView<Entity, Components...> view() {
         return { *pool_assured<std::remove_const_t<Components>>()... };
+    }
+
+    /**
+    * @brief Visits an entity and returns the type seq index and opaque pointer for its components.
+    * 
+    * The signature of the function should be equivalent to the following:
+    * 
+    * @code{.cpp}
+    * void(int type_seq_index, void* component);
+    * @endcode
+    */
+    template<typename Func>
+    void visit(Entity entity, Func func) const {
+        for (auto pos = pools.size(); pos; --pos) {
+            const auto& pdata = pools[pos - 1];
+            if (!pdata.pool) {
+                continue;
+            }
+
+            auto component = pdata.pool->try_get_opaque(entity);
+            if (!component) {
+                continue;
+            }
+
+            func(pos - 1, component);
+        }
     }
 
     /**

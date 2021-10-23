@@ -3,9 +3,10 @@
 #include "EditorWindows/ControlWindow.hpp"
 
 #include <imwindows/scene_hierarchy_window.hpp>
-#include <imwindows/inspector_window.hpp>
+#include <imwindows/entity_inspector_window.hpp>
 #include <imwindows/log_window.hpp>
 
+#include <component_gui/scene_set/basic.hpp>
 
 
 Editor::Editor(Engine* engine)
@@ -13,13 +14,17 @@ Editor::Editor(Engine* engine)
 
     using namespace imwindows;
     using namespace imelements;
+    using namespace scene_set::components;
 
     register_menu_item("Window/Control",
                        [=]() { ControlWindow::init(window_manager(), this); });
 
     register_menu_item("Window/Inspector",
                        [=]() {
-                           InspectorWindow::init(window_manager(), &engine->scene_module().registry(), selection().active_scene_entity_changed());
+                           EntityInspectorWindow::init(window_manager(), 
+                                                       &engine->scene_module().registry(),
+                                                       &inspector_component_registry_impl(),
+                                                       selection().active_scene_entity_changed());
                        });
 
     register_menu_item("Window/Log",
@@ -33,6 +38,9 @@ Editor::Editor(Engine* engine)
 
 
 
+
+    inspector_component_registry_impl().register_component<Name>("Name", on_gui_name);
+    inspector_component_registry_impl().register_component<Transform>("Transform", on_gui_transform);
 
 
 

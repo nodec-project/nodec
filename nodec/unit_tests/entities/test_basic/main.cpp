@@ -12,6 +12,7 @@
 #include <cstdlib>
 
 
+
 using namespace nodec;
 using namespace nodec::entities;
 
@@ -140,18 +141,33 @@ int main() {
 
         Stopwatch<std::chrono::steady_clock> sw;
 
+        //{
+        //    Registry registry;
+
+        //    for (auto i = 0; i < 10; ++i) {
+        //        const auto entity = registry.create_entity();
+        //        auto pair = registry.emplace_component<ComponentA>(entity, i);
+
+        //        if (i % 2) {
+        //            auto pair = registry.emplace_component<ComponentB>(entity, Formatter() << i);
+        //        }
+        //    }
+        //}
+        // 
+
         {
+            logging::InfoStream info(__FILE__, __LINE__);
+
             Registry registry;
 
-            for (auto i = 0; i < 10; ++i) {
-                const auto entity = registry.create_entity();
-                auto pair = registry.emplace_component<ComponentA>(entity, i);
-
-                if (i % 2) {
-                    auto pair = registry.emplace_component<ComponentB>(entity, Formatter() << i);
-                }
-            }
+            auto entt_a = registry.create_entity();
+            registry.emplace_component<ComponentB>(entt_a);
+            auto results = registry.remove_components<ComponentB, BaseComponent>(entt_a);
+            
+            info << std::get<0>(results) << ", " << std::get<1>(results);
         }
+
+
         //ecs::Registry registry;
 
         //{
