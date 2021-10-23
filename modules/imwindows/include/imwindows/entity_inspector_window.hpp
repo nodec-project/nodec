@@ -164,22 +164,43 @@ public:
                 return;
             }
 
-            if (ImGui::CollapsingHeader(handler->component_name().c_str())) {
-                if (ImGui::BeginPopupContextItem()) {
-                    if (ImGui::Button("Remove")) {
-                        handler->remove(*entity_registry_, target_entity_);
-                    }
-                    ImGui::EndPopup();
+            auto opened = ImGui::CollapsingHeader(handler->component_name().c_str());
+
+            // this context item is binded with last element (CollapsingHeader).
+            if (ImGui::BeginPopupContextItem()) {
+                if (ImGui::Button("Remove")) {
+                    handler->remove(*entity_registry_, target_entity_);
                 }
-                //if (ImGui::CollapsingHeader(name.c_str())) {
+                ImGui::EndPopup();
+            }
+
+            if (opened) {
                 handler->on_gui(component);
-                //static char str0[128] = "Hello, world!";
-                //ImGui::InputText("Name", str0, IM_ARRAYSIZE(str0));
-                //ImGui::TreePop();
             }
 
                                 });
 
+        ImGui::Separator();
+
+        if (ImGui::Button("Add component")) {
+            ImGui::OpenPopup("add-component-popup");
+        }
+
+        if (ImGui::BeginPopup("add-component-popup")) {
+            if (ImGui::BeginListBox("##component-list")) {
+                for (auto& pair : *component_registry_) {
+                    auto& handler = pair.second;
+
+                    if (ImGui::Selectable(handler->component_name().c_str())) {
+                        handler->add(*entity_registry_, target_entity_);
+                        ImGui::CloseCurrentPopup();
+                    }
+                }
+
+                ImGui::EndListBox();
+            }
+            ImGui::EndPopup();
+        }
 
     }
 

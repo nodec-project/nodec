@@ -2,7 +2,7 @@
 #define COMPONENT_GUI__SCENE_SET__BASIC_HPP
 
 #include <scene_set/components/basic.hpp>
-
+#include <nodec/math/gfx.hpp>
 
 #include <imgui.h>
 #include <algorithm>
@@ -42,6 +42,7 @@ void on_gui_transform(Transform& trfm) {
     ImGui::DragFloat("Y##position-y", &trfm.local_position.y, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
     ImGui::DragFloat("Z##position-z", &trfm.local_position.z, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f");
     ImGui::PopItemWidth();
+
 
     ImGui::Text("Rotation");
 
