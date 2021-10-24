@@ -13,6 +13,13 @@
 #include <nodec/logging.hpp>
 
 
+#define EDITOR_MODE
+
+#ifdef EDITOR_MODE
+#include <scene_editor/scene_editor.hpp>
+#include <imgui.h>
+#endif
+
 //
 //#include <game_engine/game_engine.hpp>
 //

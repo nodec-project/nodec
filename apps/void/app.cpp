@@ -3,6 +3,8 @@
 //#include "test_cube.hpp"
 //#include "player.hpp"
 
+#include <scene_set/systems/transform_system.hpp>
+
 using namespace nodec_engine;
 using namespace scene_set;
 using namespace screen;
@@ -11,15 +13,33 @@ using namespace screen;
 class HelloWorld {
 
 public:
+    struct HelloComponent {
+        int my_field;
+    };
+
     HelloWorld(NodecEngine& engine) {
         engine.stepped().connect([=](NodecEngine& engine) { on_step(engine); });
         engine.initialized().connect([=](NodecEngine& engine) { on_initialized(engine); });
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
+
+#ifdef EDITOR_MODE
+        using namespace scene_editor;
+        auto& editor = engine.get_module<SceneEditor>();
+
+        editor.inspector_component_registry().register_component<HelloComponent>("HelloComponent", [](HelloComponent& comp) {
+            ImGui::Text("My Field"); ImGui::SameLine();
+            ImGui::SliderInt("##my-field", &comp.my_field, 0, 100);
+
+                                                                                 });
+#endif
     }
 
     ~HelloWorld() {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::~HelloWorld] >>> See you ;)";
     }
+
+
+
 private:
     void on_step(NodecEngine& engine) {
 
@@ -30,11 +50,11 @@ private:
 
     void on_initialized(NodecEngine& engine) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
-        
+
         auto& scene = engine.get_module<Scene>();
         auto entity = scene.create_entity("Hello World!!");
 
-        
+
     }
 
 

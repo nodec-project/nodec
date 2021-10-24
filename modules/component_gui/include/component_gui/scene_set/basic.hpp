@@ -36,22 +36,40 @@ void on_gui_transform(Transform& trfm) {
         child_w = 1.0f;
     }
 
-    ImGui::PushItemWidth(child_w);
-    ImGui::Text("Position"); ImGui::SameLine(align);
-    ImGui::DragFloat("X##position-x", &trfm.local_position.x, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
-    ImGui::DragFloat("Y##position-y", &trfm.local_position.y, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
-    ImGui::DragFloat("Z##position-z", &trfm.local_position.z, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f");
-    ImGui::PopItemWidth();
+    {
+        auto orig_pos = trfm.local_position;
+
+        ImGui::PushItemWidth(child_w);
+        ImGui::Text("Position"); ImGui::SameLine(align);
+        ImGui::DragFloat("X##position-x", &trfm.local_position.x, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
+        ImGui::DragFloat("Y##position-y", &trfm.local_position.y, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
+        ImGui::DragFloat("Z##position-z", &trfm.local_position.z, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f");
+        ImGui::PopItemWidth();
+
+        if (orig_pos != trfm.local_position) {
+            trfm.dirty = true;
+        }
+    }
 
 
-    ImGui::Text("Rotation");
+    {
+        ImGui::Text("Rotation");
+    }
 
-    ImGui::PushItemWidth(child_w);
-    ImGui::Text("Scale"); ImGui::SameLine(align);
-    ImGui::DragFloat("X##scale-x", &trfm.local_scale.x, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
-    ImGui::DragFloat("Y##scale-y", &trfm.local_scale.y, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
-    ImGui::DragFloat("Z##scale-z", &trfm.local_scale.z, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f");
-    ImGui::PopItemWidth();
+    {
+        auto orig_scale = trfm.local_scale;
+
+        ImGui::PushItemWidth(child_w);
+        ImGui::Text("Scale"); ImGui::SameLine(align);
+        ImGui::DragFloat("X##scale-x", &trfm.local_scale.x, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
+        ImGui::DragFloat("Y##scale-y", &trfm.local_scale.y, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f"); ImGui::SameLine();
+        ImGui::DragFloat("Z##scale-z", &trfm.local_scale.z, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f");
+        ImGui::PopItemWidth();
+
+        if (orig_scale != trfm.local_scale) {
+            trfm.dirty = true;
+        }
+    }
 
 
 

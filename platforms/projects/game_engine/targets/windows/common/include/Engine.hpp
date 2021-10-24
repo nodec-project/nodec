@@ -8,6 +8,7 @@
 #include <screen/impl/screen_module.hpp>
 
 #include <scene_set/impl/scene_module.hpp>
+#include <scene_set/systems/transform_system.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/unicode.hpp>
@@ -62,6 +63,12 @@ public:
     }
 
     void frame_end() {
+        using namespace scene_set::systems;
+
+        for (auto& root : scene_module_->hierarchy_system().root_entities()) {
+            update_transform(scene_module_->registry(), root);
+        }
+
         window_->Gfx().EndFrame();
     }
 

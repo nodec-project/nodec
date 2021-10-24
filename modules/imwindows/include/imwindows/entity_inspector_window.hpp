@@ -6,6 +6,8 @@
 #include <nodec/vector2.hpp>
 #include <nodec/type_info.hpp>
 
+#include <imgui.h>
+
 #include <vector>
 #include <unordered_map>
 
@@ -76,7 +78,7 @@ public:
 
             template<typename Component, typename Callback>
             decltype(auto) register_component(const std::string& name, const Callback&& on_gui_callback) {
-                registry_->register_component(name, on_gui_callback);
+                registry_->register_component<Component>(name, std::forward<const Callback&&>(on_gui_callback));
             }
 
         private:
