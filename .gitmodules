@@ -1,12 +1,12 @@
 [submodule "3rd_party/libs/cereal"]
 	path = modules/serialization/cereal
 	url = https://github.com/USCiLab/cereal.git
-[submodule "3rd_party/assimp/assimp"]
-	path = extentions/assimp/assimp
-	url = https://github.com/assimp/assimp.git
 [submodule "3rd_party/imgui/imgui"]
 	path = modules/imgui/imgui
 	url = https://github.com/ocornut/imgui.git
 [submodule "platforms/sdks/DirectXTex/DirectXTex"]
 	path = platforms/sdks/DirectXTex/DirectXTex
 	url = https://github.com/microsoft/DirectXTex.git
+[submodule "modules/assimp/assimp"]
+	path = modules/assimp/assimp
+	url = https://github.com/assimp/assimp.git
