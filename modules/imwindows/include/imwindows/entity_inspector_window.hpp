@@ -143,7 +143,7 @@ public:
 
 public:
     EntityInspectorWindow()
-        : BaseWindow("Inspector", nodec::Vector2f(300, 500)) {
+        : BaseWindow("Entity Inspector", nodec::Vector2f(300, 500)) {
 
     }
 

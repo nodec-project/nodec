@@ -9,7 +9,6 @@
 #include <screen/screen.hpp>
 #include <scene_set/scene.hpp>
 
-
 #include <nodec/logging.hpp>
 
 

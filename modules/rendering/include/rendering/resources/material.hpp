@@ -10,12 +10,9 @@
 
 #include <map>
 
-namespace nodec_modules
-{
-namespace rendering
-{
-namespace interfaces
-{
+namespace rendering {
+namespace resources {
+
 
 class Material : public BindableResource
 {
@@ -68,8 +65,7 @@ protected:
 
 };
 
-} // namespace interfaces
-} // namespace rendering
-} // namespace nodec_modules
+}
+}
 
 #endif

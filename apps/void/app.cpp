@@ -3,7 +3,6 @@
 //#include "test_cube.hpp"
 //#include "player.hpp"
 
-#include <scene_set/systems/transform_system.hpp>
 
 using namespace nodec_engine;
 using namespace scene_set;

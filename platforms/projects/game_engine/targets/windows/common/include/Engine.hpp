@@ -3,12 +3,13 @@
 #include "ScreenHandler.hpp"
 #include "Window.hpp"
 #include "ImguiManager.hpp"
+#include "ResourceHandler.hpp"
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <screen/impl/screen_module.hpp>
-
 #include <scene_set/impl/scene_module.hpp>
 #include <scene_set/systems/transform_system.hpp>
+#include <resources/impl/resources_module.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/unicode.hpp>
@@ -21,6 +22,9 @@ class Engine : public nodec_engine::impl::NodecEngineModule {
 
     using SceneModule = scene_set::impl::SceneModule;
     using Scene = scene_set::Scene;
+
+    using ResourcesModule = resources::impl::ResourcesModule;
+    using Resources = resources::Resources;
 
 public:
     Engine() {
@@ -37,6 +41,9 @@ public:
 
         scene_module_.reset(new SceneModule());
         add_module<Scene>(scene_module_);
+
+        resources_module_.reset(new ResourcesModule());
+        add_module<Resources>(resources_module_);
 
 
         initialized().connect([=](NodecEngine&) {
@@ -82,6 +89,8 @@ private:
 
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
+    std::shared_ptr<ResourcesModule> resources_module_;
+    std::unique_ptr<ResourceHandler> resource_handler_;
 
     std::shared_ptr<SceneModule> scene_module_;
 

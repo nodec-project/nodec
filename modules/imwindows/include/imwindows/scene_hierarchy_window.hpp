@@ -22,7 +22,7 @@ public:
 
 public:
     SceneHierarchyWindow()
-        : BaseWindow("Hierarchy", nodec::Vector2f(200, 500)) {
+        : BaseWindow("Scene Hierarchy", nodec::Vector2f(200, 500)) {
 
     }
 

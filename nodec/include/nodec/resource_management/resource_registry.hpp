@@ -61,11 +61,11 @@ public:
     class ResourceBlock;
 
     template<typename Type>
-    class ResourceLoadBridge {
+    class LoadBridge {
         using ResourceBlock = ResourceBlock<Type>;
 
     public:
-        ResourceLoadBridge(ResourceBlock* block)
+        LoadBridge(ResourceBlock* block)
             : block_{ block } {
         }
 
@@ -85,25 +85,6 @@ public:
         ResourceBlock* block_{ nullptr };
     };
 
-    template<typename Type>
-    class ResourceDeleteBridge {
-        using ResourceBlock = ResourceBlock<Type>;
-
-    public:
-        ResourceDeleteBridge(ResourceBlock* block)
-            : block_{ block } {
-        }
-
-        void delete_resource(const std::string& name) const {
-            {
-                std::lock_guard<std::mutex> lock(block_->dict_mutex);
-                block_->dict.erase(name);
-            }
-        }
-
-    private:
-        ResourceBlock* block_{ nullptr };
-    };
 
 private:
 
@@ -116,15 +97,7 @@ private:
         static_assert(std::is_const_v<decltype(Type::name)>,
                       "The type of the resource name must be const.");
 
-        // if error in creating, throw exception. no need to return result as like bool.
-        using Creator = std::function<std::future<void>(const std::string&)>;
-
-        using Loader = std::function<ResourceFuture<Type>(const std::string&, ResourceLoadBridge<Type>)>;
-
-        using Writer = std::function<std::future<void>(Resource<Type>)>;
-        
-        using Deleter = std::function<std::future<void>(const std::string&, ResourceDeleteBridge<Type>)>;
-
+        using Loader = std::function<ResourceFuture<Type>(const std::string&, LoadBridge<Type>)>;
 
         ~ResourceBlock() {}
 
@@ -134,10 +107,7 @@ private:
         std::mutex dict_mutex;
         std::mutex loading_futures_mutex;
 
-        Creator creator;
         Loader loader;
-        Writer writer;
-        Deleter deleter;
     };
 
     struct ResourceBlockData {
@@ -173,14 +143,18 @@ public:
 
     ResourceRegistry& operator=(ResourceRegistry&&) = default;
 
-    template<typename Type, typename Creator, typename Loader, typename Writer, typename Deleter>
-    void register_resource_handlers(Creator&& creator, Loader&& loader, Writer&& writer, Deleter&& deleter) {
+
+    /**
+    * 
+    * @code{.cpp}
+    * std::future<std::shared_ptr<Type>>(const std::string&, LoadBridge<Type>);
+    * @endcode
+    */
+    template<typename Type, typename Loader>
+    void register_resource_loader(Loader&& loader) {
         auto* block = resource_block_assured<Type>();
 
-        block->creator = creator;
         block->loader = loader;
-        block->writer = writer;
-        block->deleter = deleter;
     }
 
     template<typename Type>
@@ -217,47 +191,6 @@ public:
 
         *future = block->loader(name, { block }).share();
         return *future;
-    }
-
-    template<typename Type>
-    decltype(auto) new_resource(const std::string& name) {
-        auto* block = resource_block_assured<Type>();
-
-        Resource<Type> resource;
-        {
-            std::lock_guard<std::mutex> lock(block->dict_mutex);
-            resource = block->dict[name].lock();
-        }
-
-        if (resource) {
-            details::throw_resource_already_exists_exception<Type>(name, __FILE__, __LINE__);
-        }
-
-        return block->creator(name);
-    }
-
-    template<typename Type>
-    decltype(auto) apply_changes(const std::string& name) {
-        auto* block = resource_block_assured<Type>();
-
-        Resource<Type> resource;
-        {
-            std::lock_guard<std::mutex> lock(block->dict_mutex);
-            resource = block->dict[name].lock();
-        }
-
-        if (!resource) {
-            details::throw_no_resource_exception<Type>(name, __FILE__, __LINE__);
-        }
-
-        return block->writer(resource);
-    }
-
-    template<typename Type>
-    decltype(auto) delete_resource(const std::string& name) {
-        auto* block = resource_block_assured<Type>();
-
-        return block->deleter(name, { block });
     }
 
 
