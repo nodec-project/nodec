@@ -5,6 +5,8 @@
 #include <nodec/error_formatter.hpp>
 #include <nodec/macros.hpp>
 
+// Prevent to define min/max macro in windows api.
+#define NOMINMAX
 #include <Windows.h>
 #include <d3d11.h>
 #include <wrl.h>

@@ -7,6 +7,7 @@
 using namespace nodec_engine;
 using namespace scene_set;
 using namespace screen;
+using namespace resources;
 
 
 class HelloWorld {
@@ -70,6 +71,12 @@ void nodec_engine::on_boot(NodecEngine& engine) {
     screen.set_resolution({ 1280, 720 });
 
     screen.set_title("[ void ]");
+
+    auto& resources = engine.get_module<Resources>();
+
+#ifdef _DEBUG
+    resources.set_resource_path("C:/Users/onete/OneDrive/Documents/Projects/nodec_project/nodec/apps/void/resources");
+#endif // _DEBUG
 
     engine.add_module(std::make_shared<HelloWorld>(engine));
 

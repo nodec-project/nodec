@@ -10,14 +10,11 @@ class Resources {
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
 
 public:
+    virtual ResourceRegistry& registry() = 0;
 
-    ResourceRegistry& registry() {
-        return registry_;
-    }
+    virtual void set_resource_path(const std::string& path) = 0;
 
-private:
-    ResourceRegistry registry_;
-
+    virtual std::string resource_path() const = 0;
 
 };
 

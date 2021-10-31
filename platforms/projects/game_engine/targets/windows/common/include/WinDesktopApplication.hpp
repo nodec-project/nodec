@@ -6,6 +6,7 @@
 #include <nodec/application.hpp>
 #include <nodec/logging.hpp>
 
+#define NOMINMAX
 #include <Windows.h>
 
 #include <memory>
@@ -75,7 +76,4 @@ protected:
 
         return -1;
     }
-
-protected:
-    std::unique_ptr<Window> window;
 };

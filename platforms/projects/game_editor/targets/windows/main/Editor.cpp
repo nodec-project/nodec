@@ -39,7 +39,7 @@ Editor::Editor(Engine* engine)
 
     register_menu_item("Window/Resource Importer",
                        [=]() {
-                           ResourceImportWindow::init(window_manager());
+                           ResourceImportWindow::init(window_manager(), engine->resources_module().resource_path());
                        });
 
 

@@ -6,6 +6,7 @@
 #include <nodec/macros.hpp>
 #include <nodec/signals.hpp>
 
+#define NOMINMAX
 #include <Windows.h>
 
 #include <stdexcept>

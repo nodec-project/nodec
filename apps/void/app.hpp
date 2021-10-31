@@ -8,6 +8,7 @@
 #include <nodec_engine/nodec_engine.hpp>
 #include <screen/screen.hpp>
 #include <scene_set/scene.hpp>
+#include <resources/resources.hpp>
 
 #include <nodec/logging.hpp>
 

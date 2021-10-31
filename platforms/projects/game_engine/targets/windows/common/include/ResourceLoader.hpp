@@ -6,7 +6,7 @@
 #include "Rendering/Mesh.hpp"
 
 
-class ResourceHandler {
+class ResourceLoader {
 
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
     

@@ -3,7 +3,8 @@
 #include "ScreenHandler.hpp"
 #include "Window.hpp"
 #include "ImguiManager.hpp"
-#include "ResourceHandler.hpp"
+#include "ResourceLoader.hpp"
+#include "ResourcePathHandler.hpp"
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <screen/impl/screen_module.hpp>
@@ -34,16 +35,22 @@ public:
 
         imgui_manager_.reset(new ImguiManager);
 
+        // --- screen ---
         screen_module_.reset(new ScreenModule());
         add_module<Screen>(screen_module_);
 
         screen_handler_.reset(new ScreenHandler(screen_module_.get()));
 
+        // --- scene ---
         scene_module_.reset(new SceneModule());
         add_module<Scene>(scene_module_);
 
+        // --- resources ---
         resources_module_.reset(new ResourcesModule());
         add_module<Resources>(resources_module_);
+
+        resource_path_handler_.reset(new ResourcePathHandler(resources_module_.get()));
+        resource_path_handler_->BindHandlersOnBoot();
 
 
         initialized().connect([=](NodecEngine&) {
@@ -63,6 +70,8 @@ public:
                                 unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
 
         screen_handler_->Setup(window_.get());
+
+        resource_path_handler_->BindHandlersOnRuntime();
     }
 
     void frame_begin() {
@@ -81,6 +90,7 @@ public:
 
     ScreenModule& screen_module() { return *screen_module_; }
     SceneModule& scene_module() { return *scene_module_; }
+    ResourcesModule& resources_module() { return *resources_module_; }
 
 private:
     // imgui must be destroyed after window.
@@ -90,7 +100,8 @@ private:
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
     std::shared_ptr<ResourcesModule> resources_module_;
-    std::unique_ptr<ResourceHandler> resource_handler_;
+    std::unique_ptr<ResourceLoader> resource_loader_;
+    std::unique_ptr<ResourcePathHandler> resource_path_handler_;
 
     std::shared_ptr<SceneModule> scene_module_;
 

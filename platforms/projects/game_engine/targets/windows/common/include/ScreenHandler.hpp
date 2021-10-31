@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Window.hpp"
 
 #include <screen/impl/screen_module.hpp>
@@ -69,54 +70,6 @@ private:
                 }
             });
     }
-
-
-    //
-    //
-    //
-    //    void SetupOnBootingHandlers(
-    //        & screenModule
-    //    );
-    //
-    //    void SetupRuntimeHandlers(
-    //        screen::impl::ScreenModule& screenModule,
-    //        Window* pWindow
-    //    );
-    //
-    //public:
-    //    ScreenHandlers();
-    //
-    //
-    //    virtual void HandleResolutionChangeOnBoot(
-    //        screen::impl::ScreenModule& screenModule,
-    //        const nodec::Vector2i& resolution
-    //    );
-    //
-    //    virtual void HandleSizeChangeOnBoot(
-    //        screen::impl::ScreenModule& screenModule,
-    //        const nodec::Vector2i& size
-    //    );
-    //
-    //    virtual void HandleTitleChangeOnBoot(
-    //        screen::impl::ScreenModule& screenModule,
-    //        const std::string& title
-    //    );
-    //
-    //
-    //    virtual void HandleResolutionChangeOnRuntime(
-    //        screen::impl::ScreenModule& screenModule,
-    //        const nodec::Vector2i& resolution
-    //    );
-    //
-    //    virtual void HandleSizeChangeOnRuntime(
-    //        screen::impl::ScreenModule& screenModule,
-    //        const nodec::Vector2i& size
-    //    );
-    //
-    //    virtual void HandleTitleChangeOnRuntime(
-    //        screen::impl::ScreenModule& screenModule,
-    //        const std::string& title
-    //    );
 
 private:
     ScreenModule* mpScreenModule;

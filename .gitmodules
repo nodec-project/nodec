@@ -10,3 +10,4 @@
 [submodule "modules/assimp/assimp"]
 	path = modules/assimp/assimp
 	url = https://github.com/assimp/assimp.git
+	ignore = dirty

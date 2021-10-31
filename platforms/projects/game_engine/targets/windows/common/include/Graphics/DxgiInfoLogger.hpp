@@ -3,6 +3,8 @@
 #include <nodec/macros.hpp>
 #include <nodec/logging.hpp>
 
+// Prevent to define min/max macro in windows api.
+#define NOMINMAX
 #include <wrl.h>
 #include <dxgidebug.h>
 
