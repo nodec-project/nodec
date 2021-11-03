@@ -24,8 +24,6 @@ void on_gui_name(Name &name) {
         // on type enter
     }
     name.name = str;
-
-
 }
 
 void on_gui_transform(Transform& trfm) {

@@ -69,15 +69,16 @@ public:
             : block_{ block } {
         }
 
-        void on_resource_loaded(Resource<Type> resource) const  {
+        void on_resource_loaded(const std::string& name, Resource<Type> resource) const {
             {
                 std::lock_guard<std::mutex> lock(block_->dict_mutex);
-                block_->dict[resource->name] = resource;
+                block_->dict[name] = resource;
+                block_->inverted_dict[reinterpret_cast<std::intptr_t>(resource.get())] = name;
             }
 
             {
                 std::lock_guard<std::mutex> lock(block_->loading_futures_mutex);
-                block_->loading_futures.erase(resource->name);
+                block_->loading_futures.erase(name);
             }
         }
 
@@ -94,8 +95,6 @@ private:
 
     template<typename Type>
     struct ResourceBlock : public BaseResourceBlock {
-        static_assert(std::is_const_v<decltype(Type::name)>,
-                      "The type of the resource name must be const.");
 
         using Loader = std::function<ResourceFuture<Type>(const std::string&, LoadBridge<Type>)>;
 
@@ -103,6 +102,9 @@ private:
 
         std::unordered_map<std::string, std::weak_ptr<Type>> dict;
         std::unordered_map<std::string, ResourceSharedFuture<Type>> loading_futures;
+
+        // ptr -> name
+        std::unordered_map<std::intptr_t, std::string> inverted_dict;
 
         std::mutex dict_mutex;
         std::mutex loading_futures_mutex;
@@ -145,7 +147,7 @@ public:
 
 
     /**
-    * 
+    *
     * @code{.cpp}
     * std::future<std::shared_ptr<Type>>(const std::string&, LoadBridge<Type>);
     * @endcode
@@ -176,7 +178,7 @@ public:
         }
 
         bool is_loading = false;
-        ResourceSharedFuture<Type> *future;
+        ResourceSharedFuture<Type>* future;
 
         {
             std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
@@ -193,6 +195,32 @@ public:
         return *future;
     }
 
+    template<typename Type>
+    std::pair<std::string, bool> lookup_name(Resource<Type> resource) noexcept {
+        auto* block = resource_block_assured<Type>();
+
+        std::string name;
+
+        // get resource pointer
+        auto ptr = reinterpret_cast<std::intptr_t>(resource.get());
+        {
+            std::lock_guard<std::mutex> lock(block->dict_mutex);
+
+            // lookup name from the pointer
+            auto iter = block->inverted_dict.find(ptr);
+            if (iter == block->inverted_dict.end()) {
+                return { "", false };
+            }
+
+            auto booked = block->dict[iter->second].lock();
+            if (!booked || resource != booked) {
+                block->inverted_dict.erase(iter);
+                return { "", false };
+            }
+            name = iter->second;
+        }
+        return { name, true };
+    }
 
 private:
     std::mutex resource_blocks_mutex;

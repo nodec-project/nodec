@@ -1,7 +1,7 @@
 #include "Editor.hpp"
 
 #include "EditorWindows/ControlWindow.hpp"
-#include "EditorWindows/ResourceImportWindow.hpp"
+#include "EditorWindows/AssetImportWindow.hpp"
 
 #include <imwindows/scene_hierarchy_window.hpp>
 #include <imwindows/entity_inspector_window.hpp>
@@ -37,9 +37,12 @@ Editor::Editor(Engine* engine)
                            window.selected_entity_changed().connect([=](auto entity) {selection().select(entity); });
                        });
 
-    register_menu_item("Window/Resource Importer",
+    register_menu_item("Window/Asset Importer",
                        [=]() {
-                           ResourceImportWindow::init(window_manager(), engine->resources_module().resource_path());
+                           AssetImportWindow::init(window_manager(), 
+                                                   engine->resources_module().resource_path(),
+                                                   &engine->scene_module(),
+                                                   &engine->resources_module().registry());
                        });
 
 

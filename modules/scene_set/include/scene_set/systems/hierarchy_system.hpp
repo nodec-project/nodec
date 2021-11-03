@@ -56,8 +56,8 @@ public:
         while (grand != null_entity) {
             if (grand == child) {
                 throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-                    Formatter() << "Circular reference detected. The given child (entity: " << child
-                    << ") was detected in the parents of given parent (entity: " << parent << ").",
+                    Formatter() << "The entity cannot set itself as a parent. (parent: " << parent
+                    << "; child: " << child << ")",
                     __FILE__, __LINE__
                     ));
             }

@@ -9,8 +9,6 @@ class Rendering;
 
 class Mesh {
 
-public:
-    const std::string name;
 
 };
 
