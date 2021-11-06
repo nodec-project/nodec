@@ -28,9 +28,11 @@ protected:
         engine->add_module<SceneEditor>(editor);
 
         engine->configure();
+
+        // ImGui does not work if the resolution and window size are not the same.
+        engine->screen_module().internal_size = engine->screen_module().internal_resolution;
         
         engine->setup();
-
     }
 
     void loop() {

@@ -17,16 +17,14 @@ class ScreenHandler {
 public:
     ScreenHandler(ScreenModule* pScreenModule)
         : mpScreenModule{ pScreenModule } {
-        BindHandlersOnBoot();
     }
 
-    void Setup(Window* pWindow) {
+    void SetWindow(Window* pWindow) {
         mpWindow = pWindow;
-        BindHandlersOnRuntime();
     }
 
 
-private:
+public:
     void BindHandlersOnBoot() {
         using namespace nodec;
         mResolutionChangedConnection = mpScreenModule->resolution_changed().connect(
@@ -47,6 +45,7 @@ private:
     }
 
     void BindHandlersOnRuntime() {
+
         assert(mpWindow);
 
         mResolutionChangedConnection.disconnect();

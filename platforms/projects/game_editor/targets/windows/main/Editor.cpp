@@ -17,6 +17,7 @@ Editor::Editor(Engine* engine)
     using namespace imelements;
     using namespace scene_set::components;
 
+
     register_menu_item("Window/Control",
                        [=]() { ControlWindow::init(window_manager(), this); });
 

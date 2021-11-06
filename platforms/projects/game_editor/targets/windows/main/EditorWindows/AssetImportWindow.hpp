@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
+#include <assimp/postprocess.h>
 
 #include <nodec/logging.hpp>
 #include <nodec/formatter.hpp>
@@ -44,7 +45,7 @@ public:
         if (ImGui::Button("Import")) {
 
             current_scene = nullptr;
-            const auto scene = importer.ReadFile(source_path, 0);
+            const auto scene = importer.ReadFile(source_path, aiProcess_Triangulate);
 
             if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
                 logging::ErrorStream(__FILE__, __LINE__) << "Import failed!\n"
@@ -55,9 +56,6 @@ public:
             else {
                 current_scene = scene;
                 setup_current_scene(scene);
-
-                //selected_mesh_index = 0;
-
                 last_import_failed = false;
             }
         }
@@ -113,9 +111,31 @@ public:
         if (nodes_header_opened) {
 
             if (ImGui::Button("Export")) {
+                export_messages_.clear();
 
+                for (int i = 0; i < current_scene->mNumMeshes; ++i) {
+                    auto mesh = current_scene->mMeshes[i];
+                    std::string dest_path = Formatter() << resource_path_  << "/"
+                        << resource_name_prefix <<  resource_name_map_[Formatter() << "mesh-" << i].target;
+
+                    if (AssetExporter::ExportMesh(mesh, dest_path)) {
+                        export_messages_.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), Formatter() << "Mesh export success: " << dest_path);
+                    }
+                    else {
+                        export_messages_.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), 
+                                                      Formatter() << "Mesh export failed: " << dest_path << "\n"
+                                                      << "Make sure the file path exists."
+                        );
+                    }
+                }
 
                 AssetExporter::ExportScene(current_scene, *dest_scene_, resource_name_map_, *resource_registry_);
+            }
+
+            for (auto& record : export_messages_) {
+                ImGui::PushStyleColor(ImGuiCol_Text, record.color);
+                ImGui::TextWrapped(record.message.c_str());
+                ImGui::PopStyleColor();
             }
         }
     }
@@ -220,6 +240,15 @@ private:
 private:
     using ResourceNameEntry = AssetExporter::ResourceNameEntry;
 
+    struct MessageRecord {
+        MessageRecord(const ImVec4& color, const std::string& message)
+            : color(color)
+            , message(message) {
+        }
+
+        ImVec4 color;
+        std::string message;
+    };
 private:
     std::string resource_path_;
     ResourceRegistry* resource_registry_;
@@ -234,6 +263,6 @@ private:
 
     char resource_name_prefix[128]{ 0 };
     AssetExporter::ResourceNameMap resource_name_map_;
+    std::vector<MessageRecord> export_messages_;
 
-    bool last_mesh_export_failed;
 };

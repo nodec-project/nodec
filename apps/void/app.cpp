@@ -67,7 +67,16 @@ void nodec_engine::on_boot(NodecEngine& engine) {
     auto& screen = engine.get_module<Screen>();
 
     screen.set_size({ 1920, 1080 });
+    //screen.set_resolution({ 1920, 1080 });
+
+    //screen.set_size({ 1280, 720 });
     screen.set_resolution({ 1280, 720 });
+
+    //screen.set_size({ 1368, 800 });
+    //screen.set_resolution({ 1368, 800 });
+
+    //screen.set_size({ 1600, 900 });
+    //screen.set_resolution({ 1600, 900 });
 
     screen.set_title("[ void ]");
 

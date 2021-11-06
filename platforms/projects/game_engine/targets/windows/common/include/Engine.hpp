@@ -40,6 +40,7 @@ public:
         add_module<Screen>(screen_module_);
 
         screen_handler_.reset(new ScreenHandler(screen_module_.get()));
+        screen_handler_->BindHandlersOnBoot();
 
         // --- scene ---
         scene_module_.reset(new SceneModule());
@@ -65,11 +66,11 @@ public:
     void setup() {
         using namespace nodec;
 
-        window_.reset(new Window(screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
+        window_.reset(new Window(screen_module_->internal_size.x, screen_module_->internal_size.y,
                                 screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
                                 unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
 
-        screen_handler_->Setup(window_.get());
+        screen_handler_->SetWindow(window_.get());
 
         resource_path_handler_->BindHandlersOnRuntime();
     }

@@ -5,11 +5,16 @@
 
 #define CEREAL_THREAD_SAFE 1
 #include <cereal/cereal.hpp>
-#include <cereal/archives/xml.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/portable_binary.hpp>
+#include <cereal/types/vector.hpp>
 
 #include <scene_set/scene_registry.hpp>
 #include <scene_set/scene.hpp>
 #include <rendering/components/mesh_renderer.hpp>
+#include <serialization/nodec/vector3.hpp>
+#include <serialization/nodec/vector2.hpp>
+
 #include <nodec/resource_management/resource_registry.hpp>
 
 #include <fstream>
@@ -71,21 +76,56 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
 
 
 inline bool ExportMesh(aiMesh* pMesh, const std::string& destPath) {
-    std::ofstream out(destPath);
+    using namespace nodec;
+
+    std::ofstream out(destPath, std::ios::binary);
 
     if (!out) {
         return false;
     }
 
-    cereal::XMLOutputArchive archive(out);
+    //cereal::JSONOutputArchive archive(out);
+    cereal::PortableBinaryOutputArchive archive(out);
+
+    std::vector<Vector3f> vertices;
+    std::vector<Vector3f> normals;
+    std::vector<unsigned int> triangles;
+    std::vector<Vector2f> uvs;
+    std::vector<Vector2f> tangents;
 
     for (unsigned int i = 0; i < pMesh->mNumVertices; ++i) {
+        auto &vert = pMesh->mVertices[i];
+        vertices.emplace_back(vert.x, vert.y, vert.z);
 
+        auto& normal = pMesh->mNormals[i];
+        normals.emplace_back(normal.x, normal.y, normal.z);
+
+        if (pMesh->mTextureCoords[0]) {
+            auto& uv = pMesh->mTextureCoords[0][i];
+            uvs.emplace_back(uv.x, uv.y);
+        }
+
+        if (pMesh->mTangents) {
+            auto& tangent = pMesh->mTangents[i];
+            tangents.emplace_back(tangent.x, tangent.y);
+        }
     }
 
     for (unsigned int i = 0; i < pMesh->mNumFaces; ++i) {
+        // 3 indices per face
+        auto& face = pMesh->mFaces[i];
 
+        assert(face.mNumIndices == 3 && "Only 3 indices available. Make sure to set aiProcess_Triangulate on call Assimp::Importer::ReadFile.");
+        for (unsigned int j = 0; j < face.mNumIndices; ++j) {
+            triangles.emplace_back(face.mIndices[j]);
+        }
     }
+
+    archive(CEREAL_NVP(vertices));
+    archive(CEREAL_NVP(triangles));
+    archive(CEREAL_NVP(normals));
+    archive(CEREAL_NVP(uvs));
+    archive(CEREAL_NVP(tangents));
 
     return true;
 }
