@@ -11,15 +11,7 @@ namespace math {
 */
 namespace gfx {
 
-inline void set_angle_axis(Quaternionf& quaternion, float angle_deg, const Vector3f& axis) {
-    auto theta = angle_deg * deg2rad<float> / 2.0f;
-    auto s = std::sin(theta);
-    auto a = normalize(axis);
-    quaternion.x = a.x * s;
-    quaternion.y = a.y * s;
-    quaternion.z = a.z * s;
-    quaternion.w = std::cos(theta);
-}
+
 
 inline Vector3f transform(const Vector3f& vec, const Quaternionf& q) {
     Quaternionf qv(vec.x, vec.y, vec.z, 0.0f);
@@ -47,6 +39,62 @@ inline Matrix4x4f trs(const Vector3f& t, const Quaternionf& r, const Vector3f& s
     };
 }
 
+inline void set_angle_axis(Quaternionf& quaternion, float angle_deg, const Vector3f& axis) {
+    auto theta = angle_deg * deg2rad<float> / 2.0f;
+    auto s = std::sin(theta);
+    auto a = normalize(axis);
+    quaternion.x = a.x * s;
+    quaternion.y = a.y * s;
+    quaternion.z = a.z * s;
+    quaternion.w = std::cos(theta);
+}
+
+// * <https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles>
+//  the equation of above page is zyx conversion.
+
+inline Vector3f euler_angles_xyz(const Quaternionf& rotation) {
+    Vector3f angles;
+
+    // x-axis rotation
+    float sin_x = 2 * (rotation.x * rotation.w - rotation.y * rotation.z);
+    float cos_x = 2 * (rotation.z * rotation.z + rotation.w * rotation.w) - 1;
+    angles.x = std::atan2(sin_x, cos_x);
+
+    // y-axis rotation
+    float sin_y = 2 * (rotation.x * rotation.z + rotation.y * rotation.w);
+    if (std::abs(sin_y) >= 1) {
+        // use 90 degrees if out of range
+        angles.y = std::copysign(90, sin_y);
+    }
+    else {
+        angles.y = std::asin(sin_y);
+    }
+
+    // z-axis rotation
+    float sin_z = 2 * (rotation.z * rotation.w - rotation.x * rotation.y);
+    float cos_z = 2 * (rotation.x * rotation.x + rotation.w * rotation.w) - 1;
+    angles.z = std::atan2(sin_z, cos_z);
+    
+    return angles * rad2deg<float>;
+}
+
+
+/**
+* Rx * Ry * Rz = R
+*/
+inline void set_eulaer_angles_xyz(Quaternionf& rotation, const Vector3f& euler) {
+    float cx = std::cos(euler.x * 0.5f * deg2rad<float>);
+    float sy = std::sin(euler.y * 0.5f * deg2rad<float>);
+    float sz = std::sin(euler.z * 0.5f * deg2rad<float>);
+    float sx = std::sin(euler.x * 0.5f * deg2rad<float>);
+    float cy = std::cos(euler.y * 0.5f * deg2rad<float>);
+    float cz = std::cos(euler.z * 0.5f * deg2rad<float>);
+
+    rotation.x = cx * sy * sz + sx * cy * cz;
+    rotation.y = cx * sy * cz - sx * cy * sz;
+    rotation.z = cx * cy * sz + sx * sy * cz;
+    rotation.w = cx * cy * cz - sx * sy * sz;
+}
 
 } // namespace gfx
 } // namespace math

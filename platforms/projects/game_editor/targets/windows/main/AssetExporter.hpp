@@ -1,6 +1,7 @@
 #pragma once
 
 #include <assimp/scene.h>
+#include <assimp/matrix4x4.h>
 
 #define CEREAL_THREAD_SAFE 1
 #include <cereal/cereal.hpp>
@@ -34,9 +35,22 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
     using namespace nodec;
     using namespace nodec::entities;
     using namespace rendering::components;
+    using namespace scene_set::components;
 
     auto myEntity = destScene.create_entity(pNode->mName.C_Str());
 
+    {
+        aiVector3D position;
+        aiQuaternion rotation;
+        aiVector3D scale;
+        pNode->mTransformation.Decompose(scale, rotation, position);
+
+        auto& trfm = destScene.registry().get_component<Transform>(myEntity);
+        trfm.local_position.set(position.x, position.y, position.z);
+        trfm.local_rotation.set(rotation.x, rotation.y, rotation.z, rotation.w);
+        trfm.local_scale.set(scale.x, scale.y, scale.z);
+        trfm.dirty = true;
+    }
 
     if (parentEntity != null_entity) {
         destScene.append_child(parentEntity, myEntity);

@@ -125,6 +125,17 @@ inline Quaternion<T> operator+= (Quaternion<T>& left, const Quaternion<T>& right
 }
 
 template<typename T>
+inline bool operator==(const Quaternion<T>& left, const Quaternion<T>& right) {
+    return (left.x == right.x && left.y == right.y && left.z == right.z && left.w == right.w);
+}
+
+template<typename T>
+inline bool operator!=(const Quaternion<T>& left, const Quaternion<T>& right) {
+    return !(left == right);
+}
+
+
+template<typename T>
 inline std::ostream& operator<<(std::ostream& stream, const Quaternion<T>& quaternion)
 {
     return stream << "( " << quaternion.x << " )i + ( " << quaternion.y << " )j + ( " << quaternion.z << " )k + ( " << quaternion.w << " )";

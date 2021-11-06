@@ -27,9 +27,8 @@ public:
         auto& editor = engine.get_module<SceneEditor>();
 
         editor.inspector_component_registry().register_component<HelloComponent>("HelloComponent", [](HelloComponent& comp) {
-            ImGui::Text("My Field"); ImGui::SameLine();
-            ImGui::SliderInt("##my-field", &comp.my_field, 0, 100);
-
+            /*ImGui::Text("My Field"); ImGui::SameLine();*/
+            ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
                                                                                  });
 #endif
     }
