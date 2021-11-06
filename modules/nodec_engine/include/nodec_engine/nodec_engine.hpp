@@ -87,7 +87,6 @@ private:
 
 void on_boot(NodecEngine& engine);
 
-NodecEngine& current();
 
 } // namespace game_engine
 

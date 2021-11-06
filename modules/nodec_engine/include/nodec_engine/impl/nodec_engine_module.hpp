@@ -22,7 +22,12 @@ public:
 
     }
 
-    ~NodecEngineModule();
+    ~NodecEngineModule() {
+        nodec::logging::InfoStream(__FILE__, __LINE__)
+            << "[NodecEngineModule] >>> The engine is destroyed.\n"
+            << "engine_time: " << engine_time() << "[s]";
+
+    }
 
 public:
     void configure() {
@@ -122,7 +127,6 @@ private:
     nodec::Stopwatch<std::chrono::steady_clock> engine_timer_;
 };
 
-void set_current(NodecEngineModule* engine);
 
 }  // namespace impl
 }  // namespace game_engine

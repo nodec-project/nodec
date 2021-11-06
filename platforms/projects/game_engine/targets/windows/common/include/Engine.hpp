@@ -31,8 +31,6 @@ public:
     Engine() {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Created!";
 
-        nodec_engine::impl::set_current(this);
-
         imgui_manager_.reset(new ImguiManager);
 
         // --- screen ---
