@@ -3,7 +3,7 @@
 #include <nodec/resource_management/resource_registry.hpp>
 #include <nodec/concurrent/thread_pool_executor.hpp>
 
-#include "Rendering/Mesh.hpp"
+#include "Rendering/MeshBackend.hpp"
 
 
 class ResourceLoader {

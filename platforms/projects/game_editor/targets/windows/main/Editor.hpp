@@ -1,5 +1,7 @@
 #pragma once
 
+#include "InspectorGUI/InspectorGUI.hpp"
+
 #include <Engine.hpp>
 
 #include <scene_editor/impl/scene_editor_module.hpp>
@@ -110,5 +112,7 @@ private:
     State state_{ State::Paused };
     Mode mode_{ Mode::Edit };
     bool do_one_step_{ false };
+
+    std::unique_ptr<InspectorGUI> inspector_gui_;
 
 };

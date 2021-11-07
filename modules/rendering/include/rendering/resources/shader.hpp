@@ -1,24 +1,22 @@
-#ifndef NODEC_MODULES__RENDERING__INTERFACES__SHADER_HPP_
-#define NODEC_MODULES__RENDERING__INTERFACES__SHADER_HPP_
+#ifndef RENDERING__RESOURCES__SHADER_HPP_
+#define RENDERING__RESOURCES__SHADER_HPP_
 
-#include "bindable_resource.hpp"
-#include <nodec/nodec_object.hpp>
+#include <string>
 
-namespace nodec_modules
-{
-namespace rendering
-{
-namespace interfaces
-{
+namespace rendering {
+namespace resources {
 
-class Shader : public BindableResource
-{
+class Shader {
 public:
-    Shader(const std::string& shader_name, Rendering* target_rendering);
-    ~Shader();
+    Shader(const std::string& shader_name)
+        : shader_name_{ shader_name } {
+    }
 
-    const char* shader_name() const noexcept;
+    ~Shader() {}
 
+    const char* shader_name() const noexcept {
+        return shader_name_.c_str();
+    }
 
 private:
     std::string shader_name_;
@@ -26,6 +24,6 @@ private:
 
 }
 }
-}
+
 
 #endif

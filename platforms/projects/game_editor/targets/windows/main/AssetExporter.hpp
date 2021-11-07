@@ -7,13 +7,12 @@
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/archives/portable_binary.hpp>
-#include <cereal/types/vector.hpp>
 
 #include <scene_set/scene_registry.hpp>
 #include <scene_set/scene.hpp>
 #include <rendering/components/mesh_renderer.hpp>
-#include <serialization/nodec/vector3.hpp>
-#include <serialization/nodec/vector2.hpp>
+#include <rendering/resources/mesh.hpp>
+#include <serialization/rendering/resources/mesh.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -61,10 +60,15 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
         destScene.append_child(parentEntity, myEntity);
     }
 
+    MeshRenderer meshRenderer;
+
+    auto& name = destScene.registry().get_component<Name>(myEntity);
+
     for (unsigned int i = 0; i < pNode->mNumMeshes; ++i) {
         auto meshIndex = pNode->mMeshes[i];
         auto mesh = pScene->mMeshes[meshIndex];
 
+        name.name += "+";
     }
 
     for (unsigned int i = 0; i < pNode->mNumChildren; ++i) {
@@ -77,38 +81,39 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
 
 inline bool ExportMesh(aiMesh* pMesh, const std::string& destPath) {
     using namespace nodec;
+    using namespace rendering::resources;
 
     std::ofstream out(destPath, std::ios::binary);
 
     if (!out) {
         return false;
     }
-
+    
     //cereal::JSONOutputArchive archive(out);
     cereal::PortableBinaryOutputArchive archive(out);
 
-    std::vector<Vector3f> vertices;
-    std::vector<Vector3f> normals;
-    std::vector<unsigned int> triangles;
-    std::vector<Vector2f> uvs;
-    std::vector<Vector2f> tangents;
+
+    Mesh mesh;
 
     for (unsigned int i = 0; i < pMesh->mNumVertices; ++i) {
-        auto &vert = pMesh->mVertices[i];
-        vertices.emplace_back(vert.x, vert.y, vert.z);
-
+        auto &position = pMesh->mVertices[i];
         auto& normal = pMesh->mNormals[i];
-        normals.emplace_back(normal.x, normal.y, normal.z);
+
+        Mesh::Vertex vert;
+        vert.position.set(position.x, position.y, position.z);
+        vert.normal.set(normal.x, normal.y, normal.z);
+
 
         if (pMesh->mTextureCoords[0]) {
             auto& uv = pMesh->mTextureCoords[0][i];
-            uvs.emplace_back(uv.x, uv.y);
+            vert.uv.set(uv.x, uv.y);
         }
 
         if (pMesh->mTangents) {
             auto& tangent = pMesh->mTangents[i];
-            tangents.emplace_back(tangent.x, tangent.y);
+            vert.tangent.set(tangent.x, tangent.y, tangent.z);
         }
+        mesh.vertices.push_back(vert);
     }
 
     for (unsigned int i = 0; i < pMesh->mNumFaces; ++i) {
@@ -117,15 +122,11 @@ inline bool ExportMesh(aiMesh* pMesh, const std::string& destPath) {
 
         assert(face.mNumIndices == 3 && "Only 3 indices available. Make sure to set aiProcess_Triangulate on call Assimp::Importer::ReadFile.");
         for (unsigned int j = 0; j < face.mNumIndices; ++j) {
-            triangles.emplace_back(face.mIndices[j]);
+            mesh.triangles.emplace_back(face.mIndices[j]);
         }
     }
 
-    archive(CEREAL_NVP(vertices));
-    archive(CEREAL_NVP(triangles));
-    archive(CEREAL_NVP(normals));
-    archive(CEREAL_NVP(uvs));
-    archive(CEREAL_NVP(tangents));
+    archive(cereal::make_nvp("mesh", mesh));
 
     return true;
 }

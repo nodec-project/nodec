@@ -8,24 +8,6 @@ namespace rendering
 namespace interfaces
 {
 
-Material::Material(nodec::NodecObject::Holder<Shader> shader,
-                   Rendering* target_rendering) :
-    BindableResource(target_rendering, "Material"),
-    shader_(shader)
-{
-}
-
-Material::~Material()
-{
-    target_rendering->unbind_material(this);
-}
-
-const Shader&
-Material::shader() const noexcept
-{
-    return *shader_;
-}
-
 
 const std::map<std::string, float>&
 Material::float_properties() const

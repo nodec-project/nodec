@@ -1,27 +1,29 @@
-#ifndef NODEC_MODULES__RENDERING__INTERFACES__TEXTURE_HPP_
-#define NODEC_MODULES__RENDERING__INTERFACES__TEXTURE_HPP_
+#ifndef RENDERING__RESOURCES__TEXTURE_HPP_
+#define RENDERING__RESOURCES__TEXTURE_HPP_
 
-#include "bindable_resource.hpp"
+#include <string>
 
-namespace nodec_modules
-{
-namespace rendering
-{
-namespace interfaces
-{
+namespace rendering {
+namespace resources {
 
-class Texture : public BindableResource
-{
+class Texture {
+
 public:
-    Texture(const std::string& path, Rendering* target_rendering);
-    ~Texture();
+    Texture(const std::string& name)
+        : name_{ name } {
+    }
 
-    const char* path() const noexcept;
+    ~Texture() {}
+
+    const char* name() const noexcept {
+        return name_.c_str();
+    }
+
 private:
-    std::string path_;
+    std::string name_;
 };
 
 }
 }
-}
+
 #endif

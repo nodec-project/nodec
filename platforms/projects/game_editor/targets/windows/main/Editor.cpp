@@ -8,6 +8,7 @@
 #include <imwindows/log_window.hpp>
 
 #include <component_gui/scene_set/basic.hpp>
+#include <rendering/components/mesh_renderer.hpp>
 
 
 Editor::Editor(Engine* engine)
@@ -16,6 +17,7 @@ Editor::Editor(Engine* engine)
     using namespace imwindows;
     using namespace imelements;
     using namespace scene_set::components;
+    using namespace rendering::components;
 
 
     register_menu_item("Window/Control",
@@ -47,7 +49,7 @@ Editor::Editor(Engine* engine)
                        });
 
 
-
+    inspector_gui_.reset(new InspectorGUI);
 
     inspector_component_registry_impl().register_component<Name>("Name", on_gui_name);
     inspector_component_registry_impl().register_component<Transform>("Transform", on_gui_transform);

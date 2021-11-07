@@ -45,7 +45,7 @@ public:
         if (ImGui::Button("Import")) {
 
             current_scene = nullptr;
-            const auto scene = importer.ReadFile(source_path, aiProcess_Triangulate);
+            const auto scene = importer.ReadFile(source_path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
 
             if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
                 logging::ErrorStream(__FILE__, __LINE__) << "Import failed!\n"
@@ -72,7 +72,9 @@ public:
         }
 
         ImGui::Separator();
-        // C:\Users\onete\Desktop\retrotv\uploads_files_2941243_retrotv0319.fbx
+        // C:\Users\onete\Desktop\models\Alicia\FBX\Alicia_solid_Unity.FBX
+        // C:\Users\onete\Desktop\models\retrotv\uploads_files_2941243_retrotv0319.fbx
+        // C:\Users\onete\Desktop\models\UnityChanKAGURA_URP-release-1.0.1\Assets\UnityChanKAGURA\Models\FBX\UnityCHanKAGURA.fbx
         auto resources_header_opened = ImGui::CollapsingHeader("Resources");
         if (resources_header_opened) {
             ImGui::InputText("Resource Name Prefix", resource_name_prefix, IM_ARRAYSIZE(resource_name_prefix));
@@ -82,21 +84,7 @@ public:
             }
 
             if (current_scene->mNumMaterials > 0) {
-                auto opened = ImGui::TreeNodeEx("Material");
-                if (opened) {
-
-                    for (int i = 0; i < current_scene->mNumMaterials; ++i) {
-                        auto mat = current_scene->mMaterials[i];
-                        auto name = mat->GetName();
-
-                        for (int j = 0; j < mat->GetTextureCount(aiTextureType_DIFFUSE); ++j) {
-                            aiString str;
-                            mat->GetTexture(aiTextureType_DIFFUSE, j, &str);
-                            logging::InfoStream(__FILE__, __LINE__) << str.C_Str();
-                        }
-                    }
-                    ImGui::TreePop();
-                }
+                material_resource_import_gui();
             }
 
             if (current_scene->mNumTextures > 0) {
@@ -129,6 +117,13 @@ public:
                     }
                 }
 
+                for (int i = 0; i < current_scene->mNumMaterials; ++i) {
+                    auto mat = current_scene->mMaterials[i];
+                    std::string dest_path = Formatter() << resource_path_ << "/"
+                        << resource_name_prefix << resource_name_map_[Formatter() << "material-" << i].target;
+
+                }
+
                 AssetExporter::ExportScene(current_scene, *dest_scene_, resource_name_map_, *resource_registry_);
             }
 
@@ -159,6 +154,17 @@ private:
             resource_name_map_.emplace(Formatter() << "mesh-" << i, entry);
         }
 
+        for (int i = 0; i < scene->mNumMaterials; ++i) {
+            auto mat = scene->mMaterials[i];
+
+            ResourceNameEntry entry;
+
+            entry.source = mat->GetName().C_Str();
+            entry.target = Formatter() << entry.source << ".material";
+
+            resource_name_map_.emplace(Formatter() << "material-" << i, entry);
+        }
+
     }
 
     void mesh_resource_import_gui() {
@@ -185,56 +191,87 @@ private:
                     ImGui::Text(entry.source.c_str());
 
                     ImGui::TableNextColumn();
-                    constexpr size_t buffer_size = 128;
-                    char name_buffer[buffer_size];
-                    entry.target.copy(name_buffer, buffer_size - 1);
-                    auto null_pos = std::min(entry.target.size(), buffer_size - 1);
-                    name_buffer[null_pos] = '\0';
-                    ImGui::InputText(label.c_str(), name_buffer, buffer_size);
-                    entry.target = name_buffer;
+
+                    set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), entry.target);
+                    ImGui::InputText(label.c_str(), temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
+                    entry.target = temp_str_buffer;
                 }
 
                 ImGui::EndTable();
             }
-
-            //if (ImGui::BeginListBox("##mesh-list", ImVec2(-FLT_MIN, 5 * ImGui::GetTextLineHeightWithSpacing()))) {
-            //    for (int i = 0; i < current_scene->mNumMeshes; ++i) {
-            //        const bool is_selected = (selected_mesh_index == i);
-
-            //        auto mesh = current_scene->mMeshes[i];
-            //        std::string label;
-            //        if (mesh->mName.length != 0) {
-            //            label = Formatter() << mesh->mName.C_Str() << "##mesh-" << i;
-            //        }
-            //        else {
-            //            label = Formatter() << "mesh-" << i;
-            //        }
-
-            //        if (ImGui::Selectable(label.c_str(), is_selected)) {
-            //            selected_mesh_index = i;
-            //        }
-            //    }
-
-            //    ImGui::EndListBox();
-            //}
-
-
-            //ImGui::InputText("Target Resource Name", target_mesh_resource_name, IM_ARRAYSIZE(target_mesh_resource_name));
-
-            //std::string export_path = Formatter() << resource_path_ << "/" << target_mesh_resource_name;
-            //if (ImGui::Button("Export")) {
-            //    logging::InfoStream(__FILE__, __LINE__) << resource_path_;
-
-            //    last_mesh_export_failed = !ResourceExporter::ExportMesh(current_scene->mMeshes[selected_mesh_index], export_path);
-            //}
-            //if (last_mesh_export_failed) {
-            //    std::string message = Formatter() << "Export failed! \nDoes the directory of '" << export_path << "' exist?";
-            //    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-            //    ImGui::TextWrapped(message.c_str());
-            //    ImGui::PopStyleColor();
-            //}
             ImGui::TreePop();
         }
+    }
+
+    void material_resource_import_gui() {
+        using namespace nodec;
+
+        auto opened = ImGui::TreeNodeEx("Material");
+
+        if (opened) {
+
+            for (int i = 0; i < current_scene->mNumMaterials; ++i) {
+                auto mat = current_scene->mMaterials[i];
+                auto& entry = resource_name_map_[Formatter() << "material-" << i];
+                std::string label = Formatter() << entry.source << "##material-" << i;
+
+                auto mat_opened = ImGui::TreeNode(label.c_str());
+                if (mat_opened) {
+                    set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), entry.target);
+                    ImGui::InputText("Target Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
+                    entry.target = temp_str_buffer;
+
+                    auto& shader_entry = resource_name_map_[Formatter() << "material-" << i << "::shader"];
+                    set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), shader_entry.target);
+                    ImGui::InputText("Shader Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
+                    shader_entry.target = temp_str_buffer;
+
+                    //texture_resource_import_gui(mat, aiTextureType_DIFFUSE);
+                    //texture_resource_import_gui(mat, aiTextureType_SPECULAR);
+                    //texture_resource_import_gui(mat, aiTextureType_AMBIENT);
+                    //texture_resource_import_gui(mat, aiTextureType_EMISSIVE);
+                    //texture_resource_import_gui(mat, aiTextureType_HEIGHT);
+                    //texture_resource_import_gui(mat, aiTextureType_NORMALS);
+                    //texture_resource_import_gui(mat, aiTextureType_SHININESS);
+                    //texture_resource_import_gui(mat, aiTextureType_OPACITY);
+                    //texture_resource_import_gui(mat, aiTextureType_DISPLACEMENT);
+                    //texture_resource_import_gui(mat, aiTextureType_LIGHTMAP);
+                    //texture_resource_import_gui(mat, aiTextureType_REFLECTION);
+                    //texture_resource_import_gui(mat, aiTextureType_BASE_COLOR);
+                    //texture_resource_import_gui(mat, aiTextureType_NORMAL_CAMERA);
+                    //texture_resource_import_gui(mat, aiTextureType_NORMAL_CAMERA);
+                    //texture_resource_import_gui(mat, aiTextureType_EMISSION_COLOR);
+                    //texture_resource_import_gui(mat, aiTextureType_METALNESS);
+                    //texture_resource_import_gui(mat, aiTextureType_DIFFUSE_ROUGHNESS);
+                    //texture_resource_import_gui(mat, aiTextureType_AMBIENT_OCCLUSION);
+
+                    ImGui::TreePop();
+                }
+            }
+
+            //if (ImGui::BeginTable("material-list", 2)) {
+
+            //    ImGui::EndTable();
+            //}
+
+
+                //for (int j = 0; j < mat->GetTextureCount(aiTextureType_DIFFUSE); ++j) {
+                //    aiString str;
+                //    mat->GetTexture(aiTextureType_DIFFUSE, j, &str);
+                //}
+            
+            ImGui::TreePop();
+        }
+    }
+
+    void texture_resource_import_gui(aiMaterial *material, aiTextureType type) {
+        using namespace nodec;
+
+        for (unsigned int i = 0; i < material->GetTextureCount(type); ++i) {
+        }
+        std::string str = Formatter() << material->GetTextureCount(type);
+
+        ImGui::Text(str.c_str());
     }
 
 private:
@@ -249,12 +286,19 @@ private:
         ImVec4 color;
         std::string message;
     };
+
+    void set_str_buffer(char* buffer, const size_t buffer_size, const std::string& source) {
+        source.copy(buffer, buffer_size - 1);
+
+        auto null_pos = std::min(source.size(), buffer_size - 1);
+        buffer[null_pos] = '\0';
+    }
+
 private:
     std::string resource_path_;
     ResourceRegistry* resource_registry_;
     scene_set::Scene* dest_scene_;
     
-
     char source_path[256]{ 0 };
     bool last_import_failed{ false };
     std::string last_error_string;
@@ -264,5 +308,7 @@ private:
     char resource_name_prefix[128]{ 0 };
     AssetExporter::ResourceNameMap resource_name_map_;
     std::vector<MessageRecord> export_messages_;
+
+    char temp_str_buffer[128]{ 0 };
 
 };

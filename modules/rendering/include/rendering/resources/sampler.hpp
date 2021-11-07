@@ -1,21 +1,15 @@
-#ifndef NODEC_MODULES__RENDERING__INTERFACES__SAMPLER_HPP_
-#define NODEC_MODULES__RENDERING__INTERFACES__SAMPLER_HPP_
+#ifndef RENDERING__RESOURCES__SAMPLER_HPP_
+#define RENDERING__RESOURCES__SAMPLER_HPP_
 
-namespace nodec_modules
-{
-namespace rendering
-{
-namespace interfaces
-{
+namespace rendering {
+namespace resources {
 
-enum class Sampler
-{
+enum class Sampler {
     Point,
     Bilinear,
     Anisotropic
 };
 
-}
 }
 }
 
