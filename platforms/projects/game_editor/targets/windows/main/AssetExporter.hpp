@@ -12,7 +12,9 @@
 #include <scene_set/scene.hpp>
 #include <rendering/components/mesh_renderer.hpp>
 #include <rendering/resources/mesh.hpp>
+#include <rendering/resources/material.hpp>
 #include <serialization/rendering/resources/mesh.hpp>
+#include <serialization/rendering/resources/material.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -132,7 +134,26 @@ inline bool ExportMesh(aiMesh* pMesh, const std::string& destPath) {
 }
 
 inline bool ExportMaterial(aiMaterial* pMaterial, const std::string& destPath) {
+    using namespace nodec;
+    using namespace rendering::resources;
 
+    std::ofstream out(destPath, std::ios::binary);
+
+    if (!out) {
+        return false;
+    }
+
+    cereal::JSONOutputArchive archive(out);
+
+    Material material;
+    //material.float_properties["albedo"];
+    //material.float_properties["metalness"];
+    //material.texture_properties["albedo"] = { std::make_shared<Texture>("albedo.tga"), Sampler::Bilinear };
+    //material.vector4_properties["ao"];
+
+    archive(cereal::make_nvp("material", material));
+
+    return true;
 }
 
 inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, const ResourceNameMap& nameMap,

@@ -13,6 +13,7 @@
 namespace rendering {
 namespace resources {
 
+
 template<class Archive>
 void serialize(Archive& archive, Mesh::Vertex& vert) {
     archive(

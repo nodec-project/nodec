@@ -87,12 +87,12 @@ public:
                 material_resource_import_gui();
             }
 
-            if (current_scene->mNumTextures > 0) {
-                auto opened = ImGui::TreeNodeEx("Texture");
-                if (opened) {
-                    ImGui::TreePop();
-                }
-            }
+            //if (current_scene->mNumTextures > 0) {
+            //    auto opened = ImGui::TreeNodeEx("Texture");
+            //    if (opened) {
+            //        ImGui::TreePop();
+            //    }
+            //}
         }
 
         auto nodes_header_opened = ImGui::CollapsingHeader("Scene Export");
@@ -101,7 +101,7 @@ public:
             if (ImGui::Button("Export")) {
                 export_messages_.clear();
 
-                for (int i = 0; i < current_scene->mNumMeshes; ++i) {
+                for (unsigned int i = 0; i < current_scene->mNumMeshes; ++i) {
                     auto mesh = current_scene->mMeshes[i];
                     std::string dest_path = Formatter() << resource_path_  << "/"
                         << resource_name_prefix <<  resource_name_map_[Formatter() << "mesh-" << i].target;
@@ -121,6 +121,16 @@ public:
                     auto mat = current_scene->mMaterials[i];
                     std::string dest_path = Formatter() << resource_path_ << "/"
                         << resource_name_prefix << resource_name_map_[Formatter() << "material-" << i].target;
+
+                    if (AssetExporter::ExportMaterial(mat, dest_path)) {
+                        export_messages_.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), Formatter() << "Material export success: " << dest_path);
+                    }
+                    else {
+                        export_messages_.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
+                                                      Formatter() << "Material export failed: " << dest_path << "\n"
+                                                      << "Make sure the file path exists."
+                        );
+                    }
 
                 }
 
@@ -221,10 +231,10 @@ private:
                     ImGui::InputText("Target Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
                     entry.target = temp_str_buffer;
 
-                    auto& shader_entry = resource_name_map_[Formatter() << "material-" << i << "::shader"];
-                    set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), shader_entry.target);
-                    ImGui::InputText("Shader Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
-                    shader_entry.target = temp_str_buffer;
+                    //auto& shader_entry = resource_name_map_[Formatter() << "material-" << i << "::shader"];
+                    //set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), shader_entry.target);
+                    //ImGui::InputText("Shader Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
+                    //shader_entry.target = temp_str_buffer;
 
                     //texture_resource_import_gui(mat, aiTextureType_DIFFUSE);
                     //texture_resource_import_gui(mat, aiTextureType_SPECULAR);
