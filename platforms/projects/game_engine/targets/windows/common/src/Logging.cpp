@@ -13,7 +13,13 @@ std::ofstream logFile;
 bool initialized = false;
 
 void RecordToFileHandler(const nodec::logging::LogRecord& record) {
-    logFile << record << "\n";
+    try {
+        logFile << record << "\n";
+        logFile.flush();
+    }
+    catch (...) {
+        // It is not possible to log exceptions that occur during log writing, so ignore them.
+    }
 }
 
 }

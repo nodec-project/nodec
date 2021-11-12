@@ -49,7 +49,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept {
 Window::Window(int width, int height,
                int gfxWidth, int gfxHeight,
                const wchar_t* name)
-    : width(width), height(height) {
+    : mWidth(width), mHeight(height) {
     RECT wr;
     wr.left = 100;
     wr.right = width + wr.left;
@@ -77,12 +77,11 @@ Window::Window(int width, int height,
     ShowWindow(hWnd, SW_SHOWDEFAULT);
 
     // create graphics object
-    pGfx = std::make_unique<Graphics>(hWnd, gfxWidth, gfxHeight);
+    mpGraphics = std::make_unique<Graphics>(hWnd, gfxWidth, gfxHeight);
 
 
     // Init ImGUI Win32 Impl
     ImGui_ImplWin32_Init(hWnd);
-
 }
 
 Window::~Window() {
@@ -104,15 +103,6 @@ void Window::SetTitle(const std::string& title) {
     }
 }
 
-Graphics& Window::Gfx() {
-    if (!pGfx) {
-        throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
-            "No Graphics.",
-            __FILE__, __LINE__
-            ));
-    }
-    return *pGfx;
-}
 
 LRESULT CALLBACK Window::HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept {
     // use create parameter passed in from CreateWindow() to store window class pointer at WinAPI side.

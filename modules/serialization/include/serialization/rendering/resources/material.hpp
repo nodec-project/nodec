@@ -2,12 +2,11 @@
 #define SERIALIZATION__RENDERING__RESOURCES__MATERIAL_HPP_
 
 #include <cereal/cereal.hpp>
-#include <cereal/types/vector.hpp>
-#include <cereal/types/map.hpp>
+#include <cereal/types/unordered_map.hpp>
 
-#include <serialization/nodec/vector4.hpp>
-#include <serialization/nodec/vector3.hpp>
 #include <serialization/nodec/vector2.hpp>
+#include <serialization/nodec/vector3.hpp>
+#include <serialization/nodec/vector4.hpp>
 
 #include <rendering/resources/material.hpp>
 
@@ -15,29 +14,39 @@
 namespace rendering {
 namespace resources {
 
+struct SerializableMaterial {
 
-template<class Archive>
-void serialize(Archive& archive, Material::TextureEntry& entry) {
-    std::string texture_name = entry.texture ? entry.texture->name() : "";
+    struct TextureEntry {
+        std::string texture;
+        Sampler sampler;
 
-    archive(
-        cereal::make_nvp("texture", texture_name),
-        cereal::make_nvp("sampler", entry.sampler)
-    );
-}
+        template<class Archive>
+        void serialize(Archive& archive) {
+            archive(
+                cereal::make_nvp("texture", texture),
+                cereal::make_nvp("sampler", sampler)
+            );
+        }
+
+    };
+
+    std::string shader;
+
+    std::unordered_map<std::string, float> float_properties;
+    std::unordered_map<std::string, nodec::Vector4f> vector4_properties;
+    std::unordered_map<std::string, TextureEntry> texture_properties;
 
 
-template<class Archive>
-void serialize(Archive& archive, Material& material) {
-    std::string shader_name = material.shader() ? material.shader()->name() : "";
-
-    archive(
-        cereal::make_nvp("shader", shader_name),
-        cereal::make_nvp("float_properties", material.float_properties),
-        cereal::make_nvp("vector4_properties", material.vector4_properties),
-        cereal::make_nvp("texture_properties", material.texture_properties)
-    );
-}
+    template<class Archive>
+    void serialize(Archive& archive) {
+        archive(
+            cereal::make_nvp("shader", shader),
+            cereal::make_nvp("float_properties", float_properties),
+            cereal::make_nvp("vector4_properties", vector4_properties),
+            cereal::make_nvp("texture_properties", texture_properties)
+        );
+    }
+};
 
 
 }

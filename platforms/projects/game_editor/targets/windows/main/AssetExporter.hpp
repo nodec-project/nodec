@@ -37,10 +37,11 @@ namespace internal {
 inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceNameMap& nameMap,
                         scene_set::SceneEntity parentEntity,
                         scene_set::Scene& destScene,
-                        const nodec::resource_management::ResourceRegistry& resourceRegistry) {
+                        nodec::resource_management::ResourceRegistry& resourceRegistry) {
     using namespace nodec;
     using namespace nodec::entities;
     using namespace rendering::components;
+    using namespace rendering::resources;
     using namespace scene_set::components;
 
     auto myEntity = destScene.create_entity(pNode->mName.C_Str());
@@ -62,16 +63,30 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
         destScene.append_child(parentEntity, myEntity);
     }
 
-    MeshRenderer meshRenderer;
+    //auto& name = destScene.registry().get_component<Name>(myEntity);
 
-    auto& name = destScene.registry().get_component<Name>(myEntity);
+    if (pNode->mNumMeshes > 0) {
+        destScene.registry().emplace_component<MeshRenderer>(myEntity);
+    }
+
+    auto* meshRenderer = destScene.registry().try_get_component<MeshRenderer>(myEntity);
 
     for (unsigned int i = 0; i < pNode->mNumMeshes; ++i) {
-        auto meshIndex = pNode->mMeshes[i];
-        auto mesh = pScene->mMeshes[meshIndex];
+        assert(meshRenderer);
 
-        name.name += "+";
+        auto meshIndex = pNode->mMeshes[i];
+        auto materialIndex = pScene->mMeshes[meshIndex]->mMaterialIndex;
+
+        auto &meshPath = nameMap.at(Formatter() << "mesh-" << meshIndex).target;
+
+        auto mesh = resourceRegistry.get_resource<Mesh>(meshPath).get();
+
+        meshRenderer->meshes.push_back(mesh);
+        
+
+        //name.name += "+";
     }
+
 
     for (unsigned int i = 0; i < pNode->mNumChildren; ++i) {
         ProcessNode(pNode->mChildren[i], pScene, nameMap, myEntity, destScene, resourceRegistry);
@@ -94,14 +109,14 @@ inline bool ExportMesh(aiMesh* pMesh, const std::string& destPath) {
     //cereal::JSONOutputArchive archive(out);
     cereal::PortableBinaryOutputArchive archive(out);
 
-
-    Mesh mesh;
+    SerializableMesh mesh;
 
     for (unsigned int i = 0; i < pMesh->mNumVertices; ++i) {
         auto &position = pMesh->mVertices[i];
         auto& normal = pMesh->mNormals[i];
 
-        Mesh::Vertex vert;
+
+        SerializableMesh::Vertex vert;
         vert.position.set(position.x, position.y, position.z);
         vert.normal.set(normal.x, normal.y, normal.z);
 
@@ -145,7 +160,7 @@ inline bool ExportMaterial(aiMaterial* pMaterial, const std::string& destPath) {
 
     cereal::JSONOutputArchive archive(out);
 
-    Material material;
+    SerializableMaterial material;
     //material.float_properties["albedo"];
     //material.float_properties["metalness"];
     //material.texture_properties["albedo"] = { std::make_shared<Texture>("albedo.tga"), Sampler::Bilinear };
@@ -157,7 +172,7 @@ inline bool ExportMaterial(aiMaterial* pMaterial, const std::string& destPath) {
 }
 
 inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, const ResourceNameMap& nameMap,
-                        const nodec::resource_management::ResourceRegistry& resourceRegistry) {
+                        nodec::resource_management::ResourceRegistry& resourceRegistry) {
     using namespace nodec::entities;
 
     internal::ProcessNode(pScene->mRootNode, pScene, nameMap, null_entity, destScene, resourceRegistry);

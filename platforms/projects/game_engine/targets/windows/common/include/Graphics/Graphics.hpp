@@ -29,7 +29,7 @@ public:
         HrException(HRESULT hr, const char* type, const char* file, size_t line) noexcept
             : errorCode(hr)
             , runtime_error(nodec::error_fomatter::with_type_file_line(
-                nodec::Formatter() 
+                nodec::Formatter()
                 << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
                 << " (" << (unsigned long)hr << ")",
                 type, file, line
@@ -60,25 +60,25 @@ public:
     void DrawIndexed(UINT count);
 
     void ThrowIfError(HRESULT hr, const char* file, size_t line);
-    void DrawTestTriangle();
+    //void DrawTestTriangle();
 
-    ID3D11Device* GetDevice() noexcept;
-    ID3D11DeviceContext* GetContext() noexcept;
-    DxgiInfoLogger* GetInfoLogger() noexcept;
+    ID3D11Device& GetDevice() noexcept { return *mpDevice.Get(); }
+    ID3D11DeviceContext& GetContext() noexcept { return *mpContext.Get(); }
+    DxgiInfoLogger& GetInfoLogger() noexcept { return mInfoLogger; };
 
-    UINT GetWidth() noexcept;
-    UINT GetHeight() noexcept;
+    UINT GetWidth() const noexcept { return mWidth; };
+    UINT GetHeight() const noexcept { return mHeight; };
 
 private:
-    UINT width;
-    UINT height;
+    UINT mWidth;
+    UINT mHeight;
 
-    DxgiInfoLogger infoLogger;
-    Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
-    Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
-    Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
-    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> pTarget;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView>pDSV;
+    DxgiInfoLogger mInfoLogger;
+    Microsoft::WRL::ComPtr<ID3D11Device> mpDevice;
+    Microsoft::WRL::ComPtr<IDXGISwapChain> mpSwap;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext> mpContext;
+    Microsoft::WRL::ComPtr<ID3D11RenderTargetView> mpTarget;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView>mpDSV;
 
 private:
     NODEC_DISABLE_COPY(Graphics);

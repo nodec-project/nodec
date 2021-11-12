@@ -61,15 +61,15 @@ public:
     class ResourceBlock;
 
     template<typename Type>
-    class LoadBridge {
+    class LoadNotifyer {
         using ResourceBlock = ResourceBlock<Type>;
 
     public:
-        LoadBridge(ResourceBlock* block)
+        LoadNotifyer(ResourceBlock* block)
             : block_{ block } {
         }
 
-        void on_resource_loaded(const std::string& name, Resource<Type> resource) const {
+        void on_loaded(const std::string& name, Resource<Type> resource) const {
             {
                 std::lock_guard<std::mutex> lock(block_->dict_mutex);
                 block_->dict[name] = resource;
@@ -96,7 +96,7 @@ private:
     template<typename Type>
     struct ResourceBlock : public BaseResourceBlock {
 
-        using Loader = std::function<ResourceFuture<Type>(const std::string&, LoadBridge<Type>)>;
+        using Loader = std::function<ResourceFuture<Type>(const std::string&, LoadNotifyer<Type>)>;
 
         ~ResourceBlock() {}
 
@@ -149,7 +149,7 @@ public:
     /**
     *
     * @code{.cpp}
-    * std::future<std::shared_ptr<Type>>(const std::string&, LoadBridge<Type>);
+    * std::future<std::shared_ptr<Type>>(const std::string& name, LoadNotifyer<Type> notifyer);
     * @endcode
     */
     template<typename Type, typename Loader>
@@ -158,6 +158,7 @@ public:
 
         block->loader = loader;
     }
+
 
     template<typename Type>
     ResourceSharedFuture<Type> get_resource(const std::string& name) {
@@ -177,22 +178,18 @@ public:
             return promise.get_future().share();
         }
 
-        bool is_loading = false;
-        ResourceSharedFuture<Type>* future;
-
         {
             std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
-            is_loading = block->loading_futures.find(name) != block->loading_futures.end();
-            future = &block->loading_futures[name];
-        }
 
-        if (is_loading) {
-            assert(future->valid());
-            return *future;
-        }
+            auto& future = block->loading_futures[name];
+            if (future.valid()) {
+                // if loading.
+                return future;
+            }
 
-        *future = block->loader(name, { block }).share();
-        return *future;
+            future = block->loader(name, { block }).share();
+            return future;
+        }
     }
 
     template<typename Type>

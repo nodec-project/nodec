@@ -10,16 +10,15 @@
 #include <Windows.h>
 
 #include <stdexcept>
+#include <cassert>
 
 
-class Window
-{
+class Window {
 public:
-    class HrException : public std::runtime_error
-    {
+    class HrException : public std::runtime_error {
     public:
         static std::string TranslateErrorCode(HRESULT hr) noexcept;
-        
+
     public:
         HrException(HRESULT hr, const char* file, size_t line) noexcept
             : errorCode(hr)
@@ -42,8 +41,7 @@ private:
     /**
     * @brief Singleton class. Manage registration/cleanup of window class.
     */
-    class WindowClass
-    {
+    class WindowClass {
     public:
         static const wchar_t* GetName() noexcept;
         static HINSTANCE GetInstance() noexcept;
@@ -60,8 +58,8 @@ private:
     };
 
 public:
-    Window(int width, int height, 
-           int gfxWidth, int gfxHeight, 
+    Window(int width, int height,
+           int gfxWidth, int gfxHeight,
            const wchar_t* name);
 
     ~Window();
@@ -70,11 +68,11 @@ public:
     static bool ProcessMessages(int& exit_code) noexcept;
     void SetTitle(const std::string& title);
 
-    Graphics& Gfx();
+    Graphics& GetGraphics() { return *mpGraphics; }
 
 public:
     using WindowSignal = nodec::signals::Signal<void(Window&)>;
-    
+
     decltype(auto) WindowDestroyed() { return mWindowDestroyed.signal_interface(); }
 
 private:
@@ -86,10 +84,10 @@ private:
     LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 
 private:
-    int width;
-    int height;
+    int mWidth;
+    int mHeight;
     HWND hWnd;
-    std::unique_ptr<Graphics> pGfx;
+    std::unique_ptr<Graphics> mpGraphics;
 
 private:
     NODEC_DISABLE_COPY(Window);

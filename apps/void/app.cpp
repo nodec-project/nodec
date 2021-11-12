@@ -3,11 +3,12 @@
 //#include "test_cube.hpp"
 //#include "player.hpp"
 
-
+using namespace nodec;
 using namespace nodec_engine;
 using namespace scene_set;
 using namespace screen;
 using namespace resources;
+using namespace rendering::resources;
 
 
 class HelloWorld {
@@ -18,7 +19,7 @@ public:
     };
 
     HelloWorld(NodecEngine& engine) {
-        engine.stepped().connect([=](NodecEngine& engine) { on_step(engine); });
+        engine.stepped().connect([=](NodecEngine& engine) { on_stepped(engine); });
         engine.initialized().connect([=](NodecEngine& engine) { on_initialized(engine); });
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
 
@@ -40,12 +41,6 @@ public:
 
 
 private:
-    void on_step(NodecEngine& engine) {
-
-        //auto& scene = engine.get_module<Scene>();
-        //auto entity = scene.create_entity("OOO");
-        //nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_step] engine time: " << engine.engine_time();
-    }
 
     void on_initialized(NodecEngine& engine) {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
@@ -53,10 +48,29 @@ private:
         auto& scene = engine.get_module<Scene>();
         auto entity = scene.create_entity("Hello World!!");
 
+        auto& resources = engine.get_module<Resources>();
+        mesh_future = resources.registry().get_resource<Mesh>("models/retrotv/Circle.001##mesh-2.mesh");
+    }
+
+    void on_stepped(NodecEngine& engine) {
+        logging::InfoStream info(__FILE__, __LINE__);
+
+        if (mesh_future.valid()) {
+            auto result = mesh_future.wait_for(std::chrono::nanoseconds(1));
+            if (result != std::future_status::timeout) {
+                info << mesh_future.get();
+                mesh_future = {}; // reset
+            }
+            else {
+                info << "timeout";
+            }
+        }
 
     }
 
-
+private:
+    
+    std::shared_future<std::shared_ptr<Mesh>> mesh_future;
 };
 
 void nodec_engine::on_boot(NodecEngine& engine) {

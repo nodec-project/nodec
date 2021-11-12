@@ -3,8 +3,10 @@
 #include "ScreenHandler.hpp"
 #include "Window.hpp"
 #include "ImguiManager.hpp"
-#include "ResourceLoader.hpp"
-#include "ResourcePathHandler.hpp"
+#include "Resources/ResourceLoader.hpp"
+#include "Resources/ResourcesModuleBackend.hpp"
+
+#include "Graphics/VertexBuffer.hpp"
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <screen/impl/screen_module.hpp>
@@ -45,11 +47,12 @@ public:
         add_module<Scene>(scene_module_);
 
         // --- resources ---
-        resources_module_.reset(new ResourcesModule());
+        resource_loader_.reset(new ResourceLoader());
+
+        resources_module_.reset(new ResourcesModuleBackend(resource_loader_.get()));
         add_module<Resources>(resources_module_);
 
-        resource_path_handler_.reset(new ResourcePathHandler(resources_module_.get()));
-        resource_path_handler_->BindHandlersOnBoot();
+        resources_module_->bind_handlers_on_boot();
 
 
         initialized().connect([=](NodecEngine&) {
@@ -68,13 +71,14 @@ public:
                                 screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
                                 unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
 
-        screen_handler_->SetWindow(window_.get());
+        screen_handler_->Setup(window_.get());
+        resource_loader_->Setup(&window_->GetGraphics());
 
-        resource_path_handler_->BindHandlersOnRuntime();
+        resources_module_->bind_handers_on_runtime();
     }
 
     void frame_begin() {
-        window_->Gfx().BeginFrame();
+        window_->GetGraphics().BeginFrame();
     }
 
     void frame_end() {
@@ -84,7 +88,7 @@ public:
             update_transform(scene_module_->registry(), root);
         }
 
-        window_->Gfx().EndFrame();
+        window_->GetGraphics().EndFrame();
     }
 
     ScreenModule& screen_module() { return *screen_module_; }
@@ -98,9 +102,8 @@ private:
 
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
-    std::shared_ptr<ResourcesModule> resources_module_;
     std::unique_ptr<ResourceLoader> resource_loader_;
-    std::unique_ptr<ResourcePathHandler> resource_path_handler_;
+    std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
     std::shared_ptr<SceneModule> scene_module_;
 

@@ -19,7 +19,7 @@ public:
         : mpScreenModule{ pScreenModule } {
     }
 
-    void SetWindow(Window* pWindow) {
+    void Setup(Window* pWindow) {
         mpWindow = pWindow;
     }
 

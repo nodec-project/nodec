@@ -25,7 +25,7 @@ Editor::Editor(Engine* engine)
 
     register_menu_item("Window/Entity Inspector",
                        [=]() {
-                           EntityInspectorWindow::init(window_manager(), 
+                           EntityInspectorWindow::init(window_manager(),
                                                        &engine->scene_module().registry(),
                                                        &inspector_component_registry_impl(),
                                                        selection().active_scene_entity_changed());
@@ -42,7 +42,7 @@ Editor::Editor(Engine* engine)
 
     register_menu_item("Window/Asset Importer",
                        [=]() {
-                           AssetImportWindow::init(window_manager(), 
+                           AssetImportWindow::init(window_manager(),
                                                    engine->resources_module().resource_path(),
                                                    &engine->scene_module(),
                                                    &engine->resources_module().registry());
@@ -53,6 +53,9 @@ Editor::Editor(Engine* engine)
 
     inspector_component_registry_impl().register_component<Name>("Name", on_gui_name);
     inspector_component_registry_impl().register_component<Transform>("Transform", on_gui_transform);
+    inspector_component_registry_impl().register_component<MeshRenderer>("Mesh Renderer", [=](MeshRenderer& renderer) {
+        inspector_gui_->OnGUIMeshRenderer(renderer);
+                                                                         });
 
 
 

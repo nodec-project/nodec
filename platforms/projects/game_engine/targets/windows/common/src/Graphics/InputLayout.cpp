@@ -6,7 +6,6 @@ InputLayout::InputLayout(Graphics* graphics,
                          const void* pShaderBytecode,
                          SIZE_T bytecodeLength)
 {
-
     graphics->ThrowIfError(
         graphics->GetDevice()->CreateInputLayout(
             pInputElementDescs,

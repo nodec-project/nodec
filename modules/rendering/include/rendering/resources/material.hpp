@@ -5,6 +5,8 @@
 #include "texture.hpp"
 #include "sampler.hpp"
 
+#include <nodec/vector4.hpp>
+
 #include <map>
 #include <memory>
 
@@ -46,9 +48,6 @@ public:
     };
 
 public:
-    std::map<std::string, float> float_properties;
-    std::map<std::string, nodec::Vector4f> vector4_properties;
-    std::map<std::string, TextureEntry> texture_properties;
 
 private:
     ShaderPtr shader_;

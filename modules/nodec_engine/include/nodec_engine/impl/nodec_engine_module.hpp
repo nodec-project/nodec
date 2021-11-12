@@ -36,7 +36,6 @@ public:
         engine_timer_.start();
 
         boot();
-        initialize();
 
         state_ = State::Inactive;
     }
@@ -47,12 +46,10 @@ public:
         (this->*step_func)();
     }
 
-    void reset() {
+    void deactivate() {
         assert(state_ != State::Unconfigured);
 
         step_func = &NodecEngineModule::step_first;
-        initialize();
-
         state_ = State::Inactive;
     }
 
@@ -99,7 +96,8 @@ private:
         step_func = &NodecEngineModule::step_cycle;
 
         //nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_first]";
-        stepped_(*this);
+
+        initialize();
     }
 
     void step_cycle() {

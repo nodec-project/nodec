@@ -38,7 +38,8 @@ public:
     }
 
     void reset() {
-        engine_->reset();
+        engine_->deactivate();
+        engine_->step();
         state_ = State::Paused;
     }
 

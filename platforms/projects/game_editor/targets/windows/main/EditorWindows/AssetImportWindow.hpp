@@ -220,7 +220,7 @@ private:
 
         if (opened) {
 
-            for (int i = 0; i < current_scene->mNumMaterials; ++i) {
+            for (unsigned int i = 0; i < current_scene->mNumMaterials; ++i) {
                 auto mat = current_scene->mMaterials[i];
                 auto& entry = resource_name_map_[Formatter() << "material-" << i];
                 std::string label = Formatter() << entry.source << "##material-" << i;

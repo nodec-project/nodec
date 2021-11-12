@@ -33,6 +33,9 @@ protected:
         engine->screen_module().internal_size = engine->screen_module().internal_resolution;
         
         engine->setup();
+
+        // Do first step (initialize).
+        engine->step();
     }
 
     void loop() {
