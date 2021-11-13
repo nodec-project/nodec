@@ -133,10 +133,12 @@ public:
     static decltype(auto) init(imelements::WindowManager& manager,
                                EntityRegistry* entity_registry,
                                ComponentRegistry* component_registry,
+                               Entity init_target_entity,
                                ChangeTargetSignal::SignalInterface change_target_signal) {
         auto& window = manager.get_window<EntityInspectorWindow>();
         window.entity_registry_ = entity_registry;
         window.component_registry_ = component_registry;
+        window.target_entity_ = init_target_entity;
         window.change_target_signal_connection_ = change_target_signal.connect([&](auto entity) {window.inspect(entity); });
         ImGui::SetWindowFocus(window.name());
     }
@@ -203,13 +205,10 @@ public:
             }
             ImGui::EndPopup();
         }
-
     }
 
 private:
     void inspect(Entity entity) {
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "inspect " << entity;
-
         target_entity_ = entity;
     }
 

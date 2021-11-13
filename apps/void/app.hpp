@@ -9,6 +9,7 @@
 #include <screen/screen.hpp>
 #include <scene_set/scene.hpp>
 #include <resources/resources.hpp>
+#include <rendering/components/mesh_renderer.hpp>
 #include <rendering/resources/mesh.hpp>
 
 #include <nodec/logging.hpp>

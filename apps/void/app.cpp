@@ -8,6 +8,7 @@ using namespace nodec_engine;
 using namespace scene_set;
 using namespace screen;
 using namespace resources;
+using namespace rendering::components;
 using namespace rendering::resources;
 
 
@@ -27,7 +28,7 @@ public:
         using namespace scene_editor;
         auto& editor = engine.get_module<SceneEditor>();
 
-        editor.inspector_component_registry().register_component<HelloComponent>("HelloComponent", [](HelloComponent& comp) {
+        editor.inspector_component_registry().register_component<HelloComponent>("Hello Component", [](HelloComponent& comp) {
             /*ImGui::Text("My Field"); ImGui::SameLine();*/
             ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
                                                                                  });
@@ -47,6 +48,8 @@ private:
 
         auto& scene = engine.get_module<Scene>();
         auto entity = scene.create_entity("Hello World!!");
+        //scene.registry().emplace_component<MeshRenderer>(entity);
+        //auto& renderer = scene.registry().get_component<MeshRenderer>(entity);
 
         auto& resources = engine.get_module<Resources>();
         mesh_future = resources.registry().get_resource<Mesh>("models/retrotv/Circle.001##mesh-2.mesh");

@@ -28,6 +28,7 @@ Editor::Editor(Engine* engine)
                            EntityInspectorWindow::init(window_manager(),
                                                        &engine->scene_module().registry(),
                                                        &inspector_component_registry_impl(),
+                                                       selection().active_scene_entity(),
                                                        selection().active_scene_entity_changed());
                        });
 
@@ -49,7 +50,7 @@ Editor::Editor(Engine* engine)
                        });
 
 
-    inspector_gui_.reset(new InspectorGUI);
+    inspector_gui_.reset(new InspectorGUI(&engine->resources_module().registry()));
 
     inspector_component_registry_impl().register_component<Name>("Name", on_gui_name);
     inspector_component_registry_impl().register_component<Transform>("Transform", on_gui_transform);
