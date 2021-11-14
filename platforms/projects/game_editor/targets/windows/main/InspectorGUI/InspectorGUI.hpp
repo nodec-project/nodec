@@ -70,8 +70,6 @@ public:
         for (auto& material : renderer.materials) {
 
         }
-
-
     }
 
     void SetStrBuffer(char* pBuffer, const size_t bufferSize, const std::string& source) {

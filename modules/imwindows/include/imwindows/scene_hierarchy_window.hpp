@@ -148,8 +148,6 @@ private:
     SceneEntity selected_entity_{ nodec::entities::null_entity };
 
     nodec::signals::Signal<void(SceneEntity selected)> selected_entity_changed_;
-
-
 };
 
 }

@@ -11,6 +11,10 @@
 #include <rendering/components/mesh_renderer.hpp>
 
 
+// --- test ---
+#include <serialization/rendering/resources/shader.hpp>
+
+
 Editor::Editor(Engine* engine)
     : engine_{ engine } {
 
@@ -59,5 +63,29 @@ Editor::Editor(Engine* engine)
                                                                          });
 
 
+    register_menu_item("Test", [=]() {
+        using namespace nodec;
+        using namespace rendering::resources;
 
+        std::ofstream out(Formatter() << engine_->resources_module().resource_path() << "/shader.meta", std::ios::binary);
+
+        if (!out) {
+            logging::WarnStream(__FILE__, __LINE__) << "Failed";
+            return;
+        }
+
+        cereal::JSONOutputArchive archive(out);
+
+        SerializableShaderMetaInfo meta;
+        meta.float_properties.push_back({ "float_a", 0.0f });
+        meta.float_properties.push_back({ "float_b", 1.0f });
+
+        meta.vector4_properties.push_back({ "vector_a", {0.0f, 0.0f, 0.0f, 0.0f} });
+        meta.vector4_properties.push_back({ "vector_b", {1.0f, 1.0f, 1.0f, 1.0f} });
+
+        meta.texture_entries.push_back({ "texture_a" });
+        meta.texture_entries.push_back({ "texture_b" });
+
+        archive(cereal::make_nvp("meta", meta));
+                       });
 }

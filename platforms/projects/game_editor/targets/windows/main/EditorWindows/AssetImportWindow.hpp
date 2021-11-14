@@ -311,7 +311,6 @@ private:
     
     char source_path[256]{ 0 };
     bool last_import_failed{ false };
-    std::string last_error_string;
     Assimp::Importer importer;
     const aiScene* current_scene{ nullptr };
 

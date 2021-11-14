@@ -1,9 +1,9 @@
 #pragma once
 
-#include <rendering/resources/mesh.hpp>
-
 #include <Graphics/VertexBuffer.hpp>
 #include <Graphics/IndexBuffer.hpp>
+
+#include <rendering/resources/mesh.hpp>
 
 #include <nodec/vector3.hpp>
 #include <nodec/vector2.hpp>
@@ -30,7 +30,6 @@ public:
         vertex_buffer_.reset();
         index_buffer_.reset();
 
-
         vertex_buffer_.reset(
             new VertexBuffer(
                 graphics,
@@ -46,7 +45,6 @@ public:
                 triangles.data()
             )
         );
-
     }
 
     VertexBuffer* vertex_buffer() {

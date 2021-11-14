@@ -27,7 +27,6 @@ struct SerializableMaterial {
                 cereal::make_nvp("sampler", sampler)
             );
         }
-
     };
 
     std::string shader;
