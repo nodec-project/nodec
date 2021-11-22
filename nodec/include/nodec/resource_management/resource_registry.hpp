@@ -3,6 +3,7 @@
 
 #include <nodec/type_info.hpp>
 #include <nodec/error_formatter.hpp>
+#include <nodec/flags/flags.hpp>
 
 #include <type_traits>
 #include <string>
@@ -48,7 +49,7 @@ inline void throw_resource_already_exists_exception(const std::string& resource_
 
 class ResourceRegistry {
     template<typename Type>
-    using Resource = std::shared_ptr<Type>;
+    using ResourcePtr = std::shared_ptr<Type>;
 
     template<typename Type>
     using ResourceSharedFuture = std::shared_future<std::shared_ptr<Type>>;
@@ -56,9 +57,15 @@ class ResourceRegistry {
     template <typename Type>
     using ResourceFuture = std::future<std::shared_ptr<Type>>;
 
-public:
     template<typename Type>
     class ResourceBlock;
+
+public:
+
+    enum class LoadPolicy {
+        Async = 0x01 << 0,
+        Direct = 0x01 << 1
+    };
 
     template<typename Type>
     class LoadNotifyer {
@@ -69,7 +76,7 @@ public:
             : block_{ block } {
         }
 
-        void on_loaded(const std::string& name, Resource<Type> resource) const {
+        void on_loaded(const std::string& name, ResourcePtr<Type> resource) const {
             {
                 std::lock_guard<std::mutex> lock(block_->dict_mutex);
                 block_->dict[name] = resource;
@@ -96,7 +103,7 @@ private:
     template<typename Type>
     struct ResourceBlock : public BaseResourceBlock {
 
-        using Loader = std::function<ResourceFuture<Type>(const std::string&, LoadNotifyer<Type>)>;
+        using Loader = std::function<ResourceFuture<Type>(LoadPolicy, const std::string&, LoadNotifyer<Type>)>;
 
         ~ResourceBlock() {}
 
@@ -136,7 +143,6 @@ private:
     }
 
 
-
 public:
 
     ResourceRegistry() = default;
@@ -149,7 +155,7 @@ public:
     /**
     *
     * @code{.cpp}
-    * std::future<std::shared_ptr<Type>>(const std::string& name, LoadNotifyer<Type> notifyer);
+    * std::future<std::shared_ptr<Type>>(LoadPolicy policy, const std::string& name, LoadNotifyer<Type> notifyer);
     * @endcode
     */
     template<typename Type, typename Loader>
@@ -161,10 +167,10 @@ public:
 
 
     template<typename Type>
-    ResourceSharedFuture<Type> get_resource(const std::string& name) {
+    ResourceSharedFuture<Type> get_resource(const std::string& name, LoadPolicy policy = LoadPolicy::Async) {
         auto* block = resource_block_assured<Type>();
 
-        Resource<Type> resource;
+        ResourcePtr<Type> resource;
 
         {
             std::lock_guard<std::mutex> lock(block->dict_mutex);
@@ -172,7 +178,7 @@ public:
         }
 
         if (resource) {
-            std::promise<Resource<Type>> promise;
+            std::promise<ResourcePtr<Type>> promise;
             promise.set_value(resource);
 
             return promise.get_future().share();
@@ -187,13 +193,14 @@ public:
                 return future;
             }
 
-            future = block->loader(name, { block }).share();
+            future = block->loader(policy, name, { block }).share();
             return future;
         }
     }
 
+
     template<typename Type>
-    std::pair<std::string, bool> lookup_name(Resource<Type> resource) noexcept {
+    std::pair<std::string, bool> lookup_name(ResourcePtr<Type> resource) noexcept {
         auto* block = resource_block_assured<Type>();
 
         std::string name;
@@ -228,5 +235,6 @@ private:
 }
 }
 
+NODEC_ALLOW_FLAGS_FOR_ENUM(nodec::resource_management::ResourceRegistry::LoadPolicy)
 
 #endif

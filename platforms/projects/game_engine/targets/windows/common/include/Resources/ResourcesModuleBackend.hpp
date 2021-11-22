@@ -8,20 +8,9 @@
 
 class ResourcesModuleBackend : public resources::impl::ResourcesModule {
 
-    using Mesh = rendering::resources::Mesh;
-
 public:
 
-    ResourcesModuleBackend(ResourceLoader* resource_loader) {
-        using namespace nodec;
-
-        registry().register_resource_loader<Mesh>(
-            [=](auto& name, auto bridge) {
-                return resource_loader->LoadMeshAsync(name, Formatter() << resource_path() << "/" << name, bridge);
-            });
-    }
-
-    void bind_handlers_on_boot() {
+    void setup_on_boot() {
         resource_path_changed_connection_ = resource_path_changed().connect(
             [](ResourcesModule& resources, const std::string& path) {
                 resources.internal_resource_path = path;
@@ -29,13 +18,29 @@ public:
         );
     }
 
-    void bind_handers_on_runtime() {
+    void setup_on_runtime(Graphics *graphics) {
+        using namespace nodec;
+        using namespace rendering::resources;
+
         resource_path_changed_connection_.disconnect();
+
+        resource_loader_.reset(new ResourceLoader(graphics, &registry()));
+
+
+        registry().register_resource_loader<Mesh>(
+            [=](auto policy, auto& name, auto notifyer) {
+                return resource_loader_->Load<Mesh, MeshBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
+
+        registry().register_resource_loader<Material>(
+            [=](auto policy, auto& name, auto notifyer) {
+                return resource_loader_->Load<Material, MaterialBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
+
     }
 
 private:
     ResourcesModule::ResourcePathChangedSignal::Connection
         resource_path_changed_connection_;
-
-    //ResourceLoader* resource_loader_;
+    std::unique_ptr<ResourceLoader> resource_loader_;
 };

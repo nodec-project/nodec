@@ -47,12 +47,10 @@ public:
         add_module<Scene>(scene_module_);
 
         // --- resources ---
-        resource_loader_.reset(new ResourceLoader());
-
-        resources_module_.reset(new ResourcesModuleBackend(resource_loader_.get()));
+        resources_module_.reset(new ResourcesModuleBackend());
         add_module<Resources>(resources_module_);
 
-        resources_module_->bind_handlers_on_boot();
+        resources_module_->setup_on_boot();
 
 
         initialized().connect([=](NodecEngine&) {
@@ -72,9 +70,8 @@ public:
                                 unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
 
         screen_handler_->Setup(window_.get());
-        resource_loader_->Setup(&window_->GetGraphics());
 
-        resources_module_->bind_handers_on_runtime();
+        resources_module_->setup_on_runtime(&window_->GetGraphics());
     }
 
     void frame_begin() {
@@ -102,7 +99,6 @@ private:
 
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
-    std::unique_ptr<ResourceLoader> resource_loader_;
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
     std::shared_ptr<SceneModule> scene_module_;

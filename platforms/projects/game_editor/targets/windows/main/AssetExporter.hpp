@@ -78,13 +78,12 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
         auto materialIndex = pScene->mMeshes[meshIndex]->mMaterialIndex;
 
         auto &meshPath = nameMap.at(Formatter() << "mesh-" << meshIndex).target;
-
         auto mesh = resourceRegistry.get_resource<Mesh>(meshPath).get();
-
         meshRenderer->meshes.push_back(mesh);
         
-
-        //name.name += "+";
+        auto& materialPath = nameMap.at(Formatter() << "material-" << materialIndex).target;
+        auto material = resourceRegistry.get_resource<Material>(materialPath).get();
+        meshRenderer->materials.push_back(material);
     }
 
 
@@ -176,7 +175,6 @@ inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, cons
     using namespace nodec::entities;
 
     internal::ProcessNode(pScene->mRootNode, pScene, nameMap, null_entity, destScene, resourceRegistry);
-
 }
 
 

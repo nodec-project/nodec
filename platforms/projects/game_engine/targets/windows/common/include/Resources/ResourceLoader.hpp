@@ -2,8 +2,12 @@
 
 #include <Graphics/Graphics.hpp>
 #include <Rendering/MeshBackend.hpp>
+#include <Rendering/MaterialBackend.hpp>
+#include <Rendering/ShaderBackend.hpp>
+#include <Rendering/TextureBackend.hpp>
 
 #include <serialization/rendering/resources/mesh.hpp>
+#include <serialization/rendering/resources/material.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 #include <nodec/concurrent/thread_pool_executor.hpp>
@@ -24,7 +28,7 @@ class ResourceLoader {
 
     using Mesh = rendering::resources::Mesh;
 
-    static void HandleException(const std::string &identifier) {
+    static void HandleException(const std::string& identifier) {
         using namespace nodec;
 
         std::string details;
@@ -46,30 +50,39 @@ class ResourceLoader {
     }
 
 public:
+    ResourceLoader(Graphics* pGraphics, ResourceRegistry* pRegistry)
+        : mpGraphics{ pGraphics }
+        , mpRegistry{ pRegistry } {
 
-    void Setup(Graphics *pGraphics) {
-        mpGraphics = pGraphics;
     }
-
 
     // For resource registry
-    ResourceFuture<Mesh> LoadMeshAsync(const std::string& name, const std::string& path, ResourceRegistry::LoadNotifyer<Mesh> notifyer) {
-        return mExecutor.submit(
-            [=]() {
-                std::shared_ptr<Mesh> mesh = LoadMesh(path);
-                notifyer.on_loaded(name, mesh);
-                return mesh;
-            });
+    template<typename Resource, typename ResourceBackend>
+    ResourceFuture<Resource> Load(ResourceRegistry::LoadPolicy policy, const std::string& name, const std::string& path, ResourceRegistry::LoadNotifyer<Resource> notifyer) {
+        if (policy & ResourceRegistry::LoadPolicy::Async) {
+            return mExecutor.submit(
+                [=]() {
+                    std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
+                    notifyer.on_loaded(name, resource);
+                    return resource;
+                });
+        }
+        else if (policy & ResourceRegistry::LoadPolicy::Direct) {
+            std::promise<std::shared_ptr<Resource>> promise;
+            std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
+            notifyer.on_loaded(name, resource);
+            promise.set_value(resource);
+            return promise.get_future();
+        }
+        return {};
     }
 
 
-    //ResourceFuture<MeshBackend> LoadMeshAync(const std::string& path) {
+    template<typename ResourceBackend>
+    std::shared_ptr<ResourceBackend> LoadBackend(const std::string& path) const noexcept;
 
-    //}
-
-
-    std::shared_ptr<MeshBackend> LoadMesh(const std::string path) const noexcept {
-        assert(mpGraphics && "Call the setup function before use.");
+    template<>
+    std::shared_ptr<MeshBackend> LoadBackend<MeshBackend>(const std::string& path) const noexcept {
 
         using namespace rendering::resources;
         using namespace nodec;
@@ -82,6 +95,7 @@ public:
             return {};
         }
 
+
         cereal::PortableBinaryInputArchive archive(file);
 
         SerializableMesh source;
@@ -90,6 +104,7 @@ public:
         }
         catch (...) {
             HandleException(Formatter() << "Mesh::" << path);
+            return {};
         }
 
         auto mesh = std::make_shared<MeshBackend>();
@@ -112,8 +127,67 @@ public:
     }
 
 
+    template<>
+    std::shared_ptr<MaterialBackend> LoadBackend<MaterialBackend>(const std::string& path) const noexcept {
+        using namespace nodec;
+        using namespace rendering::resources;
+
+        std::ifstream file(path, std::ios::binary);
+
+        if (!file) {
+            logging::WarnStream(__FILE__, __LINE__) << "Failed to open resource file. path: " << path;
+            // return empty mesh.
+            return {};
+        }
+
+        cereal::JSONInputArchive archive(file);
+
+        SerializableMaterial source;
+        try {
+            archive(source);
+        }
+        catch (...) {
+            HandleException(Formatter() << "Material::archive::" << path);
+            return {};
+        }
+
+        auto material = std::make_shared<MaterialBackend>();
+
+        try {
+            auto shader = mpRegistry->get_resource<Shader>(source.shader, ResourceRegistry::LoadPolicy::Direct).get();
+            material->set_shader(shader);
+
+            for (auto&& property : source.float_properties) {
+                material->set_float_property(property.first, property.second);
+            }
+
+            for (auto&& property : source.vector4_properties) {
+                material->set_vector4_property(property.first, property.second);
+            }
+
+            for (auto&& property : source.texture_properties) {
+                auto& sourceEntry = property.second;
+                Material::TextureEntry entry;
+                entry.sampler = sourceEntry.sampler;
+
+                auto texture = mpRegistry->get_resource<Texture>(sourceEntry.texture, ResourceRegistry::LoadPolicy::Direct).get();
+                entry.texture = texture;
+
+                material->set_texture_entry(property.first, entry);
+            }
+        }
+        catch (...) {
+            HandleException(Formatter() << "Material::make::" << path);
+            return {};
+        }
+
+        return material;
+    }
+
+
 private:
     nodec::concurrent::ThreadPoolExecutor mExecutor;
     Graphics* mpGraphics;
+    ResourceRegistry* mpRegistry;
 
 };
