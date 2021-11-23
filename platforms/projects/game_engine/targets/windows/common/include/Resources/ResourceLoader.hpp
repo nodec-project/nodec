@@ -8,6 +8,7 @@
 
 #include <serialization/rendering/resources/mesh.hpp>
 #include <serialization/rendering/resources/material.hpp>
+#include <serialization/rendering/resources/shader.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 #include <nodec/concurrent/thread_pool_executor.hpp>
@@ -120,12 +121,63 @@ public:
         }
         catch (...) {
             HandleException(Formatter() << "Mesh::" << path);
+            return {};
         }
 
         //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         return mesh;
     }
 
+
+    template<>
+    std::shared_ptr<ShaderBackend> LoadBackend<ShaderBackend>(const std::string& path) const noexcept {
+        using namespace nodec;
+        using namespace rendering::resources;
+
+        std::ifstream file(Formatter() << path << "/shader.meta", std::ios::binary);
+
+        if (!file) {
+            logging::WarnStream(__FILE__, __LINE__) << "Failed to open resource file. path: " << path;
+            // return empty mesh.
+            return {};
+        }
+
+        cereal::JSONInputArchive archive(file);
+
+        SerializableShaderMetaInfo sourceMetaInfo;
+        try {
+            archive(sourceMetaInfo);
+        }
+        catch (...) {
+            HandleException(Formatter() << "Shader::" << path);
+            return {};
+        }
+
+        ShaderBackend::MetaInfo metaInfo;
+        metaInfo.float_properties.reserve(sourceMetaInfo.float_properties.size());
+        for (auto&& property : sourceMetaInfo.float_properties) {
+            metaInfo.float_properties.push_back({ property.name, property.default_value });
+        }
+        metaInfo.vector4_properties.reserve(sourceMetaInfo.vector4_properties.size());
+        for (auto&& property : sourceMetaInfo.vector4_properties) {
+            metaInfo.vector4_properties.push_back({ property.name, property.default_value });
+        }
+        metaInfo.texture_entries.reserve(sourceMetaInfo.texture_entries.size());
+        for (auto&& property : sourceMetaInfo.float_properties) {
+            metaInfo.texture_entries.push_back({ property.name });
+        };
+
+        std::shared_ptr<ShaderBackend> shader;
+        try {
+            shader = std::make_shared<ShaderBackend>(mpGraphics, path, metaInfo);
+        }
+        catch (...) {
+            HandleException(Formatter() << "Shader::" << path);
+            return {};
+        }
+
+        return shader;
+    }
 
     template<>
     std::shared_ptr<MaterialBackend> LoadBackend<MaterialBackend>(const std::string& path) const noexcept {
@@ -147,7 +199,7 @@ public:
             archive(source);
         }
         catch (...) {
-            HandleException(Formatter() << "Material::archive::" << path);
+            HandleException(Formatter() << "Material::" << path);
             return {};
         }
 
@@ -177,7 +229,7 @@ public:
             }
         }
         catch (...) {
-            HandleException(Formatter() << "Material::make::" << path);
+            HandleException(Formatter() << "Material::" << path);
             return {};
         }
 

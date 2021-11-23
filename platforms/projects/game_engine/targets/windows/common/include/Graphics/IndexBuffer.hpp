@@ -23,7 +23,6 @@ public:
     }
 
     void Bind(Graphics* pGraphics) {
-        pGraphics->GetInfoLogger().SetLatest();
         pGraphics->GetContext().IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
         pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
     }

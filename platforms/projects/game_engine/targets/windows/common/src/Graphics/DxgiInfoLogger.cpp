@@ -37,18 +37,18 @@ DxgiInfoLogger::DxgiInfoLogger() {
     }
 
     HRESULT hr;
-    if (FAILED(hr = DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &pDxgiInfoQueue))) {
+    if (FAILED(hr = DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &mpDxgiInfoQueue))) {
         throw Graphics::HrException(hr, __FILE__, __LINE__);
     }
 
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[DxgiInfoLogger] >>> Successfully initialized." << std::flush;
 }
-
-void DxgiInfoLogger::SetLatest() noexcept {
-    // set the index (next) so that the next all to 
-    // Dump() will only get errors generated after this call.
-    next = pDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
-}
+//
+//void DxgiInfoLogger::SetLatest() noexcept {
+//    // set the index (next) so that the next all to 
+//    // Dump() will only get errors generated after this call.
+//    next = mpDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
+//}
 
 bool DxgiInfoLogger::DumpIfAny(nodec::logging::Level logLevel) {
     std::ostringstream oss;
@@ -77,19 +77,22 @@ void DxgiInfoLogger::Dump(nodec::logging::Level logLevel) {
 }
 
 bool DxgiInfoLogger::GetMessages(std::ostringstream& outMessagesStream) {
-    const auto end = pDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
+    static std::mutex mtx;
+    std::lock_guard<std::mutex> lock(mtx);
 
-    if (next == end) {
+    const auto end = mpDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
+
+    if (mNext == end) {
         return false;
     }
 
-    for (; next < end; ++next) {
+    for (; mNext < end; ++mNext) {
         HRESULT hr;
-        SIZE_T messageLength;
+        SIZE_T messageLength{};
 
         // get the size of message in bytes
-        if (FAILED(hr = pDxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, next, nullptr, &messageLength))) {
-            outMessagesStream << "[ERROR] cannnot get the size of message '" << next << "': hr=0x"
+        if (FAILED(hr = mpDxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, mNext, nullptr, &messageLength))) {
+            outMessagesStream << "[ERROR] cannnot get the size of message '" << mNext << "': hr=0x"
                 << std::hex << std::uppercase << hr << std::dec << "\n";
             continue;
         }
@@ -97,8 +100,8 @@ bool DxgiInfoLogger::GetMessages(std::ostringstream& outMessagesStream) {
         auto bytes = std::make_unique<byte[]>(messageLength);
         auto pMessage = reinterpret_cast<DXGI_INFO_QUEUE_MESSAGE*>(bytes.get());
         // get the message and log its description
-        if (FAILED(hr = pDxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, next, pMessage, &messageLength))) {
-            outMessagesStream << "[ERROR] cannnot get the size of message '" << next << "': hr=0x"
+        if (FAILED(hr = mpDxgiInfoQueue->GetMessage(DXGI_DEBUG_ALL, mNext, pMessage, &messageLength))) {
+            outMessagesStream << "[ERROR] cannnot get the size of message '" << mNext << "': hr=0x"
                 << std::hex << std::uppercase << hr << std::dec << "\n";
             continue;
         }

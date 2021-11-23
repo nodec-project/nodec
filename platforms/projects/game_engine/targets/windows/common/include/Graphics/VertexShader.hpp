@@ -1,23 +1,41 @@
 #pragma once
 
-#include "Shader.hpp"
-#include "InputLayout.hpp"
 #include "Graphics.hpp"
 
-#include <nodec/macros.hpp>
+#include <nodec/unicode.hpp>
 
-class VertexShader : public Shader
-{
+#include <d3dcompiler.h>
+
+
+class VertexShader {
 public:
-    VertexShader(Graphics* graphics,
-                 const std::string& path,
-                 const D3D11_INPUT_ELEMENT_DESC* pInputElementDescs,
-                 UINT numElements);
+    VertexShader(Graphics* pGraphics, const std::string& path) {
 
-    void Bind(Graphics* graphics);
+        pGraphics->ThrowIfError(
+            D3DReadFileToBlob(nodec::unicode::utf8to16<std::wstring>(path).c_str(), &mpBytecodeBlob),
+            __FILE__, __LINE__
+        );
+
+        pGraphics->ThrowIfError(
+            pGraphics->GetDevice().CreateVertexShader(
+                mpBytecodeBlob->GetBufferPointer(), mpBytecodeBlob->GetBufferSize(),
+                nullptr, &mpVertexShader
+            ),
+            __FILE__, __LINE__
+        );
+    }
+
+    void Bind(Graphics* pGraphics) {
+        pGraphics->GetContext().VSSetShader(mpVertexShader.Get(), nullptr, 0u);
+        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+    }
+
+    ID3DBlob& GetBytecode() {
+        return *mpBytecodeBlob.Get();
+    }
 
 private:
-    InputLayout inputLayout;
-    Microsoft::WRL::ComPtr<ID3D11VertexShader> pVertexShader;
+    Microsoft::WRL::ComPtr<ID3D11VertexShader> mpVertexShader;
+    Microsoft::WRL::ComPtr<ID3DBlob> mpBytecodeBlob;
 
 };

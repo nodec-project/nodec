@@ -40,12 +40,11 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     sd.Flags = 0;
 
-
     UINT swapCreateFlags = 0u;
     swapCreateFlags |= D3D11_CREATE_DEVICE_DEBUG;
 
-    // for checking results of d3d functions.
-    mInfoLogger.SetLatest();
+    // // for checking results of d3d functions.
+    // mInfoLogger.SetLatest();
 
     // create device and front/back buffers, and swap chain and rendering context.
     ThrowIfError(D3D11CreateDeviceAndSwapChain(
@@ -106,7 +105,6 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     // bind depth stencil view to OM
     mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), mpDSV.Get());
 
-
     // configure viewport
     D3D11_VIEWPORT vp;
     vp.Width = static_cast<float>(width);
@@ -159,7 +157,7 @@ void Graphics::EndFrame() {
 
 
     HRESULT hr;
-    mInfoLogger.SetLatest();
+    // mInfoLogger.SetLatest();
     if (FAILED(hr = mpSwap->Present(1u, 0u))) {
         mInfoLogger.Dump(nodec::logging::Level::Fatal);
         if (hr == DXGI_ERROR_DEVICE_REMOVED) {
@@ -172,7 +170,6 @@ void Graphics::EndFrame() {
 }
 
 void Graphics::DrawIndexed(UINT count) {
-    mInfoLogger.SetLatest();
     mpContext->DrawIndexed(count, 0u, 0u);
     mInfoLogger.DumpIfAny(nodec::logging::Level::Warn);
 }

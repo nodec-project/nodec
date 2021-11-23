@@ -19,14 +19,6 @@ struct SerializableMaterial {
     struct TextureEntry {
         std::string texture;
         Sampler sampler;
-
-        template<class Archive>
-        void serialize(Archive& archive) {
-            archive(
-                cereal::make_nvp("texture", texture),
-                cereal::make_nvp("sampler", sampler)
-            );
-        }
     };
 
     std::string shader;
@@ -34,19 +26,26 @@ struct SerializableMaterial {
     std::unordered_map<std::string, float> float_properties;
     std::unordered_map<std::string, nodec::Vector4f> vector4_properties;
     std::unordered_map<std::string, TextureEntry> texture_properties;
-
-
-    template<class Archive>
-    void serialize(Archive& archive) {
-        archive(
-            cereal::make_nvp("shader", shader),
-            cereal::make_nvp("float_properties", float_properties),
-            cereal::make_nvp("vector4_properties", vector4_properties),
-            cereal::make_nvp("texture_properties", texture_properties)
-        );
-    }
 };
+template<class Archive>
+void serialize(Archive& archive, SerializableMaterial::TextureEntry &entry) {
+    archive(
+        cereal::make_nvp("texture", entry.texture),
+        cereal::make_nvp("sampler", entry.sampler)
+    );
+}
 
+
+
+template<class Archive>
+void serialize(Archive& archive, SerializableMaterial &material) {
+    archive(
+        cereal::make_nvp("shader", material.shader),
+        cereal::make_nvp("float_properties", material.float_properties),
+        cereal::make_nvp("vector4_properties", material.vector4_properties),
+        cereal::make_nvp("texture_properties", material.texture_properties)
+    );
+}
 
 }
 }

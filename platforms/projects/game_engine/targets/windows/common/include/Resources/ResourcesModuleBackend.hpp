@@ -18,7 +18,7 @@ public:
         );
     }
 
-    void setup_on_runtime(Graphics *graphics) {
+    void setup_on_runtime(Graphics* graphics) {
         using namespace nodec;
         using namespace rendering::resources;
 
@@ -32,10 +32,15 @@ public:
                 return resource_loader_->Load<Mesh, MeshBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
             });
 
-        registry().register_resource_loader<Material>(
+        registry().register_resource_loader<Shader>(
             [=](auto policy, auto& name, auto notifyer) {
-                return resource_loader_->Load<Material, MaterialBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
+                return resource_loader_->Load<Shader, ShaderBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
             });
+
+        //registry().register_resource_loader<Material>(
+        //    [=](auto policy, auto& name, auto notifyer) {
+        //        return resource_loader_->Load<Material, MaterialBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
+        //    });
 
     }
 

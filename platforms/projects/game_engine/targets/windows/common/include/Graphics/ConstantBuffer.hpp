@@ -41,13 +41,11 @@ public:
 
 
     void BindVS(Graphics* pGraphics, UINT slot) {
-        pGraphics->GetInfoLogger().SetLatest();
         pGraphics->GetContext().VSSetConstantBuffers(slot, 1u, mpConstantBuffer.GetAddressOf());
         pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
     }
 
     void BindPS(Graphics* pGraphics, UINT slot) {
-        pGraphics->GetInfoLogger().SetLatest();
         pGraphics->GetContext().PSSetConstantBuffers(slot, 1u, mpConstantBuffer.GetAddressOf());
         pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
     }

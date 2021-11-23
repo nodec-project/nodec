@@ -55,8 +55,6 @@ Texture::Texture(Graphics* graphics, const std::string& path)
 
 void Texture::BindVS(Graphics* graphics, UINT slot)
 {
-    graphics->GetInfoLogger()->SetLatest();
-
     graphics->GetContext()->VSSetShaderResources(slot, 1u, pTextureView.GetAddressOf());
 
     graphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);
@@ -64,8 +62,6 @@ void Texture::BindVS(Graphics* graphics, UINT slot)
 
 void Texture::BindPS(Graphics* graphics, UINT slot)
 {
-    graphics->GetInfoLogger()->SetLatest();
-
     graphics->GetContext()->PSSetShaderResources(slot, 1u, pTextureView.GetAddressOf());
 
     graphics->GetInfoLogger()->DumpIfAny(nodec::logging::Level::Warn);

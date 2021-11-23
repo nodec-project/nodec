@@ -44,7 +44,8 @@ public:
 private:
 
     void on_initialized(NodecEngine& engine) {
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
+        using namespace nodec;
+        logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
 
         auto& scene = engine.get_module<Scene>();
         auto entity = scene.create_entity("Hello World!!");
@@ -53,6 +54,10 @@ private:
 
         auto& resources = engine.get_module<Resources>();
         mesh_future = resources.registry().get_resource<Mesh>("models/retrotv/Circle.001##mesh-2.mesh");
+
+        auto shader = resources.registry().get_resource<Shader>("shaders/pbr").get();
+        logging::InfoStream(__FILE__, __LINE__) << shader;
+
     }
 
     void on_stepped(NodecEngine& engine) {
