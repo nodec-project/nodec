@@ -28,20 +28,28 @@ public:
 
 
         registry().register_resource_loader<Mesh>(
-            [=](auto policy, auto& name, auto notifyer) {
-                return resource_loader_->Load<Mesh, MeshBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
+            [=](auto& name) {
+                return resource_loader_->LoadDirect<Mesh, MeshBackend>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto& name, auto notifyer) {
+                return resource_loader_->LoadAsync<Mesh, MeshBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
             });
 
         registry().register_resource_loader<Shader>(
-            [=](auto policy, auto& name, auto notifyer) {
-                return resource_loader_->Load<Shader, ShaderBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
+            [=](auto& name) {
+                return resource_loader_->LoadDirect<Shader, ShaderBackend>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto& name, auto notifyer) {
+                return resource_loader_->LoadAsync<Shader, ShaderBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
             });
 
-        //registry().register_resource_loader<Material>(
-        //    [=](auto policy, auto& name, auto notifyer) {
-        //        return resource_loader_->Load<Material, MaterialBackend>(policy, name, Formatter() << resource_path() << "/" << name, notifyer);
-        //    });
-
+        registry().register_resource_loader<Material>(
+            [=](auto& name) {
+                return resource_loader_->LoadDirect<Material, MaterialBackend>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto& name, auto notifyer) {
+                return resource_loader_->LoadAsync<Material, MaterialBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
     }
 
 private:

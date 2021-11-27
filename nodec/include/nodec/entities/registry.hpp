@@ -251,7 +251,7 @@ public:
         }
 
         using Comp = std::remove_const_t<Component>;
-        auto* cpool = pool_if_exists<Comp>();
+        const auto* cpool = pool_if_exists<Comp>();
         if (!cpool) {
             details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }

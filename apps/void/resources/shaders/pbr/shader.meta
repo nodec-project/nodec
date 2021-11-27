@@ -2,40 +2,43 @@
     "meta": {
         "float_properties": [
             {
-                "name": "float_a",
+                "name": "metallic",
                 "default_value": 0.0
             },
             {
-                "name": "float_b",
-                "default_value": 1.0
+                "name": "roughness",
+                "default_value": 0.0
             }
         ],
         "vector4_properties": [
-            {
-                "name": "vector_a",
-                "default_value": {
-                    "x": 0.0,
-                    "y": 0.0,
-                    "z": 0.0,
-                    "w": 0.0
-                }
-            },
-            {
-                "name": "vector_b",
+          {
+                "name": "albedo",
                 "default_value": {
                     "x": 1.0,
                     "y": 1.0,
                     "z": 1.0,
                     "w": 1.0
                 }
-            }
+          }
         ],
         "texture_entries": [
             {
-                "name": "texture_a"
+                "name": "albedo"
             },
             {
-                "name": "texture_b"
+                "name": "normal"
+            },
+            {
+                "name": "height"
+            },
+            {
+                "name": "metallic"
+            },
+            {
+                "name": "roughness"
+            },
+            {
+                "name": "ambient_occlusion"
             }
         ]
     }

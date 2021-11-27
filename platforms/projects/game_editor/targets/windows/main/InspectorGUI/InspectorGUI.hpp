@@ -68,7 +68,9 @@ public:
         ImGui::Text("Materials");
 
         for (auto& material : renderer.materials) {
-
+            //auto result = mpResourceRegistry->lookup_name(material);
+            //logging::InfoStream(__FILE__, __LINE__) << result.first;
+            //logging::InfoStream(__FILE__, __LINE__) << mpResourceRegistry->lookup_name(material).first;
         }
     }
 

@@ -20,6 +20,19 @@
 namespace nodec {
 namespace resource_management {
 
+enum class LoadPolicy {
+    Async = 0x01 << 0,
+    Direct = 0x01 << 1
+};
+
+}
+}
+
+NODEC_ALLOW_FLAGS_FOR_ENUM(nodec::resource_management::LoadPolicy)
+
+namespace nodec {
+namespace resource_management {
+
 namespace details {
 
 // Note-2021-10-03 <IOE>:
@@ -62,10 +75,6 @@ class ResourceRegistry {
 
 public:
 
-    enum class LoadPolicy {
-        Async = 0x01 << 0,
-        Direct = 0x01 << 1
-    };
 
     template<typename Type>
     class LoadNotifyer {
@@ -103,7 +112,8 @@ private:
     template<typename Type>
     struct ResourceBlock : public BaseResourceBlock {
 
-        using Loader = std::function<ResourceFuture<Type>(LoadPolicy, const std::string&, LoadNotifyer<Type>)>;
+        using DirectLoader = std::function<ResourcePtr<Type>(const std::string&)>;
+        using AsyncLoader = std::function<ResourceFuture<Type>(const std::string&, LoadNotifyer<Type>)>;
 
         ~ResourceBlock() {}
 
@@ -116,7 +126,8 @@ private:
         std::mutex dict_mutex;
         std::mutex loading_futures_mutex;
 
-        Loader loader;
+        DirectLoader direct_loader;
+        AsyncLoader async_loader;
     };
 
     struct ResourceBlockData {
@@ -154,15 +165,22 @@ public:
 
     /**
     *
-    * @code{.cpp}
-    * std::future<std::shared_ptr<Type>>(LoadPolicy policy, const std::string& name, LoadNotifyer<Type> notifyer);
-    * @endcode
+    * @param direct_loader
+    *   @code{.cpp}
+    *   std::shared_ptr<Type>(const std::string& name);
+    *   @endcode
+    * 
+    * @param async_loader
+    *   @code{.cpp}
+    *   std::future<std::shared_ptr<Type>>(const std::string& name, LoadNotifyer<Type> notifyer);
+    *   @endcode
     */
-    template<typename Type, typename Loader>
-    void register_resource_loader(Loader&& loader) {
+    template<typename Type, typename DirectLoader, typename AsyncLoader>
+    void register_resource_loader(DirectLoader&& direct_loader, AsyncLoader&& async_loader) {
         auto* block = resource_block_assured<Type>();
 
-        block->loader = loader;
+        block->direct_loader = direct_loader;
+        block->async_loader = async_loader;
     }
 
 
@@ -184,18 +202,43 @@ public:
             return promise.get_future().share();
         }
 
+        std::promise<ResourcePtr<Type>> promise;
+        ResourceSharedFuture<Type> future;
+
         {
             std::lock_guard<std::mutex> lock(block->loading_futures_mutex);
 
-            auto& future = block->loading_futures[name];
+            future = block->loading_futures[name];
             if (future.valid()) {
-                // if loading.
+                // someone is loading. return future ticket.
                 return future;
             }
 
-            future = block->loader(policy, name, { block }).share();
-            return future;
+            if (policy & LoadPolicy::Async) {
+                // get future ticket from async loader immediately.
+                // and register the ticket.
+                future = block->async_loader(name, { block }).share();
+                block->loading_futures[name] = future;
+
+                return future;
+            }
+
+            // LoadPolicy::Direct
+            // create future ticket immediately and register it.
+            future = promise.get_future().share();
+            block->loading_futures[name] = future;
         }
+
+        // load resource directly.
+        // and set resource in promise.
+        resource = block->direct_loader(name);
+        promise.set_value(resource);
+
+        // for using on_loaded()
+        LoadNotifyer<Type> notifyer{ block };
+        notifyer.on_loaded(name, resource);
+
+        return future;
     }
 
 
@@ -235,6 +278,5 @@ private:
 }
 }
 
-NODEC_ALLOW_FLAGS_FOR_ENUM(nodec::resource_management::ResourceRegistry::LoadPolicy)
 
 #endif

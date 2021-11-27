@@ -27,6 +27,9 @@ class ResourceLoader {
     template<typename T>
     using ResourceFuture = std::future<std::shared_ptr<T>>;
 
+    template<typename T>
+    using ResourcePtr = std::shared_ptr<T>;
+
     using Mesh = rendering::resources::Mesh;
 
     static void HandleException(const std::string& identifier) {
@@ -59,23 +62,19 @@ public:
 
     // For resource registry
     template<typename Resource, typename ResourceBackend>
-    ResourceFuture<Resource> Load(ResourceRegistry::LoadPolicy policy, const std::string& name, const std::string& path, ResourceRegistry::LoadNotifyer<Resource> notifyer) {
-        if (policy & ResourceRegistry::LoadPolicy::Async) {
-            return mExecutor.submit(
-                [=]() {
-                    std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
-                    notifyer.on_loaded(name, resource);
-                    return resource;
-                });
-        }
-        else if (policy & ResourceRegistry::LoadPolicy::Direct) {
-            std::promise<std::shared_ptr<Resource>> promise;
-            std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
-            notifyer.on_loaded(name, resource);
-            promise.set_value(resource);
-            return promise.get_future();
-        }
-        return {};
+    ResourcePtr<Resource> LoadDirect(const std::string& path) {
+        std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
+        return resource;
+    }
+
+    template<typename Resource, typename ResourceBackend>
+    ResourceFuture<Resource> LoadAsync(const std::string& name, const std::string& path, ResourceRegistry::LoadNotifyer<Resource> notifyer) {
+        return mExecutor.submit(
+            [=]() {
+                std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
+                notifyer.on_loaded(name, resource);
+                return resource;
+            });
     }
 
 
@@ -182,6 +181,7 @@ public:
     template<>
     std::shared_ptr<MaterialBackend> LoadBackend<MaterialBackend>(const std::string& path) const noexcept {
         using namespace nodec;
+        using namespace nodec::resource_management;
         using namespace rendering::resources;
 
         std::ifstream file(path, std::ios::binary);
@@ -203,10 +203,10 @@ public:
             return {};
         }
 
-        auto material = std::make_shared<MaterialBackend>();
+        auto material = std::make_shared<MaterialBackend>(mpGraphics);
 
         try {
-            auto shader = mpRegistry->get_resource<Shader>(source.shader, ResourceRegistry::LoadPolicy::Direct).get();
+            auto shader = mpRegistry->get_resource<Shader>(source.shader, LoadPolicy::Direct).get();
             material->set_shader(shader);
 
             for (auto&& property : source.float_properties) {
@@ -222,7 +222,7 @@ public:
                 Material::TextureEntry entry;
                 entry.sampler = sourceEntry.sampler;
 
-                auto texture = mpRegistry->get_resource<Texture>(sourceEntry.texture, ResourceRegistry::LoadPolicy::Direct).get();
+                auto texture = mpRegistry->get_resource<Texture>(sourceEntry.texture, LoadPolicy::Direct).get();
                 entry.texture = texture;
 
                 material->set_texture_entry(property.first, entry);
