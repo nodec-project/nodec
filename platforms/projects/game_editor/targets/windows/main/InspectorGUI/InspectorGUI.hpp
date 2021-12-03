@@ -67,11 +67,28 @@ public:
 
         ImGui::Text("Materials");
 
-        for (auto& material : renderer.materials) {
-            //auto result = mpResourceRegistry->lookup_name(material);
-            //logging::InfoStream(__FILE__, __LINE__) << result.first;
-            //logging::InfoStream(__FILE__, __LINE__) << mpResourceRegistry->lookup_name(material).first;
+        for (int i = 0; i < renderer.materials.size(); ++i) {
+            auto& material = renderer.materials[i];
+
+            auto result = mpResourceRegistry->lookup_name(material);
+
+            auto origResourceName = result.first;
+
+            std::string label = Formatter() << "##material-" << i;
+
+            SetStrBuffer(strBuffer, strBufferSize, origResourceName);
+
+            if (ImGui::InputText(label.c_str(), strBuffer, strBufferSize, ImGuiInputTextFlags_EnterReturnsTrue)) {
+                std::string newResourceName = strBuffer;
+
+                auto newMaterial = mpResourceRegistry->get_resource<Material>(newResourceName).get();
+
+                if (newMaterial) {
+                    material = newMaterial;
+                }
+            }
         }
+
     }
 
     void SetStrBuffer(char* pBuffer, const size_t bufferSize, const std::string& source) {
