@@ -146,20 +146,16 @@ public:
         TypeId component_type_id = type_seq<Component>::value();
         TypeId serializable_component_type_id = type_seq<SerializableComponent>::value();
 
-        assert(component_serializations.find({ component_type_id, serializable_component_type_id }) != component_serializations.end());
-
         assert(component_dict.find(component_type_id) != component_dict.end());
         assert(serializable_component_dict.find(serializable_component_type_id) != serializable_component_dict.end());
 
-        auto pair = std::make_pair(component_type_id, serializable_component_type_id);
-        component_dict[component_type_id] = pair;
-        serializable_component_dict[serializable_component_type_id] = pair;
+        auto serialization = std::make_shared<ComponentSerialization<Component, SerializableComponent>>();
 
-        component_serializations[pair].reset(new ComponentSerialization<Component, SerializableComponent>());
-        auto* serialization = static_cast<ComponentSerialization<Component, SerializableComponent>*>(component_serializations[pair].get());
         serialization->serializer = serializer;
         serialization->emplacer = emplacer;
 
+        component_dict[component_type_id] = serialization;
+        serializable_component_dict[serializable_component_type_id] = serialization;
 
     }
 
@@ -188,24 +184,40 @@ public:
 
         auto node = std::make_shared<SerializableEntityNode>();
 
-        auto exception_handler = []() {
+        auto exception_handler = [=](TypeId component_type_id) {
 
+            std::string details;
+
+            try {
+                throw;
+            }
+            catch (std::exception& e) {
+                details = e.what();
+            }
+            catch (...) {
+                details = "Unknown";
+            }
+
+            logging::WarnStream(__FILE__, __LINE__)
+                << "Failed to serialize component ( type_seq_id: " << component_type_id 
+                << " ) of entity ( entity: 0x" << std::hex << entity << " )\n"
+                << "details: \n"
+                << details;
         };
 
         scene_registry.visit(entity, [=, &node](int type_id, void* comp) {
+            assert(comp);
 
             try {
-                auto& pair = component_dict.at(type_id);
-                auto& serialization = component_serializations.at(pair);
+                auto& serialization = component_dict.at(type_id);
 
-                assert(serialization);
-                assert(comp);
-
+                assert(static_cast<bool>(serialization));
+                
                 auto serializable_component = serialization->serialize(comp);
                 node->components.push_back(serializable_component);
             }
             catch (...) {
-                exception_handler();
+                exception_handler(type_id);
             }
 
             });
@@ -221,8 +233,24 @@ public:
         }
 
 
-        auto exception_handler = []() {
+        auto exception_handler = [](TypeId component_type_id) {
 
+            std::string details;
+
+            try {
+                throw;
+            }
+            catch (std::exception& e) {
+                details = e.what();
+            }
+            catch (...) {
+                details = "Unknown";
+            }
+
+            logging::WarnStream(__FILE__, __LINE__)
+                << "Failed to emplace component from serializable component ( type_seq_id: " << component_type_id << " )\n"
+                << "details: \n"
+                << details;
         };
 
         auto entity = scene_registry.create_entity();
@@ -231,32 +259,24 @@ public:
             if (!comp) { continue; }
 
             try {
-                auto& pair = serializable_component_dict.at(comp->type_id());
-                auto& serialization = component_serializations.at(pair);
+                auto& serialization = serializable_component_dict.at(comp->type_id());
 
-                assert(serialization);
+                assert(static_cast<bool>(serialization));
 
                 serialization->emplace_component(comp.get(), entity, scene_registry);
             }
             catch (...) {
-                exception_handler();
+                exception_handler(comp->type_id());
             }
-
-            
         }
 
         return entity;
     }
 
-private:
-
 
 private:
-    std::map<std::pair<nodec::TypeId, nodec::TypeId>, std::unique_ptr<BaseComponentSerialization>> component_serializations;
-    std::unordered_map<nodec::TypeId, std::pair<nodec::TypeId, nodec::TypeId>> component_dict;
-    std::unordered_map<nodec::TypeId, std::pair<nodec::TypeId, nodec::TypeId>> serializable_component_dict;
-
-
+    std::unordered_map<nodec::TypeId, std::shared_ptr<BaseComponentSerialization>> component_dict;
+    std::unordered_map<nodec::TypeId, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict;
 };
 
 }
