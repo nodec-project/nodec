@@ -5,6 +5,7 @@
 #include "ImguiManager.hpp"
 #include "Resources/ResourceLoader.hpp"
 #include "Resources/ResourcesModuleBackend.hpp"
+#include "SceneSerialization/SceneSerializationModuleBackend.hpp"
 
 #include "Graphics/VertexBuffer.hpp"
 
@@ -30,6 +31,8 @@ class Engine : public nodec_engine::impl::NodecEngineModule {
     using ResourcesModule = resources::impl::ResourcesModule;
     using Resources = resources::Resources;
 
+    using SceneSerialization = scene_serialization::SceneSerialization;
+
 public:
     Engine() {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Created!";
@@ -52,6 +55,10 @@ public:
         add_module<Resources>(resources_module_);
 
         resources_module_->setup_on_boot();
+
+        // --- scene serialization ---
+        scene_serialization_module_.reset(new SceneSerializationModuleBackend(&resources_module_->registry()));
+        add_module<SceneSerialization>(scene_serialization_module_);
 
 
         initialized().connect([=](NodecEngine&) {
@@ -103,6 +110,9 @@ private:
 
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
+    std::shared_ptr<SceneSerializationModuleBackend> scene_serialization_module_;
+
     std::shared_ptr<SceneModule> scene_module_;
+
 
 };

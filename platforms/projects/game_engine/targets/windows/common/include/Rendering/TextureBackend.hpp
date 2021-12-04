@@ -1,4 +1,4 @@
-#pragma onece
+#pragma once
 
 #include <rendering/resources/texture.hpp>
 

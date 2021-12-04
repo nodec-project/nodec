@@ -16,7 +16,7 @@ class BaseSerializableComponent {
 
 public:
     template<class Derived>
-    BaseSerializableComponent()
+    BaseSerializableComponent(Derived*)
         : type_id_{ nodec::type_seq<Derived>::value() } {
 
     }
@@ -118,7 +118,7 @@ class SceneSerialization {
         std::shared_ptr<BaseSerializableComponent> serialize(const void* component) const override {
             assert(component);
 
-            return serializer(*static_cast<Component>(component));
+            return serializer(*static_cast<const Component*>(component));
         }
 
         void emplace_component(const BaseSerializableComponent* serializable_component, SceneEntity entity, SceneRegistry& scene_registry) const override {
@@ -127,7 +127,7 @@ class SceneSerialization {
             assert(serializable_component);
             assert(serializable_component->type_id() == type_seq<SerializableComponent>::value());
 
-            emplacer(*static_cast<SerializableComponent*>(serializable_component), entity, scene_registry);
+            emplacer(*static_cast<const SerializableComponent*>(serializable_component), entity, scene_registry);
         }
 
     public:
@@ -138,6 +138,17 @@ class SceneSerialization {
 
 public:
 
+    /**
+    * @param serializer
+    *   @code{.cpp}
+    *   std::shared_ptr<SerializableComponent>(const Component&);
+    *   @endcode
+    * 
+    * @param emplacer
+    *   @code{.cpp}
+    *   void(const SerializableComponent&, SceneEntity, SceneRegistry&);
+    *   @endcode
+    */
     template<typename Component, typename SerializableComponent, typename Serializer, typename Emplacer>
     void register_component(Serializer&& serializer, Emplacer&& emplacer) {
 
@@ -146,8 +157,8 @@ public:
         TypeId component_type_id = type_seq<Component>::value();
         TypeId serializable_component_type_id = type_seq<SerializableComponent>::value();
 
-        assert(component_dict.find(component_type_id) != component_dict.end());
-        assert(serializable_component_dict.find(serializable_component_type_id) != serializable_component_dict.end());
+        assert(component_dict.find(component_type_id) == component_dict.end());
+        assert(serializable_component_dict.find(serializable_component_type_id) == serializable_component_dict.end());
 
         auto serialization = std::make_shared<ComponentSerialization<Component, SerializableComponent>>();
 
