@@ -13,6 +13,7 @@
 #include <scene_set/impl/scene_module.hpp>
 #include <scene_set/systems/transform_system.hpp>
 #include <resources/impl/resources_module.hpp>
+#include <scene_serialization/scene_serialization.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/unicode.hpp>
@@ -99,6 +100,7 @@ private:
 
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
+
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
     std::shared_ptr<SceneModule> scene_module_;
