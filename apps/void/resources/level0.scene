@@ -1,0 +1,27 @@
+{
+    "scene_graph": {
+        "roots": [
+            {
+                "ptr_wrapper": {
+                    "id": 2147483649,
+                    "data": {
+                        "children": [],
+                        "components": [
+                            {
+                                "polymorphic_id": 2147483649,
+                                "polymorphic_name": "SerializableMeshRenderer",
+                                "ptr_wrapper": {
+                                    "id": 2147483650,
+                                    "data": {
+                                        "meshes": [],
+                                        "materials": []
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

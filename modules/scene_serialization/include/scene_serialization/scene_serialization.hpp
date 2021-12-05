@@ -3,12 +3,11 @@
 
 #include <scene_set/scene_registry.hpp>
 
-#include <vector>
-
 #include <cereal/types/polymorphic.hpp>
+#include <cereal/types/memory.hpp>
+#include <cereal/types/vector.hpp>
 
-
-//CEREAL_REGISTER_POLYMORPHIC_RELATION()
+#include <vector>
 
 namespace scene_serialization {
 
@@ -21,19 +20,19 @@ public:
 
     }
 
+    BaseSerializableComponent() : type_id_{0} {}
+
+    virtual ~BaseSerializableComponent() {};
+
 public:
     nodec::TypeId type_id() const { return type_id_; }
 
 private:
     const nodec::TypeId type_id_;
-
-    //using SceneEntity = scene_set::SceneEntity;
-    //using SceneRegistry = scene_set::SceneRegistry;
-//
-//public:
-//    virtual void emplace_component(SceneRegistry& registry, const SceneEntity entity) const = 0;
-
 };
+
+template<class Archive>
+void serialize(Archive&, BaseSerializableComponent&) {}
 
 //
 //template<typename Component>
@@ -65,18 +64,18 @@ class SerializableEntityNode {
     using SceneEntity = scene_set::SceneEntity;
     using SceneRegistry = scene_set::SceneRegistry;
 
-//public:
-//    SceneEntity emplace_entity(SceneRegistry& registry) {
-//        auto entity = registry.create_entity();
-//
-//        for (auto& comp : components) {
-//            if (!comp) {
-//                continue;
-//            }
-//            comp->emplace_component(registry, entity);
-//        }
-//        return entity;
-//    }
+    //public:
+    //    SceneEntity emplace_entity(SceneRegistry& registry) {
+    //        auto entity = registry.create_entity();
+    //
+    //        for (auto& comp : components) {
+    //            if (!comp) {
+    //                continue;
+    //            }
+    //            comp->emplace_component(registry, entity);
+    //        }
+    //        return entity;
+    //    }
 
 public:
     std::vector<std::shared_ptr<SerializableEntityNode>> children;
@@ -84,10 +83,25 @@ public:
 
 };
 
-class SerializableSceneGraph {
+template<class Archive>
+void serialize(Archive& archive, SerializableEntityNode& node) {
 
-    std::vector<SerializableEntityNode> roots;
+    archive(cereal::make_nvp("children", node.children));
+    archive(cereal::make_nvp("components", node.components));
+
+}
+
+class SerializableSceneGraph {
+public:
+    std::vector<std::shared_ptr<SerializableEntityNode>> roots;
 };
+
+template<class Archive>
+void serialize(Archive& archive, SerializableSceneGraph& graph) {
+
+    archive(cereal::make_nvp("roots", graph.roots));
+
+}
 
 
 namespace internal {
@@ -112,7 +126,6 @@ class SceneSerialization {
         using Serializer = std::function<std::shared_ptr<SerializableComponent>(const Component&)>;
         using Emplacer = std::function<void(const SerializableComponent&, SceneEntity, SceneRegistry&)>;
 
-        //using Deserializer = std::function<std::shared_ptr<Component>(const SerializableComponent&)>;
 
     public:
         std::shared_ptr<BaseSerializableComponent> serialize(const void* component) const override {
@@ -133,7 +146,6 @@ class SceneSerialization {
     public:
         Serializer serializer;
         Emplacer emplacer;
-        //Deserializer deserializer;
     };
 
 public:
@@ -143,7 +155,7 @@ public:
     *   @code{.cpp}
     *   std::shared_ptr<SerializableComponent>(const Component&);
     *   @endcode
-    * 
+    *
     * @param emplacer
     *   @code{.cpp}
     *   void(const SerializableComponent&, SceneEntity, SceneRegistry&);
@@ -190,7 +202,10 @@ public:
 
     //}
 
-    std::shared_ptr<SerializableEntityNode> make_serializable_node(const SceneEntity entity, const SceneRegistry& scene_registry) {
+    std::shared_ptr<SerializableEntityNode> make_serializable_node(
+        const SceneEntity entity,
+        const SceneRegistry& scene_registry) const
+    {
         using namespace nodec;
 
         auto node = std::make_shared<SerializableEntityNode>();
@@ -210,7 +225,7 @@ public:
             }
 
             logging::WarnStream(__FILE__, __LINE__)
-                << "Failed to serialize component ( type_seq_id: " << component_type_id 
+                << "Failed to serialize component ( type_seq_id: " << component_type_id
                 << " ) of entity ( entity: 0x" << std::hex << entity << " )\n"
                 << "details: \n"
                 << details;
@@ -223,7 +238,7 @@ public:
                 auto& serialization = component_dict.at(type_id);
 
                 assert(static_cast<bool>(serialization));
-                
+
                 auto serializable_component = serialization->serialize(comp);
                 node->components.push_back(serializable_component);
             }
@@ -236,7 +251,10 @@ public:
         return node;
     }
 
-    SceneEntity emplace_entity(std::shared_ptr<SerializableEntityNode> entity_node, SceneRegistry& scene_registry) {
+    SceneEntity emplace_entity(
+        std::shared_ptr<SerializableEntityNode> entity_node, 
+        SceneRegistry& scene_registry) const
+    {
         using namespace nodec;
 
         if (!entity_node) {

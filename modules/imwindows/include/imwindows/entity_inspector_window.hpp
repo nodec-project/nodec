@@ -83,7 +83,6 @@ public:
 
         private:
             ComponentRegistry* registry_{ nullptr };
-
         };
 
         template<typename Component, typename Callback>

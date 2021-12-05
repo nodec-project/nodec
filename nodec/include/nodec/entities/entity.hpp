@@ -1,7 +1,9 @@
 #ifndef NODEC__ENTITIES__ENTITY_HPP_
 #define NODEC__ENTITIES__ENTITY_HPP_
 
-#include <stdint.h>
+#include <cstdint>
+#include <cstddef>
+
 
 namespace nodec {
 namespace entities {

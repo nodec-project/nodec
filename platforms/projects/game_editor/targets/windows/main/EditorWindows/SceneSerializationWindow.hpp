@@ -1,17 +1,43 @@
 #pragma once
 
+#include "../ResourceExporter.hpp"
+
 #include <imelements/window.hpp>
+#include <scene_serialization/scene_serialization.hpp>
 
 #include <imgui.h>
 
 
 class SceneSerializationWindow : public imelements::BaseWindow {
+    using SceneEntity = scene_set::SceneEntity;
+    using SelectedEntityChangedSignal = nodec::signals::Signal<void(SceneEntity)>;
+    using ResourceRegistry = nodec::resource_management::ResourceRegistry;
+    using SceneSerialization = scene_serialization::SceneSerialization;
+    using Scene = scene_set::Scene;
 
 public:
 
-    static void init(imelements::WindowManager& manager) {
+    static void init(
+        imelements::WindowManager& manager,
+        scene_set::Scene* scene,
+        SceneSerialization* scene_serialization,
+        const std::string& resource_path,
+        SceneEntity selected_entity,
+        SelectedEntityChangedSignal::SignalInterface selected_entity_changed_signal
+    ) {
 
         auto& window = manager.get_window<SceneSerializationWindow>();
+
+        window.scene = scene;
+        window.scene_serialization = scene_serialization;
+        window.resource_path = resource_path;
+
+        window.selected_entity = selected_entity;
+
+        window.selected_entity_changed_signal_connection
+            = selected_entity_changed_signal.connect([&](auto entity) {
+            window.selected_entity = entity;
+                });
 
         ImGui::SetWindowFocus(window.name());
     }
@@ -23,6 +49,7 @@ public:
     }
 
     void on_gui() override {
+        using namespace nodec;
         //auto import_header_opened = ImGui::CollapsingHeader("Import");
 
         if (ImGui::BeginTabBar("TabBar"))
@@ -52,7 +79,9 @@ public:
                 export_path = temp_str_buffer;
 
                 if (ImGui::Button("Export")) {
+                    std::string dest_path = Formatter() << resource_path << "/" << export_path;
 
+                    ResourceExporter::ExportSceneGraph(scene->root_entites(), scene->registry(), *scene_serialization, dest_path);
                 }
                 //ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
                 ImGui::EndTabItem();
@@ -70,20 +99,22 @@ private:
     }
 
 
-    void on_import_gui() {
-
-    }
-
-    void on_export_gui() {
-
-    }
 
 private:
     std::string import_path;
-    std::string export_path;
+    std::string export_path{"level0.scene"};
 
     int import_target;
     int export_target;
     char temp_str_buffer[512]{ 0 };
+
+    std::string resource_path;
+    Scene* scene;
+    ResourceRegistry* resource_registry;
+    SceneSerialization* scene_serialization;
+
+    SceneEntity selected_entity;
+
+    SelectedEntityChangedSignal::Connection selected_entity_changed_signal_connection;
 
 };

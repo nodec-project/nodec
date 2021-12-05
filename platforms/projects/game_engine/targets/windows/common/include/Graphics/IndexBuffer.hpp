@@ -9,7 +9,7 @@ public:
         D3D11_BUFFER_DESC ibd = {};
         ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
         ibd.Usage = D3D11_USAGE_DEFAULT;
-        ibd.CPUAccessFlags - 0u;
+        ibd.CPUAccessFlags = 0u;
         ibd.MiscFlags = 0u;
         ibd.ByteWidth = size * sizeof(uint16_t);
         ibd.StructureByteStride = sizeof(uint16_t);

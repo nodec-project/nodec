@@ -18,9 +18,13 @@ class AssetImportWindow : public imelements::BaseWindow {
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
 
 public:
-    static void init(imelements::WindowManager& manager, const std::string& resource_path,
-                     scene_set::Scene* dest_scene,
-                     ResourceRegistry *resource_registry) {
+    static void init(
+        imelements::WindowManager& manager, 
+        const std::string& resource_path,
+        scene_set::Scene* dest_scene,
+        ResourceRegistry* resource_registry) 
+    {
+
         assert(resource_registry && dest_scene);
 
         auto& window = manager.get_window<AssetImportWindow>();
@@ -103,21 +107,21 @@ public:
 
                 for (unsigned int i = 0; i < current_scene->mNumMeshes; ++i) {
                     auto mesh = current_scene->mMeshes[i];
-                    std::string dest_path = Formatter() << resource_path_  << "/"
-                        << resource_name_prefix <<  resource_name_map_[Formatter() << "mesh-" << i].target;
+                    std::string dest_path = Formatter() << resource_path_ << "/"
+                        << resource_name_prefix << resource_name_map_[Formatter() << "mesh-" << i].target;
 
                     if (ResourceExporter::ExportMesh(mesh, dest_path)) {
                         export_messages_.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), Formatter() << "Mesh export success: " << dest_path);
                     }
                     else {
-                        export_messages_.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), 
-                                                      Formatter() << "Mesh export failed: " << dest_path << "\n"
-                                                      << "Make sure the file path exists."
+                        export_messages_.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
+                            Formatter() << "Mesh export failed: " << dest_path << "\n"
+                            << "Make sure the file path exists."
                         );
                     }
                 }
 
-                for (int i = 0; i < current_scene->mNumMaterials; ++i) {
+                for (unsigned int i = 0; i < current_scene->mNumMaterials; ++i) {
                     auto mat = current_scene->mMaterials[i];
                     std::string dest_path = Formatter() << resource_path_ << "/"
                         << resource_name_prefix << resource_name_map_[Formatter() << "material-" << i].target;
@@ -127,8 +131,8 @@ public:
                     }
                     else {
                         export_messages_.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
-                                                      Formatter() << "Material export failed: " << dest_path << "\n"
-                                                      << "Make sure the file path exists."
+                            Formatter() << "Material export failed: " << dest_path << "\n"
+                            << "Make sure the file path exists."
                         );
                     }
 
@@ -153,7 +157,7 @@ private:
 
         resource_name_map_.clear();
 
-        for (int i = 0; i < scene->mNumMeshes; ++i) {
+        for (unsigned int i = 0; i < scene->mNumMeshes; ++i) {
             auto mesh = scene->mMeshes[i];
 
             ResourceNameEntry entry;
@@ -189,12 +193,12 @@ private:
                 ImGui::TableSetupColumn("Target");
                 ImGui::TableHeadersRow();
 
-                for (int i = 0; i < current_scene->mNumMeshes; ++i) {
+                for (unsigned int i = 0; i < current_scene->mNumMeshes; ++i) {
                     ImGui::TableNextRow();
 
                     auto mesh = current_scene->mMeshes[i];
                     auto& entry = resource_name_map_[Formatter() << "mesh-" << i];
-                    
+
                     std::string label = Formatter() << "##mesh-" << i;
 
                     ImGui::TableNextColumn();
@@ -269,12 +273,12 @@ private:
                 //    aiString str;
                 //    mat->GetTexture(aiTextureType_DIFFUSE, j, &str);
                 //}
-            
+
             ImGui::TreePop();
         }
     }
 
-    void texture_resource_import_gui(aiMaterial *material, aiTextureType type) {
+    void texture_resource_import_gui(aiMaterial* material, aiTextureType type) {
         using namespace nodec;
 
         for (unsigned int i = 0; i < material->GetTextureCount(type); ++i) {
@@ -308,7 +312,7 @@ private:
     std::string resource_path_;
     ResourceRegistry* resource_registry_;
     scene_set::Scene* dest_scene_;
-    
+
     char source_path[256]{ 0 };
     bool last_import_failed{ false };
     Assimp::Importer importer;

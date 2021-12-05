@@ -27,7 +27,8 @@ Editor::Editor(Engine* engine)
 
     register_menu_item("Window/Entity Inspector",
         [=]() {
-            EntityInspectorWindow::init(window_manager(),
+            EntityInspectorWindow::init(
+                window_manager(),
                 &engine->scene_module().registry(),
                 &inspector_component_registry_impl(),
                 selection().active_scene_entity(),
@@ -45,7 +46,8 @@ Editor::Editor(Engine* engine)
 
     register_menu_item("Window/Asset Importer",
         [=]() {
-            AssetImportWindow::init(window_manager(),
+            AssetImportWindow::init(
+                window_manager(),
                 engine->resources_module().resource_path(),
                 &engine->scene_module(),
                 &engine->resources_module().registry());
@@ -53,7 +55,14 @@ Editor::Editor(Engine* engine)
 
     register_menu_item("Window/Scene Serialization",
         [=]() {
-            SceneSerializationWindow::init(window_manager());
+            SceneSerializationWindow::init(
+                window_manager(),
+                &engine->scene_module(),
+                &engine->scene_serialization(),
+                engine->resources_module().resource_path(),
+                selection().active_scene_entity(),
+                selection().active_scene_entity_changed()
+            );
         });
 
 

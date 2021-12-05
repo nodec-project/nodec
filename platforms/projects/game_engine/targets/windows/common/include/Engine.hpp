@@ -99,6 +99,7 @@ public:
     ScreenModule& screen_module() { return *screen_module_; }
     SceneModule& scene_module() { return *scene_module_; }
     ResourcesModule& resources_module() { return *resources_module_; }
+    SceneSerialization& scene_serialization() { return *scene_serialization_module_; }
 
 private:
     // imgui must be destroyed after window.

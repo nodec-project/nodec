@@ -1,12 +1,8 @@
 #pragma once
 
-#include <assimp/scene.h>
-#include <assimp/matrix4x4.h>
-
 #define CEREAL_THREAD_SAFE 1
-#include <cereal/cereal.hpp>
-#include <cereal/archives/json.hpp>
-#include <cereal/archives/portable_binary.hpp>
+
+#include <SceneSerialization/SerializableBasicComponents.hpp>
 
 #include <scene_set/scene_registry.hpp>
 #include <scene_set/scene.hpp>
@@ -15,8 +11,16 @@
 #include <rendering/resources/material.hpp>
 #include <serialization/rendering/resources/mesh.hpp>
 #include <serialization/rendering/resources/material.hpp>
+#include <scene_serialization/scene_serialization.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
+
+#include <assimp/scene.h>
+#include <assimp/matrix4x4.h>
+
+#include <cereal/cereal.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/portable_binary.hpp>
 
 #include <fstream>
 
@@ -175,6 +179,55 @@ inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, cons
     using namespace nodec::entities;
 
     internal::ProcessNode(pScene->mRootNode, pScene, nameMap, null_entity, destScene, resourceRegistry);
+}
+
+
+namespace internal {
+
+inline std::shared_ptr<scene_serialization::SerializableEntityNode> ProcessSceneEntityNode(
+    scene_set::SceneEntity entity,
+    const scene_set::SceneRegistry& sceneRegistry,
+    const scene_serialization::SceneSerialization& sceneSerializaton) 
+{
+
+    auto node = sceneSerializaton.make_serializable_node(entity, sceneRegistry);
+
+
+    return node;
+}
+
+}
+
+inline bool ExportSceneGraph(
+    const std::vector<scene_set::SceneEntity>& roots,
+    const scene_set::SceneRegistry& sceneRegistry,
+    const scene_serialization::SceneSerialization& sceneSerialization,
+    const std::string& destPath) {
+
+    using namespace nodec;
+    using namespace scene_serialization;
+
+    std::ofstream out(destPath, std::ios::binary);
+
+    if (!out) {
+        return false;
+    }
+
+    cereal::JSONOutputArchive archive(out);
+
+
+    SerializableSceneGraph sceneGraph;
+
+    for (auto& root : roots) {
+        auto node = internal::ProcessSceneEntityNode(root, sceneRegistry, sceneSerialization);
+        sceneGraph.roots.push_back(node);
+        
+        
+    }
+
+    archive(cereal::make_nvp("scene_graph", sceneGraph));
+
+    return true;
 }
 
 
