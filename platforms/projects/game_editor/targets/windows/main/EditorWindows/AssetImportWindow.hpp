@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../AssetExporter.hpp"
+#include "../ResourceExporter.hpp"
 
 #include <imelements/window.hpp>
 #include <imgui.h>
@@ -106,7 +106,7 @@ public:
                     std::string dest_path = Formatter() << resource_path_  << "/"
                         << resource_name_prefix <<  resource_name_map_[Formatter() << "mesh-" << i].target;
 
-                    if (AssetExporter::ExportMesh(mesh, dest_path)) {
+                    if (ResourceExporter::ExportMesh(mesh, dest_path)) {
                         export_messages_.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), Formatter() << "Mesh export success: " << dest_path);
                     }
                     else {
@@ -122,7 +122,7 @@ public:
                     std::string dest_path = Formatter() << resource_path_ << "/"
                         << resource_name_prefix << resource_name_map_[Formatter() << "material-" << i].target;
 
-                    if (AssetExporter::ExportMaterial(mat, dest_path)) {
+                    if (ResourceExporter::ExportMaterial(mat, dest_path)) {
                         export_messages_.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), Formatter() << "Material export success: " << dest_path);
                     }
                     else {
@@ -134,7 +134,7 @@ public:
 
                 }
 
-                AssetExporter::ExportScene(current_scene, *dest_scene_, resource_name_map_, *resource_registry_);
+                ResourceExporter::ExportScene(current_scene, *dest_scene_, resource_name_map_, *resource_registry_);
             }
 
             for (auto& record : export_messages_) {
@@ -285,7 +285,7 @@ private:
     }
 
 private:
-    using ResourceNameEntry = AssetExporter::ResourceNameEntry;
+    using ResourceNameEntry = ResourceExporter::ResourceNameEntry;
 
     struct MessageRecord {
         MessageRecord(const ImVec4& color, const std::string& message)
@@ -315,7 +315,7 @@ private:
     const aiScene* current_scene{ nullptr };
 
     char resource_name_prefix[128]{ 0 };
-    AssetExporter::ResourceNameMap resource_name_map_;
+    ResourceExporter::ResourceNameMap resource_name_map_;
     std::vector<MessageRecord> export_messages_;
 
     char temp_str_buffer[128]{ 0 };

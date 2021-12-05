@@ -23,7 +23,7 @@
 
 // * <https://learnopengl.com/Model-Loading/Model>
 
-namespace AssetExporter {
+namespace ResourceExporter {
 
 
 struct ResourceNameEntry {
