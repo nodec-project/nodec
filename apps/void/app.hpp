@@ -5,17 +5,31 @@
 #ifndef APP__APP_HPP_
 #define APP__APP_HPP_
 
+#define CEREAL_THREAD_SAFE 1
+
+#define EDITOR_MODE
+
+
 #include <nodec_engine/nodec_engine.hpp>
 #include <screen/screen.hpp>
 #include <scene_set/scene.hpp>
+#include <scene_set/components/basic.hpp>
 #include <resources/resources.hpp>
 #include <rendering/components/mesh_renderer.hpp>
 #include <rendering/resources/mesh.hpp>
+#include <scene_serialization/scene_serialization.hpp>
 
 #include <nodec/logging.hpp>
 
 
-#define EDITOR_MODE
+#include <cereal/types/polymorphic.hpp>
+
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/portable_binary.hpp>
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/xml.hpp>
+
+
 
 #ifdef EDITOR_MODE
 #include <scene_editor/scene_editor.hpp>

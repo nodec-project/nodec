@@ -10,6 +10,7 @@ using namespace screen;
 using namespace resources;
 using namespace rendering::components;
 using namespace rendering::resources;
+using namespace scene_serialization;
 
 
 class HelloWorld {
@@ -19,10 +20,44 @@ public:
         int my_field;
     };
 
+    class SerializableHelloComponent : public scene_serialization::BaseSerializableComponent {
+    public:
+        SerializableHelloComponent()
+            : BaseSerializableComponent(this) {
+
+        }
+
+        int my_field;
+
+        template<class Archive>
+        void serialize(Archive& archive) {
+
+            archive(cereal::make_nvp("my_field", my_field));
+
+        }
+    };
+
     HelloWorld(NodecEngine& engine) {
+
         engine.stepped().connect([=](NodecEngine& engine) { on_stepped(engine); });
         engine.initialized().connect([=](NodecEngine& engine) { on_initialized(engine); });
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
+
+        {
+            auto& scene_serialization = engine.get_module<SceneSerialization>();
+
+            scene_serialization.register_component<HelloComponent, SerializableHelloComponent>(
+                [](const auto& comp) {
+                    auto serializable = std::make_shared<SerializableHelloComponent>();
+                    serializable->my_field = comp.my_field;
+                    return serializable;
+                },
+                [](const auto& serializable, auto entity, SceneRegistry& registry) {
+                    registry.emplace_component<HelloComponent>(entity);
+                    auto& comp = registry.get_component<HelloComponent>(entity);
+                    comp.my_field = serializable.my_field;
+                });
+        }
 
 #ifdef EDITOR_MODE
         using namespace scene_editor;
@@ -80,6 +115,12 @@ private:
     
     std::shared_future<std::shared_ptr<Mesh>> mesh_future;
 };
+
+
+
+CEREAL_REGISTER_TYPE(HelloWorld::SerializableHelloComponent);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(BaseSerializableComponent, HelloWorld::SerializableHelloComponent);
+
 
 void nodec_engine::on_boot(NodecEngine& engine) {
     using namespace nodec;

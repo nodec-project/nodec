@@ -1,8 +1,5 @@
 #pragma once
 
-#define CEREAL_THREAD_SAFE 1
-
-#include <SceneSerialization/SerializableBasicComponents.hpp>
 
 #include <scene_set/scene_registry.hpp>
 #include <scene_set/scene.hpp>
@@ -11,7 +8,10 @@
 #include <rendering/resources/material.hpp>
 #include <serialization/rendering/resources/mesh.hpp>
 #include <serialization/rendering/resources/material.hpp>
+#include <serialization/scene_set/components/basic.hpp>
+#include <serialization/rendering/components/mesh_renderer.hpp>
 #include <scene_serialization/scene_serialization.hpp>
+#include <scene_serialization/serializable_scene_graph.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -213,6 +213,7 @@ inline bool ExportSceneGraph(
         return false;
     }
 
+    
     cereal::JSONOutputArchive archive(out);
 
 

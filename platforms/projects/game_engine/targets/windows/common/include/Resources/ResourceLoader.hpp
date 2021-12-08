@@ -13,7 +13,6 @@
 #include <nodec/resource_management/resource_registry.hpp>
 #include <nodec/concurrent/thread_pool_executor.hpp>
 
-#define CEREAL_THREAD_SAFE 1
 #include <cereal/cereal.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/archives/portable_binary.hpp>
