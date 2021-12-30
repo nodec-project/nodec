@@ -189,9 +189,16 @@ inline std::shared_ptr<scene_serialization::SerializableEntityNode> ProcessScene
     const scene_set::SceneRegistry& sceneRegistry,
     const scene_serialization::SceneSerialization& sceneSerializaton) 
 {
+    using namespace scene_set::components;
 
     auto node = sceneSerializaton.make_serializable_node(entity, sceneRegistry);
 
+    auto& hier = sceneRegistry.get_component<Hierarchy>(entity);
+
+    for (auto childEntity : hier.children) {
+        auto child = ProcessSceneEntityNode(childEntity, sceneRegistry, sceneSerializaton);
+        node->children.push_back(child);
+    }
 
     return node;
 }
@@ -212,9 +219,10 @@ inline bool ExportSceneGraph(
     if (!out) {
         return false;
     }
-
+    using Options = cereal::JSONOutputArchive::Options;
+    //Options options(324, Options::IndentChar::space, 2U);
     
-    cereal::JSONOutputArchive archive(out);
+    cereal::JSONOutputArchive archive(out, Options::NoIndent());
 
 
     SerializableSceneGraph sceneGraph;
@@ -222,8 +230,6 @@ inline bool ExportSceneGraph(
     for (auto& root : roots) {
         auto node = internal::ProcessSceneEntityNode(root, sceneRegistry, sceneSerialization);
         sceneGraph.roots.push_back(node);
-        
-        
     }
 
     archive(cereal::make_nvp("scene_graph", sceneGraph));
