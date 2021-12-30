@@ -17,10 +17,16 @@ public:
 
     }
 
+    BaseSerializableComponent()
+        : type_id_{ nodec::type_seq<BaseSerializableComponent>::value() } {
+
+    }
+
     virtual ~BaseSerializableComponent() {};
 
     template<class Archive>
     void serialize(Archive&) {}
+
 
 public:
     nodec::TypeId type_id() const { return type_id_; }

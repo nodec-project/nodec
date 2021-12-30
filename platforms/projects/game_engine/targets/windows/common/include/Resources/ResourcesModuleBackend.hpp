@@ -3,7 +3,7 @@
 #include "ResourceLoader.hpp"
 
 #include <resources/impl/resources_module.hpp>
-#include <rendering/resources/mesh.hpp>
+
 
 
 class ResourcesModuleBackend : public resources::impl::ResourcesModule {
@@ -21,6 +21,8 @@ public:
     void setup_on_runtime(Graphics* graphics) {
         using namespace nodec;
         using namespace rendering::resources;
+        using namespace scene_serialization;
+
 
         resource_path_changed_connection_.disconnect();
 
@@ -49,6 +51,14 @@ public:
             },
             [=](auto& name, auto notifyer) {
                 return resource_loader_->LoadAsync<Material, MaterialBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
+
+        registry().register_resource_loader<SerializableSceneGraph>(
+            [=](auto& name) {
+                return resource_loader_->LoadDirect<SerializableSceneGraph, SerializableSceneGraph>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto& name, auto notifyer) {
+                return resource_loader_->LoadAsync<SerializableSceneGraph, SerializableSceneGraph>(name, Formatter() << resource_path() << "/" << name, notifyer);
             });
     }
 

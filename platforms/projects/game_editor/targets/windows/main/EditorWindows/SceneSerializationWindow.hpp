@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../ResourceExporter.hpp"
+#include "../ResourceImporter.hpp"
 
 #include <imelements/window.hpp>
 #include <scene_serialization/scene_serialization.hpp>
@@ -22,6 +23,7 @@ public:
         scene_set::Scene* scene,
         SceneSerialization* scene_serialization,
         const std::string& resource_path,
+        ResourceRegistry* resource_registry,
         SceneEntity selected_entity,
         SelectedEntityChangedSignal::SignalInterface selected_entity_changed_signal
     ) {
@@ -31,6 +33,7 @@ public:
         window.scene = scene;
         window.scene_serialization = scene_serialization;
         window.resource_path = resource_path;
+        window.resource_registry = resource_registry;
 
         window.selected_entity = selected_entity;
 
@@ -50,6 +53,8 @@ public:
 
     void on_gui() override {
         using namespace nodec;
+        using namespace nodec::entities;
+
         //auto import_header_opened = ImGui::CollapsingHeader("Import");
 
         if (ImGui::BeginTabBar("TabBar"))
@@ -63,9 +68,8 @@ public:
                 ImGui::Combo("Target", &import_target, "Root\0Selected Entity");
 
                 if (ImGui::Button("Import")) {
-
+                    ResourceImporter::ImportSceneGraph(import_path, null_entity, *resource_registry, *scene, *scene_serialization);
                 }
-                //ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
 
                 ImGui::EndTabItem();
             }
@@ -81,7 +85,26 @@ public:
                 if (ImGui::Button("Export")) {
                     std::string dest_path = Formatter() << resource_path << "/" << export_path;
 
-                    ResourceExporter::ExportSceneGraph(scene->root_entites(), scene->registry(), *scene_serialization, dest_path);
+                    switch (export_target) {
+                    case 0: // Root
+                    {
+                        ResourceExporter::ExportSceneGraph(scene->root_entites(), scene->registry(), *scene_serialization, dest_path);
+                    }
+                        break;
+
+                    case 1: // Selected Entity
+                    {
+                        if (scene->registry().is_valid(selected_entity)) {
+                            std::vector<SceneEntity> roots{selected_entity};
+                            ResourceExporter::ExportSceneGraph(roots, scene->registry(), *scene_serialization, dest_path);
+                        }
+                    }
+                        break;
+
+                    default:
+                        break;
+                    }
+
                 }
                 //ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
                 ImGui::EndTabItem();
@@ -97,7 +120,6 @@ private:
         auto null_pos = std::min(source.size(), buffer_size - 1);
         buffer[null_pos] = '\0';
     }
-
 
 
 private:

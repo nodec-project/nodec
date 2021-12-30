@@ -63,6 +63,7 @@ Editor::Editor(Engine* engine)
                 &engine->scene_module(),
                 &engine->scene_serialization(),
                 engine->resources_module().resource_path(),
+                &engine->resources_module().registry(),
                 selection().active_scene_entity(),
                 selection().active_scene_entity_changed()
             );

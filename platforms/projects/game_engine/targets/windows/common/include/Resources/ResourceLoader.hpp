@@ -9,6 +9,7 @@
 #include <serialization/rendering/resources/mesh.hpp>
 #include <serialization/rendering/resources/material.hpp>
 #include <serialization/rendering/resources/shader.hpp>
+#include <scene_serialization/serializable_scene_graph.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 #include <nodec/concurrent/thread_pool_executor.hpp>
@@ -29,7 +30,8 @@ class ResourceLoader {
     template<typename T>
     using ResourcePtr = std::shared_ptr<T>;
 
-    using Mesh = rendering::resources::Mesh;
+    using SerializableSceneGraph = scene_serialization::SerializableSceneGraph;
+
 
     static void HandleException(const std::string& identifier) {
         using namespace nodec;
@@ -235,6 +237,34 @@ public:
         return material;
     }
 
+    template<>
+    std::shared_ptr<SerializableSceneGraph> LoadBackend<SerializableSceneGraph>(const std::string& path) const noexcept {
+        using namespace nodec;
+
+        std::ifstream file(path, std::ios::binary);
+
+        if (!file) {
+            logging::WarnStream(__FILE__, __LINE__) << "Failed to open resource file. path: " << path;
+            // return empty mesh.
+            return {};
+        }
+
+        cereal::JSONInputArchive archive(file);
+
+        SerializableSceneGraph graph;
+
+        try {
+            archive(graph);
+        }
+        catch (...) {
+            HandleException(Formatter() << "SerializableSceneGraph::" << path);
+            return {};
+        }
+
+        auto out = std::make_shared<SerializableSceneGraph>();
+        *out = std::move(graph);
+        return out;
+    }
 
 private:
     nodec::concurrent::ThreadPoolExecutor mExecutor;

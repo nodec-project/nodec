@@ -39,9 +39,9 @@ using ResourceNameMap = std::unordered_map<std::string, ResourceNameEntry>;
 
 namespace internal {
 inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceNameMap& nameMap,
-                        scene_set::SceneEntity parentEntity,
-                        scene_set::Scene& destScene,
-                        nodec::resource_management::ResourceRegistry& resourceRegistry) {
+    scene_set::SceneEntity parentEntity,
+    scene_set::Scene& destScene,
+    nodec::resource_management::ResourceRegistry& resourceRegistry) {
     using namespace nodec;
     using namespace nodec::entities;
     using namespace rendering::components;
@@ -81,10 +81,10 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
         auto meshIndex = pNode->mMeshes[i];
         auto materialIndex = pScene->mMeshes[meshIndex]->mMaterialIndex;
 
-        auto &meshPath = nameMap.at(Formatter() << "mesh-" << meshIndex).target;
+        auto& meshPath = nameMap.at(Formatter() << "mesh-" << meshIndex).target;
         auto mesh = resourceRegistry.get_resource<Mesh>(meshPath).get();
         meshRenderer->meshes.push_back(mesh);
-        
+
         auto& materialPath = nameMap.at(Formatter() << "material-" << materialIndex).target;
         auto material = resourceRegistry.get_resource<Material>(materialPath).get();
         meshRenderer->materials.push_back(material);
@@ -108,14 +108,14 @@ inline bool ExportMesh(aiMesh* pMesh, const std::string& destPath) {
     if (!out) {
         return false;
     }
-    
+
     //cereal::JSONOutputArchive archive(out);
     cereal::PortableBinaryOutputArchive archive(out);
 
     SerializableMesh mesh;
 
     for (unsigned int i = 0; i < pMesh->mNumVertices; ++i) {
-        auto &position = pMesh->mVertices[i];
+        auto& position = pMesh->mVertices[i];
         auto& normal = pMesh->mNormals[i];
 
 
@@ -175,7 +175,7 @@ inline bool ExportMaterial(aiMaterial* pMaterial, const std::string& destPath) {
 }
 
 inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, const ResourceNameMap& nameMap,
-                        nodec::resource_management::ResourceRegistry& resourceRegistry) {
+    nodec::resource_management::ResourceRegistry& resourceRegistry) {
     using namespace nodec::entities;
 
     internal::ProcessNode(pScene->mRootNode, pScene, nameMap, null_entity, destScene, resourceRegistry);
@@ -187,7 +187,7 @@ namespace internal {
 inline std::shared_ptr<scene_serialization::SerializableEntityNode> ProcessSceneEntityNode(
     scene_set::SceneEntity entity,
     const scene_set::SceneRegistry& sceneRegistry,
-    const scene_serialization::SceneSerialization& sceneSerializaton) 
+    const scene_serialization::SceneSerialization& sceneSerializaton)
 {
     using namespace scene_set::components;
 
@@ -221,7 +221,7 @@ inline bool ExportSceneGraph(
     }
     using Options = cereal::JSONOutputArchive::Options;
     //Options options(324, Options::IndentChar::space, 2U);
-    
+
     cereal::JSONOutputArchive archive(out, Options::NoIndent());
 
 

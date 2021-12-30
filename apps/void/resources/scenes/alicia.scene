@@ -1,0 +1,15970 @@
+{
+"scene_graph": {
+"roots": [
+{
+"ptr_wrapper": {
+"id": 2147483649,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483650,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483651,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 2147483649,
+"polymorphic_name": "scene_set::components::SerializableTransform",
+"ptr_wrapper": {
+"id": 2147483652,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2147483650,
+"polymorphic_name": "scene_set::components::SerializableName",
+"ptr_wrapper": {
+"id": 2147483653,
+"data": {
+"name": "other02"
+}
+}
+},
+{
+"polymorphic_id": 2147483651,
+"polymorphic_name": "rendering::components::SerializableMeshRenderer",
+"ptr_wrapper": {
+"id": 2147483654,
+"data": {
+"meshes": [
+""
+],
+"materials": [
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483655,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483656,
+"data": {
+"name": "other02_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483657,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483658,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483659,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483660,
+"data": {
+"name": "other"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483661,
+"data": {
+"meshes": [
+"",
+"",
+"",
+"",
+""
+],
+"materials": [
+"",
+"",
+"",
+"",
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483662,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483663,
+"data": {
+"name": "other_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483664,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483665,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483666,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483667,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483668,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483669,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483670,
+"data": {
+"name": "face"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483671,
+"data": {
+"meshes": [
+"",
+"",
+""
+],
+"materials": [
+"",
+"",
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483672,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483673,
+"data": {
+"name": "face_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483674,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483675,
+"data": {
+"name": "face_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483676,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483677,
+"data": {
+"name": "face_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483678,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483679,
+"data": {
+"name": "face_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483680,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483681,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483682,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483683,
+"data": {
+"name": "Cylinder001"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483684,
+"data": {
+"meshes": [
+""
+],
+"materials": [
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483685,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483686,
+"data": {
+"name": "Cylinder001_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483687,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483688,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483689,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483690,
+"data": {
+"name": "body"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483691,
+"data": {
+"meshes": [
+"",
+"",
+"",
+""
+],
+"materials": [
+"",
+"",
+"",
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483692,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483693,
+"data": {
+"name": "body_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483694,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483695,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483696,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483697,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483698,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483699,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483700,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483701,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483702,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483703,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483704,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483705,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483706,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -7.431814193725586,
+"z": -8.149510383605957
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483707,
+"data": {
+"name": "toe_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483708,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": -40.794029235839847
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.028357351198792459,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9995978474617004
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483709,
+"data": {
+"name": "ankle_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483710,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": -35.27997970581055
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.028357353061437608,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9995978474617004
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483711,
+"data": {
+"name": "knee_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483712,
+"data": {
+"local_position": {
+"x": 5.86279821395874,
+"y": -0.08902740478515625,
+"z": -8.298675537109375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483713,
+"data": {
+"name": "leg_L"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483714,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483715,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483716,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483717,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483718,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -7.431813716888428,
+"z": -8.149510383605957
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483719,
+"data": {
+"name": "toe_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483720,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": -40.794029235839847
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.028357353061437608,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9995978474617004
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483721,
+"data": {
+"name": "ankle_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483722,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": -35.27997970581055
+},
+"local_scale": {
+"x": 1.0,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.028357401490211488,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9995979070663452
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483723,
+"data": {
+"name": "knee_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483724,
+"data": {
+"local_position": {
+"x": -5.863000392913818,
+"y": -0.08902740478515625,
+"z": -8.298675537109375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483725,
+"data": {
+"name": "leg_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483726,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 7.5019073486328129
+},
+"local_scale": {
+"x": 1.0299999713897706,
+"y": 1.0299999713897706,
+"z": 1.0299999713897706
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483727,
+"data": {
+"name": "lowerbody"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483728,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483729,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483730,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483731,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483732,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483733,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483734,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483735,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483736,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483737,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483738,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483739,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483740,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483741,
+"data": {
+"name": "skirt_07_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483742,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9999997019767761,
+"y": -0.9999998807907105,
+"z": -1.0000001192092896
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483743,
+"data": {
+"name": "skirt_07_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483744,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483745,
+"data": {
+"name": "skirt_07_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483746,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003509789705277,
+"y": -1.127939519562915e-8,
+"z": 5.344809927976257e-9,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483747,
+"data": {
+"name": "skirt_07_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483748,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 0.00000762939453125,
+"z": 9.999996185302735
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483749,
+"data": {
+"name": "skirt_07_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483750,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0000001192092896,
+"y": -1.000000238418579,
+"z": -0.9999998807907105
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483751,
+"data": {
+"name": "skirt_07_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483752,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483753,
+"data": {
+"name": "skirt_07_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483754,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9999998807907105,
+"y": -0.9999997615814209,
+"z": -1.0000001192092896
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483755,
+"data": {
+"name": "skirt_07_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483756,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483757,
+"data": {
+"name": "skirt_07_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483758,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": -0.24396830797195435,
+"y": 0.8453801870346069,
+"z": 0.4565645158290863,
+"w": -0.13175997138023377
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483759,
+"data": {
+"name": "skirt_07_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483760,
+"data": {
+"local_position": {
+"x": -5.371000289916992,
+"y": 7.824948787689209,
+"z": 4.1018524169921879
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483761,
+"data": {
+"name": "skirt_07_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483762,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483763,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483764,
+"data": {
+"local_position": {
+"x": 4.76837158203125e-7,
+"y": -0.00000762939453125,
+"z": -10.000003814697266
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003510534763336,
+"y": 2.2001291455353568e-8,
+"z": 1.426746631949527e-8,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483765,
+"data": {
+"name": "skirt_04_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483766,
+"data": {
+"local_position": {
+"x": 9.333052635192871,
+"y": 3.687521457672119,
+"z": 4.101844787597656
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": -0.24952000379562379,
+"y": -0.40441495180130007,
+"z": 0.7488198280334473,
+"w": 0.462014377117157
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483767,
+"data": {
+"name": "skirt_04_01"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483768,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483769,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483770,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483771,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483772,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483773,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483774,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483775,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483776,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 1.7319374084472657
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483777,
+"data": {
+"name": "fore3_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483778,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 2.384185791015625e-7,
+"z": 2.6951026916503908
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483779,
+"data": {
+"name": "fore2_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483780,
+"data": {
+"local_position": {
+"x": -0.50323486328125,
+"y": -1.529707670211792,
+"z": 5.246076583862305
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.03085261955857277,
+"y": 0.03181230276823044,
+"z": 0.0003641698567662388,
+"w": 0.9990174770355225
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483781,
+"data": {
+"name": "fore1_L"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483782,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483783,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483784,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483785,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": -0.0000019073486328125,
+"z": 1.608978271484375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483786,
+"data": {
+"name": "third3_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483787,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": -0.0000019073486328125,
+"z": 2.3841552734375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483788,
+"data": {
+"name": "third2_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483789,
+"data": {
+"local_position": {
+"x": -0.25168609619140627,
+"y": 1.138088583946228,
+"z": 5.26472282409668
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.02462221495807171,
+"y": 0.024829862639307977,
+"z": -0.09434876590967179,
+"w": 0.9949249029159546
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483790,
+"data": {
+"name": "third1_L"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483791,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483792,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483793,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483794,
+"data": {
+"local_position": {
+"x": 0.00000762939453125,
+"y": 0.0,
+"z": 2.1306076049804689
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483795,
+"data": {
+"name": "thumb2_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483796,
+"data": {
+"local_position": {
+"x": 0.000003814697265625,
+"y": 0.00000762939453125,
+"z": 3.2389907836914064
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.20574863255023957,
+"y": -0.04433178901672363,
+"z": 0.044016581028699878,
+"w": 0.9766088128089905
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483797,
+"data": {
+"name": "thumb1_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483798,
+"data": {
+"local_position": {
+"x": 0.8030471801757813,
+"y": -1.570422649383545,
+"z": 1.015920639038086
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.17153427004814149,
+"y": 0.15974664688110352,
+"z": -0.33390599489212038,
+"w": 0.9129971265792847
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483799,
+"data": {
+"name": "thumb0_L"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483800,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483801,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483802,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483803,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 1.8829154968261719
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483804,
+"data": {
+"name": "middle3_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483805,
+"data": {
+"local_position": {
+"x": -0.0000152587890625,
+"y": -4.76837158203125e-7,
+"z": 3.0853424072265627
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483806,
+"data": {
+"name": "middle2_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483807,
+"data": {
+"local_position": {
+"x": -0.5240097045898438,
+"y": -0.15895503759384156,
+"z": 5.301458358764648
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.0025531891733407976,
+"y": 0.02537437342107296,
+"z": -0.024543453007936479,
+"w": 0.9993734359741211
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483808,
+"data": {
+"name": "middle1_L"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483809,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483810,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483811,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483812,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 1.3443107604980469
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483813,
+"data": {
+"name": "little3_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483814,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 0.0000019073486328125,
+"z": 1.98388671875
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483815,
+"data": {
+"name": "little2_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483816,
+"data": {
+"local_position": {
+"x": 0.14739990234375,
+"y": 2.2392120361328127,
+"z": 4.848421096801758
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.03294028341770172,
+"y": 0.028930142521858217,
+"z": -0.10518128424882889,
+"w": 0.993486225605011
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483817,
+"data": {
+"name": "little1_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483818,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 4.172325134277344e-7,
+"z": 21.77315902709961
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483819,
+"data": {
+"name": "wrist_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483820,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 4.76837158203125e-7,
+"z": 20.903034210205079
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483821,
+"data": {
+"name": "elbow_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483822,
+"data": {
+"local_position": {
+"x": 0.23514556884765626,
+"y": 1.7881393432617188e-7,
+"z": 5.435882568359375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -5.272971392855652e-8,
+"y": 0.22109770774841309,
+"z": 2.325883059484113e-7,
+"w": 0.9752516746520996
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483823,
+"data": {
+"name": "arm_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483824,
+"data": {
+"local_position": {
+"x": 1.643333911895752,
+"y": 0.34066009521484377,
+"z": 13.897102355957032
+},
+"local_scale": {
+"x": 1.0,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.043442241847515109,
+"y": 0.7777493000030518,
+"z": 0.05408220738172531,
+"w": 0.6247351169586182
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483825,
+"data": {
+"name": "shoulder_L"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483826,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483827,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483828,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483829,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483830,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483831,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483832,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483833,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483834,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483835,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483836,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483837,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483838,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483839,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483840,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483841,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483842,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483843,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483844,
+"data": {
+"name": "eye_light_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483845,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699998497962952,
+"y": 0.9699996709823608,
+"z": 0.9699996709823608
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483846,
+"data": {
+"name": "eye_light_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483847,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483848,
+"data": {
+"name": "eye_light_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483849,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.012805440463125706,
+"y": 0.0028842580504715444,
+"z": 0.14227011799812318,
+"w": 0.9897408485412598
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483850,
+"data": {
+"name": "eye_light_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483851,
+"data": {
+"local_position": {
+"x": 2.7644152641296388,
+"y": -1.3403369188308716,
+"z": 4.640472412109375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483852,
+"data": {
+"name": "eye_light_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483853,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483854,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483855,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483856,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483857,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483858,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483859,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483860,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483861,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483862,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483863,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483864,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483865,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483866,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483867,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483868,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483869,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483870,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483871,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483872,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483873,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483874,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483875,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483876,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483877,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483878,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483879,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483880,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483881,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483882,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483883,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483884,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483885,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483886,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483887,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483888,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483889,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483890,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483891,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483892,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483893,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483894,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483895,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483896,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483897,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483898,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483899,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483900,
+"data": {
+"name": "hair8_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483901,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700008034706116,
+"y": -0.9700009822845459,
+"z": -0.970000147819519
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483902,
+"data": {
+"name": "hair8_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483903,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483904,
+"data": {
+"name": "hair8_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483905,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.1777031570672989,
+"y": 0.09744693338871002,
+"z": -0.015155453234910965,
+"w": 0.979130208492279
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483906,
+"data": {
+"name": "hair8_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483907,
+"data": {
+"local_position": {
+"x": -0.000003814697265625,
+"y": 0.0,
+"z": 7.1240386962890629
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483908,
+"data": {
+"name": "hair8_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483909,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309269428253174,
+"y": -1.030927062034607,
+"z": -1.0309271812438965
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483910,
+"data": {
+"name": "hair7_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483911,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483912,
+"data": {
+"name": "hair7_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483913,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700008630752564,
+"y": -0.970000684261322,
+"z": -0.9700006246566773
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483914,
+"data": {
+"name": "hair7_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483915,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483916,
+"data": {
+"name": "hair7_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483917,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08734690397977829,
+"y": 1.3998182168961649e-7,
+"z": 1.0950302709034077e-7,
+"w": 0.9961779117584229
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483918,
+"data": {
+"name": "hair7_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483919,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.00000762939453125,
+"z": 13.5609130859375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483920,
+"data": {
+"name": "hair7_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483921,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309267044067383,
+"y": -1.0309278964996338,
+"z": -1.0309274196624756
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483922,
+"data": {
+"name": "hair6_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483923,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483924,
+"data": {
+"name": "hair6_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483925,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700010418891907,
+"y": -0.9699999690055847,
+"z": -0.9700003862380981
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483926,
+"data": {
+"name": "hair6_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483927,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483928,
+"data": {
+"name": "hair6_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483929,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 7.598830364941023e-8,
+"y": -0.01932261325418949,
+"z": 7.598828233312816e-8,
+"w": 0.9998133182525635
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483930,
+"data": {
+"name": "hair6_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483931,
+"data": {
+"local_position": {
+"x": -0.0000057220458984375,
+"y": 0.00000762939453125,
+"z": 19.249553680419923
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483932,
+"data": {
+"name": "hair6_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483933,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309271812438965,
+"y": -1.0309277772903443,
+"z": -1.0309276580810547
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483934,
+"data": {
+"name": "hair5_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483935,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483936,
+"data": {
+"name": "hair5_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483937,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700005650520325,
+"y": -0.9700000882148743,
+"z": -0.9700002074241638
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483938,
+"data": {
+"name": "hair5_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483939,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483940,
+"data": {
+"name": "hair5_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483941,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.06472227722406388,
+"y": -0.052798375487327579,
+"z": 0.01386132650077343,
+"w": 0.9964091777801514
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483942,
+"data": {
+"name": "hair5_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483943,
+"data": {
+"local_position": {
+"x": 0.0000019073486328125,
+"y": -0.00000762939453125,
+"z": 14.550010681152344
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483944,
+"data": {
+"name": "hair5_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483945,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.030927062034607,
+"y": -1.0309275388717652,
+"z": -1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483946,
+"data": {
+"name": "hair4_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483947,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483948,
+"data": {
+"name": "hair4_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483949,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700007438659668,
+"y": -0.9700002670288086,
+"z": -0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483950,
+"data": {
+"name": "hair4_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483951,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483952,
+"data": {
+"name": "hair4_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483953,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.15415634214878083,
+"y": -0.046941328793764117,
+"z": 0.009021350182592869,
+"w": 0.9868895411491394
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483954,
+"data": {
+"name": "hair4_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483955,
+"data": {
+"local_position": {
+"x": 0.000209808349609375,
+"y": 0.000423431396484375,
+"z": 14.549995422363282
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483956,
+"data": {
+"name": "hair4_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483957,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309276580810547,
+"y": -1.0309278964996338,
+"z": -1.0309276580810547
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483958,
+"data": {
+"name": "hair3_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483959,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483960,
+"data": {
+"name": "hair3_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483961,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.970000147819519,
+"y": -0.9699999690055847,
+"z": -0.970000147819519
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483962,
+"data": {
+"name": "hair3_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483963,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483964,
+"data": {
+"name": "hair3_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483965,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.028482770547270776,
+"y": -0.03216727823019028,
+"z": 0.007526236120611429,
+"w": 0.9990482330322266
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483966,
+"data": {
+"name": "hair3_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483967,
+"data": {
+"local_position": {
+"x": 6.556510925292969e-7,
+"y": 0.00006866455078125,
+"z": 10.155685424804688
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483968,
+"data": {
+"name": "hair3_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483969,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.030927300453186,
+"y": -1.0309276580810547,
+"z": -1.0309275388717652
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483970,
+"data": {
+"name": "hair2_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483971,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483972,
+"data": {
+"name": "hair2_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483973,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700005054473877,
+"y": -0.9700002074241638,
+"z": -0.9700002670288086
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483974,
+"data": {
+"name": "hair2_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483975,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483976,
+"data": {
+"name": "hair2_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483977,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.11794775724411011,
+"y": -0.004631517920643091,
+"z": -0.006201889365911484,
+"w": 0.9929896593093872
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483978,
+"data": {
+"name": "hair2_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483979,
+"data": {
+"local_position": {
+"x": 0.14653834700584413,
+"y": -1.1372966766357422,
+"z": 11.936492919921875
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483980,
+"data": {
+"name": "hair2_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483981,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309268236160279,
+"y": -1.0309274196624756,
+"z": -1.0309276580810547
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483982,
+"data": {
+"name": "hair1_R_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483983,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483984,
+"data": {
+"name": "hair1_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483985,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700009822845459,
+"y": -0.9700003862380981,
+"z": -0.970000147819519
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483986,
+"data": {
+"name": "hair1_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483987,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.9396925568580627,
+"y": 0.34202027320861819,
+"z": 4.925881214035144e-8,
+"w": 1.8927433131921135e-7
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483988,
+"data": {
+"name": "hair1_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483989,
+"data": {
+"local_position": {
+"x": -6.572000026702881,
+"y": 8.068790435791016,
+"z": 12.0692138671875
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483990,
+"data": {
+"name": "hair1_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483991,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483992,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483993,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483994,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483995,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483996,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483997,
+"data": {
+"name": "ribbon_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483998,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.970000147819519,
+"y": -0.9699998497962952,
+"z": -0.9699998497962952
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483999,
+"data": {
+"name": "ribbon_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484000,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484001,
+"data": {
+"name": "ribbon_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484002,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.6914312839508057,
+"y": 0.6831135153770447,
+"z": -0.036840785294771197,
+"w": -0.232210174202919
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484003,
+"data": {
+"name": "ribbon_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484004,
+"data": {
+"local_position": {
+"x": -0.9699999690055847,
+"y": 0.5072941780090332,
+"z": 20.164321899414064
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484005,
+"data": {
+"name": "ribbon_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484006,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484007,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484008,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484009,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484010,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484011,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484012,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484013,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484014,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484015,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484016,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484017,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484018,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484019,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484020,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484021,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484022,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484023,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484024,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484025,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484026,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484027,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484028,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484029,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484030,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484031,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484032,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484033,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484034,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484035,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484036,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484037,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484038,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484039,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484040,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484041,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484042,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484043,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484044,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484045,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484046,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484047,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484048,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484049,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484050,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484051,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484052,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484053,
+"data": {
+"name": "hair8_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484054,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700009226799011,
+"y": 0.9700003266334534,
+"z": 0.9699999094009399
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484055,
+"data": {
+"name": "hair8_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484056,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484057,
+"data": {
+"name": "hair8_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484058,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.17770293354988099,
+"y": 0.09744696319103241,
+"z": -0.015155734494328499,
+"w": 0.9791302680969238
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484059,
+"data": {
+"name": "hair8_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484060,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": -7.1240386962890629
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484061,
+"data": {
+"name": "hair8_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484062,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309269428253174,
+"y": 1.0309275388717652,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484063,
+"data": {
+"name": "hair7_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484064,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484065,
+"data": {
+"name": "hair7_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484066,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700008630752564,
+"y": 0.9700002670288086,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484067,
+"data": {
+"name": "hair7_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484068,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484069,
+"data": {
+"name": "hair7_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484070,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": -0.08734689652919769,
+"y": 1.205663977543736e-7,
+"z": -2.6615765591486709e-7,
+"w": 0.9961779713630676
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484071,
+"data": {
+"name": "hair7_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484072,
+"data": {
+"local_position": {
+"x": 0.00000762939453125,
+"y": -0.0000152587890625,
+"z": -13.560909271240235
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484073,
+"data": {
+"name": "hair7_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484074,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309268236160279,
+"y": 1.0309277772903443,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484075,
+"data": {
+"name": "hair6_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484076,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484077,
+"data": {
+"name": "hair6_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484078,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700009822845459,
+"y": 0.9700000882148743,
+"z": 0.9699999094009399
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484079,
+"data": {
+"name": "hair6_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484080,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484081,
+"data": {
+"name": "hair6_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484082,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 1.0177328846339151e-7,
+"y": -0.01932281255722046,
+"z": -1.3216853744779656e-7,
+"w": 0.9998133182525635
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484083,
+"data": {
+"name": "hair6_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484084,
+"data": {
+"local_position": {
+"x": -0.012411117553710938,
+"y": -0.0182952880859375,
+"z": -19.506614685058595
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484085,
+"data": {
+"name": "hair6_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484086,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309268236160279,
+"y": 1.0309276580810547,
+"z": 1.030928134918213
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484087,
+"data": {
+"name": "hair5_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484088,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484089,
+"data": {
+"name": "hair5_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484090,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700009822845459,
+"y": 0.9700002074241638,
+"z": 0.9699996709823608
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484091,
+"data": {
+"name": "hair5_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484092,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484093,
+"data": {
+"name": "hair5_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484094,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.0647219866514206,
+"y": -0.05279827117919922,
+"z": 0.013861022889614106,
+"w": 0.9964092373847961
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484095,
+"data": {
+"name": "hair5_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484096,
+"data": {
+"local_position": {
+"x": 0.000003814697265625,
+"y": 0.0000152587890625,
+"z": -14.549995422363282
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484097,
+"data": {
+"name": "hair5_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484098,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309269428253174,
+"y": 1.0309276580810547,
+"z": 1.0309284925460816
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484099,
+"data": {
+"name": "hair4_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484100,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484101,
+"data": {
+"name": "hair4_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484102,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700008630752564,
+"y": 0.9700002074241638,
+"z": 0.9699994325637817
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484103,
+"data": {
+"name": "hair4_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484104,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484105,
+"data": {
+"name": "hair4_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484106,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.15415620803833009,
+"y": -0.0469411164522171,
+"z": 0.009021122939884663,
+"w": 0.9868896007537842
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484107,
+"data": {
+"name": "hair4_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484108,
+"data": {
+"local_position": {
+"x": 0.0000019073486328125,
+"y": 0.0,
+"z": -14.550003051757813
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484109,
+"data": {
+"name": "hair4_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484110,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309274196624756,
+"y": 1.0309275388717652,
+"z": 1.030928134918213
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484111,
+"data": {
+"name": "hair3_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484112,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484113,
+"data": {
+"name": "hair3_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484114,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700004458427429,
+"y": 0.9700002670288086,
+"z": 0.9699996709823608
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484115,
+"data": {
+"name": "hair3_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484116,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484117,
+"data": {
+"name": "hair3_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484118,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.02848280780017376,
+"y": -0.032167136669158939,
+"z": 0.007526225410401821,
+"w": 0.9990482330322266
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484119,
+"data": {
+"name": "hair3_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484120,
+"data": {
+"local_position": {
+"x": 0.000002562999725341797,
+"y": 0.0,
+"z": -10.155860900878907
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484121,
+"data": {
+"name": "hair3_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484122,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309275388717652,
+"y": 1.0309277772903443,
+"z": 1.0309282541275025
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484123,
+"data": {
+"name": "hair2_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484124,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484125,
+"data": {
+"name": "hair2_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484126,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700003266334534,
+"y": 0.9700000286102295,
+"z": 0.9699995517730713
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484127,
+"data": {
+"name": "hair2_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484128,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484129,
+"data": {
+"name": "hair2_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484130,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.11794783920049668,
+"y": -0.004631546325981617,
+"z": -0.006201947573572397,
+"w": 0.9929896593093872
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484131,
+"data": {
+"name": "hair2_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484132,
+"data": {
+"local_position": {
+"x": -0.1469450294971466,
+"y": 1.1365365982055665,
+"z": -11.936065673828125
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484133,
+"data": {
+"name": "hair2_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484134,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309275388717652,
+"y": 1.0309277772903443,
+"z": 1.0309282541275025
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484135,
+"data": {
+"name": "hair1_L_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484136,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484137,
+"data": {
+"name": "hair1_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484138,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9700003266334534,
+"y": 0.9700000286102295,
+"z": 0.9699995517730713
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484139,
+"data": {
+"name": "hair1_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484140,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 3.3719278036414838e-8,
+"y": -5.474876374478299e-8,
+"z": -0.3420201539993286,
+"w": 0.9396926164627075
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484141,
+"data": {
+"name": "hair1_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484142,
+"data": {
+"local_position": {
+"x": 6.572429180145264,
+"y": 8.068790435791016,
+"z": 12.069198608398438
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484143,
+"data": {
+"name": "hair1_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484144,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484145,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484146,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484147,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484148,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484149,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484150,
+"data": {
+"name": "ribbon_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484151,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699998497962952,
+"y": 0.9699999094009399,
+"z": 0.9700003862380981
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484152,
+"data": {
+"name": "ribbon_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484153,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484154,
+"data": {
+"name": "ribbon_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484155,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.23221081495285035,
+"y": -0.03683965280652046,
+"z": -0.6831134557723999,
+"w": 0.6914311051368713
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484156,
+"data": {
+"name": "ribbon_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484157,
+"data": {
+"local_position": {
+"x": 0.9699999690055847,
+"y": 0.5072920918464661,
+"z": 20.164337158203126
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484158,
+"data": {
+"name": "ribbon_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484159,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484160,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484161,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484162,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484163,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484164,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484165,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484166,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484167,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484168,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484169,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484170,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484171,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484172,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484173,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484174,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484175,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484176,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484177,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484178,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484179,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484180,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484181,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484182,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484183,
+"data": {
+"name": "tongue03"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484184,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699999690055847,
+"y": 0.9699999690055847,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484185,
+"data": {
+"name": "tongue03_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484186,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484187,
+"data": {
+"name": "tongue03_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484188,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484189,
+"data": {
+"name": "tongue03_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484190,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -1.3876538276672364,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484191,
+"data": {
+"name": "tongue03_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484192,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309278964996338,
+"y": 1.0309278964996338,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484193,
+"data": {
+"name": "tongue02_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484194,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484195,
+"data": {
+"name": "tongue02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484196,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699999690055847,
+"y": 0.9699999690055847,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484197,
+"data": {
+"name": "tongue02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484198,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484199,
+"data": {
+"name": "tongue02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484200,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484201,
+"data": {
+"name": "tongue02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484202,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -1.327770709991455,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484203,
+"data": {
+"name": "tongue02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484204,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309278964996338,
+"y": 1.0309278964996338,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484205,
+"data": {
+"name": "tongue01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484206,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484207,
+"data": {
+"name": "tongue01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484208,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699999690055847,
+"y": 0.9699999690055847,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484209,
+"data": {
+"name": "tongue01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484210,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484211,
+"data": {
+"name": "tongue01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484212,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.04361937195062637,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9990482330322266
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484213,
+"data": {
+"name": "tongue01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484214,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 1.4683647155761719,
+"z": 0.1732025146484375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484215,
+"data": {
+"name": "tongue01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484216,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309278964996338,
+"y": 1.0309278964996338,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484217,
+"data": {
+"name": "mouth_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484218,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484219,
+"data": {
+"name": "mouth"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484220,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699999690055847,
+"y": 0.9699999690055847,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484221,
+"data": {
+"name": "mouth_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484222,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484223,
+"data": {
+"name": "mouth_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484224,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484225,
+"data": {
+"name": "mouth_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484226,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -5.470737457275391,
+"z": -1.0894622802734376
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484227,
+"data": {
+"name": "mouth_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484228,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484229,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484230,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484231,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484232,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484233,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484234,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484235,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484236,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484237,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484238,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484239,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484240,
+"data": {
+"name": "hair_03_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484241,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700009226799011,
+"y": -0.9700004458427429,
+"z": -0.9700007438659668
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484242,
+"data": {
+"name": "hair_03_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484243,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484244,
+"data": {
+"name": "hair_03_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484245,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -1.9010974128264025e-8,
+"y": 0.21850503981113435,
+"z": 8.490234648661499e-8,
+"w": 0.9758358001708984
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484246,
+"data": {
+"name": "hair_03_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484247,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.0000019073486328125,
+"z": 5.30157470703125
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484248,
+"data": {
+"name": "hair_03_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484249,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309275388717652,
+"y": -1.0309280157089234,
+"z": -1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484250,
+"data": {
+"name": "hair_03_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484251,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484252,
+"data": {
+"name": "hair_03_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484253,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700002670288086,
+"y": -0.9699998497962952,
+"z": -0.9699999094009399
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484254,
+"data": {
+"name": "hair_03_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484255,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484256,
+"data": {
+"name": "hair_03_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484257,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.22443550825119019,
+"y": 0.9505792856216431,
+"z": 0.051498472690582278,
+"w": 0.20826850831508637
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484258,
+"data": {
+"name": "hair_03_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484259,
+"data": {
+"local_position": {
+"x": 6.014374256134033,
+"y": -4.649538993835449,
+"z": 15.47833251953125
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484260,
+"data": {
+"name": "hair_03_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484261,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484262,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484263,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484264,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484265,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484266,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484267,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484268,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484269,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484270,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484271,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484272,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484273,
+"data": {
+"name": "hair_02_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484274,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9699997305870056,
+"y": -0.9700002670288086,
+"z": -0.9700003862380981
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484275,
+"data": {
+"name": "hair_02_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484276,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484277,
+"data": {
+"name": "hair_02_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484278,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -5.633796362758403e-8,
+"y": 0.21850523352622987,
+"z": 1.1521132137204404e-7,
+"w": 0.9758358001708984
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484279,
+"data": {
+"name": "hair_02_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484280,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.0000019073486328125,
+"z": 5.232391357421875
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484281,
+"data": {
+"name": "hair_02_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484282,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309282541275025,
+"y": -1.0309277772903443,
+"z": -1.0309280157089234
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484283,
+"data": {
+"name": "hair_02_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484284,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484285,
+"data": {
+"name": "hair_02_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484286,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9699995517730713,
+"y": -0.9700000882148743,
+"z": -0.9699998497962952
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484287,
+"data": {
+"name": "hair_02_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484288,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484289,
+"data": {
+"name": "hair_02_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484290,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.5190303921699524,
+"y": 0.8273932933807373,
+"z": -0.018425969406962396,
+"w": 0.21374835073947907
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484291,
+"data": {
+"name": "hair_02_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484292,
+"data": {
+"local_position": {
+"x": 3.411027431488037,
+"y": -6.512869834899902,
+"z": 15.47833251953125
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484293,
+"data": {
+"name": "hair_02_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484294,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484295,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484296,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484297,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484298,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484299,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484300,
+"data": {
+"name": "eye_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484301,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9699996709823608,
+"y": -0.9700000286102295,
+"z": -0.9699994921684265
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484302,
+"data": {
+"name": "eye_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484303,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484304,
+"data": {
+"name": "eye_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484305,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.01280550193041563,
+"y": -0.0028828936628997328,
+"z": -0.1422702968120575,
+"w": 0.9897408485412598
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484306,
+"data": {
+"name": "eye_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484307,
+"data": {
+"local_position": {
+"x": -2.7644999027252199,
+"y": -1.1603482961654664,
+"z": 4.640472412109375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484308,
+"data": {
+"name": "eye_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484309,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484310,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484311,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484312,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484313,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484314,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484315,
+"data": {
+"name": "mituami_F"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484316,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700004458427429,
+"y": -0.9699996709823608,
+"z": -0.9699999094009399
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484317,
+"data": {
+"name": "mituami_F_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484318,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484319,
+"data": {
+"name": "mituami_F_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484320,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.8524750471115112,
+"y": 0.1909523755311966,
+"z": -0.4537823498249054,
+"w": 0.17579849064350129
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484321,
+"data": {
+"name": "mituami_F_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484322,
+"data": {
+"local_position": {
+"x": -3.832303762435913,
+"y": 1.0232889652252198,
+"z": 14.447830200195313
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484323,
+"data": {
+"name": "mituami_F_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484324,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484325,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484326,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484327,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484328,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484329,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484330,
+"data": {
+"name": "eye_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484331,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699998497962952,
+"y": 0.9699996709823608,
+"z": 0.9699996709823608
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484332,
+"data": {
+"name": "eye_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484333,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484334,
+"data": {
+"name": "eye_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484335,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.012805440463125706,
+"y": 0.0028842580504715444,
+"z": 0.14227011799812318,
+"w": 0.9897408485412598
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484336,
+"data": {
+"name": "eye_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484337,
+"data": {
+"local_position": {
+"x": 2.7644152641296388,
+"y": -1.1603482961654664,
+"z": 4.640472412109375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484338,
+"data": {
+"name": "eye_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484339,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484340,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484341,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484342,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484343,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484344,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484345,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484346,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484347,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484348,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484349,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484350,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484351,
+"data": {
+"name": "hair_01_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484352,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700003862380981,
+"y": -0.9699998497962952,
+"z": -0.970000147819519
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484353,
+"data": {
+"name": "hair_01_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484354,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484355,
+"data": {
+"name": "hair_01_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484356,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -8.750401292445531e-8,
+"y": 0.21850518882274629,
+"z": 1.5210389392450453e-7,
+"w": 0.9758358001708984
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484357,
+"data": {
+"name": "hair_01_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484358,
+"data": {
+"local_position": {
+"x": 0.0000152587890625,
+"y": -0.00000286102294921875,
+"z": 5.139854431152344
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484359,
+"data": {
+"name": "hair_01_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484360,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309276580810547,
+"y": -1.030928611755371,
+"z": -1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484361,
+"data": {
+"name": "hair_01_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484362,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484363,
+"data": {
+"name": "hair_01_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484364,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.970000147819519,
+"y": -0.9699993133544922,
+"z": -0.9699999094009399
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484365,
+"data": {
+"name": "hair_01_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484366,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484367,
+"data": {
+"name": "hair_01_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484368,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.6792469620704651,
+"y": 0.7010793089866638,
+"z": -0.11964642256498337,
+"w": 0.18109728395938874
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484369,
+"data": {
+"name": "hair_01_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484370,
+"data": {
+"local_position": {
+"x": 0.024026457220315934,
+"y": -7.01632022857666,
+"z": 15.352920532226563
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484371,
+"data": {
+"name": "hair_01_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484372,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484373,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484374,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484375,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484376,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484377,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484378,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484379,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484380,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484381,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484382,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484383,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484384,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484385,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484386,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484387,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484388,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484389,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484390,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484391,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484392,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484393,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484394,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484395,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484396,
+"data": {
+"name": "mituami4"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484397,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700003862380981,
+"y": -0.9700000286102295,
+"z": -0.9699994921684265
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484398,
+"data": {
+"name": "mituami4_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484399,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484400,
+"data": {
+"name": "mituami4_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484401,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484402,
+"data": {
+"name": "mituami4_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484403,
+"data": {
+"local_position": {
+"x": -0.000003814697265625,
+"y": -0.0000019073486328125,
+"z": 7.662025451660156
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484404,
+"data": {
+"name": "mituami4_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484405,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309274196624756,
+"y": -1.0309278964996338,
+"z": -1.0309282541275025
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484406,
+"data": {
+"name": "mituami3_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484407,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484408,
+"data": {
+"name": "mituami3"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484409,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700004458427429,
+"y": -0.9699999690055847,
+"z": -0.9699996113777161
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484410,
+"data": {
+"name": "mituami3_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484411,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484412,
+"data": {
+"name": "mituami3_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484413,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484414,
+"data": {
+"name": "mituami3_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484415,
+"data": {
+"local_position": {
+"x": -0.000003814697265625,
+"y": -0.0000019073486328125,
+"z": 7.1929779052734379
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484416,
+"data": {
+"name": "mituami3_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484417,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309276580810547,
+"y": -1.030928134918213,
+"z": -1.0309282541275025
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484418,
+"data": {
+"name": "mituami2_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484419,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484420,
+"data": {
+"name": "mituami2"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484421,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700002074241638,
+"y": -0.9699997305870056,
+"z": -0.9699996113777161
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484422,
+"data": {
+"name": "mituami2_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484423,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484424,
+"data": {
+"name": "mituami2_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484425,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484426,
+"data": {
+"name": "mituami2_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484427,
+"data": {
+"local_position": {
+"x": 0.000003814697265625,
+"y": -9.5367431640625e-7,
+"z": 8.005767822265625
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484428,
+"data": {
+"name": "mituami2_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484429,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0309275388717652,
+"y": -1.0309278964996338,
+"z": -1.0309280157089234
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484430,
+"data": {
+"name": "mituami1_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484431,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484432,
+"data": {
+"name": "mituami1"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484433,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9700003266334534,
+"y": -0.9699999690055847,
+"z": -0.9699998497962952
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484434,
+"data": {
+"name": "mituami1_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484435,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484436,
+"data": {
+"name": "mituami1_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484437,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.985175371170044,
+"y": -0.07977205514907837,
+"z": -0.15028062462806703,
+"w": -0.021946612745523454
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484438,
+"data": {
+"name": "mituami1_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484439,
+"data": {
+"local_position": {
+"x": -10.89011001586914,
+"y": 7.00293493270874,
+"z": 11.751144409179688
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484440,
+"data": {
+"name": "mituami1_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484441,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484442,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484443,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484444,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484445,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484446,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484447,
+"data": {
+"name": "eye_light_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484448,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9699996709823608,
+"y": -0.9700000286102295,
+"z": -0.9699994921684265
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484449,
+"data": {
+"name": "eye_light_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484450,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484451,
+"data": {
+"name": "eye_light_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484452,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.01280550193041563,
+"y": -0.0028828936628997328,
+"z": -0.1422702968120575,
+"w": 0.9897408485412598
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484453,
+"data": {
+"name": "eye_light_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484454,
+"data": {
+"local_position": {
+"x": -2.7644999027252199,
+"y": -1.3403369188308716,
+"z": 4.640472412109375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484455,
+"data": {
+"name": "eye_light_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484456,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309278964996338,
+"y": 1.0309278964996338,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484457,
+"data": {
+"name": "head_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484458,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484459,
+"data": {
+"name": "head"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484460,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699999690055847,
+"y": 0.9699999690055847,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484461,
+"data": {
+"name": "head_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484462,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484463,
+"data": {
+"name": "head_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484464,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484465,
+"data": {
+"name": "head_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484466,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 2.4586915969848635e-7,
+"z": 7.68768310546875
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484467,
+"data": {
+"name": "head_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484468,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0309278964996338,
+"y": 1.0309278964996338,
+"z": 1.0309278964996338
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484469,
+"data": {
+"name": "neck_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484470,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484471,
+"data": {
+"name": "neck"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484472,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699999690055847,
+"y": 0.9699999690055847,
+"z": 0.9699999690055847
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484473,
+"data": {
+"name": "neck_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484474,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484475,
+"data": {
+"name": "neck_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484476,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.06936926394701004,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9975910186767578
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484477,
+"data": {
+"name": "neck_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484478,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.5213260650634766,
+"z": 14.047882080078125
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484479,
+"data": {
+"name": "neck_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484480,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484481,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484482,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484483,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484484,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484485,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484486,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484487,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 2.384185791015625e-7,
+"z": 1.7319374084472657
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484488,
+"data": {
+"name": "fore3_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484489,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -2.384185791015625e-7,
+"z": 2.6951065063476564
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484490,
+"data": {
+"name": "fore2_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484491,
+"data": {
+"local_position": {
+"x": -0.50323486328125,
+"y": -1.529707670211792,
+"z": 5.246076583862305
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.030852623283863069,
+"y": 0.03181230276823044,
+"z": 0.00036417008959688246,
+"w": 0.9990174770355225
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484492,
+"data": {
+"name": "fore1_R"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484493,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484494,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484495,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484496,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 0.0,
+"z": 1.3443031311035157
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484497,
+"data": {
+"name": "little3_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484498,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 0.0,
+"z": 1.9838829040527344
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484499,
+"data": {
+"name": "little2_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484500,
+"data": {
+"local_position": {
+"x": 0.14739227294921876,
+"y": 2.2392120361328127,
+"z": 4.848413467407227
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.03294029086828232,
+"y": 0.02893013507127762,
+"z": -0.10518129169940949,
+"w": 0.993486225605011
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484501,
+"data": {
+"name": "little1_R"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484502,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484503,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484504,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484505,
+"data": {
+"local_position": {
+"x": 0.00000762939453125,
+"y": 0.0,
+"z": 2.130615234375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484506,
+"data": {
+"name": "thumb2_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484507,
+"data": {
+"local_position": {
+"x": 0.000003814697265625,
+"y": 0.00000762939453125,
+"z": 3.2389907836914064
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.20574864745140077,
+"y": -0.04433181509375572,
+"z": 0.04401658847928047,
+"w": 0.9766088128089905
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484508,
+"data": {
+"name": "thumb1_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484509,
+"data": {
+"local_position": {
+"x": 0.8030471801757813,
+"y": -1.5704225301742554,
+"z": 1.015920639038086
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 0.9999999403953552,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.1715342402458191,
+"y": 0.15974655747413636,
+"z": -0.33390599489212038,
+"w": 0.9129971861839294
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484510,
+"data": {
+"name": "thumb0_R"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484511,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484512,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484513,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484514,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 1.8829231262207032
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484515,
+"data": {
+"name": "middle3_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484516,
+"data": {
+"local_position": {
+"x": -0.0000152587890625,
+"y": -4.76837158203125e-7,
+"z": 3.0853424072265627
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484517,
+"data": {
+"name": "middle2_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484518,
+"data": {
+"local_position": {
+"x": -0.524017333984375,
+"y": -0.15895497798919679,
+"z": 5.301454544067383
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.0025531912688165905,
+"y": 0.02537437342107296,
+"z": -0.02454344555735588,
+"w": 0.9993734359741211
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484519,
+"data": {
+"name": "middle1_R"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484520,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484521,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484522,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484523,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 0.0,
+"z": 1.608978271484375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484524,
+"data": {
+"name": "third3_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484525,
+"data": {
+"local_position": {
+"x": -0.00000762939453125,
+"y": 0.0000019073486328125,
+"z": 2.3841552734375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484526,
+"data": {
+"name": "third2_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484527,
+"data": {
+"local_position": {
+"x": -0.25170135498046877,
+"y": 1.1380888223648072,
+"z": 5.264719009399414
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.02462221495807171,
+"y": 0.024829832836985589,
+"z": -0.09434876590967179,
+"w": 0.9949249029159546
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484528,
+"data": {
+"name": "third1_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484529,
+"data": {
+"local_position": {
+"x": 0.00000762939453125,
+"y": 4.76837158203125e-7,
+"z": 21.773151397705079
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484530,
+"data": {
+"name": "wrist_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484531,
+"data": {
+"local_position": {
+"x": -0.0000152587890625,
+"y": 5.364418029785156e-7,
+"z": 20.90302276611328
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484532,
+"data": {
+"name": "elbow_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484533,
+"data": {
+"local_position": {
+"x": 0.23516082763671876,
+"y": 1.1920928955078126e-7,
+"z": 5.435882568359375
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -5.4371888325022158e-8,
+"y": 0.22109775245189668,
+"z": 2.3268388815722575e-7,
+"w": 0.9752516746520996
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484534,
+"data": {
+"name": "arm_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484535,
+"data": {
+"local_position": {
+"x": -1.6430001258850098,
+"y": 0.34066009521484377,
+"z": 13.897102355957032
+},
+"local_scale": {
+"x": -1.0000001192092896,
+"y": -1.000000238418579,
+"z": -0.9999997019767761
+},
+"local_rotation": {
+"x": 0.6247350573539734,
+"y": -0.05408202484250069,
+"z": 0.7777493596076965,
+"w": -0.043442413210868838
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484536,
+"data": {
+"name": "shoulder_R"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484537,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484538,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484539,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484540,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484541,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484542,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484543,
+"data": {
+"name": "tit_L"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484544,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9699998497962952,
+"y": 0.9699996709823608,
+"z": 0.9699996709823608
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484545,
+"data": {
+"name": "tit_L_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484546,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484547,
+"data": {
+"name": "tit_L_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484548,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.0822332352399826,
+"y": -0.002094827825203538,
+"z": 0.05545542389154434,
+"w": 0.9950668215751648
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484549,
+"data": {
+"name": "tit_L_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484550,
+"data": {
+"local_position": {
+"x": 3.200000047683716,
+"y": -0.16707420349121095,
+"z": 6.626396179199219
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484551,
+"data": {
+"name": "tit_L_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484552,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484553,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484554,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484555,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484556,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484557,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484558,
+"data": {
+"name": "tit_R"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484559,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9699996709823608,
+"y": -0.9700000286102295,
+"z": -0.9699994921684265
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484560,
+"data": {
+"name": "tit_R_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484561,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484562,
+"data": {
+"name": "tit_R_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484563,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.08223308622837067,
+"y": 0.0020961607806384565,
+"z": -0.05545555800199509,
+"w": 0.9950668215751648
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484564,
+"data": {
+"name": "tit_R_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484565,
+"data": {
+"local_position": {
+"x": -3.200000047683716,
+"y": -0.16706466674804688,
+"z": 6.6263885498046879
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484566,
+"data": {
+"name": "tit_R_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484567,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 14.586891174316407
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.06936927139759064,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9975910186767578
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484568,
+"data": {
+"name": "upperbody01"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484569,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484570,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484571,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484572,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484573,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484574,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484575,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484576,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484577,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484578,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484579,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484580,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484581,
+"data": {
+"name": "skirt_09_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484582,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9999995827674866,
+"y": -0.9999998807907105,
+"z": -0.9999998807907105
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484583,
+"data": {
+"name": "skirt_09_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484584,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484585,
+"data": {
+"name": "skirt_09_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484586,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003463596105576,
+"y": 4.781263669428881e-7,
+"z": 4.9601656115783047e-8,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484587,
+"data": {
+"name": "skirt_09_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484588,
+"data": {
+"local_position": {
+"x": 0.00000667572021484375,
+"y": -0.00000762939453125,
+"z": 9.999996185302735
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484589,
+"data": {
+"name": "skirt_09_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484590,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0000001192092896,
+"y": -1.0000001192092896,
+"z": -1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484591,
+"data": {
+"name": "skirt_09_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484592,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484593,
+"data": {
+"name": "skirt_09_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484594,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9999998807907105,
+"y": -0.9999998807907105,
+"z": -1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484595,
+"data": {
+"name": "skirt_09_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484596,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484597,
+"data": {
+"name": "skirt_09_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484598,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": 0.7225267291069031,
+"y": -0.5417924523353577,
+"z": -0.2993646562099457,
+"w": 0.3078911006450653
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484599,
+"data": {
+"name": "skirt_09_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484600,
+"data": {
+"local_position": {
+"x": -10.02199935913086,
+"y": -1.2436156272888184,
+"z": 4.156623840332031
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484601,
+"data": {
+"name": "skirt_09_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484602,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484603,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484604,
+"data": {
+"local_position": {
+"x": -7.152557373046875e-7,
+"y": -0.00000762939453125,
+"z": -9.999996185302735
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003509044647217,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484605,
+"data": {
+"name": "skirt_05_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484606,
+"data": {
+"local_position": {
+"x": 5.371376037597656,
+"y": 7.824952125549316,
+"z": 4.101844787597656
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.131759911775589,
+"y": -0.4565645754337311,
+"z": 0.8453801870346069,
+"w": 0.2439681887626648
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484607,
+"data": {
+"name": "skirt_05_01"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484608,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484609,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484610,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484611,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484612,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484613,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484614,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484615,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484616,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484617,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484618,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484619,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484620,
+"data": {
+"name": "skirt_08_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484621,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9999997615814209,
+"y": -0.9999997019767761,
+"z": -0.9999998807907105
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484622,
+"data": {
+"name": "skirt_08_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484623,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484624,
+"data": {
+"name": "skirt_08_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484625,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003511279821396,
+"y": 3.487324651274548e-9,
+"z": 5.954396531393513e-9,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484626,
+"data": {
+"name": "skirt_08_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484627,
+"data": {
+"local_position": {
+"x": -0.0000064373016357421879,
+"y": 0.0000152587890625,
+"z": 9.999988555908204
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484628,
+"data": {
+"name": "skirt_08_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484629,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.000000238418579,
+"y": -1.0000001192092896,
+"z": -1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484630,
+"data": {
+"name": "skirt_08_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484631,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484632,
+"data": {
+"name": "skirt_08_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484633,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -0.9999997615814209,
+"y": -0.9999999403953552,
+"z": -1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484634,
+"data": {
+"name": "skirt_08_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484635,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484636,
+"data": {
+"name": "skirt_08_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484637,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.462014377117157,
+"y": 0.7488197684288025,
+"z": 0.4044150114059448,
+"w": -0.24952000379562379
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484638,
+"data": {
+"name": "skirt_08_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484639,
+"data": {
+"local_position": {
+"x": -9.333000183105469,
+"y": 3.6875224113464357,
+"z": 4.1018524169921879
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484640,
+"data": {
+"name": "skirt_08_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484641,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484642,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484643,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.00000762939453125,
+"z": -9.999996185302735
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003511279821396,
+"y": 1.1289095880329114e-8,
+"z": -9.622078689375258e-10,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484644,
+"data": {
+"name": "skirt_02_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484645,
+"data": {
+"local_position": {
+"x": 6.666802406311035,
+"y": -5.861271858215332,
+"z": 3.9228286743164064
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": -0.3630391061306,
+"y": -0.16778069734573365,
+"z": 0.2873428761959076,
+"w": 0.8703368902206421
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484646,
+"data": {
+"name": "skirt_02_01"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484647,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484648,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484649,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.00000762939453125,
+"z": -10.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003510534763336,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484650,
+"data": {
+"name": "skirt_06_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484651,
+"data": {
+"local_position": {
+"x": -0.0000010271222663504887,
+"y": 9.82800579071045,
+"z": 3.6721572875976564
+},
+"local_scale": {
+"x": 1.0,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": -9.252416077742964e-8,
+"y": -0.4751964807510376,
+"z": 0.8798797726631165,
+"w": 1.713189021756989e-7
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484652,
+"data": {
+"name": "skirt_06_01"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484653,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484654,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484655,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484656,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484657,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484658,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484659,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484660,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484661,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484662,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484663,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484664,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484665,
+"data": {
+"name": "skirt_10_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484666,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0000001192092896,
+"y": -1.000000238418579,
+"z": -0.9999998807907105
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484667,
+"data": {
+"name": "skirt_10_02_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484668,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484669,
+"data": {
+"name": "skirt_10_02_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484670,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003462851047516,
+"y": 3.854284003068642e-8,
+"z": 8.700608233880303e-9,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484671,
+"data": {
+"name": "skirt_10_02_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484672,
+"data": {
+"local_position": {
+"x": -0.00000286102294921875,
+"y": 0.00002288818359375,
+"z": 9.999992370605469
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484673,
+"data": {
+"name": "skirt_10_02_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484674,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0,
+"y": -0.9999998807907105,
+"z": -1.0000001192092896
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484675,
+"data": {
+"name": "skirt_10_01_$AssimpFbx$_GeometricScalingInverse"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484676,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484677,
+"data": {
+"name": "skirt_10_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484678,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": -1.0,
+"y": -1.0000001192092896,
+"z": -0.9999999403953552
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484679,
+"data": {
+"name": "skirt_10_01_$AssimpFbx$_GeometricScaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484680,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484681,
+"data": {
+"name": "skirt_10_01_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484682,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.9999999403953552,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.8703368902206421,
+"y": -0.2873428761959076,
+"z": -0.16778071224689485,
+"w": 0.36303916573524477
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484683,
+"data": {
+"name": "skirt_10_01_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484684,
+"data": {
+"local_position": {
+"x": -6.666999816894531,
+"y": -5.861268997192383,
+"z": 3.9228286743164064
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484685,
+"data": {
+"name": "skirt_10_01_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484686,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484687,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484688,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.00000762939453125,
+"z": -9.999992370605469
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003510534763336,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484689,
+"data": {
+"name": "skirt_01_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484690,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -7.374255180358887,
+"z": 4.4210357666015629
+},
+"local_scale": {
+"x": 1.0,
+"y": 0.9999999403953552,
+"z": 0.9999999403953552
+},
+"local_rotation": {
+"x": -0.3416636288166046,
+"y": 0.0,
+"z": 0.0,
+"w": 0.9398223161697388
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484691,
+"data": {
+"name": "skirt_01_01"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484692,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484693,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484694,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -0.00000762939453125,
+"z": -10.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.08003509789705277,
+"y": 6.166316790512383e-9,
+"z": -6.979449462818366e-9,
+"w": 0.9967920780181885
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484695,
+"data": {
+"name": "skirt_03_02"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484696,
+"data": {
+"local_position": {
+"x": 10.021692276000977,
+"y": -1.243614673614502,
+"z": 4.156623840332031
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.30789104104042055,
+"y": -0.29936447739601138,
+"z": 0.5417923927307129,
+"w": 0.7225268483161926
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484697,
+"data": {
+"name": "skirt_03_01"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484698,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": -1.3229999542236329,
+"z": 8.773574829101563
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484699,
+"data": {
+"name": "upperbody"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484700,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 89.64411926269531
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484701,
+"data": {
+"name": "waist"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484702,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484703,
+"data": {
+"name": "root"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484704,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484705,
+"data": {
+"name": "Character001"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484706,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484707,
+"data": {
+"name": "Character001_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484708,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484709,
+"data": {
+"name": "Character001_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484710,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484711,
+"data": {
+"name": "Character001_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484712,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484713,
+"data": {
+"name": "Character001_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484714,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484715,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484716,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484717,
+"data": {
+"name": "eye"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147484718,
+"data": {
+"meshes": [
+""
+],
+"materials": [
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484719,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484720,
+"data": {
+"name": "eye_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147484721,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484722,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484723,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484724,
+"data": {
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147484725,
+"data": {
+"children": [],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484726,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484727,
+"data": {
+"name": "flonthair"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147484728,
+"data": {
+"meshes": [
+"",
+"",
+"",
+""
+],
+"materials": [
+"",
+"",
+"",
+""
+]
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484729,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484730,
+"data": {
+"name": "flonthair_$AssimpFbx$_Scaling"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484731,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484732,
+"data": {
+"name": "flonthair_$AssimpFbx$_Rotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484733,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484734,
+"data": {
+"name": "flonthair_$AssimpFbx$_PreRotation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484735,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484736,
+"data": {
+"name": "flonthair_$AssimpFbx$_Translation"
+}
+}
+}
+]
+}
+}
+}
+],
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147484737,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147484738,
+"data": {
+"name": "Alicia"
+}
+}
+}
+]
+}
+}
+}
+]
+}
+}
