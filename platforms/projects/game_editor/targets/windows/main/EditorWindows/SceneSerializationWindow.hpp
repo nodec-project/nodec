@@ -61,6 +61,7 @@ public:
         {
             if (ImGui::BeginTabItem("Import"))
             {
+
                 set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), import_path);
                 ImGui::InputText("Source", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
                 import_path = temp_str_buffer;
@@ -68,8 +69,39 @@ public:
                 ImGui::Combo("Target", &import_target, "Root\0Selected Entity");
 
                 if (ImGui::Button("Import")) {
-                    ResourceImporter::ImportSceneGraph(import_path, null_entity, *resource_registry, *scene, *scene_serialization);
+                    import_messages.clear();
+
+                    bool success = false;
+                    switch (import_target) {
+                    case 0: // Root
+                    {
+                        success = ResourceImporter::ImportSceneGraph(import_path, null_entity, *resource_registry, *scene, *scene_serialization);
+                        break;
+                    }
+                    case 1: // Selected Entity
+                    {
+                        if (scene->registry().is_valid(selected_entity)) {
+                            success = ResourceImporter::ImportSceneGraph(import_path, selected_entity, *resource_registry, *scene, *scene_serialization);
+                        }
+                        break;
+                    }
+                    default:
+                        break;
+                    }
+
+                    if (success) {
+                        import_messages.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f),
+                            Formatter() << "Scene import success: " << import_path
+                        );
+                    }
+                    else {
+                        import_messages.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
+                            Formatter() << "Scene import failed: " << import_path
+                        );
+                    }
                 }
+
+                print_messages(import_messages);
 
                 ImGui::EndTabItem();
             }
@@ -82,30 +114,47 @@ public:
                 ImGui::InputText("Target", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
                 export_path = temp_str_buffer;
 
+                bool success = false;
+
                 if (ImGui::Button("Export")) {
+                    export_messages.clear();
+
                     std::string dest_path = Formatter() << resource_path << "/" << export_path;
 
                     switch (export_target) {
                     case 0: // Root
                     {
-                        ResourceExporter::ExportSceneGraph(scene->root_entites(), scene->registry(), *scene_serialization, dest_path);
-                    }
+                        success = ResourceExporter::ExportSceneGraph(scene->root_entites(), scene->registry(), *scene_serialization, dest_path);
                         break;
+                    }
 
                     case 1: // Selected Entity
                     {
                         if (scene->registry().is_valid(selected_entity)) {
-                            std::vector<SceneEntity> roots{selected_entity};
-                            ResourceExporter::ExportSceneGraph(roots, scene->registry(), *scene_serialization, dest_path);
+                            std::vector<SceneEntity> roots{ selected_entity };
+                            success = ResourceExporter::ExportSceneGraph(roots, scene->registry(), *scene_serialization, dest_path);
                         }
-                    }
                         break;
+                    }
 
                     default:
                         break;
                     }
 
+                    if (success) {
+                        export_messages.emplace_back(ImVec4(0.0f, 1.0f, 0.0f, 1.0f),
+                            Formatter() << "Scene export success: " << dest_path
+                        );
+                    }
+                    else {
+                        export_messages.emplace_back(ImVec4(1.0f, 0.0f, 0.0f, 1.0f),
+                            Formatter() << "Scene export failed: " << dest_path
+                        );
+                    }
                 }
+
+                print_messages(export_messages);
+
                 //ImGui::Text("This is the Avocado tab!\nblah blah blah blah blah");
                 ImGui::EndTabItem();
             }
@@ -114,17 +163,39 @@ public:
     }
 
 private:
-    void set_str_buffer(char* buffer, const size_t buffer_size, const std::string& source) {
+    struct MessageRecord {
+        MessageRecord(const ImVec4& color, const std::string& message)
+            : color(color)
+            , message(message) {
+        }
+
+        ImVec4 color;
+        std::string message;
+    };
+
+private:
+    static void set_str_buffer(char* buffer, const size_t buffer_size, const std::string& source) {
         source.copy(buffer, buffer_size - 1);
 
         auto null_pos = std::min(source.size(), buffer_size - 1);
         buffer[null_pos] = '\0';
     }
 
+    static void print_messages(const std::vector<MessageRecord>& messages) {
+        for (auto& record : messages) {
+            ImGui::PushStyleColor(ImGuiCol_Text, record.color);
+            ImGui::TextWrapped(record.message.c_str());
+            ImGui::PopStyleColor();
+        }
+    }
+
 
 private:
     std::string import_path;
-    std::string export_path{"level0.scene"};
+    std::string export_path{ "level0.scene" };
+
+    std::vector<MessageRecord> export_messages;
+    std::vector<MessageRecord> import_messages;
 
     int import_target;
     int export_target;

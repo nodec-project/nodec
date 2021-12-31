@@ -38,10 +38,14 @@ struct ResourceNameEntry {
 using ResourceNameMap = std::unordered_map<std::string, ResourceNameEntry>;
 
 namespace internal {
-inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceNameMap& nameMap,
+inline void ProcessNode(
+    aiNode* pNode, const aiScene* pScene,
+    const std::string& resource_name_prefix,
+    const ResourceNameMap& nameMap,
     scene_set::SceneEntity parentEntity,
     scene_set::Scene& destScene,
-    nodec::resource_management::ResourceRegistry& resourceRegistry) {
+    nodec::resource_management::ResourceRegistry& resourceRegistry)
+{
     using namespace nodec;
     using namespace nodec::entities;
     using namespace rendering::components;
@@ -81,18 +85,18 @@ inline void ProcessNode(aiNode* pNode, const aiScene* pScene, const ResourceName
         auto meshIndex = pNode->mMeshes[i];
         auto materialIndex = pScene->mMeshes[meshIndex]->mMaterialIndex;
 
-        auto& meshPath = nameMap.at(Formatter() << "mesh-" << meshIndex).target;
+        std::string meshPath = Formatter() << resource_name_prefix << nameMap.at(Formatter() << "mesh-" << meshIndex).target;
         auto mesh = resourceRegistry.get_resource<Mesh>(meshPath).get();
         meshRenderer->meshes.push_back(mesh);
 
-        auto& materialPath = nameMap.at(Formatter() << "material-" << materialIndex).target;
+        std::string materialPath = Formatter() << resource_name_prefix << nameMap.at(Formatter() << "material-" << materialIndex).target;
         auto material = resourceRegistry.get_resource<Material>(materialPath).get();
         meshRenderer->materials.push_back(material);
     }
 
 
     for (unsigned int i = 0; i < pNode->mNumChildren; ++i) {
-        ProcessNode(pNode->mChildren[i], pScene, nameMap, myEntity, destScene, resourceRegistry);
+        ProcessNode(pNode->mChildren[i], pScene, resource_name_prefix, nameMap, myEntity, destScene, resourceRegistry);
     }
 }
 
@@ -174,11 +178,11 @@ inline bool ExportMaterial(aiMaterial* pMaterial, const std::string& destPath) {
     return true;
 }
 
-inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, const ResourceNameMap& nameMap,
+inline void ExportScene(const aiScene* pScene, scene_set::Scene& destScene, const std::string& resource_name_prefix, const ResourceNameMap& nameMap,
     nodec::resource_management::ResourceRegistry& resourceRegistry) {
     using namespace nodec::entities;
 
-    internal::ProcessNode(pScene->mRootNode, pScene, nameMap, null_entity, destScene, resourceRegistry);
+    internal::ProcessNode(pScene->mRootNode, pScene, resource_name_prefix, nameMap, null_entity, destScene, resourceRegistry);
 }
 
 

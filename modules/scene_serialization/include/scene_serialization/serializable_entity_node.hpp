@@ -23,8 +23,8 @@ public:
 template<class Archive>
 void serialize(Archive& archive, SerializableEntityNode& node) {
 
-    archive(cereal::make_nvp("children", node.children));
     archive(cereal::make_nvp("components", node.components));
+    archive(cereal::make_nvp("children", node.children));
 
 }
 

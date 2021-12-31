@@ -38,7 +38,7 @@ public:
 public:
     AssetImportWindow()
         : BaseWindow("Asset Importer", nodec::Vector2f(600, 280)) {
-
+        importer.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, false);
     }
 
     void on_gui() override {
@@ -90,13 +90,6 @@ public:
             if (current_scene->mNumMaterials > 0) {
                 material_resource_import_gui();
             }
-
-            //if (current_scene->mNumTextures > 0) {
-            //    auto opened = ImGui::TreeNodeEx("Texture");
-            //    if (opened) {
-            //        ImGui::TreePop();
-            //    }
-            //}
         }
 
         auto nodes_header_opened = ImGui::CollapsingHeader("Scene Export");
@@ -138,7 +131,7 @@ public:
 
                 }
 
-                ResourceExporter::ExportScene(current_scene, *dest_scene_, resource_name_map_, *resource_registry_);
+                ResourceExporter::ExportScene(current_scene, *dest_scene_, resource_name_prefix, resource_name_map_, *resource_registry_);
             }
 
             for (auto& record : export_messages_) {
@@ -234,45 +227,9 @@ private:
                     set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), entry.target);
                     ImGui::InputText("Target Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
                     entry.target = temp_str_buffer;
-
-                    //auto& shader_entry = resource_name_map_[Formatter() << "material-" << i << "::shader"];
-                    //set_str_buffer(temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer), shader_entry.target);
-                    //ImGui::InputText("Shader Path", temp_str_buffer, IM_ARRAYSIZE(temp_str_buffer));
-                    //shader_entry.target = temp_str_buffer;
-
-                    //texture_resource_import_gui(mat, aiTextureType_DIFFUSE);
-                    //texture_resource_import_gui(mat, aiTextureType_SPECULAR);
-                    //texture_resource_import_gui(mat, aiTextureType_AMBIENT);
-                    //texture_resource_import_gui(mat, aiTextureType_EMISSIVE);
-                    //texture_resource_import_gui(mat, aiTextureType_HEIGHT);
-                    //texture_resource_import_gui(mat, aiTextureType_NORMALS);
-                    //texture_resource_import_gui(mat, aiTextureType_SHININESS);
-                    //texture_resource_import_gui(mat, aiTextureType_OPACITY);
-                    //texture_resource_import_gui(mat, aiTextureType_DISPLACEMENT);
-                    //texture_resource_import_gui(mat, aiTextureType_LIGHTMAP);
-                    //texture_resource_import_gui(mat, aiTextureType_REFLECTION);
-                    //texture_resource_import_gui(mat, aiTextureType_BASE_COLOR);
-                    //texture_resource_import_gui(mat, aiTextureType_NORMAL_CAMERA);
-                    //texture_resource_import_gui(mat, aiTextureType_NORMAL_CAMERA);
-                    //texture_resource_import_gui(mat, aiTextureType_EMISSION_COLOR);
-                    //texture_resource_import_gui(mat, aiTextureType_METALNESS);
-                    //texture_resource_import_gui(mat, aiTextureType_DIFFUSE_ROUGHNESS);
-                    //texture_resource_import_gui(mat, aiTextureType_AMBIENT_OCCLUSION);
-
                     ImGui::TreePop();
                 }
             }
-
-            //if (ImGui::BeginTable("material-list", 2)) {
-
-            //    ImGui::EndTable();
-            //}
-
-
-                //for (int j = 0; j < mat->GetTextureCount(aiTextureType_DIFFUSE); ++j) {
-                //    aiString str;
-                //    mat->GetTexture(aiTextureType_DIFFUSE, j, &str);
-                //}
 
             ImGui::TreePop();
         }
@@ -301,7 +258,7 @@ private:
         std::string message;
     };
 
-    void set_str_buffer(char* buffer, const size_t buffer_size, const std::string& source) {
+    static void set_str_buffer(char* buffer, const size_t buffer_size, const std::string& source) {
         source.copy(buffer, buffer_size - 1);
 
         auto null_pos = std::min(source.size(), buffer_size - 1);
