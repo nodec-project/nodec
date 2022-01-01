@@ -49,7 +49,13 @@ public:
         if (ImGui::Button("Import")) {
 
             current_scene = nullptr;
-            const auto scene = importer.ReadFile(source_path, aiProcess_Triangulate | aiProcess_CalcTangentSpace);
+            const auto scene = importer.ReadFile(
+                source_path, 
+                aiProcess_Triangulate | 
+                aiProcess_CalcTangentSpace | 
+                aiProcess_MakeLeftHanded |
+                aiProcess_FlipUVs |
+                aiProcess_FlipWindingOrder);
 
             if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
                 logging::ErrorStream(__FILE__, __LINE__) << "Import failed!\n"

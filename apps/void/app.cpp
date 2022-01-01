@@ -63,10 +63,25 @@ public:
         using namespace scene_editor;
         auto& editor = engine.get_module<SceneEditor>();
 
-        editor.inspector_component_registry().register_component<HelloComponent>("Hello Component", [](HelloComponent& comp) {
-            /*ImGui::Text("My Field"); ImGui::SameLine();*/
-            ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
-                                                                                 });
+        editor.inspector_component_registry().register_component<HelloComponent>(
+            "Hello Component", [=](HelloComponent& comp) {
+                /*ImGui::Text("My Field"); ImGui::SameLine();*/
+                //ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
+
+
+                if (retrotv_main_material) {
+                    float metallic, roughness;
+
+                    metallic = retrotv_main_material->get_float_property("metallic");
+                    roughness = retrotv_main_material->get_float_property("roughness");
+
+                    ImGui::DragFloat("metallic", &metallic, 0.01f, 0.0f, 1.0f);
+                    ImGui::DragFloat("roughness", &roughness, 0.01f, 0.0f, 1.0f);
+
+                    retrotv_main_material->set_float_property("metallic", metallic);
+                    retrotv_main_material->set_float_property("roughness", roughness);
+                }
+            });
 #endif
     }
 
@@ -88,32 +103,16 @@ private:
         //auto& renderer = scene.registry().get_component<MeshRenderer>(entity);
 
         auto& resources = engine.get_module<Resources>();
-        mesh_future = resources.registry().get_resource<Mesh>("models/retrotv/Circle.001##mesh-2.mesh");
 
-        auto shader = resources.registry().get_resource<Shader>("shaders/pbr").get();
-        logging::InfoStream(__FILE__, __LINE__) << shader;
-
+        retrotv_main_material = resources.registry().get_resource<Material>("models/retrotv/Main.material").get();
     }
 
     void on_stepped(NodecEngine& engine) {
-        logging::InfoStream info(__FILE__, __LINE__);
-
-        if (mesh_future.valid()) {
-            auto result = mesh_future.wait_for(std::chrono::nanoseconds(1));
-            if (result != std::future_status::timeout) {
-                info << mesh_future.get();
-                mesh_future = {}; // reset
-            }
-            else {
-                info << "timeout";
-            }
-        }
 
     }
 
 private:
-    
-    std::shared_future<std::shared_ptr<Mesh>> mesh_future;
+    std::shared_ptr<Material> retrotv_main_material;
 };
 
 

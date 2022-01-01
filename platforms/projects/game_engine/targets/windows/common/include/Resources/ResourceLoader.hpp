@@ -191,10 +191,10 @@ public:
             return {};
         }
 
-        cereal::JSONInputArchive archive(file);
-
         SerializableMaterial source;
+
         try {
+            cereal::JSONInputArchive archive(file);
             archive(source);
         }
         catch (...) {

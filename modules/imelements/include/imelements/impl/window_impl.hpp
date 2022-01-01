@@ -27,7 +27,7 @@ public:
             }
 
             bool is_shown = true;
-            ImGui::SetNextWindowSize(ImVec2(window->init_size.x, window->init_size.y), ImGuiCond_Once);
+            ImGui::SetNextWindowSize(ImVec2(window->init_size.x, window->init_size.y), ImGuiCond_FirstUseEver);
             if (ImGui::Begin(window->name(), &is_shown)) {
                 try {
                     window->on_gui();

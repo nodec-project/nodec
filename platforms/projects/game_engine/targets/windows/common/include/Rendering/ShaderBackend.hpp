@@ -144,7 +144,9 @@ private:
     template<typename T>
     static T* get_property_ptr(std::vector<uint8_t>& memory, const int offset) {
         // <http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2015/p0007r0.html>
-        return const_cast<T*>(get_property_ptr<T>(const_cast<std::add_const_t<decltype(memory)>&>(memory), offset));
+        return const_cast<T*>(get_property_ptr<T>(
+            const_cast<std::add_const_t<std::remove_reference_t<decltype(memory)>>&>(memory),
+            offset));
     }
 
     template<typename T>

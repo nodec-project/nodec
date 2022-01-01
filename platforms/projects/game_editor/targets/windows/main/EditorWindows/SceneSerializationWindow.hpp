@@ -47,7 +47,7 @@ public:
 
 public:
     SceneSerializationWindow()
-        : BaseWindow("Scene Serialization", nodec::Vector2f(600, 200)) {
+        : BaseWindow("Scene Serialization", nodec::Vector2f(400, 200)) {
 
     }
 

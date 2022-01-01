@@ -49,15 +49,23 @@ public:
         }
 
         {
-            auto euler_angles = math::gfx::euler_angles_xyz(trfm.local_rotation);
+            static Vector3f eulerAngles;
+            static bool isActive = false;
+
+            if (!isActive) {
+                eulerAngles = math::gfx::euler_angles_xyz(trfm.local_rotation);
+            }
 
             ImGui::Text("Rotation (XYZ Euler)");
-
+            
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            if (ImGui::DragFloat3("##Rotation", euler_angles.v, 0.1f, -FLT_MAX, +FLT_MAX, "%.3f")) {
-                math::gfx::set_eulaer_angles_xyz(trfm.local_rotation, euler_angles);
+
+            if (ImGui::DragFloat3("##Rotation", eulerAngles.v, 0.1f, -FLT_MAX, +FLT_MAX, "%.3f")) {
+                math::gfx::set_eulaer_angles_xyz(trfm.local_rotation, eulerAngles);
                 trfm.dirty = true;
             }
+
+            isActive = ImGui::IsItemActive();
         }
 
         {

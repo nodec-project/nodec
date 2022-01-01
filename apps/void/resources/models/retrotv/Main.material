@@ -1,7 +1,16 @@
 {
     "material": {
         "shader": "shaders/pbr",
-        "float_properties": [],
+        "float_properties": [
+            {
+                "key": "metallic",
+                "value": 0.5
+            },
+            {
+                "key": "roughness",
+                "value": 0.5
+            }
+        ],
         "vector4_properties": [],
         "texture_properties": []
     }
