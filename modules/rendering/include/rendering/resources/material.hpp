@@ -23,7 +23,7 @@ public:
 
 public:
     void set_shader(ShaderPtr shader) {
-        if (shader_ != shader) {
+        if (shader_ == shader) {
             return;
         }
 

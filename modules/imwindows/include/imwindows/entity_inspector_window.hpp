@@ -118,7 +118,6 @@ public:
             return handlers.end();
         }
 
-
         decltype(auto) registry_interface() {
             return RegistryInterface{ this };
         }

@@ -1,6 +1,6 @@
 {
     "material": {
-        "shader": "",
+        "shader": "shaders/pbr",
         "float_properties": [],
         "vector4_properties": [],
         "texture_properties": []

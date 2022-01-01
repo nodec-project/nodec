@@ -96,7 +96,6 @@ public:
             return {};
         }
 
-
         cereal::PortableBinaryInputArchive archive(file);
 
         SerializableMesh source;
@@ -127,7 +126,6 @@ public:
         //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         return mesh;
     }
-
 
     template<>
     std::shared_ptr<ShaderBackend> LoadBackend<ShaderBackend>(const std::string& path) const noexcept {
@@ -163,7 +161,7 @@ public:
             metaInfo.vector4_properties.push_back({ property.name, property.default_value });
         }
         metaInfo.texture_entries.reserve(sourceMetaInfo.texture_entries.size());
-        for (auto&& property : sourceMetaInfo.float_properties) {
+        for (auto&& property : sourceMetaInfo.texture_entries) {
             metaInfo.texture_entries.push_back({ property.name });
         };
 
@@ -235,6 +233,22 @@ public:
         }
 
         return material;
+    }
+
+    template<>
+    std::shared_ptr<TextureBackend> LoadBackend<TextureBackend>(const std::string& path) const noexcept {
+        using namespace nodec;
+
+        try {
+            auto texture = std::make_shared<TextureBackend>(mpGraphics, path);
+            return texture;
+        }
+        catch (...) {
+            HandleException(Formatter() << "Texture::" << path);
+            return {};
+        }
+
+        return {};
     }
 
     template<>

@@ -1,24 +1,20 @@
-#ifndef NODEC_MODULES__RENDERING__INTERFACES__CAMERA_HPP_
-#define NODEC_MODULES__RENDERING__INTERFACES__CAMERA_HPP_
+#ifndef RENDERING__COMPONENTS__CAMERA_HPP_
+#define RENDERING__COMPONENTS__CAMERA_HPP_
 
-#include <nodec/scene_set/component.hpp>
 
-namespace nodec_modules
-{
-namespace rendering
-{
-namespace interfaces
-{
+namespace rendering {
+namespace components {
 
-class Camera : public nodec::scene_set::Component
-{
+class Camera {
+
 public:
-    using Component::Component;
 
+    float farClipPlane{ 100.0f };
+    float nearClipPlane{ 0.01f };
+    float fovAngle{ 45.0f };
 
 };
 
-}
 }
 }
 

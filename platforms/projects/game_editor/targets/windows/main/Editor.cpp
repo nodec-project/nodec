@@ -11,9 +11,6 @@
 #include <imwindows/entity_inspector_window.hpp>
 #include <imwindows/log_window.hpp>
 
-#include <component_gui/scene_set/basic.hpp>
-#include <rendering/components/mesh_renderer.hpp>
-
 
 
 Editor::Editor(Engine* engine)
@@ -72,36 +69,27 @@ Editor::Editor(Engine* engine)
 
     inspector_gui_.reset(new InspectorGUI(&engine->resources_module().registry()));
 
-    inspector_component_registry_impl().register_component<Name>("Name", on_gui_name);
-    inspector_component_registry_impl().register_component<Transform>("Transform", on_gui_transform);
-    inspector_component_registry_impl().register_component<MeshRenderer>("Mesh Renderer", [=](MeshRenderer& renderer) {
-        inspector_gui_->OnGUIMeshRenderer(renderer);
+    inspector_component_registry_impl().register_component<Name>(
+        "Name",
+        [=](auto& name) {
+            inspector_gui_->OnGUIName(name);
         });
 
+    inspector_component_registry_impl().register_component<Transform>(
+        "Transform",
+        [=](auto& trfm) {
+            inspector_gui_->onGUITransform(trfm);
+        });
 
-    //register_menu_item("Test", [=]() {
-    //    using namespace nodec;
-    //    using namespace rendering::resources;
+    inspector_component_registry_impl().register_component<MeshRenderer>(
+        "Mesh Renderer",
+        [=](auto& renderer) {
+            inspector_gui_->OnGUIMeshRenderer(renderer);
+        });
 
-    //    std::ofstream out(Formatter() << engine_->resources_module().resource_path() << "/shader.meta", std::ios::binary);
-
-    //    if (!out) {
-    //        logging::WarnStream(__FILE__, __LINE__) << "Failed";
-    //        return;
-    //    }
-
-    //    cereal::JSONOutputArchive archive(out);
-
-    //    SerializableShaderMetaInfo meta;
-    //    meta.float_properties.push_back({ "float_a", 0.0f });
-    //    meta.float_properties.push_back({ "float_b", 1.0f });
-
-    //    meta.vector4_properties.push_back({ "vector_a", {0.0f, 0.0f, 0.0f, 0.0f} });
-    //    meta.vector4_properties.push_back({ "vector_b", {1.0f, 1.0f, 1.0f, 1.0f} });
-
-    //    meta.texture_entries.push_back({ "texture_a" });
-    //    meta.texture_entries.push_back({ "texture_b" });
-
-    //    archive(cereal::make_nvp("meta", meta));
-    //    });
+    inspector_component_registry_impl().register_component<Camera>(
+        "Camera",
+        [=](auto& camera) {
+            inspector_gui_->OnGUICamera(camera);
+        });
 }

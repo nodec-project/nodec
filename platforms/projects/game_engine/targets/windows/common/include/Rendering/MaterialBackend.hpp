@@ -104,6 +104,4 @@ private:
     std::vector<uint8_t> property_memory_;
     std::vector<TextureEntry> texture_entries_;
     bool dirty_{ true };
-
-
 };

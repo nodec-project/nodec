@@ -6,8 +6,8 @@
 #include "Resources/ResourceLoader.hpp"
 #include "Resources/ResourcesModuleBackend.hpp"
 #include "SceneSerialization/SceneSerializationModuleBackend.hpp"
+#include "Rendering/SceneRenderer.hpp"
 
-#include "Graphics/VertexBuffer.hpp"
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <screen/impl/screen_module.hpp>
@@ -80,6 +80,8 @@ public:
         screen_handler_->Setup(window_.get());
 
         resources_module_->setup_on_runtime(&window_->GetGraphics());
+
+        scene_renderer_.reset(new SceneRenderer(&window_->GetGraphics()));
     }
 
     void frame_begin() {
@@ -92,6 +94,8 @@ public:
         for (auto& root : scene_module_->hierarchy_system().root_entities()) {
             update_transform(scene_module_->registry(), root);
         }
+
+        scene_renderer_->Render(*scene_module_);
 
         window_->GetGraphics().EndFrame();
     }
@@ -114,6 +118,8 @@ private:
     std::shared_ptr<SceneSerializationModuleBackend> scene_serialization_module_;
 
     std::shared_ptr<SceneModule> scene_module_;
+
+    std::unique_ptr<SceneRenderer> scene_renderer_;
 
 
 };
