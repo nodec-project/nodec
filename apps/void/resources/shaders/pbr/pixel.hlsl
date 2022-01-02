@@ -70,8 +70,13 @@ float2 ApplyParallaxOffset(float2 uv, float3 viewDirInTangentSpace, Texture2D he
 
 float4 PSMain(V2P input) : SV_Target
 {
-    float3 cameraPos = sceneProperties.cameraPos.xyz;
+    // normalize !!MUST DO
+    // why?
+    //  * <https://forum.unity.com/threads/normalizing-a-vector-in-the-vertex-or-fragment-shader-is-not-the-same.1120411/>
+    input.worldNormal = normalize(input.worldNormal);
+    input.worldTangent = normalize(input.worldTangent);
     
+    const float3 cameraPos = sceneProperties.cameraPos.xyz;
     
     const float3 viewDir = normalize(input.worldPos - cameraPos); // camera to obj 
     
@@ -141,7 +146,8 @@ float4 PSMain(V2P input) : SV_Target
     // environment lighting
     float3 oEnv = EnvironmentBRDF(surface, -viewDir, environmentIrradience, environmentSpecular);
     
-    float3 illumination = oDiffuseSpecular + oEnv;
+    //float3 illumination = oDiffuseSpecular + oEnv;
+    float3 illumination = oDiffuseSpecular;
     
     // t1: ambient_occlusion
     if (textureConfig.texHasFlag & 0x02)

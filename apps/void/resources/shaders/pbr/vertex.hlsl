@@ -29,5 +29,4 @@ V2P VSMain(VSIn input)
     output.texcoord = input.texcoord;
     
     return output;
-
 }

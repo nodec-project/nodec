@@ -48,7 +48,7 @@
 "id": 2147483652,
 "data": {
 "meshes": [
-"models/primitives/sphere.mesh"
+"models/primitives/Sphere.mesh"
 ],
 "materials": [
 "models/primitives/Default.material"

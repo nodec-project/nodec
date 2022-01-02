@@ -22,6 +22,12 @@
 // The Cook-Torrence BRDF    : f_r = k_d * f_lambert + k_s * f_cook-torrence
 //                            f_lambert = albedo / PI;
 //
+// about theory:
+//  * <https://light11.hatenadiary.com/entry/2020/03/03/195249>
+//
+// about implementation:
+//  * <https://light11.hatenadiary.com/entry/2020/03/05/220957>
+
 
 #define PI 3.14159265359f
 
@@ -37,49 +43,51 @@ struct BRDFSurface
 };
 
 // Trowbridge-Reitz GGX Distribution
+// approximates the amount the surface's microfacets are aligned to the halfway vector, 
+// influenced by the roughness of the surface; this is the primary function approximating the microfacets.
+//
+// NDF_GGXTR(N, H, roughness) = roughness^2 / ( PI * ( dot(N, H))^2 * (roughness^2 - 1) + 1 )^2
+//
+// details:
+//  * <https://learnopengl.com/PBR/Theory>
+//  * <http://reedbeta.com/blog/hows-the-ndf-really-defined/>
+//
+// @param normal
+// @param wh halfway vector
 inline float NormalDistributionGGX(float3 normal, float3 wh, float roughness)
-{
-    // approximates microfacets :    approximates the amount the surface's microfacets are
-    //                                aligned to the halfway vector influenced by the roughness
-    //                                of the surface
-    //                            :    determines the size, brightness, and shape of the specular highlight
-    // more: http://reedbeta.com/blog/hows-the-ndf-really-defined/
-    //
-    // NDF_GGXTR(N, H, roughness) = roughness^2 / ( PI * ( dot(N, H))^2 * (roughness^2 - 1) + 1 )^2
+{   
     const float a = roughness * roughness;
     const float a2 = a * a;
     const float nh2 = pow(max(dot(normal, wh), 0), 2);
-    const float denom = (PI * pow((nh2 * (a2 - 1.0f) + 1.0f), 2));
-    if (denom < EPSILON)
-        return 1.0f;
+    const float denom = (PI * pow((nh2 * (a2 - 1.0f) + 1.0f), 2)) + 0.0001f; // here 0.0001 for avoiding zero division
 
     return a2 / denom;
 }
 
 // Smith's Schlick-GGX for Direct Lighting (non-IBL)
-inline float GeometrySmithsSchlickGGX(float3 normal, float3 w, float roughness)
+// describes self shadowing of geometry
+//
+// G_ShclickGGX(N, V, k) = ( dot(N,V) ) / ( dot(N,V)*(1-k) + k )
+//
+// k         :    remapping of roughness based on wheter we're using geometry function 
+//                for direct lighting or IBL
+// k_direct     = (roughness + 1)^2 / 8
+// k_IBL     = roughness^2 / 2
+//
+// @param w ray vector
+inline float GeometrySmithSchlickGGX(float3 normal, float3 w, float roughness)
 {
-    // describes self shadowing of geometry
-    //
-    // G_ShclickGGX(N, V, k) = ( dot(N,V) ) / ( dot(N,V)*(1-k) + k )
-    //
-    // k         :    remapping of roughness based on wheter we're using geometry function 
-    //                for direct lighting or IBL
-    // k_direct     = (roughness + 1)^2 / 8
-    // k_IBL     = roughness^2 / 2
-    //
     const float k = pow((roughness + 1.0f), 2) / 8.0f;
     const float nv = max(0.0f, dot(normal, w));
     const float denom = (nv * (1.0f - k) + k) + 0.0001f;
-    if (denom < EPSILON)
-        return 1.0f;
     return nv / denom;
 }
 
-inline float Geometry(float3 normal, float3 wi, float3 wo, float roughness)
+
+inline float GeometrySmith(float3 normal, float3 wi, float3 wo, float roughness)
 {
     // essentially a multiplier [0, 1] measuring microfacet shadowing
-    return GeometrySmithsSchlickGGX(normal, wi, roughness) * GeometrySmithsSchlickGGX(normal, wo, roughness);
+    return GeometrySmithSchlickGGX(normal, wi, roughness) * GeometrySmithSchlickGGX(normal, wo, roughness);
 }
 
 
@@ -89,7 +97,6 @@ inline float3 Fresnel(float3 wh, float3 wo, float3 f0)
     // F_Schlick(N, V, F0) = F0 - (1-F0)*(1 - dot(N,V))^5
     return f0 + (float3(1, 1, 1) - f0) * pow(1.0f - max(0.0f, dot(wh, wo)), 5.0f);
 }
-
 
 
 // Fresnel-Schlick with roughness factored in used in image-based lighting 
@@ -105,8 +112,8 @@ inline float3 FLambertDiffuse(float3 kd)
     return kd / PI;
 }
 
-// @note
-// <https://learnopengl.com/PBR/Theory>
+// about implementation:
+// * <https://learnopengl.com/PBR/Theory>
 float3 BRDF(BRDFSurface surface, float3 wi, float3 wo)
 {
     const float3 normal = surface.normal;
@@ -120,16 +127,24 @@ float3 BRDF(BRDFSurface surface, float3 wi, float3 wo)
     
     //// Fresnel_Cook-Torrence BRDF
     const float3 fresnel = Fresnel(wh, wo, f0);
-    const float geometory = Geometry(normal, wi, wo, roughness);
+    const float geometory = GeometrySmith(normal, wi, wo, roughness);
     const float ndf = NormalDistributionGGX(normal, wh, roughness);
+    
+    // Note that we add 0.0001 to the denominator to prevent a divide by zero in case any dot product ends up 0.0.
     const float denom = (4.0f * max(0.0f, dot(wo, normal)) * max(0.0f, dot(wi, normal))) + 0.0001f;
+    
     const float3 specular = ndf * fresnel * geometory / denom;
     const float3 oSpecular = specular;
     
-    // Diffuse BRDF
+    // Now we can finally calculate each light's contribution to the reflectance equation. 
+    // As the Fresnel value directly corresponds to kS we can use F to denote the specular 
+    // contribution of any light that hits the surface. From kS we can then calculate the 
+    // ratio of refraction kD:
     const float3 ks = fresnel;
-    const float3 kd = (float3(1.0f, 1.0f, 1.0f) - ks) * (1.0f - metallic) * albedo;
-    const float3 oDiffuse = FLambertDiffuse(kd);
+    const float3 kd = (float3(1.0f, 1.0f, 1.0f) - ks) * (1.0f - metallic);
+    
+    // Diffuse BRDF
+    const float3 oDiffuse = FLambertDiffuse(kd * albedo);
     
     return (oDiffuse + oSpecular);
 }
