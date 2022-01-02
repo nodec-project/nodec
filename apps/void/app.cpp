@@ -69,17 +69,17 @@ public:
                 //ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
 
 
-                if (retrotv_main_material) {
+                if (target_material) {
                     float metallic, roughness;
 
-                    metallic = retrotv_main_material->get_float_property("metallic");
-                    roughness = retrotv_main_material->get_float_property("roughness");
+                    metallic = target_material->get_float_property("metallic");
+                    roughness = target_material->get_float_property("roughness");
 
                     ImGui::DragFloat("metallic", &metallic, 0.01f, 0.0f, 1.0f);
                     ImGui::DragFloat("roughness", &roughness, 0.01f, 0.0f, 1.0f);
 
-                    retrotv_main_material->set_float_property("metallic", metallic);
-                    retrotv_main_material->set_float_property("roughness", roughness);
+                    target_material->set_float_property("metallic", metallic);
+                    target_material->set_float_property("roughness", roughness);
                 }
             });
 #endif
@@ -104,7 +104,7 @@ private:
 
         auto& resources = engine.get_module<Resources>();
 
-        retrotv_main_material = resources.registry().get_resource<Material>("models/retrotv/Main.material").get();
+        target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
     }
 
     void on_stepped(NodecEngine& engine) {
@@ -112,7 +112,7 @@ private:
     }
 
 private:
-    std::shared_ptr<Material> retrotv_main_material;
+    std::shared_ptr<Material> target_material;
 };
 
 
