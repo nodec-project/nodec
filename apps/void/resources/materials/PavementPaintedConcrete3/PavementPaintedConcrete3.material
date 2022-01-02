@@ -1,0 +1,49 @@
+{
+    "material": {
+        "shader": "shaders/pbr",
+        "float_properties": [
+            {
+                "key": "metallic",
+                "value": 0.0
+            }
+        ],
+        "vector4_properties": [],
+        "texture_properties": [
+            {
+                "key": "albedo",
+                "value": {
+                    "texture": "materials/PavementPaintedConcrete3/Tcom_Pavement_PaintedConcrete3_Base_Color.tga",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "normal",
+                "value": {
+                    "texture": "materials/PavementPaintedConcrete3/Tcom_Pavement_PaintedConcrete3_Normal.tga",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "height",
+                "value": {
+                    "texture": "materials/PavementPaintedConcrete3/Tcom_Pavement_PaintedConcrete3_Height.tga",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "roughness",
+                "value": {
+                    "texture": "materials/PavementPaintedConcrete3/Tcom_Pavement_PaintedConcrete3_Roughness.tga",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "ambient_occlusion",
+                "value": {
+                    "texture": "materials/PavementPaintedConcrete3/Tcom_Pavement_PaintedConcrete3_Ambient_Occlusion.tga",
+                    "sampler": 1
+                }
+            }
+        ]
+    }
+}

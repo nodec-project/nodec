@@ -45,6 +45,14 @@ public:
                 return resource_loader_->LoadAsync<Shader, ShaderBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
             });
 
+        registry().register_resource_loader<Texture>(
+            [=](auto& name) {
+                return resource_loader_->LoadDirect<Texture, TextureBackend>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto& name, auto notifyer) {
+                return resource_loader_->LoadAsync<Texture, TextureBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
+
         registry().register_resource_loader<Material>(
             [=](auto& name) {
                 return resource_loader_->LoadDirect<Material, MaterialBackend>(Formatter() << resource_path() << "/" << name);

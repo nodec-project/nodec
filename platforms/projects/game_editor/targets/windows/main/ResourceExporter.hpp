@@ -170,7 +170,7 @@ inline bool ExportMaterial(aiMaterial* pMaterial, const std::string& destPath) {
     SerializableMaterial material;
     //material.float_properties["albedo"];
     //material.float_properties["metalness"];
-    //material.texture_properties["albedo"] = { std::make_shared<Texture>("albedo.tga"), Sampler::Bilinear };
+    //material.texture_properties["albedo"] = { "albedo.tga", Sampler::Bilinear };
     //material.vector4_properties["ao"];
 
     archive(cereal::make_nvp("material", material));
