@@ -69,6 +69,7 @@ public:
     }
 
     void Render(scene_set::Scene& scene) {
+        using namespace nodec;
         using namespace scene_set::components;
         using namespace rendering::components;
         using namespace DirectX;
@@ -98,9 +99,13 @@ public:
             switch (light.type) {
             case LightType::Directional:
             {
-                mSceneProperties.lights.directional.enabled = 0x01;
-                mSceneProperties.lights.directional.color = light.color;
-                mSceneProperties.lights.directional.intensity = light.intensity;
+                auto& directional = mSceneProperties.lights.directional;
+                directional.enabled = 0x01;
+                directional.color = light.color;
+                directional.intensity = light.intensity;
+
+                auto direction = trfm.local2world * Vector4f{ 0.0f, 0.0f, 1.0f, 0.0f };
+                directional.direction.set(direction.x, direction.y, direction.z);
                 break;
             }
 

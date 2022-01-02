@@ -156,6 +156,16 @@ inline Matrix4x4<T> operator* (const Matrix4x4<T>& left, const Matrix4x4<T>& rig
 }
 
 template<typename T>
+inline Vector4<T> operator*(const Matrix4x4<T>& mat, const Vector4<T>& vec) {
+    return {
+        mat.m11 * vec.v[0] + mat.m12 * vec.v[1] + mat.m13 * vec.v[2] + mat.m14 * vec.v[3],
+        mat.m21 * vec.v[0] + mat.m22 * vec.v[1] + mat.m23 * vec.v[2] + mat.m24 * vec.v[3],
+        mat.m31 * vec.v[0] + mat.m32 * vec.v[1] + mat.m33 * vec.v[2] + mat.m34 * vec.v[3],
+        mat.m41 * vec.v[0] + mat.m42 * vec.v[1] + mat.m43 * vec.v[2] + mat.m44 * vec.v[3]
+    };
+}
+
+template<typename T>
 inline Matrix4x4<T> operator*(T left, const Matrix4x4<T>& right) {
     return{
         {

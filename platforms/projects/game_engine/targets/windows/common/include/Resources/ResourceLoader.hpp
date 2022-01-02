@@ -70,10 +70,20 @@ public:
 
     template<typename Resource, typename ResourceBackend>
     ResourceFuture<Resource> LoadAsync(const std::string& name, const std::string& path, ResourceRegistry::LoadNotifyer<Resource> notifyer) {
+        using namespace nodec;
+        
         return mExecutor.submit(
             [=]() {
+                // <https://github.com/microsoft/DirectXTex/issues/163>
+                HRESULT hr = CoInitializeEx(nullptr, COINITBASE_MULTITHREADED);
+                if (FAILED(hr)) {
+                    logging::WarnStream(__FILE__, __LINE__) << "CoInitializeEx failed.";
+                }
+
                 std::shared_ptr<Resource> resource = LoadBackend<ResourceBackend>(path);
                 notifyer.on_loaded(name, resource);
+
+                CoUninitialize();
                 return resource;
             });
     }

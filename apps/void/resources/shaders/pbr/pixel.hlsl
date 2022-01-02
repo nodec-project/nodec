@@ -139,7 +139,7 @@ float4 PSMain(V2P input) : SV_Target
     
     if (sceneProperties.lights.directional.enabled != 0)
     {
-        const float3 wi = normalize(-float3(0.0f, 0.0f, 1.0f));
+        const float3 wi = normalize(-sceneProperties.lights.directional.direction);
         const float3 radiance = sceneProperties.lights.directional.color * sceneProperties.lights.directional.intensity;
     
         oDiffuseSpecular += BRDF(surface, wi, -viewDir) * radiance * saturate(dot(surface.normal, wi));

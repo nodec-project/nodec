@@ -1,17 +1,44 @@
 {
     "material": {
         "shader": "shaders/pbr",
-        "float_properties": [
+        "float_properties": [],
+        "vector4_properties": [],
+        "texture_properties": [
             {
-                "key": "metallic",
-                "value": 0.5
+                "key": "albedo",
+                "value": {
+                    "texture": "models/retrotv/retrotv0319_Main_BaseColor.png",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "normal",
+                "value": {
+                    "texture": "models/retrotv/retrotv0319_Main_NormalDX.png",
+                    "sampler": 1
+                }
             },
             {
                 "key": "roughness",
-                "value": 0.5
+                "value": {
+                    "texture": "models/retrotv/retrotv0319_Main_Roughness.png",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "metallic",
+                "value": {
+                    "texture": "models/retrotv/retrotv0319_Main_Metallic.png",
+                    "sampler": 1
+                }
+            },
+            {
+                "key": "ambient_occlusion",
+                "value": {
+                    "texture": "models/retrotv/retrotv0319_Main_AO.png",
+                    "sampler": 1
+                }
             }
-        ],
-        "vector4_properties": [],
-        "texture_properties": []
+        ]
     }
 }

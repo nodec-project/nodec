@@ -47,7 +47,7 @@ public:
         default:
         case ImageType::WIC:
             pGfx->ThrowIfError(
-                LoadFromWICFile(pathW.c_str(), DirectX::WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
+                LoadFromWICFile(pathW.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
                 __FILE__, __LINE__);
             break;
         }
