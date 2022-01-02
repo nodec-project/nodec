@@ -12,6 +12,7 @@
 #include <scene_set/components/basic.hpp>
 #include <rendering/components/mesh_renderer.hpp>
 #include <rendering/components/camera.hpp>
+#include <rendering/components/light.hpp>
 
 #include <nodec/vector4.hpp>
 
@@ -22,9 +23,22 @@ class SceneRenderer {
     using TextureEntry = rendering::resources::Material::TextureEntry;
 
 public:
+    struct DirectionalLight {
+        nodec::Vector3f direction;
+        float intensity;
+        nodec::Vector4f color;
+        uint32_t enabled{ 0x00 };
+        uint32_t padding[3];
+    };
+
+    struct SceneLighting {
+        DirectionalLight directional;
+    };
+
     struct SceneProperties
     {
         nodec::Vector4f cameraPos;
+        SceneLighting lights;
     };
 
     struct ModelProperties
@@ -73,6 +87,28 @@ public:
 
         mTextureConfigCB.BindVS(mpGfx, 3);
         mTextureConfigCB.BindPS(mpGfx, 3);
+
+        // --- lights ---
+        mSceneProperties.lights.directional.enabled = 0x00;
+
+        for (auto entt : scene.registry().view<const Light, const Transform>()) {
+            auto& light = scene.registry().get_component<const Light>(entt);
+            auto& trfm = scene.registry().get_component<const Transform>(entt);
+
+            switch (light.type) {
+            case LightType::Directional:
+            {
+                mSceneProperties.lights.directional.enabled = 0x01;
+                mSceneProperties.lights.directional.color = light.color;
+                mSceneProperties.lights.directional.intensity = light.intensity;
+                break;
+            }
+
+            default:
+                break;
+            }
+
+        }
 
 
         for (auto cameraEntt : scene.registry().view<const Camera, const Transform>()) {

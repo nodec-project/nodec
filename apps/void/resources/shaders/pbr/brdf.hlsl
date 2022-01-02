@@ -123,6 +123,9 @@ float3 BRDF(BRDFSurface surface, float3 wi, float3 wo)
     const float3 albedo = surface.albedo;
     const float roughness = surface.roughness;
     const float metallic = surface.metallic;
+    
+    // As you can see, for non-metallic surfaces F0 is always 0.04. For metallic surfaces, 
+    // we vary F0 by linearly interpolating between the original F0 and the albedo value given the metallic property.
     const float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), albedo, metallic);
     
     //// Fresnel_Cook-Torrence BRDF

@@ -1,6 +1,21 @@
+
+struct DirectionalLight
+{
+    float3 direction;
+    float intensity;
+    float4 color;
+    int enabled;
+};
+
+struct SceneLighting
+{
+    DirectionalLight directional;
+};
+
 struct SceneProperties
 {
     float4 cameraPos;
+    SceneLighting lights;
 };
 
 cbuffer cbSceneProperties : register(b0)

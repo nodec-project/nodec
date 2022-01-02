@@ -92,4 +92,10 @@ Editor::Editor(Engine* engine)
         [=](auto& camera) {
             inspector_gui_->OnGUICamera(camera);
         });
+
+    inspector_component_registry_impl().register_component<Light>(
+        "Light",
+        [=](auto& light) {
+            inspector_gui_->OnGUILight(light);
+        });
 }

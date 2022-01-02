@@ -3,6 +3,7 @@
 #include <scene_set/components/basic.hpp>
 #include <rendering/components/mesh_renderer.hpp>
 #include <rendering/components/camera.hpp>
+#include <Rendering/components/light.hpp>
 
 #include <nodec/math/gfx.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
@@ -19,6 +20,7 @@ class InspectorGUI {
     using Name = scene_set::components::Name;
     using Transform = scene_set::components::Transform;
     using Camera = rendering::components::Camera;
+    using Light = rendering::components::Light;
 
 public:
     InspectorGUI(ResourceRegistry* pResourceRegistry)
@@ -150,6 +152,18 @@ public:
         ImGui::DragFloat("Near Clip Plane", &camera.nearClipPlane);
         ImGui::DragFloat("Far Clip Plane", &camera.farClipPlane);
         ImGui::DragFloat("Fov Angle", &camera.fovAngle);
+    }
+
+    void OnGUILight(Light& light) {
+        using namespace rendering::components;
+
+        int currentType = static_cast<int>(light.type);
+        ImGui::Combo("Type", &currentType, "Directional\0Point\0Spot");
+        light.type = static_cast<LightType>(currentType);
+
+        ImGui::ColorEdit4("Color", light.color.v, ImGuiColorEditFlags_Float);
+
+        ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
     }
 
 private:

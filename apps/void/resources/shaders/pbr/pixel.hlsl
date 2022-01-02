@@ -2,6 +2,9 @@
 * @require Shader Model 4 (/4_0)
 */
 
+// about implementation:
+//  * <https://github.com/vilbeyli/VQEngine-Legacy/blob/master/Source/Shaders/forward_brdf_ps.hlsl>
+
 #include "interface.hlsl"
 
 #include "brdf.hlsl"
@@ -107,14 +110,9 @@ float4 PSMain(V2P input) : SV_Target
     surface.albedo = (textureConfig.texHasFlag & 0x01) 
                         ? texAlbedo.Sample(sampler_texAlbedo, input.texcoord).xyz 
                         : materialProperties.albedo.xyz;
-
-    // t3: metallic
-    surface.metallic = (textureConfig.texHasFlag & 0x08)
-                        ? texMetallic.Sample(sampler_texMetallic, input.texcoord).x
-                        : materialProperties.metallic;
     
-    // t4: normal
-    if (textureConfig.texHasFlag & 0x10)
+    // t1: normal
+    if (textureConfig.texHasFlag & 0x02)
     {
         float3 normal = texNormal.Sample(sampler_texNormal, input.texcoord).rgb;
         normal = normalize(normal * 2.0 - 1.0);
@@ -125,32 +123,39 @@ float4 PSMain(V2P input) : SV_Target
         surface.normal = input.worldNormal;
     }
     
-    // t5: roughness
-    surface.roughness = (textureConfig.texHasFlag & 0x20)
+    // t3: metallic
+    surface.metallic = (textureConfig.texHasFlag & 0x08)
+                        ? texMetallic.Sample(sampler_texMetallic, input.texcoord).x
+                        : materialProperties.metallic;
+    
+    
+    // t4: roughness
+    surface.roughness = (textureConfig.texHasFlag & 0x10)
                         ? texRoughtness.Sample(sampler_texRoughtness, input.texcoord).x
                         : materialProperties.roughness;
     
     // illumination
     float3 oDiffuseSpecular = float3(0.0f, 0.0f, 0.0f); // diffuse & specular
     
+    if (sceneProperties.lights.directional.enabled != 0)
+    {
+        const float3 wi = normalize(-float3(0.0f, 0.0f, 1.0f));
+        const float3 radiance = sceneProperties.lights.directional.color * sceneProperties.lights.directional.intensity;
     
-    const float3 lightDirection = normalize(float3(0.0f, 0.0f, 1.0f));
-    const float3 lightColor = float3(1.0f, 1.0f, 1.0f);
-    
-    const float3 environmentIrradience = float3(0.1f, 0.1f, 0.1f);
-    const float3 environmentSpecular = float3(1.0f, 1.0f, 1.0f);
+        oDiffuseSpecular += BRDF(surface, wi, -viewDir) * radiance * saturate(dot(surface.normal, wi));
+    }
     
     
-    oDiffuseSpecular += BRDF(surface, -lightDirection, -viewDir) * lightColor;
-    
+    //const float3 environmentIrradience = float3(0.1f, 0.1f, 0.1f);
+    //const float3 environmentSpecular = float3(1.0f, 1.0f, 1.0f);
     // environment lighting
-    float3 oEnv = EnvironmentBRDF(surface, -viewDir, environmentIrradience, environmentSpecular);
+    //float3 oEnv = EnvironmentBRDF(surface, -viewDir, environmentIrradience, environmentSpecular);
     
     //float3 illumination = oDiffuseSpecular + oEnv;
     float3 illumination = oDiffuseSpecular;
     
-    // t1: ambient_occlusion
-    if (textureConfig.texHasFlag & 0x02)
+    // t5: ambient_occlusion
+    if (textureConfig.texHasFlag & 0x20)
     {
         illumination *= texAmbientOcclusion.Sample(sampler_texAmbientOcclusion, input.texcoord).r;
     }

@@ -1,26 +1,27 @@
-#ifndef NODEC_MODULES__RENDERING__INTERFACES__CAMERA_HPP_
-#define NODEC_MODULES__RENDERING__INTERFACES__CAMERA_HPP_
+#ifndef RENDERING__COMPONENTS__LIGHT_HPP_
+#define RENDERING__COMPONENTS__LIGHT_HPP_
 
-#include <nodec/scene_set/component.hpp>
+#include <nodec/vector4.hpp>
 
-namespace nodec_modules
-{
-namespace rendering
-{
-namespace interfaces
-{
+namespace rendering {
+namespace components {
 
-class Camera : public nodec::scene_set::Component
-{
+enum class LightType {
+    Directional,
+    Point,
+    Spot
+};
+
+class Light {
 public:
-    using Component::Component;
-
-
+    LightType type{ LightType::Directional };
+    nodec::Vector4f color{ 1.0f, 1.0f, 1.0f, 1.0f };
+    float intensity{ 1.0f };
 };
 
 }
 }
-}
+
 
 
 #endif
