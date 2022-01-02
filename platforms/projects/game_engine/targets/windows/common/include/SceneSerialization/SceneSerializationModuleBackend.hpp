@@ -6,6 +6,7 @@
 #include <rendering/components/mesh_renderer.hpp>
 #include <serialization/scene_set/components/basic.hpp>
 #include <serialization/rendering/components/mesh_renderer.hpp>
+#include <serialization/rendering/components/camera.hpp>
 
 
 #include <nodec/resource_management/resource_registry.hpp>
@@ -15,9 +16,6 @@ class SceneSerializationModuleBackend : public scene_serialization::SceneSeriali
     using SceneEntity = scene_set::SceneEntity;
     using SceneRegistry = scene_set::SceneRegistry;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
-    //using Mesh = rendering::resources::Mesh;
-    //using Material = rendering::resources::Material;
-    //using MeshRenderer = rendering::components::MeshRenderer;
 
 public:
     SceneSerializationModuleBackend(ResourceRegistry* pResourceRegistry)
@@ -87,7 +85,21 @@ public:
                 trfm.dirty = true;
             });
 
-
+        register_component<Camera, SerializableCamera>(
+            [](const Camera& camera) {
+                auto serializable_camera = std::make_shared<SerializableCamera>();
+                serializable_camera->farClipPlane = camera.farClipPlane;
+                serializable_camera->nearClipPlane = camera.nearClipPlane;
+                serializable_camera->fovAngle = camera.fovAngle;
+                return serializable_camera;
+            },
+            [](const SerializableCamera& serializable_camera, SceneEntity entity, SceneRegistry& registry) {
+                registry.emplace_component<Camera>(entity);
+                auto& camera = registry.get_component<Camera>(entity);
+                camera.farClipPlane = serializable_camera.farClipPlane;
+                camera.nearClipPlane = serializable_camera.nearClipPlane;
+                camera.fovAngle = serializable_camera.fovAngle;
+            });
     }
 
 private:

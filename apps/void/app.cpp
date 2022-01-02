@@ -98,7 +98,7 @@ private:
         logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
 
         auto& scene = engine.get_module<Scene>();
-        auto entity = scene.create_entity("Hello World!!");
+        //auto entity = scene.create_entity("Hello World!!");
         //scene.registry().emplace_component<MeshRenderer>(entity);
         //auto& renderer = scene.registry().get_component<MeshRenderer>(entity);
 
