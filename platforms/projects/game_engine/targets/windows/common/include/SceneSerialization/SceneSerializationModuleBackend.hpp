@@ -7,6 +7,7 @@
 #include <serialization/scene_set/components/basic.hpp>
 #include <serialization/rendering/components/mesh_renderer.hpp>
 #include <serialization/rendering/components/camera.hpp>
+#include <serialization/rendering/components/light.hpp>
 
 
 #include <nodec/resource_management/resource_registry.hpp>
@@ -99,6 +100,22 @@ public:
                 camera.farClipPlane = serializable_camera.farClipPlane;
                 camera.nearClipPlane = serializable_camera.nearClipPlane;
                 camera.fovAngle = serializable_camera.fovAngle;
+            });
+
+        register_component<Light, SerializableLight>(
+            [](const Light& light) {
+                auto serializable_light = std::make_shared<SerializableLight>();
+                serializable_light->type = light.type;
+                serializable_light->color = light.color;
+                serializable_light->intensity = light.intensity;
+                return serializable_light;
+            },
+            [](const SerializableLight& serializable_light, SceneEntity entity, SceneRegistry& registry) {
+                registry.emplace_component<Light>(entity);
+                auto& light = registry.get_component<Light>(entity);
+                light.type = serializable_light.type;
+                light.color = serializable_light.color;
+                light.intensity = serializable_light.intensity;
             });
     }
 

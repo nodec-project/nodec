@@ -125,6 +125,66 @@
 "children": []
 }
 }
+},
+{
+"ptr_wrapper": {
+"id": 2147483658,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483654,
+"polymorphic_name": "rendering::components::SerializableLight",
+"ptr_wrapper": {
+"id": 2147483659,
+"data": {
+"type": 0,
+"color": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0,
+"w": 1.0
+},
+"intensity": 1.0
+}
+}
+},
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483660,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483661,
+"data": {
+"name": "Light"
+}
+}
+}
+],
+"children": []
+}
+}
 }
 ]
 }
