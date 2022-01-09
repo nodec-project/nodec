@@ -4,8 +4,9 @@
 
 #include <xaudio2.h>
 #include <x3daudio.h>
-
 #include <wrl/client.h>
+
+#pragma comment(lib,"xaudio2.lib")
 
 
 class AudioIntegration {
@@ -28,7 +29,13 @@ public:
         mpXAudio2->SetDebugConfiguration(&debug, 0);
 #endif
 
-        //X3DAudioInitialize()
+        // Create a mastering voice
+        ThrowIfFailed(mpXAudio2->CreateMasteringVoice(&mpMasteringVoice), __FILE__, __LINE__);
+
+        DWORD channelMask;
+        ThrowIfFailed(mpMasteringVoice->GetChannelMask(&channelMask), __FILE__, __LINE__);
+
+        X3DAudioInitialize(channelMask, X3DAUDIO_SPEED_OF_SOUND, mX3DAudioHandle);
     }
 
     IXAudio2& GetXAudio() noexcept { return *mpXAudio2.Get(); }
@@ -37,5 +44,7 @@ public:
 
 private:
     Microsoft::WRL::ComPtr<IXAudio2> mpXAudio2;
+    IXAudio2MasteringVoice* mpMasteringVoice{ nullptr };
     X3DAUDIO_HANDLE mX3DAudioHandle{ 0x00 };
+
 };

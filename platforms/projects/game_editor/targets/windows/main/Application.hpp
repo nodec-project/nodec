@@ -11,7 +11,6 @@
 #include <scene_editor/impl/scene_editor_module.hpp>
 
 
-
 class Application : public WinDesktopApplication {
 
 public:
