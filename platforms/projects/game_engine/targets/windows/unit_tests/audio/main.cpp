@@ -2,18 +2,26 @@
 
 #include <nodec/logging.hpp>
 #include <nodec/audio/wave_format.hpp>
+#include <nodec/endian.hpp>
 
 #include <fstream>
 #include <thread>
 
 
 struct Test {
-    int field = 100;
-};
+    union 
+    {
+        char bytes[2];
+        uint16_t value;
+    };
 
-inline std::ostream& operator<<(std::ostream& stream, const Test& test) {
-    return stream << test.field;
-}
+};
+//
+//inline std::ostream& operator<<(std::ostream& stream, const Test& test) {
+//    return stream << test.field;
+//}
+
+
 
 int main() {
     using namespace nodec;
@@ -21,7 +29,9 @@ int main() {
     using namespace Exceptions;
 
     logging::record_handlers().connect(logging::record_to_stdout_handler);
+
     try {
+
         ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED), __FILE__, __LINE__);
 
         AudioIntegration audioIntegration;
@@ -126,6 +136,17 @@ int main() {
         
         //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         std::cin.get();
+
+        audioIntegration.GetXAudio().StopEngine();
+
+        std::cin.get();
+
+        audioIntegration.GetXAudio().StartEngine();
+
+        std::cin.get();
+
+        pSourceVoice->Stop();
+        pSourceVoice->DestroyVoice();
 
     }
     catch (std::exception& e) {
