@@ -9,7 +9,7 @@
 
 
 struct Test {
-    union 
+    union
     {
         char bytes[2];
         uint16_t value;
@@ -22,9 +22,9 @@ struct Test {
 //}
 
 
-
 int main() {
     using namespace nodec;
+    using namespace nodec::riff;
     using namespace nodec::audio::wave_format;
     using namespace Exceptions;
 
@@ -37,34 +37,36 @@ int main() {
         AudioIntegration audioIntegration;
 
         std::ifstream audio_file;
-        audio_file.open("08-Isabella's Song-s16.wav", std::ios::binary);
+        //audio_file.open("08-Isabella's Song-s16.wav", std::ios::binary);
+        audio_file.open("08-Isabella's Song-f32.wav", std::ios::binary);
+        //audio_file.unsetf(std::ios::skipws);
+        //audio_file.open("void.txt", std::ios::binary);
         if (!audio_file) {
             throw std::runtime_error("open failed");
         }
 
-        RIFFChunkHeader riff_header;
+        RIFFChunk riff_chunk; bool found;
+        RIFFChunk chunk;
 
-        audio_file.read(reinterpret_cast<char*>(&riff_header), sizeof(RIFFChunkHeader));
-        if (!audio_file) {
-            throw std::runtime_error("Stream Error");
-        }
-        if (riff_header.descriptor.id != FOURCC_RIFF_TAG) {
+        std::tie(riff_chunk, found) = find_riff_chunk(FOURCC_RIFF_TAG, audio_file);
+        if (!found) {
             throw std::runtime_error("Not RIFF");
         }
-        if (riff_header.type != FOURCC_WAVE_FILE_TAG) {
+        riff::FOURCC id;
+        audio_file.read(reinterpret_cast<char*>(&id), sizeof(riff::FOURCC));
+        if (id != FOURCC_WAVE_FILE_TAG) {
             throw std::runtime_error("Not WAVE File");
         }
 
-        RIFFChunk riff_chunk;
-        audio_file.read(reinterpret_cast<char*>(&riff_chunk), sizeof(RIFFChunk));
-        if (!audio_file) {
-            throw std::runtime_error("Stream Error");
-        }
-        if (riff_chunk.id != FOURCC_FORMAT_TAG) {
+        // Preserve start of subchunk in riff chunk, and end of riff chunk.
+        auto sub_chunk_start = audio_file.tellg();
+        auto riff_end = audio_file.tellg() + static_cast<std::streamsize>(riff_chunk.size);
+
+        std::tie(chunk, found) = find_riff_chunk(FOURCC_FORMAT_TAG, audio_file, riff_end);
+        if (!found) {
             throw std::runtime_error("Format Error. not found fmt chunk");
         }
 
-        auto pos = audio_file.tellg();
         WAVEFormat wave_format;
         audio_file.read(reinterpret_cast<char*>(&wave_format), sizeof(WAVEFormat));
         if (!audio_file) {
@@ -79,35 +81,23 @@ int main() {
             << "block_align    : " << wave_format.block_align << "\n"
             << "bits_per_sample: " << wave_format.bits_per_sample;
 
-        audio_file.seekg(pos + static_cast<std::streampos>(riff_chunk.size));
-        if (!audio_file) {
-            throw std::runtime_error("Stream Error");
-        }
-
-        audio_file.read(reinterpret_cast<char*>(&riff_chunk), sizeof(RIFFChunk));
-        if (!audio_file) {
-            throw std::runtime_error("Stream Error");
-        }
-        if (riff_chunk.id != FOURCC_DATA_TAG) {
+        audio_file.seekg(sub_chunk_start);
+        std::tie(chunk, found) = find_riff_chunk(FOURCC_DATA_TAG, audio_file, riff_end);
+        if (!found) {
             throw std::runtime_error("Format Error. not found data chunk");
         }
+
         logging::InfoStream(__FILE__, __LINE__) << "\n"
-            << "id:   " << riff_chunk.id << "\n"
-            << "size: " << riff_chunk.size;
+            << "id:   " << chunk.id << "\n"
+            << "size: " << chunk.size;
 
         std::vector<uint8_t> sample_data;
-        sample_data.resize(riff_chunk.size);
-        audio_file.read(reinterpret_cast<char*>(sample_data.data()), riff_chunk.size);
+        sample_data.resize(chunk.size);
+        audio_file.read(reinterpret_cast<char*>(sample_data.data()), chunk.size);
         if (!audio_file) {
             throw std::runtime_error("Stream Error");
         }
-        //audio_file.read(reinterpret_cast<char*>())
 
-        //Test test;
-        //logging::InfoStream(__FILE__, __LINE__) << "\n"
-        //    << "id:   " << riff_header.descriptor.id << "\n"
-        //    << "size: " << riff_header.descriptor.size << "\n"
-        //    << "type: " << riff_header.type << test;
 
 
         IXAudio2SourceVoice* pSourceVoice;
