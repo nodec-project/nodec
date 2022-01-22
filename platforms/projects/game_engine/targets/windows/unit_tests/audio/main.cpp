@@ -39,6 +39,7 @@ int main() {
         std::ifstream audio_file;
         //audio_file.open("08-Isabella's Song-s16.wav", std::ios::binary);
         audio_file.open("08-Isabella's Song-f32.wav", std::ios::binary);
+        //audio_file.open("dodon.wav", std::ios::binary);
         //audio_file.unsetf(std::ios::skipws);
         //audio_file.open("void.txt", std::ios::binary);
         if (!audio_file) {
@@ -124,14 +125,19 @@ int main() {
         ThrowIfFailed(pSourceVoice->Start(), __FILE__, __LINE__);
         
         
+        
         //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         std::cin.get();
+        pSourceVoice->Stop();
 
-        audioIntegration.GetXAudio().StopEngine();
+        buffer.PlayBegin = 0;
+        //ThrowIfFailed(pSourceVoice->SubmitSourceBuffer(&buffer), __FILE__, __LINE__);
+        //audioIntegration.GetXAudio().StopEngine();
 
         std::cin.get();
+        pSourceVoice->Start();
 
-        audioIntegration.GetXAudio().StartEngine();
+        //audioIntegration.GetXAudio().StartEngine();
 
         std::cin.get();
 
