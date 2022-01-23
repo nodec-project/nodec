@@ -31,7 +31,6 @@ int main() {
     logging::record_handlers().connect(logging::record_to_stdout_handler);
 
     try {
-
         ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED), __FILE__, __LINE__);
 
         AudioIntegration audioIntegration;
@@ -123,9 +122,9 @@ int main() {
         ThrowIfFailed(pSourceVoice->SubmitSourceBuffer(&buffer), __FILE__, __LINE__);
 
         ThrowIfFailed(pSourceVoice->Start(), __FILE__, __LINE__);
-        
-        
-        
+
+
+
         //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
         std::cin.get();
         pSourceVoice->Stop();

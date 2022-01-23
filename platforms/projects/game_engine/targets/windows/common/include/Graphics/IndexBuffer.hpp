@@ -16,15 +16,21 @@ public:
         D3D11_SUBRESOURCE_DATA isd = {};
         isd.pSysMem = pSysMem;
 
-        pGraphics->ThrowIfError(
+        ThrowIfFailedGfx(
             pGraphics->GetDevice().CreateBuffer(&ibd, &isd, &pIndexBuffer),
-            __FILE__, __LINE__
+            pGraphics, __FILE__, __LINE__
         );
     }
 
     void Bind(Graphics* pGraphics) {
         pGraphics->GetContext().IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[IndexBuffer::Bind] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
 private:

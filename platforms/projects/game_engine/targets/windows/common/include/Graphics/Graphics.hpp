@@ -2,7 +2,7 @@
 
 #include "DxgiInfoLogger.hpp"
 
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 #include <nodec/macros.hpp>
 
 // Prevent to define min/max macro in windows api.
@@ -16,51 +16,12 @@
 
 class Graphics {
 public:
-    class HrException : public std::runtime_error {
-    public:
-        /*static void Throw(HRESULT hr, const char* file, size_t line) {
-            throw HrException(hr, typeid(HrException).name(), file, line);
-        }*/
-
-        HrException(HRESULT hr, const char* file, size_t line)
-            : HrException(hr, typeid(HrException).name(), file, line) {
-        };
-
-        HrException(HRESULT hr, const char* type, const char* file, size_t line) noexcept
-            : errorCode(hr)
-            , runtime_error(nodec::error_fomatter::with_type_file_line(
-                nodec::Formatter()
-                << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
-                << " (" << (unsigned long)hr << ")",
-                type, file, line
-            )) {
-        }
-
-    public:
-        HRESULT ErrorCode() const noexcept { return errorCode; }
-
-    private:
-        const HRESULT errorCode;
-    };
-
-    class DeviceRemovedException : public HrException {
-    public:
-        DeviceRemovedException(HRESULT hr, const char* file, size_t line)
-            : HrException(hr, typeid(DeviceRemovedException).name(), file, line) {
-
-        }
-    };
-
-public:
     Graphics(HWND hWnd, int width, int height);
     ~Graphics();
 
     void BeginFrame() noexcept;
     void EndFrame();
     void DrawIndexed(UINT count);
-
-    void ThrowIfError(HRESULT hr, const char* file, size_t line);
-    //void DrawTestTriangle();
 
     ID3D11Device& GetDevice() noexcept { return *mpDevice.Get(); }
     ID3D11DeviceContext& GetContext() noexcept { return *mpContext.Get(); }
@@ -83,3 +44,23 @@ private:
 private:
     NODEC_DISABLE_COPY(Graphics);
 };
+
+
+inline void ThrowIfFailedGfx(const std::string& type, HRESULT hr, Graphics* pGfx, const char* file, size_t line) {
+    using namespace nodec;
+    if (FAILED(hr)) {
+        const auto logs = pGfx->GetInfoLogger().Dump();
+
+        throw std::runtime_error(
+            ErrorFormatter<std::runtime_error>(file, line)
+            << "GraphicsError::" << type <<" [Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
+            << " (" << (unsigned long)hr << ")\n"
+            << "Last Dxgi Debug Logs:\n"
+            << logs
+        );
+    }
+}
+
+inline void ThrowIfFailedGfx(HRESULT hr, Graphics* pGfx, const char* file, size_t line) {
+    ThrowIfFailedGfx("", hr, pGfx, file, line);
+}

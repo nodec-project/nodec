@@ -18,8 +18,10 @@ public:
     ~DxgiInfoLogger() = default;
 
     //void SetLatest() noexcept;
-    void Dump(nodec::logging::Level logLevel);
-    bool DumpIfAny(nodec::logging::Level logLevel);
+    //void Dump(nodec::logging::Level logLevel);
+    //bool DumpIfAny(nodec::logging::Level logLevel);
+
+    std::string Dump() noexcept;
 
 private:
     bool GetMessages(std::ostringstream& outMessagesStream);

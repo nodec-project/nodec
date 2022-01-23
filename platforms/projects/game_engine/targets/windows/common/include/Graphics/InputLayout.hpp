@@ -12,7 +12,7 @@ public:
         const void* pShaderBytecode,
         SIZE_T bytecodeLength) {
 
-        pGraphics->ThrowIfError(
+        ThrowIfFailedGfx(
             pGraphics->GetDevice().CreateInputLayout(
                 pInputElementDescs,
                 numElements,
@@ -20,14 +20,20 @@ public:
                 bytecodeLength,
                 &mpInputLayout
             ),
-            __FILE__, __LINE__
+            pGraphics, __FILE__, __LINE__
         );
 
     }
 
     void Bind(Graphics* pGraphics) {
         pGraphics->GetContext().IASetInputLayout(mpInputLayout.Get());
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[InputLayout::Bind] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
 private:

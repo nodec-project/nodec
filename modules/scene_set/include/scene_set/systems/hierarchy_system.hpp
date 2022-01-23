@@ -14,7 +14,7 @@ class HierarchySystem {
 
 public:
     HierarchySystem(SceneRegistry* registry)
-        : registry_{registry} {
+        : registry_{ registry } {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HierarchySystem] >>> init()";
 
         hierarchy_created_connection_
@@ -24,12 +24,12 @@ public:
                 })
             .assign();
 
-        hierarchy_destroyed_connection_
-            = registry_->component_destroyed<components::Hierarchy>().connect(
-                [&](SceneRegistry& registry, const SceneEntity entity) {
-                    on_hierarchy_destroyed(registry, entity);
-                })
-            .assign();
+                hierarchy_destroyed_connection_
+                    = registry_->component_destroyed<components::Hierarchy>().connect(
+                        [&](SceneRegistry& registry, const SceneEntity entity) {
+                            on_hierarchy_destroyed(registry, entity);
+                        })
+                    .assign();
 
     }
 
@@ -55,19 +55,18 @@ public:
         auto grand = parent;
         while (grand != null_entity) {
             if (grand == child) {
-                throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-                    Formatter() << "The entity cannot set itself as a parent. (parent: " << parent
-                    << "; child: " << child << ")",
-                    __FILE__, __LINE__
-                    ));
+                throw std::runtime_error(ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
+                    << "The entity cannot set itself as a parent. (parent: " << parent
+                    << "; child: " << child << ")"
+                );
             }
             auto& hier = registry_->get_component<components::Hierarchy>(grand);
             grand = hier.parent;
         }
 
         auto pos = std::lower_bound(parent_hier.children.begin(),
-                                    parent_hier.children.end(),
-                                    child);
+            parent_hier.children.end(),
+            child);
 
         if (pos != parent_hier.children.end() && *pos == child) {
             // already exists
@@ -93,13 +92,12 @@ public:
         auto& child_hier = registry_->get_component<components::Hierarchy>(child);
 
         auto pos = std::lower_bound(parent_hier.children.begin(),
-                                    parent_hier.children.end(),
-                                    child);
+            parent_hier.children.end(),
+            child);
         if (pos == parent_hier.children.end() || *pos != child) {
-            throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-                Formatter() << "The child (entity: " << child << ") is not a child of the given parent (entity: " << parent << ").",
-                __FILE__, __LINE__
-                ));
+            throw std::runtime_error(ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
+                << "The child (entity: " << child << ") is not a child of the given parent (entity: " << parent << ")."
+            );
         }
 
         parent_hier.children.erase(pos);

@@ -1,6 +1,7 @@
 #pragma once
 
-#include <nodec/error_formatter.hpp>
+
+#include <nodec/formatter.hpp>
 
 #include <stdexcept>
 
@@ -12,11 +13,10 @@ inline void ThrowHrException(HRESULT hr, const char* file, size_t line) {
     using namespace nodec;
 
     throw std::runtime_error(
-        error_fomatter::with_type_file_line<std::runtime_error>(
-            Formatter()
-            << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
-            << " (" << (unsigned long)hr << ")",
-            file, line));
+        ErrorFormatter<std::runtime_error>(file, line)
+        << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
+        << " (" << (unsigned long)hr << ")"
+    );
 }
 
 constexpr void ThrowIfFailed(HRESULT hr, const char* file, size_t line) {

@@ -30,10 +30,9 @@ void InitLogging(nodec::logging::Level level) {
 
     logFile.open("output.log", std::ios::binary);
     if (!logFile) {
-        throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
-            "Logging initialize failed. cannot open the log file.",
-            __FILE__, __LINE__
-            ));
+        throw std::runtime_error(nodec::ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
+            << "Logging initialize failed. cannot open the log file."
+        );
     }
 
     nodec::logging::set_level(level);

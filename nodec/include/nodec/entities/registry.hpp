@@ -4,7 +4,7 @@
 #include <nodec/entities/entity.hpp>
 #include <nodec/entities/storage.hpp>
 #include <nodec/entities/view.hpp>
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 #include <nodec/type_info.hpp>
 
 #include <stdexcept>
@@ -22,20 +22,18 @@ namespace details {
 
 template<typename Entity>
 inline void throw_invalid_entity_exception(const Entity entity, const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        Formatter() << "Invalid entity detected. entity: 0x" << std::hex << entity
-        << "(entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << ")",
-        file, line
-        ));
+    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
+        << "Invalid entity detected. entity: 0x" << std::hex << entity
+        << "(entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << ")"
+    );
 }
 
 template<typename Component, typename Entity>
 inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        Formatter() << "Entity {0x" << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity)
-        << "} doesn't have the component {" << typeid(Component).name() << "}.",
-        file, line
-        ));
+    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
+        << "Entity {0x" << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity)
+        << "} doesn't have the component {" << typeid(Component).name() << "}."
+    );
 }
 
 }
@@ -228,7 +226,7 @@ public:
 
         return std::make_tuple(([this, entity](auto* cpool) {
             return cpool != nullptr && cpool->erase(*this, entity);
-                                })(pool_if_exists<Components>())...);
+            })(pool_if_exists<Components>())...);
     }
 
     void remove_all_components(const Entity entity) {
@@ -319,9 +317,9 @@ public:
 
     /**
     * @brief Visits an entity and returns the type seq index and opaque pointer for its components.
-    * 
+    *
     * The signature of the function should be equivalent to the following:
-    * 
+    *
     * @code{.cpp}
     * void(int type_seq_index, void* component);
     * @endcode

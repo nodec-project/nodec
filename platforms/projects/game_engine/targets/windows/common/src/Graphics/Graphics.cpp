@@ -13,14 +13,8 @@
 namespace wrl = Microsoft::WRL;
 //namespace dx = DirectX;
 
-void Graphics::ThrowIfError(HRESULT hr, const char* file, size_t line) {
-    if (FAILED(hr)) {
-        mInfoLogger.Dump(nodec::logging::Level::Error);
-        throw HrException(hr, file, line);
-    }
-}
 
-Graphics::Graphics(HWND hWnd, int width, int height) 
+Graphics::Graphics(HWND hWnd, int width, int height)
     : mWidth(width)
     , mHeight(height) {
     DXGI_SWAP_CHAIN_DESC sd = {};
@@ -47,7 +41,7 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     // mInfoLogger.SetLatest();
 
     // create device and front/back buffers, and swap chain and rendering context.
-    ThrowIfError(D3D11CreateDeviceAndSwapChain(
+    ThrowIfFailedGfx(D3D11CreateDeviceAndSwapChain(
         nullptr,                  // video adapter: nullptr=default adapter
         D3D_DRIVER_TYPE_HARDWARE, // driver type
         nullptr,                  // Needed if D3D_DRIVER_TYPE_SOFTWARE is enabled
@@ -60,20 +54,20 @@ Graphics::Graphics(HWND hWnd, int width, int height)
         &mpDevice,
         nullptr,
         &mpContext
-    ), __FILE__, __LINE__);
+    ), this, __FILE__, __LINE__);
 
     // gain access to texture subresource in swap chain (back buffer)
     wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
 
-    ThrowIfError(mpSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer), __FILE__, __LINE__);
-    ThrowIfError(mpDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &mpTarget), __FILE__, __LINE__);
+    ThrowIfFailedGfx(mpSwap->GetBuffer(0, __uuidof(ID3D11Texture2D), &pBackBuffer), this, __FILE__, __LINE__);
+    ThrowIfFailedGfx(mpDevice->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &mpTarget), this, __FILE__, __LINE__);
 
     D3D11_DEPTH_STENCIL_DESC dsDesc = {};
     dsDesc.DepthEnable = TRUE;
     dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
     dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
     wrl::ComPtr<ID3D11DepthStencilState> pDSState;
-    ThrowIfError(mpDevice->CreateDepthStencilState(&dsDesc, &pDSState), __FILE__, __LINE__);
+    ThrowIfFailedGfx(mpDevice->CreateDepthStencilState(&dsDesc, &pDSState), this, __FILE__, __LINE__);
 
     // bind depth state
     mpContext->OMSetDepthStencilState(pDSState.Get(), 1u);
@@ -90,16 +84,16 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     descDepth.SampleDesc.Quality = 0u;
     descDepth.Usage = D3D11_USAGE_DEFAULT;
     descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-    ThrowIfError(mpDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil), __FILE__, __LINE__);
+    ThrowIfFailedGfx(mpDevice->CreateTexture2D(&descDepth, nullptr, &pDepthStencil), this, __FILE__, __LINE__);
 
     // create view of depth stensil texture
     D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
     descDSV.Format = DXGI_FORMAT_D32_FLOAT;
     descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     descDSV.Texture2D.MipSlice = 0u;
-    ThrowIfError(
+    ThrowIfFailedGfx(
         mpDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &mpDSV),
-        __FILE__, __LINE__
+        this, __FILE__, __LINE__
     );
 
     // bind depth stencil view to OM
@@ -118,7 +112,9 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     // init imgui d3d impl
     ImGui_ImplDX11_Init(mpDevice.Get(), mpContext.Get());
 
-    mInfoLogger.Dump(nodec::logging::Level::Info);
+    nodec::logging::InfoStream(__FILE__, __LINE__) 
+        << "[Graphics] >>> DXGI Debug Logs:\n" << mInfoLogger.Dump();
+
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> Successfully initialized." << std::flush;
 }
 
@@ -126,7 +122,8 @@ Graphics::~Graphics() {
 
     ImGui_ImplDX11_Shutdown();
 
-    mInfoLogger.DumpIfAny(nodec::logging::Level::Info);
+    nodec::logging::InfoStream(__FILE__, __LINE__)
+        << "[Graphics] >>> DXGI Debug Logs:\n" << mInfoLogger.Dump();
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> End Graphics." << std::flush;
 }
 
@@ -155,99 +152,24 @@ void Graphics::EndFrame() {
         ImGui::RenderPlatformWindowsDefault();
     }
 
-
     HRESULT hr;
     // mInfoLogger.SetLatest();
     if (FAILED(hr = mpSwap->Present(1u, 0u))) {
-        mInfoLogger.Dump(nodec::logging::Level::Fatal);
         if (hr == DXGI_ERROR_DEVICE_REMOVED) {
-            throw DeviceRemovedException(mpDevice->GetDeviceRemovedReason(), __FILE__, __LINE__);
+            ThrowIfFailedGfx("DeviceRemoved", hr, this, __FILE__, __LINE__);
         }
         else {
-            throw HrException(hr, __FILE__, __LINE__);
+            ThrowIfFailedGfx(hr, this, __FILE__, __LINE__);
         }
     }
 }
 
 void Graphics::DrawIndexed(UINT count) {
     mpContext->DrawIndexed(count, 0u, 0u);
-    mInfoLogger.DumpIfAny(nodec::logging::Level::Warn);
+    const auto logs = mInfoLogger.Dump();
+    if (!logs.empty()) {
+        nodec::logging::WarnStream(__FILE__, __LINE__)
+            << "[Graphics::DrawIndexed] >>> DXGI debug having messages:\n"
+            << logs;
+    }
 }
-
-//
-//void Graphics::DrawTestTriangle() {
-//    namespace wrl = Microsoft::WRL;
-//
-//    struct Vertex {
-//        float x;
-//        float y;
-//    };
-//
-//    const Vertex vertices[] = {
-//        {0.0f, 0.5f},
-//        {0.5f, -0.5f},
-//        {-0.5f, -0.5f}
-//    };
-//    wrl::ComPtr<ID3D11Buffer> pVertexBuffer;
-//
-//    D3D11_BUFFER_DESC bd = {};
-//    bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-//    bd.Usage = D3D11_USAGE_DEFAULT;
-//    bd.CPUAccessFlags = 0u;
-//    bd.MiscFlags = 0u;
-//    bd.ByteWidth = sizeof(vertices);
-//    bd.StructureByteStride = sizeof(Vertex);
-//
-//    D3D11_SUBRESOURCE_DATA sd = {};
-//    sd.pSysMem = vertices;
-//    ThrowIfError(mpDevice->CreateBuffer(&bd, &sd, &pVertexBuffer), __FILE__, __LINE__);
-//
-//    const UINT stride = sizeof(Vertex);
-//    const UINT offset = 0u;
-//    mpContext->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
-//
-//    // For file reading
-//    wrl::ComPtr<ID3DBlob> pBlob;
-//
-//    // create pixel shader
-//    wrl::ComPtr<ID3D11PixelShader> pPixelShader;
-//    D3DReadFileToBlob(L"PixelShader.cso", &pBlob);
-//    mpDevice->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
-//
-//    // bind pixel shader
-//    mpContext->PSSetShader(pPixelShader.Get(), nullptr, 0u);
-//
-//
-//    // create vertex shader
-//    wrl::ComPtr<ID3D11VertexShader> pVertexShader;
-//    D3DReadFileToBlob(L"VertexShader.cso", &pBlob);
-//    mpDevice->CreateVertexShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pVertexShader);
-//
-//    mpContext->VSSetShader(pVertexShader.Get(), nullptr, 0u);
-//
-//
-//    // input (vertex) layout (2d position only) 
-//    wrl::ComPtr<ID3D11InputLayout> pInputLayout;
-//    const D3D11_INPUT_ELEMENT_DESC ied[] = {
-//        {"Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-//    };
-//    mpDevice->CreateInputLayout(
-//        ied, std::size(ied),
-//        pBlob->GetBufferPointer(),
-//        pBlob->GetBufferSize(),
-//        &pInputLayout);
-//
-//    // bind vertex layout
-//    mpContext->IASetInputLayout(pInputLayout.Get());
-//
-//    // bind render target
-//    mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), nullptr);
-//
-//
-//    mpContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-//
-//    mpContext->Draw((UINT)std::size(vertices), 0u);
-//
-//    //mInfoLogger.Dump(nodec::logging::Level::Debug);
-//}
-

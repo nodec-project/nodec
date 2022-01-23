@@ -1,8 +1,7 @@
 #ifndef NODEC__UNICODE_HPP_
 #define NODEC__UNICODE_HPP_
 
-#include <nodec/error_formatter.hpp>
-#include <nodec/logging.hpp>
+#include <nodec/formatter.hpp>
 
 #include <stdexcept>
 #include <iostream>
@@ -22,18 +21,16 @@ namespace unicode {
 namespace details {
 
 inline void throw_illegal_character_exception(const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        "Illegal character found.",
-        file, line
-        ));
+    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
+        << "Illegal character found."
+    );
 }
 
 
 inline void throw_buffer_range_exception(const char* file, size_t line) {
-    throw std::runtime_error(error_fomatter::with_type_file_line<std::runtime_error>(
-        "Cannot add characters to buffer, output is too small.",
-        file, line
-        ));
+    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
+        << "Cannot add characters to buffer, output is too small."
+    );
 }
 
 
@@ -321,7 +318,7 @@ DstString to_wide(const SrcString& string, Function function, bool strict = true
     constexpr size_t dst_chars_per_unit = c2_size / dst_char_size;
 
     static_assert(src_chars_per_unit > 0 && dst_chars_per_unit > 0,
-                  "The character size of the string must be set so that it is exactly divisible by the size of the code unit.");
+        "The character size of the string must be set so that it is exactly divisible by the size of the code unit.");
 
     //arguments
     const size_t srclen = string.size() / src_chars_per_unit; // source length (the number of code units)
@@ -354,7 +351,7 @@ DstString to_narrow(const SrcString& string, Function function, bool strict = tr
     constexpr size_t dst_chars_per_unit = c2_size / dst_char_size;
 
     static_assert(src_chars_per_unit > 0 && dst_chars_per_unit > 0,
-                  "The character size of the string must be set so that it is exactly divisible by the size of the code unit.");
+        "The character size of the string must be set so that it is exactly divisible by the size of the code unit.");
 
     // arguments
     const size_t srclen = string.size() / src_chars_per_unit; // source length (the number of code units)
@@ -491,13 +488,13 @@ U8String utf32to8(const U32String& string, bool strict = true) {
 * @param iter
 *   Iterator with an iterate size of 1 byte.
 *   After function execution, this iterator points to the first code unit of the next code point.
-* 
+*
 * @param end
 *   The end iterator of the string.
-* 
+*
 * @param strict
 *   If enabled, raise an exception when an illegal character is found.
-* 
+*
 * @return code point
 */
 template<typename Iter8>
@@ -506,8 +503,8 @@ uint32_t iterate_utf8(Iter8& iter, const Iter8& end, bool strict = true) {
 
     details::IteratorAdapter<Iter8> iter_adapter(iter);
     auto code_point = details::code_point_utf8to32(iter_adapter,
-                                                   details::IteratorAdapter<Iter8>(end),
-                                                   strict);
+        details::IteratorAdapter<Iter8>(end),
+        strict);
 
     iter = iter_adapter;
     return code_point;
@@ -533,8 +530,8 @@ uint32_t iterate_utf16(Iter16& iter, const Iter16& end, bool strict = true) {
 
     details::IteratorAdapter<Iter16> iter_adapter(iter);
     auto code_point = details::code_point_utf16to32(iter_adapter,
-                                                    details::IteratorAdapter<Iter16>(end),
-                                                    strict);
+        details::IteratorAdapter<Iter16>(end),
+        strict);
     iter = iter_adapter;
     return code_point;
 }

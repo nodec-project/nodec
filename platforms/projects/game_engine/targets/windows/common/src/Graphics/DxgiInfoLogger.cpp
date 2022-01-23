@@ -1,7 +1,8 @@
 #include "Graphics/DxgiInfoLogger.hpp"
 #include "Graphics/Graphics.hpp"
+#include <Exceptions.hpp>
 
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 #include <nodec/logging.hpp>
 
 #include <dxgidebug.h>
@@ -12,6 +13,8 @@
 #pragma comment(lib, "dxguid.lib")
 
 DxgiInfoLogger::DxgiInfoLogger() {
+    using namespace Exceptions;
+
     // define function signature of DXGIGetDebugInterface
     typedef HRESULT(WINAPI* DXGIGetDebugInterface)(REFIID, void**);
 
@@ -19,10 +22,9 @@ DxgiInfoLogger::DxgiInfoLogger() {
     const auto hModDxgiDebug = LoadLibraryEx(L"dxgidebug.dll", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
 
     if (hModDxgiDebug == nullptr) {
-        throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
-            "Failed to load the dll 'dxgidebug.dll'",
-            __FILE__, __LINE__
-            ));
+        throw std::runtime_error(nodec::ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
+            << "Failed to load the dll 'dxgidebug.dll'"
+        );
     }
 
     // get address of DXGIGetDebugInterface in dll
@@ -30,16 +32,12 @@ DxgiInfoLogger::DxgiInfoLogger() {
         reinterpret_cast<void*>(GetProcAddress(hModDxgiDebug, "DXGIGetDebugInterface"))
         );
     if (DxgiGetDebugInterface == nullptr) {
-        throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
-            "Failed to get address of DXGIGetDebugInterface in dll 'dxgidebug.dll'",
-            __FILE__, __LINE__
-            ));
+        throw std::runtime_error(nodec::ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
+            << "Failed to get address of DXGIGetDebugInterface in dll 'dxgidebug.dll'"
+        );
     }
 
-    HRESULT hr;
-    if (FAILED(hr = DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &mpDxgiInfoQueue))) {
-        throw Graphics::HrException(hr, __FILE__, __LINE__);
-    }
+    ThrowIfFailed(DxgiGetDebugInterface(__uuidof(IDXGIInfoQueue), &mpDxgiInfoQueue), __FILE__, __LINE__);
 
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[DxgiInfoLogger] >>> Successfully initialized." << std::flush;
 }
@@ -50,31 +48,38 @@ DxgiInfoLogger::DxgiInfoLogger() {
 //    next = mpDxgiInfoQueue->GetNumStoredMessages(DXGI_DEBUG_ALL);
 //}
 
-bool DxgiInfoLogger::DumpIfAny(nodec::logging::Level logLevel) {
+//bool DxgiInfoLogger::DumpIfAny(nodec::logging::Level logLevel) {
+//    std::ostringstream oss;
+//
+//    oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
+//        << "=== Messages ===\n";
+//    if (!GetMessages(oss)) {
+//        return false;
+//    }
+//    oss << "END Messages ===\n";
+//
+//    nodec::logging::log(logLevel, oss.str(), __FILE__, __LINE__);
+//
+//    return true;
+//}
+
+std::string DxgiInfoLogger::Dump() noexcept
+{
     std::ostringstream oss;
-
-    oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
-        << "=== Messages ===\n";
-    if (!GetMessages(oss)) {
-        return false;
-    }
-    oss << "END Messages ===\n";
-
-    nodec::logging::log(logLevel, oss.str(), __FILE__, __LINE__);
-
-    return true;
-}
-
-void DxgiInfoLogger::Dump(nodec::logging::Level logLevel) {
-    std::ostringstream oss;
-
-    oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
-        << "=== Messages ===\n";
     GetMessages(oss);
-    oss << "END Messages ===\n";
-
-    nodec::logging::log(logLevel, oss.str(), __FILE__, __LINE__);
+    return oss.str();
 }
+
+//void DxgiInfoLogger::Dump(nodec::logging::Level logLevel) {
+//    std::ostringstream oss;
+//
+//    oss << "[DxgiInfoLogger] >>> Dump the messsages.\n"
+//        << "=== Messages ===\n";
+//    GetMessages(oss);
+//    oss << "END Messages ===\n";
+//
+//    nodec::logging::log(logLevel, oss.str(), __FILE__, __LINE__);
+//}
 
 bool DxgiInfoLogger::GetMessages(std::ostringstream& outMessagesStream) {
     static std::mutex mtx;

@@ -2,7 +2,7 @@
 #define NODEC__RESOURCE_MANAGEMENT__RESOURCE_REGISTRY_HPP_
 
 #include <nodec/type_info.hpp>
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 #include <nodec/flags/flags.hpp>
 
 #include <type_traits>
@@ -41,19 +41,17 @@ namespace details {
 
 template<typename Type>
 inline void throw_no_resource_exception(const std::string& resource_name, const char* file, size_t line) {
-    throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
-        nodec::Formatter()
-        << "No resource named '" << resource_name << " (type: " << typeid(Type).name() << ")'",
-        file, line));
+    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
+        << "No resource named '" << resource_name << " (type: " << typeid(Type).name() << ")'"
+    );
 }
 
 
 template<typename Type>
 inline void throw_resource_already_exists_exception(const std::string& resource_name, const char* file, size_t line) {
-    throw std::runtime_error(nodec::error_fomatter::with_type_file_line<std::runtime_error>(
-        nodec::Formatter()
-        << "The resource named '" << resource_name << " (type: " << typeid(Type).name() << ")' already exisis.",
-        file, line));
+    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
+        << "The resource named '" << resource_name << " (type: " << typeid(Type).name() << ")' already exisis."
+    );
 }
 
 }
@@ -169,7 +167,7 @@ public:
     *   @code{.cpp}
     *   std::shared_ptr<Type>(const std::string& name);
     *   @endcode
-    * 
+    *
     * @param async_loader
     *   @code{.cpp}
     *   std::future<std::shared_ptr<Type>>(const std::string& name, LoadNotifyer<Type> notifyer);

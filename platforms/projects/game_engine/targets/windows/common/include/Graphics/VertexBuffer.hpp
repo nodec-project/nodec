@@ -19,16 +19,22 @@ public:
         bd.StructureByteStride = strideBytes;
         D3D11_SUBRESOURCE_DATA sd = {};
         sd.pSysMem = pSysMem;
-        pGraphics->ThrowIfError(
+        ThrowIfFailedGfx(
             pGraphics->GetDevice().CreateBuffer(&bd, &sd, &pVertexBuffer),
-            __FILE__, __LINE__);
+            pGraphics, __FILE__, __LINE__);
     }
 
     void Bind(Graphics* pGraphics) {
         const UINT offset = 0u;
 
         pGraphics->GetContext().IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &mStrideBytes, &offset);
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[VertexShader::Bind] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
 private:

@@ -11,23 +11,29 @@ class VertexShader {
 public:
     VertexShader(Graphics* pGraphics, const std::string& path) {
 
-        pGraphics->ThrowIfError(
+        ThrowIfFailedGfx(
             D3DReadFileToBlob(nodec::unicode::utf8to16<std::wstring>(path).c_str(), &mpBytecodeBlob),
-            __FILE__, __LINE__
+            pGraphics, __FILE__, __LINE__
         );
 
-        pGraphics->ThrowIfError(
+        ThrowIfFailedGfx(
             pGraphics->GetDevice().CreateVertexShader(
                 mpBytecodeBlob->GetBufferPointer(), mpBytecodeBlob->GetBufferSize(),
                 nullptr, &mpVertexShader
             ),
-            __FILE__, __LINE__
+            pGraphics, __FILE__, __LINE__
         );
     }
 
     void Bind(Graphics* pGraphics) {
         pGraphics->GetContext().VSSetShader(mpVertexShader.Get(), nullptr, 0u);
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[VertexShader::Bind] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
     ID3DBlob& GetBytecode() {

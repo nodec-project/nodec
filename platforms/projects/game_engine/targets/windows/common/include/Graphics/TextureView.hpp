@@ -39,33 +39,45 @@ public:
         switch (imageType)
         {
         case ImageType::TGA:
-            pGfx->ThrowIfError(
+            ThrowIfFailedGfx(
                 LoadFromTGAFile(pathW.c_str(), &metadata, image),
-                __FILE__, __LINE__);
+                pGfx, __FILE__, __LINE__);
             break;
 
         default:
         case ImageType::WIC:
-            pGfx->ThrowIfError(
+            ThrowIfFailedGfx(
                 LoadFromWICFile(pathW.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
-                __FILE__, __LINE__);
+                pGfx, __FILE__, __LINE__);
             break;
         }
 
         // create the resource view on the texture
-        pGfx->ThrowIfError(
+        ThrowIfFailedGfx(
             CreateShaderResourceView(&pGfx->GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &mpTextureView),
-            __FILE__, __LINE__);
+            pGfx, __FILE__, __LINE__);
     }
 
     void BindVS(Graphics* pGfx, UINT slot) {
         pGfx->GetContext().VSSetShaderResources(slot, 1u, mpTextureView.GetAddressOf());
-        pGfx->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGfx->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[TextureView::BindVS] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
     void BindPS(Graphics* pGfx, UINT slot) {
         pGfx->GetContext().PSSetShaderResources(slot, 1u, mpTextureView.GetAddressOf());
-        pGfx->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGfx->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[TextureView::BindPS] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
 private:

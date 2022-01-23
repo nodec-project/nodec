@@ -7,7 +7,7 @@
 #include <string>
 
 namespace nodec {
-namespace error_fomatter {
+namespace error_formatter {
 
 inline std::string with_type_file_line(const std::string& message, const char* type, const char* file, const size_t line) noexcept {
     return Formatter() << type << ": " << message << "\n"

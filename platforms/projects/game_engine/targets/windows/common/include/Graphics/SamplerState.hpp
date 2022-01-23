@@ -33,19 +33,31 @@ public:
         samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
         samplerDesc.MaxAnisotropy = D3D11_REQ_MAXANISOTROPY;
 
-        pGfx->ThrowIfError(
+        ThrowIfFailedGfx(
             pGfx->GetDevice().CreateSamplerState(&samplerDesc, &mpSamplerState),
-            __FILE__, __LINE__);
+            pGfx, __FILE__, __LINE__);
     }
 
     void BindVS(Graphics* pGraphics, UINT slot) {
         pGraphics->GetContext().VSSetSamplers(slot, 1, mpSamplerState.GetAddressOf());
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[SamplerState::BindVS] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
     void BindPS(Graphics* pGraphics, UINT slot) {
         pGraphics->GetContext().PSSetSamplers(slot, 1, mpSamplerState.GetAddressOf());
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+        
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[SamplerState::BindPS] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
 private:

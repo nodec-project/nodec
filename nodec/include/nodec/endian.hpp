@@ -20,13 +20,13 @@ struct little_endian_conv {
 
 template<typename T>
 struct little_endian_conv<T, 2> {
-    static void to_native(const T& src, T& dest) {
+    static void to_host(const T& src, T& dest) {
         const auto* bytes = reinterpret_cast<const uint8_t*>(&src);
         auto* value = reinterpret_cast<uint16_t*>(&dest);
         *value = bytes[1] << 8 | bytes[0];
     }
 
-    static void from_native(const T& src, T& dest) {
+    static void from_host(const T& src, T& dest) {
         const auto* value = reinterpret_cast<const uint16_t*>(&src);
         auto* bytes = reinterpret_cast<uint8_t*>(&dest);
         bytes[0] = (*value & 0x00ff);
@@ -36,13 +36,13 @@ struct little_endian_conv<T, 2> {
 
 template<typename T>
 struct little_endian_conv<T, 4> {
-    static void to_native(const T& src, T& dest) {
+    static void to_host(const T& src, T& dest) {
         const auto* bytes = reinterpret_cast<const uint8_t*>(&src);
         auto* value = reinterpret_cast<uint32_t*>(&dest);
         *value = bytes[3] << 24 | bytes[2] << 16 | bytes[1] << 8 | bytes[0];
     }
 
-    static void from_native(const T& src, T& dest) {
+    static void from_host(const T& src, T& dest) {
         const auto* value = reinterpret_cast<const uint32_t*>(&src);
         auto* bytes = reinterpret_cast<uint8_t*>(&dest);
         bytes[0] = (*value & 0x000000ff);
@@ -54,7 +54,7 @@ struct little_endian_conv<T, 4> {
 
 template<typename T>
 struct little_endian_conv<T, 8> {
-    static void to_native(const T& src, T& dest) {
+    static void to_host(const T& src, T& dest) {
         const auto* bytes = reinterpret_cast<const uint8_t*>(&src);
         auto* value = reinterpret_cast<uint64_t*>(&dest);
         *value = 0
@@ -62,7 +62,7 @@ struct little_endian_conv<T, 8> {
             | (uint64_t)bytes[3] << 24 | (uint64_t)bytes[2] << 16 | (uint64_t)bytes[1] << 8 | (uint64_t)bytes[0];
     }
 
-    static void from_native(const T& src, T& dest) {
+    static void from_host(const T& src, T& dest) {
         const auto* value = reinterpret_cast<const uint64_t*>(&src);
         auto* bytes = reinterpret_cast<uint8_t*>(&dest);
         bytes[0] = (*value & 0x00000000000000ff);
@@ -83,13 +83,13 @@ struct big_endian_conv {
 
 template<typename T>
 struct big_endian_conv<T, 2> {
-    static void to_native(const T& src, T& dest) {
+    static void to_host(const T& src, T& dest) {
         const auto* bytes = reinterpret_cast<const uint8_t*>(&src);
         auto* value = reinterpret_cast<uint16_t*>(&dest);
         *value = bytes[0] << 8 | bytes[1];
     }
 
-    static void from_native(const T& src, T& dest) {
+    static void from_host(const T& src, T& dest) {
         const auto* value = reinterpret_cast<const uint16_t*>(&src);
         auto* bytes = reinterpret_cast<uint8_t*>(&dest);
         bytes[0] = (*value & 0xff00) >> 8;
@@ -99,13 +99,13 @@ struct big_endian_conv<T, 2> {
 
 template<typename T>
 struct big_endian_conv<T, 4> {
-    static void to_native(const T& src, T& dest) {
+    static void to_host(const T& src, T& dest) {
         const auto* bytes = reinterpret_cast<const uint8_t*>(&src);
         auto* value = reinterpret_cast<uint32_t*>(&dest);
         *value = bytes[0] << 24 | bytes[1] << 16 | bytes[2] << 8 | bytes[3];
     }
 
-    static void from_native(const T& src, T& dest) {
+    static void from_host(const T& src, T& dest) {
         const auto* value = reinterpret_cast<const uint32_t*>(&src);
         auto* bytes = reinterpret_cast<uint8_t*>(&dest);
         bytes[0] = (*value & 0xff000000) >> 24;
@@ -117,7 +117,7 @@ struct big_endian_conv<T, 4> {
 
 template<typename T>
 struct big_endian_conv<T, 8> {
-    static void to_native(const T& src, T& dest) {
+    static void to_host(const T& src, T& dest) {
         const auto* bytes = reinterpret_cast<const uint8_t*>(&src);
         auto* value = reinterpret_cast<uint64_t*>(&dest);
         *value = 0
@@ -125,7 +125,7 @@ struct big_endian_conv<T, 8> {
             | (uint64_t)bytes[4] << 24 | (uint64_t)bytes[5] << 16 | (uint64_t)bytes[6] << 8 | (uint64_t)bytes[7];
     }
 
-    static void from_native(const T& src, T& dest) {
+    static void from_host(const T& src, T& dest) {
         const auto* value = reinterpret_cast<const uint64_t*>(&src);
         auto* bytes = reinterpret_cast<uint8_t*>(&dest);
         bytes[0] = (*value & 0xff00000000000000) >> 56;
@@ -142,29 +142,29 @@ struct big_endian_conv<T, 8> {
 }
 
 template<typename T>
-T little_to_native(const T& src) {
+T little_to_host(const T& src) {
     T dest{};
-    internal::little_endian_conv<T>::to_native(src, dest);
+    internal::little_endian_conv<T>::to_host(src, dest);
     return dest;
 }
 
 template<typename T>
-T native_to_little(const T& src) {
+T host_to_little(const T& src) {
     T dest{};
-    internal::little_endian_conv<T>::from_native(src, dest);
+    internal::little_endian_conv<T>::from_host(src, dest);
     return dest;
 }
 template<typename T>
-T big_to_native(const T& src) {
+T big_to_host(const T& src) {
     T dest{};
-    internal::big_endian_conv<T>::to_native(src, dest);
+    internal::big_endian_conv<T>::to_host(src, dest);
     return dest;
 }
 
 template<typename T>
-T native_to_big(const T& src) {
+T host_to_big(const T& src) {
     T dest{};
-    internal::big_endian_conv<T>::from_native(src, dest);
+    internal::big_endian_conv<T>::from_host(src, dest);
     return dest;
 }
 

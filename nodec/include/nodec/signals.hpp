@@ -1,7 +1,7 @@
 #ifndef NODEC__SIGNALS_HPP_
 #define NODEC__SIGNALS_HPP_
 
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 
 #include <functional>
 #include <vector>
@@ -19,10 +19,9 @@ namespace signals {
 namespace details {
 
 inline void throw_broken_connection_exception(const char* file, size_t line) {
-    throw std::logic_error(error_fomatter::with_type_file_line<std::logic_error>(
-        "This connection is broken.",
-        file, line
-        ));
+    throw std::logic_error(ErrorFormatter<std::logic_error>(file, line)
+        << "This connection is broken."
+    );
 }
 
 template<typename> class BaseSignal;
@@ -261,7 +260,7 @@ public:
     private:
         BaseConnection* ptr{ nullptr };
     };
-    
+
     class SignalInterface {
     public:
         SignalInterface(BaseSignal& base_sig)
@@ -279,7 +278,7 @@ public:
         }
 
     private:
-        BaseSignal &base_sig;
+        BaseSignal& base_sig;
     };
 
 public:

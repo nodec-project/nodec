@@ -2,7 +2,7 @@
 
 #include "Graphics/Graphics.hpp"
 
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 #include <nodec/macros.hpp>
 #include <nodec/signals.hpp>
 
@@ -22,12 +22,10 @@ public:
     public:
         HrException(HRESULT hr, const char* file, size_t line) noexcept
             : errorCode(hr)
-            , runtime_error(nodec::error_fomatter::with_type_file_line<HrException>(
-                nodec::Formatter()
+            , runtime_error(nodec::ErrorFormatter<HrException>(file, line)
                 << "[Error Code] 0x" << std::hex << std::uppercase << hr << std::dec
                 << " (" << (unsigned long)hr << ")\n"
-                << "[Description] " << TranslateErrorCode(hr),
-                file, line)) {
+                << "[Description] " << TranslateErrorCode(hr)) {
         };
 
         HRESULT ErrorCode() const noexcept { return errorCode; }
@@ -59,8 +57,8 @@ private:
 
 public:
     Window(int width, int height,
-           int gfxWidth, int gfxHeight,
-           const wchar_t* name);
+        int gfxWidth, int gfxHeight,
+        const wchar_t* name);
 
     ~Window();
 

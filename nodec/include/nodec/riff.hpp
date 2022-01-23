@@ -32,11 +32,11 @@ struct FOURCC {
 };
 
 
-constexpr FOURCC FOURCC_RIFF_TAG        = { 'R', 'I', 'F', 'F' };
-constexpr FOURCC FOURCC_LIST_TAG        = { 'L', 'I', 'S', 'T' };
-constexpr FOURCC FOURCC_FORMAT_TAG      = { 'f', 'm', 't', ' ' };
-constexpr FOURCC FOURCC_DATA_TAG        = { 'd', 'a', 't', 'a' };
-constexpr FOURCC FOURCC_WAVE_FILE_TAG   = { 'W', 'A', 'V', 'E' };
+constexpr FOURCC FOURCC_RIFF_TAG      = { 'R', 'I', 'F', 'F' };
+constexpr FOURCC FOURCC_LIST_TAG      = { 'L', 'I', 'S', 'T' };
+constexpr FOURCC FOURCC_FORMAT_TAG    = { 'f', 'm', 't', ' ' };
+constexpr FOURCC FOURCC_DATA_TAG      = { 'd', 'a', 't', 'a' };
+constexpr FOURCC FOURCC_WAVE_FILE_TAG = { 'W', 'A', 'V', 'E' };
 
 
 
@@ -57,7 +57,7 @@ inline std::pair<RIFFChunk, bool> find_riff_chunk(const FOURCC& target, std::ist
 
     while (stream && (end < 0 || stream.tellg() < end)) {
 
-        chunk.size = endian::little_to_native(chunk.size);
+        chunk.size = endian::little_to_host(chunk.size);
 
         if (chunk.id == target) {
             // found

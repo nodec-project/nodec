@@ -11,24 +11,30 @@ class PixelShader {
 public:
     PixelShader(Graphics* pGraphics, const std::string& path) {
         Microsoft::WRL::ComPtr<ID3DBlob> pBlob;
-        
-        pGraphics->ThrowIfError(
+
+        ThrowIfFailedGfx(
             D3DReadFileToBlob(nodec::unicode::utf8to16<std::wstring>(path).c_str(), &pBlob),
-            __FILE__, __LINE__
+            pGraphics, __FILE__, __LINE__
         );
 
-        pGraphics->ThrowIfError(
+        ThrowIfFailedGfx(
             pGraphics->GetDevice().CreatePixelShader(
                 pBlob->GetBufferPointer(), pBlob->GetBufferSize(),
                 nullptr, &mpPixelShader
             ),
-            __FILE__, __LINE__
+            pGraphics, __FILE__, __LINE__
         );
     }
 
     void Bind(Graphics* pGraphics) {
         pGraphics->GetContext().PSSetShader(mpPixelShader.Get(), nullptr, 0u);
-        pGraphics->GetInfoLogger().DumpIfAny(nodec::logging::Level::Warn);
+
+        const auto logs = pGraphics->GetInfoLogger().Dump();
+        if (!logs.empty()) {
+            nodec::logging::WarnStream(__FILE__, __LINE__)
+                << "[PixelShader::Bind] >>> DXGI Logs:"
+                << logs;
+        }
     }
 
 private:

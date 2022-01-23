@@ -6,7 +6,6 @@
 #include <nodec/vector3.hpp>
 #include <nodec/quaternion.hpp>
 #include <nodec/matrix4x4.hpp>
-#include <nodec/error_formatter.hpp>
 
 #include <memory>
 #include <string>
