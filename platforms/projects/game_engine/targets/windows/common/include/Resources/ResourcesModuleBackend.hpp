@@ -22,6 +22,7 @@ public:
         using namespace nodec;
         using namespace rendering::resources;
         using namespace scene_serialization;
+        using namespace scene_audio::resources;
 
 
         resource_path_changed_connection_.disconnect();
@@ -67,6 +68,14 @@ public:
             },
             [=](auto& name, auto notifyer) {
                 return resource_loader_->LoadAsync<SerializableSceneGraph, SerializableSceneGraph>(name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
+
+        registry().register_resource_loader<AudioClip>(
+            [=](auto& name) {
+                return resource_loader_->LoadDirect<AudioClip, AudioClipBackend>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto& name, auto notifyer) {
+                return resource_loader_->LoadAsync<AudioClip, AudioClipBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
             });
     }
 

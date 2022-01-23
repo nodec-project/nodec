@@ -18,6 +18,9 @@
 #include <rendering/components/mesh_renderer.hpp>
 #include <rendering/resources/mesh.hpp>
 #include <scene_serialization/scene_serialization.hpp>
+#include <scene_audio/resources/audio_clip.hpp>
+#include <scene_audio/components/audio_listener.hpp>
+#include <scene_audio/components/audio_source.hpp>
 
 #include <nodec/logging.hpp>
 

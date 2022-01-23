@@ -6,6 +6,8 @@
 #include <Rendering/ShaderBackend.hpp>
 #include <Rendering/TextureBackend.hpp>
 
+#include <SceneAudio/AudioClipBackend.hpp>
+
 #include <serialization/rendering/resources/mesh.hpp>
 #include <serialization/rendering/resources/material.hpp>
 #include <serialization/rendering/resources/shader.hpp>
@@ -290,6 +292,13 @@ public:
         return out;
     }
 
+    template<>
+    std::shared_ptr<AudioClipBackend> LoadBackend<AudioClipBackend>(const std::string& path) const noexcept {
+
+        std::shared_ptr<AudioClipBackend> clip;
+
+        return clip;
+    }
 private:
     nodec::concurrent::ThreadPoolExecutor mExecutor;
     Graphics* mpGraphics;

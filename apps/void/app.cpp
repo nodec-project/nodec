@@ -11,6 +11,8 @@ using namespace resources;
 using namespace rendering::components;
 using namespace rendering::resources;
 using namespace scene_serialization;
+using namespace scene_audio::resources;
+using namespace scene_audio::components;
 
 
 class HelloWorld {
@@ -105,6 +107,8 @@ private:
         auto& resources = engine.get_module<Resources>();
 
         target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
+
+        
     }
 
     void on_stepped(NodecEngine& engine) {
@@ -131,8 +135,8 @@ void nodec_engine::on_boot(NodecEngine& engine) {
     screen.set_size({ 1920, 1080 });
     screen.set_resolution({ 1920, 1080 });
 
-    //screen.set_size({ 1280, 720 });
-    //screen.set_resolution({ 1280, 720 });
+    screen.set_size({ 1280, 720 });
+    screen.set_resolution({ 1280, 720 });
 
     //screen.set_size({ 1368, 800 });
     //screen.set_resolution({ 1368, 800 });
