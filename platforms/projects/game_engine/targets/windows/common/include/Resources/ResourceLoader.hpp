@@ -294,8 +294,17 @@ public:
 
     template<>
     std::shared_ptr<AudioClipBackend> LoadBackend<AudioClipBackend>(const std::string& path) const noexcept {
+        using namespace nodec;
 
         std::shared_ptr<AudioClipBackend> clip;
+
+        try {
+            clip = std::make_shared<AudioClipBackend>(path);
+        }
+        catch (...) {
+            HandleException(Formatter() << "AudioClip::" << path);
+            return {};
+        }
 
         return clip;
     }

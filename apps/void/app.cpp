@@ -108,7 +108,8 @@ private:
 
         target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
 
-        
+        auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
+        auto miku_clip = resources.registry().get_resource<AudioClip>("audios/miku-activated.wav").get();
     }
 
     void on_stepped(NodecEngine& engine) {
