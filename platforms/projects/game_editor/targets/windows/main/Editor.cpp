@@ -20,6 +20,7 @@ Editor::Editor(Engine* engine)
     using namespace imelements;
     using namespace scene_set::components;
     using namespace rendering::components;
+    using namespace scene_audio::components;
 
 
     register_menu_item("Window/Control",
@@ -98,4 +99,12 @@ Editor::Editor(Engine* engine)
         [=](auto& light) {
             inspector_gui_->OnGUILight(light);
         });
+
+    inspector_component_registry_impl().register_component<AudioSource>(
+        "AudioSource",
+        [=](auto& source) {
+
+        });
+
+
 }

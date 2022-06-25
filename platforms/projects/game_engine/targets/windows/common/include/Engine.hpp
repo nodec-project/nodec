@@ -7,6 +7,8 @@
 #include "Resources/ResourcesModuleBackend.hpp"
 #include "SceneSerialization/SceneSerializationModuleBackend.hpp"
 #include "Rendering/SceneRenderer.hpp"
+#include "Audio/AudioPlatform.hpp"
+#include "SceneAudio/SceneAudioSystem.hpp"
 
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
@@ -63,7 +65,11 @@ public:
 
         initialized().connect([=](NodecEngine&) {
             scene_module_->registry().clear();
-                              });
+            });
+
+        stepped().connect([=](NodecEngine&) {
+            scene_audio_system_->UpdateAudio(scene_module_->registry());
+            });
     }
 
     ~Engine() {
@@ -74,14 +80,18 @@ public:
         using namespace nodec;
 
         window_.reset(new Window(screen_module_->internal_size.x, screen_module_->internal_size.y,
-                                screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
-                                unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
+            screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
+            unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
 
         screen_handler_->Setup(window_.get());
 
         resources_module_->setup_on_runtime(&window_->GetGraphics());
 
         scene_renderer_.reset(new SceneRenderer(&window_->GetGraphics()));
+
+        audio_platform_.reset(new AudioPlatform());
+
+        scene_audio_system_.reset(new SceneAudioSystem(audio_platform_.get(), &scene_module_->registry()));
     }
 
     void frame_begin() {
@@ -104,11 +114,13 @@ public:
     SceneModule& scene_module() { return *scene_module_; }
     ResourcesModule& resources_module() { return *resources_module_; }
     SceneSerialization& scene_serialization() { return *scene_serialization_module_; }
+    AudioPlatform& audio_platform() { return *audio_platform_; }
 
 private:
     // imgui must be destroyed after window.
     std::unique_ptr<ImguiManager> imgui_manager_;
     std::unique_ptr<Window> window_;
+    std::unique_ptr<AudioPlatform> audio_platform_;
 
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
@@ -121,5 +133,6 @@ private:
 
     std::unique_ptr<SceneRenderer> scene_renderer_;
 
+    std::unique_ptr<SceneAudioSystem> scene_audio_system_;
 
 };

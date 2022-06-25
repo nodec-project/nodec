@@ -8,11 +8,23 @@
 
 #pragma comment(lib,"xaudio2.lib")
 
+inline bool operator==(const WAVEFORMATEX& left, const WAVEFORMATEX& right) {
+    return (left.wFormatTag == right.wFormatTag)
+        && (left.nChannels == right.nChannels)
+        && (left.nSamplesPerSec == right.nSamplesPerSec)
+        && (left.nBlockAlign == right.nBlockAlign)
+        && (left.wBitsPerSample == right.wBitsPerSample)
+        && (left.cbSize == right.cbSize);
+}
 
-class AudioIntegration {
+inline bool operator!=(const WAVEFORMATEX& left, const WAVEFORMATEX& right) {
+    return !(left == right);
+}
+
+class AudioPlatform {
 
 public:
-    AudioIntegration() {
+    AudioPlatform() {
         using namespace Exceptions;
 
         ThrowIfFailed(XAudio2Create(&mpXAudio2), __FILE__, __LINE__);
@@ -36,6 +48,10 @@ public:
         ThrowIfFailed(mpMasteringVoice->GetChannelMask(&channelMask), __FILE__, __LINE__);
 
         X3DAudioInitialize(channelMask, X3DAUDIO_SPEED_OF_SOUND, mX3DAudioHandle);
+    }
+
+    ~AudioPlatform() {
+
     }
 
     IXAudio2& GetXAudio() noexcept { return *mpXAudio2.Get(); }

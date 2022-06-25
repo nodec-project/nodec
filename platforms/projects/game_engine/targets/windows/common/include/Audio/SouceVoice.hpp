@@ -1,17 +1,17 @@
 #pragma once
 
-#include "AudioIntegration.hpp"
+#include "AudioPlatform.hpp"
 #include <Exceptions.hpp>
 
 
 class SourceVoice {
 
 public:
-    SourceVoice(AudioIntegration* pIntegration, WAVEFORMATEX wfx)
+    SourceVoice(AudioPlatform* pAudioPlatform, const WAVEFORMATEX& wfx)
         : mWfx{ wfx } {
         using namespace Exceptions;
 
-        ThrowIfFailed(pIntegration->GetXAudio().CreateSourceVoice(&mpSourceVoice, &wfx), __FILE__, __LINE__);
+        ThrowIfFailed(pAudioPlatform->GetXAudio().CreateSourceVoice(&mpSourceVoice, &wfx), __FILE__, __LINE__);
     }
 
     ~SourceVoice() {

@@ -110,6 +110,12 @@ private:
 
         auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
         auto miku_clip = resources.registry().get_resource<AudioClip>("audios/miku-activated.wav").get();
+
+        auto entity = scene.create_entity("Audio Source Test");
+        scene.registry().emplace_component<AudioSource>(entity);
+        auto& source = scene.registry().get_component<AudioSource>(entity);
+        source.clip = dodon_clip;
+        source.is_playing = true;
     }
 
     void on_stepped(NodecEngine& engine) {

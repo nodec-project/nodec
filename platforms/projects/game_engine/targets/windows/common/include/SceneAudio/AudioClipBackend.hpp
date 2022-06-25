@@ -1,8 +1,5 @@
 #pragma once
 
-#include <Audio/AudioIntegration.hpp>
-#include <Exceptions.hpp>
-
 #include <scene_audio/resources/audio_clip.hpp>
 
 #include <nodec/riff.hpp>
@@ -66,13 +63,13 @@ public:
             );
         }
 
-        logging::InfoStream(__FILE__, __LINE__) << "\n"
-            << "sample_format  : " << static_cast<uint16_t>(wave_format.sample_format) << "\n"
-            << "n_channels     : " << wave_format.n_channels << "\n"
-            << "sample_rate    : " << wave_format.sample_rate << "\n"
-            << "byte_rate      : " << wave_format.byte_rate << "\n"
-            << "block_align    : " << wave_format.block_align << "\n"
-            << "bits_per_sample: " << wave_format.bits_per_sample;
+        //logging::InfoStream(__FILE__, __LINE__) << "\n"
+        //    << "sample_format  : " << static_cast<uint16_t>(wave_format.sample_format) << "\n"
+        //    << "n_channels     : " << wave_format.n_channels << "\n"
+        //    << "sample_rate    : " << wave_format.sample_rate << "\n"
+        //    << "byte_rate      : " << wave_format.byte_rate << "\n"
+        //    << "block_align    : " << wave_format.block_align << "\n"
+        //    << "bits_per_sample: " << wave_format.bits_per_sample;
 
         audio_file.seekg(sub_chunk_start);
         std::tie(chunk, found) = find_riff_chunk(FOURCC_DATA_TAG, audio_file, riff_end);

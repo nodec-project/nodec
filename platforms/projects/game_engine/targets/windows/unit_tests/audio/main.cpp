@@ -1,4 +1,4 @@
-#include <Audio/AudioIntegration.hpp>
+#include <Audio/AudioPlatform.hpp>
 #include <SceneAudio/AudioClipBackend.hpp>
 
 #include <nodec/logging.hpp>
@@ -34,7 +34,7 @@ int main() {
     try {
         ThrowIfFailed(CoInitializeEx(nullptr, COINIT_MULTITHREADED), __FILE__, __LINE__);
 
-        AudioIntegration audioIntegration;
+        AudioPlatform audioPlatform;
 
         AudioClipBackend clip("08-Isabella's Song-f32.wav");
 
@@ -105,7 +105,7 @@ int main() {
 
         IXAudio2SourceVoice* pSourceVoice;
 
-        ThrowIfFailed(audioIntegration.GetXAudio().CreateSourceVoice(&pSourceVoice, &clip.wfx()), __FILE__, __LINE__);
+        ThrowIfFailed(audioPlatform.GetXAudio().CreateSourceVoice(&pSourceVoice, &clip.wfx()), __FILE__, __LINE__);
 
 
         XAUDIO2_BUFFER buffer = {};

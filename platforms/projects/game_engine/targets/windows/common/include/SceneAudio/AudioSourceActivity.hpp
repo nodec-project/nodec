@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AudioClipBackend.hpp"
+
 #include <Audio/SouceVoice.hpp>
 
 #include <memory>
@@ -11,6 +13,16 @@
 class AudioSourceActivity {
 public:
 
-    std::unique_ptr<SourceVoice> mpSourceVoice;
+    bool loop{ false };
+
+    enum class State {
+        Inactive,
+        Stopped,
+        Playing
+    };
+
+    State state{ State::Inactive };
+    std::shared_ptr<AudioClipBackend> pClip;
+    std::unique_ptr<SourceVoice> pVoice;
 
 };
