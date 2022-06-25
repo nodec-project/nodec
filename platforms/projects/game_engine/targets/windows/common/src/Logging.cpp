@@ -2,7 +2,7 @@
 
 #include "Logging.hpp"
 
-#include <nodec/error_formatter.hpp>
+#include <nodec/formatter.hpp>
 
 #include <fstream>
 #include <sstream>
