@@ -1,9 +1,8 @@
 #ifndef NODEC__ENTITIES__ENTITY_HPP_
 #define NODEC__ENTITIES__ENTITY_HPP_
 
-#include <cstdint>
 #include <cstddef>
-
+#include <cstdint>
 
 namespace nodec {
 namespace entities {
@@ -13,15 +12,14 @@ namespace internal {
 template<typename>
 struct entity_traits;
 
-
 /**
-* @brief Entity traits for a 32 bits entity identifier.
-*   A 32 bits entity identifier gurantees:
-*
-*   * 20 bits for entity number (suitable for almost all the games).
-*   * 12 bits for the version (reset in [0-4095]).
-*
-*/
+ * @brief Entity traits for a 32 bits entity identifier.
+ *   A 32 bits entity identifier gurantees:
+ *
+ *   * 20 bits for entity number (suitable for almost all the games).
+ *   * 12 bits for the version (reset in [0-4095]).
+ *
+ */
 template<>
 struct entity_traits<std::uint32_t> {
     using Entity = std::uint32_t;
@@ -40,11 +38,9 @@ struct entity_traits<std::uint64_t> {
     static constexpr Entity entity_mask = 0xFFFFFFFF;
     static constexpr Entity version_mask = 0xFFFFFFFF;
     static constexpr std::size_t entity_shift = 32u;
-
 };
 
 } // namespace internal
-
 
 template<typename Type>
 class entity_traits {
@@ -60,12 +56,11 @@ public:
     /*! @brief Reserved identifier. */
     static constexpr Entity reserved = entt_traits::entity_mask | (entt_traits::version_mask << entt_traits::entity_shift);
 
-
     /**
-    * @brief Converts an entity to its underlying type.
-    * @param value The value to convert.
-    * @return The integral representation of the given value.
-    */
+     * @brief Converts an entity to its underlying type.
+     * @param value The value to convert.
+     * @return The integral representation of the given value.
+     */
     static constexpr Entity to_integral(const Value value) noexcept {
         return static_cast<Entity>(value);
     }
@@ -100,7 +95,7 @@ public:
      * @return A properly constructed identifier.
      */
     static constexpr Value construct(const Entity entity, const Version version) noexcept {
-        return Value{ (entity & entt_traits::entity_mask) | (static_cast<Entity>(version) << entt_traits::entity_shift) };
+        return Value{(entity & entt_traits::entity_mask) | (static_cast<Entity>(version) << entt_traits::entity_shift)};
     }
 
     /**
@@ -115,7 +110,7 @@ public:
      */
     static constexpr Value combine(const Entity lhs, const Entity rhs) noexcept {
         constexpr auto version_mask = (entt_traits::version_mask << entt_traits::entity_shift);
-        return Value{ (lhs & entt_traits::entity_mask) | (rhs & version_mask) };
+        return Value{(lhs & entt_traits::entity_mask) | (rhs & version_mask)};
     }
 };
 
@@ -134,7 +129,6 @@ constexpr typename entity_traits<Entity>::Version to_version(const Entity value)
     return entity_traits<Entity>::to_version(value);
 }
 
-
 struct NullEntity {
     /**
      * @brief Converts the null object to identifiers of any type.
@@ -148,10 +142,10 @@ struct NullEntity {
     }
 
     /**
-    * @brief Compares two null objects.
-    * @param other A null object.
-    * @return True in all cases.
-    */
+     * @brief Compares two null objects.
+     * @param other A null object.
+     * @return True in all cases.
+     */
     constexpr bool operator==(const NullEntity other) const noexcept {
         return true;
     }
@@ -164,7 +158,6 @@ struct NullEntity {
     constexpr bool operator!=(const NullEntity other) const noexcept {
         return false;
     }
-
 
     /**
      * @brief Compares a null object and an identifier of any type.
@@ -202,7 +195,6 @@ constexpr bool operator==(const Entity entity, const NullEntity other) noexcept 
     return other.operator==(entity);
 }
 
-
 /**
  * @brief Compares a null object and an identifier of any type.
  * @tparam Entity Type of identifier.
@@ -215,9 +207,7 @@ constexpr bool operator!=(const Entity entity, const NullEntity other) noexcept 
     return other.operator!=(entity);
 }
 
-
 struct TombstoneEntity {
-
     /**
      * @brief Converts the tombstone object to identifiers of any type.
      * @tparam Entity Type of identifier.
@@ -230,10 +220,10 @@ struct TombstoneEntity {
     }
 
     /**
-    * @brief Compares two tombstone objects.
-    * @param other A tombstone object.
-    * @return True if all cases.
-    */
+     * @brief Compares two tombstone objects.
+     * @param other A tombstone object.
+     * @return True if all cases.
+     */
     constexpr bool operator==(const TombstoneEntity other) const noexcept {
         return true;
     }
@@ -271,7 +261,6 @@ struct TombstoneEntity {
     }
 };
 
-
 /**
  * @brief Compares a tombstone object and an identifier of any type.
  * @tparam Entity Type of identifier.
@@ -296,7 +285,6 @@ constexpr bool operator!=(const Entity entity, const TombstoneEntity other) noex
     return !(other == entity);
 }
 
-
 /**
  * @brief Compile-time constant for null entities.
  *
@@ -317,8 +305,7 @@ constexpr TombstoneEntity tombstone_entity{};
 
 using Entity = uint32_t;
 
-
-}
-}
+} // namespace entities
+} // namespace nodec
 
 #endif

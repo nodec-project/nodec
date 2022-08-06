@@ -4,17 +4,14 @@
 #include <nodec/entities/sparse_table.hpp>
 #include <nodec/signals.hpp>
 
-#include <vector>
 #include <cassert>
-
+#include <vector>
 
 namespace nodec {
 namespace entities {
 
-
 template<typename Entity>
 class BasicRegistry;
-
 
 template<typename Entity>
 class BaseStorage {
@@ -23,10 +20,10 @@ public:
     using const_iterator = typename std::vector<Entity>::const_iterator;
 
 public:
-    virtual bool erase(BasicRegistry<Entity>& owner, const Entity entity) = 0;
-    virtual void clear(BasicRegistry<Entity>& owner) = 0;
+    virtual bool erase(BasicRegistry<Entity> &owner, const Entity entity) = 0;
+    virtual void clear(BasicRegistry<Entity> &owner) = 0;
     virtual bool contains(const Entity entity) const = 0;
-    virtual void* try_get_opaque(const Entity entity) = 0;
+    virtual void *try_get_opaque(const Entity entity) = 0;
 
 public:
     virtual iterator begin() noexcept = 0;
@@ -38,24 +35,23 @@ public:
     virtual size_t size() const noexcept = 0;
 };
 
-
 template<typename Entity, typename Value>
 class BasicStorage : public BaseStorage<Entity> {
-    static_assert(std::is_move_constructible_v<Value>&& std::is_move_assignable_v<Value>,
+    static_assert(std::is_move_constructible_v<Value> && std::is_move_assignable_v<Value>,
                   "The managed value must be at leat move constructible and move assignable.");
 
     using Base = BaseStorage<Entity>;
-    using StorageSignal = signals::Signal<void(BasicRegistry<Entity>&, const Entity)>;
+    using StorageSignal = signals::Signal<void(BasicRegistry<Entity> &, const Entity)>;
 
 public:
     template<typename... Args>
-    bool emplace(BasicRegistry<Entity>& owner, const Entity entity, Args &&... args) {
+    bool emplace(BasicRegistry<Entity> &owner, const Entity entity, Args &&...args) {
         if (sparse_table.contains(entity)) {
             return false;
         }
 
         sparse_table[entity] = instances.size();
-        instances.push_back({ args... });
+        instances.push_back({args...});
         packed.emplace_back(entity);
 
         element_constructed_(owner, entity);
@@ -63,8 +59,8 @@ public:
         return true;
     }
 
-    const Value* try_get(const Entity entity) const {
-        auto* pos = sparse_table.try_get(entity);
+    const Value *try_get(const Entity entity) const {
+        auto *pos = sparse_table.try_get(entity);
         if (!pos) {
             return nullptr;
         }
@@ -72,8 +68,8 @@ public:
         return &instances[*pos];
     }
 
-    Value* try_get(const Entity entity) {
-        auto* pos = sparse_table.try_get(entity);
+    Value *try_get(const Entity entity) {
+        auto *pos = sparse_table.try_get(entity);
         if (!pos) {
             return nullptr;
         }
@@ -81,7 +77,7 @@ public:
         return &instances[*pos];
     }
 
-    void* try_get_opaque(const Entity entity) override {
+    void *try_get_opaque(const Entity entity) override {
         return try_get(entity);
     }
 
@@ -89,18 +85,18 @@ public:
         return sparse_table.contains(entity);
     }
 
-    bool erase(BasicRegistry<Entity>& owner, const Entity entity) override {
+    bool erase(BasicRegistry<Entity> &owner, const Entity entity) override {
         if (!sparse_table.contains(entity)) {
             return false;
         }
 
         element_destroyed_(owner, entity); // cause structual changes.
 
-        auto* pos = sparse_table.try_get(entity);
+        auto *pos = sparse_table.try_get(entity);
         assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
 
         // move the back of instances to the removed index.
-        auto& other_entity = packed.back();
+        auto &other_entity = packed.back();
         packed[*pos] = other_entity;
         packed.pop_back();
 
@@ -114,7 +110,7 @@ public:
         return true;
     }
 
-    void clear(BasicRegistry<Entity>& owner) {
+    void clear(BasicRegistry<Entity> &owner) {
         while (packed.size() > 0) {
             erase(owner, packed.front());
         }
@@ -158,7 +154,6 @@ public:
         return element_destroyed_.signal_interface();
     }
 
-
 private:
     SparseTable<size_t> sparse_table;
     std::vector<Entity> packed;
@@ -168,10 +163,7 @@ private:
     StorageSignal element_destroyed_;
 };
 
-
-}
-}
-
-
+} // namespace entities
+} // namespace nodec
 
 #endif

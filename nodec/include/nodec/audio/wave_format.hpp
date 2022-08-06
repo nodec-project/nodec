@@ -9,17 +9,17 @@ namespace nodec {
 namespace audio {
 
 /**
-* @detail
-*   Wave Format:
-*       <https://wavefilegem.com/how_wave_files_work.html>
-*       <http://soundfile.sapp.org/doc/WaveFormat/>
-*       <https://docs.microsoft.com/ja-jp/windows-hardware/drivers/audio/extensible-wave-format-descriptors>
-*       <http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html>
-*
-*   WAVE-FORMAT-EXTENSIBLE:
-*       <http://dream.cs.bath.ac.uk/researchdev/wave-ex/wave_ex.html>
-*       <https://docs.microsoft.com/en-us/windows/win32/api/mmreg/ns-mmreg-waveformatextensible>
-*/
+ * @detail
+ *   Wave Format:
+ *       <https://wavefilegem.com/how_wave_files_work.html>
+ *       <http://soundfile.sapp.org/doc/WaveFormat/>
+ *       <https://docs.microsoft.com/ja-jp/windows-hardware/drivers/audio/extensible-wave-format-descriptors>
+ *       <http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html>
+ *
+ *   WAVE-FORMAT-EXTENSIBLE:
+ *       <http://dream.cs.bath.ac.uk/researchdev/wave-ex/wave_ex.html>
+ *       <https://docs.microsoft.com/en-us/windows/win32/api/mmreg/ns-mmreg-waveformatextensible>
+ */
 namespace wave_format {
 
 enum class SampleFormat : uint16_t {
@@ -42,33 +42,33 @@ struct WAVEFormat {
 //* @brief read integer as little endian from stream and
 //*        return them in the host byte order.
 //*/
-//bool decode8(std::istream& stream, uint8_t& value);
+// bool decode8(std::istream& stream, uint8_t& value);
 //
-//bool decode16(std::istream& stream, uint16_t& value);
+// bool decode16(std::istream& stream, uint16_t& value);
 //
-//bool decode24(std::istream& stream, uint32_t& value);
+// bool decode24(std::istream& stream, uint32_t& value);
 //
-//bool decode32(std::istream& stream, uint32_t& value);
+// bool decode32(std::istream& stream, uint32_t& value);
 //
-//bool decode32float(std::istream& stream, float& value);
+// bool decode32float(std::istream& stream, float& value);
 //
 //
 //
-//enum class Format
+// enum class Format
 //{
 //    PCM_Integer = 0x01,
 //    PCM_Float = 0x03,
 //    Extensible = 0xfffe,
 //};
 //
-//enum class SubFormat
+// enum class SubFormat
 //{
 //    None = 0x00,
 //    PCM_Integer = 0x01,
 //    PCM_Float = 0x03
 //};
 //
-//struct HeaderInfo
+// struct HeaderInfo
 //{
 //    Format format;
 //    uint16_t n_channels;
@@ -80,17 +80,16 @@ struct WAVEFormat {
 //    size_t n_samples;
 //};
 //
-//bool parse_header(std::istream& stream, HeaderInfo& info,
+// bool parse_header(std::istream& stream, HeaderInfo& info,
 //                  std::streampos& data_start, std::streampos& data_end);
 //
-//template<typename FloatT>
-//size_t read_data_float32_stereo(FloatT* const* const samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
+// template<typename FloatT>
+// size_t read_data_float32_stereo(FloatT* const* const samples, std::istream& stream, const std::streamoff& offset, const std::streamsize& max_length,
 //                                const std::streampos& data_start, const std::streampos& data_end, bool loop);
 
-}
-}
+} // namespace wave_format
+} // namespace audio
 
-}
-
+} // namespace nodec
 
 #endif

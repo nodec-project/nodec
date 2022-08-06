@@ -1,10 +1,8 @@
 #ifndef NODEC__TYPE_INFO_HPP_
 #define NODEC__TYPE_INFO_HPP_
 
-
-#include <stdint.h>
 #include <atomic>
-
+#include <stdint.h>
 
 namespace nodec {
 
@@ -22,7 +20,6 @@ struct type_seq final {
 
 } // namespace internal
 
-
 template<typename T>
 struct type_seq final {
     static TypeId value() {
@@ -32,6 +29,5 @@ struct type_seq final {
 };
 
 } // namespace nodec
-
 
 #endif

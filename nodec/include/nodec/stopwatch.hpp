@@ -3,13 +3,12 @@
 
 // This code is based on...
 //  * https://github.com/astagi/lauda
-// 
+//
 // Thank you :)
 
 #include <chrono>
 
 namespace nodec {
-
 
 template<typename ClockT>
 class Stopwatch {
@@ -27,7 +26,9 @@ public:
     ~Stopwatch() {}
 
 public:
-    bool is_running() const noexcept { return is_running_; }
+    bool is_running() const noexcept {
+        return is_running_;
+    }
 
     void start() {
         if (is_running_) return;
@@ -72,9 +73,8 @@ private:
     time_point stop_time;
     time_point checkpoint_time;
     bool is_running_;
-
 };
 
-}
+} // namespace nodec
 
 #endif

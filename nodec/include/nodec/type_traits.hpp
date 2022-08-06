@@ -1,8 +1,8 @@
 #ifndef NODEC__TYPE_TRAITS_HPP_
 #define NODEC__TYPE_TRAITS_HPP_
 
-#include <type_traits>
 #include <iostream>
+#include <type_traits>
 
 namespace nodec {
 
@@ -12,12 +12,12 @@ namespace nodec {
 
 */
 
-template <typename T, typename = int>
+template<typename T, typename = int>
 struct is_printable : std::false_type {};
 
-template <typename T>
-struct is_printable <T, decltype(std::cout << std::declval<T>(), 0)> : std::true_type{};
+template<typename T>
+struct is_printable<T, decltype(std::cout << std::declval<T>(), 0)> : std::true_type {};
 
-}
+} // namespace nodec
 
 #endif

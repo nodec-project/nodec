@@ -7,14 +7,13 @@ namespace nodec {
 
 class Application {
 public:
-    Application() {};
-    virtual ~Application() {};
+    Application(){};
+    virtual ~Application(){};
 
     int run() {
         try {
             return main();
-        }
-        catch (...) {
+        } catch (...) {
             return on_error_exit();
         }
     }
@@ -27,5 +26,5 @@ private:
     NODEC_DISABLE_COPY(Application);
 };
 
-}
+} // namespace nodec
 #endif

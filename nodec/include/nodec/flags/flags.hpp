@@ -6,13 +6,12 @@
 
 #include <nodec/type_traits.hpp>
 
-#include <type_traits>
-#include <ostream>
 #include <bitset>
+#include <ostream>
+#include <type_traits>
 
 namespace nodec {
 namespace flags {
-
 
 constexpr struct Empty {
     constexpr Empty() noexcept = default;
@@ -34,28 +33,30 @@ public:
     using value_type = typename iterator::value_type;
     using reference = typename iterator::reference;
     using const_reference = typename iterator::reference;
-    using pointer = enum_type*;
-    using const_pointer = const enum_type*;
+    using pointer = enum_type *;
+    using const_pointer = const enum_type *;
     using size_type = std::size_t;
     using difference_type = typename iterator::difference_type;
 
-    constexpr static std::size_t size() { return sizeof(impl_type) * 8; }
+    constexpr static std::size_t size() {
+        return sizeof(impl_type) * 8;
+    }
 
 public:
     Flags() noexcept = default;
-    Flags(const Flags&) noexcept = default;
-    Flags& operator=(const Flags&) noexcept = default;
-    Flags(Flags&&) noexcept = default;
-    Flags& operator=(Flags&&) noexcept = default;
+    Flags(const Flags &) noexcept = default;
+    Flags &operator=(const Flags &) noexcept = default;
+    Flags(Flags &&) noexcept = default;
+    Flags &operator=(Flags &&) noexcept = default;
 
-    explicit constexpr Flags(Empty) noexcept : val_(0) {}
+    explicit constexpr Flags(Empty) noexcept
+        : val_(0) {}
 
     constexpr Flags(enum_type e) noexcept
         : val_(static_cast<impl_type>(e)) {
-
     }
 
-    Flags& operator=(enum_type e) noexcept {
+    Flags &operator=(enum_type e) noexcept {
         val_ = static_cast<impl_type>(e);
         return *this;
     }
@@ -80,190 +81,188 @@ public:
         return Flags(~val_);
     }
 
-    Flags& operator|=(const Flags& fl) noexcept {
+    Flags &operator|=(const Flags &fl) noexcept {
         val_ |= fl.val_;
         return *this;
     }
 
-    Flags& operator&=(const Flags& fl) noexcept {
+    Flags &operator&=(const Flags &fl) noexcept {
         val_ &= fl.val_;
         return *this;
     }
 
-    Flags& operator^=(const Flags& fl) noexcept {
+    Flags &operator^=(const Flags &fl) noexcept {
         val_ ^= fl.val_;
         return *this;
     }
 
-    Flags& operator|=(enum_type e) noexcept {
+    Flags &operator|=(enum_type e) noexcept {
         val_ |= static_cast<impl_type>(e);
         return *this;
     }
 
-    Flags& operator&=(enum_type e) noexcept {
+    Flags &operator&=(enum_type e) noexcept {
         val_ &= static_cast<impl_type>(e);
         return *this;
     }
 
-    Flags& operator^=(enum_type e) noexcept {
+    Flags &operator^=(enum_type e) noexcept {
         val_ ^= static_cast<impl_type>(e);
         return *this;
     }
 
     friend constexpr Flags operator|(Flags f1, Flags f2) noexcept {
-        return Flags{ static_cast<impl_type>(f1.val_ | f2.val_) };
+        return Flags{static_cast<impl_type>(f1.val_ | f2.val_)};
     }
 
     friend constexpr Flags operator&(Flags f1, Flags f2) noexcept {
-        return Flags{ static_cast<impl_type>(f1.val_ & f2.val_) };
+        return Flags{static_cast<impl_type>(f1.val_ & f2.val_)};
     }
 
     friend constexpr Flags operator^(Flags f1, Flags f2) noexcept {
-        return Flags{ static_cast<impl_type>(f1.val_ ^ f2.val_) };
+        return Flags{static_cast<impl_type>(f1.val_ ^ f2.val_)};
     }
-
 
     constexpr underlying_type underlying_value() const noexcept {
         return static_cast<underlying_type>(val_);
     }
 
-    constexpr bool none() const noexcept { return !val_; }
-    void clear() noexcept { val_ = 0; }
+    constexpr bool none() const noexcept {
+        return !val_;
+    }
+    void clear() noexcept {
+        val_ = 0;
+    }
 
-    iterator begin() const noexcept { return cbegin(); }
-    iterator cbegin() const noexcept { return iterator{ val_ }; }
+    iterator begin() const noexcept {
+        return cbegin();
+    }
+    iterator cbegin() const noexcept {
+        return iterator{val_};
+    }
 
-    constexpr iterator end() const noexcept { return cend(); }
-    constexpr iterator cend() const noexcept { return {}; }
+    constexpr iterator end() const noexcept {
+        return cend();
+    }
+    constexpr iterator cend() const noexcept {
+        return {};
+    }
 
+    // template <class E>
+    // friend constexpr auto operator<<(std::ostream& stream, const Flags<E>& fl)
+    //     -> typename std::enable_if<
+    //     nodec::is_printable<E>::value, std::ostream&
+    //     >::type {
+    //     return stream << "printable. ";
+    // }
 
+    // template <class E>
+    // friend constexpr auto operator<<(std::ostream& stream, const Flags<E>& fl)
+    //     -> typename std::enable_if<
+    //     !nodec::is_printable<E>::value, std::ostream&
+    //     >::type {
+    //     return stream << "not printable. ";
+    // }
 
-    //template <class E>
-    //friend constexpr auto operator<<(std::ostream& stream, const Flags<E>& fl)
-    //    -> typename std::enable_if<
-    //    nodec::is_printable<E>::value, std::ostream&
-    //    >::type {
-    //    return stream << "printable. ";
-    //}
+    // friend auto operator<<(std::ostream& stream, const Flags& fl)
+    //     -> typename std::enable_if<
+    //     nodec::is_printable<E>::value, std::ostream&
+    //     >::type {
+    //     return stream << "printable. ";
+    // }
 
-    //template <class E>
-    //friend constexpr auto operator<<(std::ostream& stream, const Flags<E>& fl)
-    //    -> typename std::enable_if<
-    //    !nodec::is_printable<E>::value, std::ostream&
-    //    >::type {
-    //    return stream << "not printable. ";
-    //}
+    // friend auto operator<<(std::ostream& stream, const Flags& fl)
+    //     -> typename std::enable_if<
+    //     !nodec::is_printable<E>::value, std::ostream&
+    //     >::type {
+    //     return stream << "not printable. ";
+    // }
 
+    // friend constexpr auto operator<<(std::ostream& stream, const Flags& fl)
+    //     -> typename std::enable_if<
+    //     nodec::is_printable<enum_type>::value, std::ostream&
+    //     >::type {
+    //     return stream << "printable. " << fl.val_;
+    // }
 
-    //friend auto operator<<(std::ostream& stream, const Flags& fl)
-    //    -> typename std::enable_if<
-    //    nodec::is_printable<E>::value, std::ostream&
-    //    >::type {
-    //    return stream << "printable. ";
-    //}
+    // friend auto operator<<(std::ostream& stream, const Flags& fl)
+    //     -> typename std::enable_if<
+    //     !nodec::is_printable<enum_type>::value, std::ostream&
+    //     >::type {
+    //     return stream << "not printable. " << fl.val_;
+    // }
 
-    //friend auto operator<<(std::ostream& stream, const Flags& fl)
-    //    -> typename std::enable_if<
-    //    !nodec::is_printable<E>::value, std::ostream&
-    //    >::type {
-    //    return stream << "not printable. ";
-    //}
-
-    //friend constexpr auto operator<<(std::ostream& stream, const Flags& fl)
-    //    -> typename std::enable_if<
-    //    nodec::is_printable<enum_type>::value, std::ostream&
-    //    >::type {
-    //    return stream << "printable. " << fl.val_;
-    //}
-
-    //friend auto operator<<(std::ostream& stream, const Flags& fl)
-    //    -> typename std::enable_if<
-    //    !nodec::is_printable<enum_type>::value, std::ostream&
-    //    >::type {
-    //    return stream << "not printable. " << fl.val_;
-    //}
-
-    //friend constexpr auto operator<<(std::ostream& stream, const Flags& fl)
-    //    -> typename std::enable_if<
-    //    nodec::is_printable<enum_type>::value,
-    //    std::ostream&>::type {
-    //    return stream << fl.val_;
-    //}
+    // friend constexpr auto operator<<(std::ostream& stream, const Flags& fl)
+    //     -> typename std::enable_if<
+    //     nodec::is_printable<enum_type>::value,
+    //     std::ostream&>::type {
+    //     return stream << fl.val_;
+    // }
 
 private:
     constexpr explicit Flags(impl_type val) noexcept
         : val_(val) {
-
     }
 
     impl_type val_;
 };
 
+} // namespace flags
+} // namespace nodec
 
-}
-}
-
-template <class E>
+template<class E>
 constexpr auto operator|(E e1, E e2) noexcept
--> typename std::enable_if<
-    nodec::flags::is_flags<E>::value,
-    nodec::flags::Flags<E>
->::type {
+    -> typename std::enable_if<
+        nodec::flags::is_flags<E>::value,
+        nodec::flags::Flags<E>>::type {
     return nodec::flags::Flags<E>(e1) | e2;
 }
 
-template <class E>
+template<class E>
 constexpr auto operator&(E e1, E e2) noexcept
--> typename std::enable_if<
-    nodec::flags::is_flags<E>::value,
-    nodec::flags::Flags<E>
->::type {
+    -> typename std::enable_if<
+        nodec::flags::is_flags<E>::value,
+        nodec::flags::Flags<E>>::type {
     return nodec::flags::Flags<E>(e1) & e2;
 }
 
-template <class E>
+template<class E>
 constexpr auto operator^(E e1, E e2) noexcept
--> typename std::enable_if<
-    nodec::flags::is_flags<E>::value,
-    nodec::flags::Flags<E>
->::type {
+    -> typename std::enable_if<
+        nodec::flags::is_flags<E>::value,
+        nodec::flags::Flags<E>>::type {
     return nodec::flags::Flags<E>(e1) ^ e2;
 }
 
-template <class E>
+template<class E>
 constexpr auto operator~(E e1) noexcept
--> typename std::enable_if<
-    nodec::flags::is_flags<E>::value,
-    nodec::flags::Flags<E>
->::type {
+    -> typename std::enable_if<
+        nodec::flags::is_flags<E>::value,
+        nodec::flags::Flags<E>>::type {
     return ~nodec::flags::Flags<E>(e1);
 }
 
-
 //
-//template <class E>
-//auto print(std::ostream& stream, const nodec::flags::Flags<E>& fl)
+// template <class E>
+// auto print(std::ostream& stream, const nodec::flags::Flags<E>& fl)
 //-> typename std::enable_if<
 //    nodec::is_printable<E>::value, std::ostream&
 //>::type {
 //    return stream << "printable. ";
 //}
 //
-//template <class E>
-//auto print(std::ostream& stream, const nodec::flags::Flags<E>& fl)
+// template <class E>
+// auto print(std::ostream& stream, const nodec::flags::Flags<E>& fl)
 //-> typename std::enable_if<
 //    !nodec::is_printable<E>::value, std::ostream&
 //>::type {
 //    return stream << "not printable. ";
 //}
 
-
-template <class E>
-auto operator<<(std::ostream& stream, const nodec::flags::Flags<E>& flags)
--> typename std::enable_if<
-    nodec::is_printable<E>::value, std::ostream&
->::type {
-
+template<class E>
+auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
+    -> typename std::enable_if<
+        nodec::is_printable<E>::value, std::ostream &>::type {
     auto iter = flags.begin();
     if (iter == flags.end()) {
         return stream << "None";
@@ -274,19 +273,17 @@ auto operator<<(std::ostream& stream, const nodec::flags::Flags<E>& flags)
         stream << "|" << *iter;
     }
 
-    //std::copy(flags.begin(), flags.end(), std::ostream_iterator<E>(stream, "|"));
+    // std::copy(flags.begin(), flags.end(), std::ostream_iterator<E>(stream, "|"));
 
     return stream;
 }
 
-template <class E>
-auto operator<<(std::ostream& stream, const nodec::flags::Flags<E>& flags)
--> typename std::enable_if<
-    !nodec::is_printable<E>::value, std::ostream&
->::type {
+template<class E>
+auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
+    -> typename std::enable_if<
+        !nodec::is_printable<E>::value, std::ostream &>::type {
     return stream << std::bitset<flags.size()>(flags.underlying_value())
-        << "(" << std::showbase << std::hex << flags.underlying_value() << ")";
+                  << "(" << std::showbase << std::hex << flags.underlying_value() << ")";
 }
-
 
 #endif

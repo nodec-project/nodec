@@ -7,37 +7,32 @@
 #include <nodec/formatter.hpp>
 #include <nodec/type_info.hpp>
 
-#include <stdexcept>
-#include <sstream>
-#include <memory>
-#include <vector>
 #include <cassert>
-
+#include <memory>
+#include <sstream>
+#include <stdexcept>
+#include <vector>
 
 namespace nodec {
 namespace entities {
 
-
 namespace details {
 
 template<typename Entity>
-inline void throw_invalid_entity_exception(const Entity entity, const char* file, size_t line) {
+inline void throw_invalid_entity_exception(const Entity entity, const char *file, size_t line) {
     throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
-        << "Invalid entity detected. entity: 0x" << std::hex << entity
-        << "(entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << ")"
-    );
+                             << "Invalid entity detected. entity: 0x" << std::hex << entity
+                             << "(entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << ")");
 }
 
 template<typename Component, typename Entity>
-inline void throw_no_component_exception(const Entity entity, const char* file, size_t line) {
+inline void throw_no_component_exception(const Entity entity, const char *file, size_t line) {
     throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
-        << "Entity {0x" << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity)
-        << "} doesn't have the component {" << typeid(Component).name() << "}."
-    );
+                             << "Entity {0x" << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity)
+                             << "} doesn't have the component {" << typeid(Component).name() << "}.");
 }
 
-}
-
+} // namespace details
 
 template<typename Entity>
 class BasicRegistry {
@@ -68,7 +63,7 @@ private:
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component>* pool_assured() const {
+    BasicStorage<Entity, Component> *pool_assured() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
 
@@ -76,48 +71,48 @@ private:
             pools.resize(index + 1u);
         }
 
-        auto&& pdata = pools[index];
+        auto &&pdata = pools[index];
         if (!pdata.pool) {
             pdata.pool.reset(new BasicStorage<Entity, Component>());
         }
 
-        return static_cast<BasicStorage<Entity, Component>*>(pools[index].pool.get());
+        return static_cast<BasicStorage<Entity, Component> *>(pools[index].pool.get());
     }
 
     template<typename Component>
-    const BasicStorage<Entity, Component>* pool_if_exists() const {
+    const BasicStorage<Entity, Component> *pool_if_exists() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
         return (index < pools.size() && pools[index].pool)
-            ? static_cast<const BasicStorage<Entity, Component>*>(pools[index].pool.get())
-            : nullptr;
+                   ? static_cast<const BasicStorage<Entity, Component> *>(pools[index].pool.get())
+                   : nullptr;
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component>* pool_if_exists() {
+    BasicStorage<Entity, Component> *pool_if_exists() {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
         return (index < pools.size() && pools[index].pool)
-            ? static_cast<BasicStorage<Entity, Component>*>(pools[index].pool.get())
-            : nullptr;
+                   ? static_cast<BasicStorage<Entity, Component> *>(pools[index].pool.get())
+                   : nullptr;
     }
 
 public:
     /**
-    * @brief Default constructor.
-    */
+     * @brief Default constructor.
+     */
     BasicRegistry() = default;
 
     /**
-    * @brief Default move constructor.
-    */
-    BasicRegistry(BasicRegistry&&) = default;
+     * @brief Default move constructor.
+     */
+    BasicRegistry(BasicRegistry &&) = default;
 
     /**
-    * @brief Default move assignment operator.
-    * @return This registry.
-    */
-    BasicRegistry& operator=(BasicRegistry&&) = default;
+     * @brief Default move assignment operator.
+     * @return This registry.
+     */
+    BasicRegistry &operator=(BasicRegistry &&) = default;
 
     /**
      * @brief Checks if an identifier refers to a valid entity.
@@ -144,13 +139,13 @@ public:
     }
 
     /**
-    * @brief Destroys an entity.
-    *   When an entity is destroyed, its version is updated and the identifier
-    *   can be recycled at any time.
-    *
-    * @param entity
-    *   A valid entity identifier.
-    */
+     * @brief Destroys an entity.
+     *   When an entity is destroyed, its version is updated and the identifier
+     *   can be recycled at any time.
+     *
+     * @param entity
+     *   A valid entity identifier.
+     */
     void destroy_entity(const Entity entity) {
         if (!is_valid(entity)) {
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
@@ -183,8 +178,7 @@ public:
             for (auto pos = entities.size(); pos; --pos) {
                 func(entities[pos - 1]);
             }
-        }
-        else {
+        } else {
             for (auto pos = entities.size(); pos; --pos) {
                 const auto entity = entities[pos - 1];
                 if (entt_traits::to_entity(entity) == (pos - 1)) {
@@ -196,7 +190,7 @@ public:
 
     void clear() {
         for (auto pos = pools.size(); pos; --pos) {
-            auto& pdata = pools[pos - 1];
+            auto &pdata = pools[pos - 1];
             if (pdata.pool) {
                 pdata.pool->clear(*this);
             }
@@ -208,7 +202,7 @@ public:
     }
 
     template<typename Component, typename... Args>
-    decltype(auto) emplace_component(const Entity entity, Args &&... args) {
+    decltype(auto) emplace_component(const Entity entity, Args &&...args) {
         if (!is_valid(entity)) {
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
@@ -224,9 +218,9 @@ public:
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        return std::make_tuple(([this, entity](auto* cpool) {
+        return std::make_tuple(([this, entity](auto *cpool) {
             return cpool != nullptr && cpool->erase(*this, entity);
-            })(pool_if_exists<Components>())...);
+        })(pool_if_exists<Components>())...);
     }
 
     void remove_all_components(const Entity entity) {
@@ -235,7 +229,7 @@ public:
         }
 
         for (auto pos = pools.size(); pos; --pos) {
-            auto& pdata = pools[pos - 1];
+            auto &pdata = pools[pos - 1];
             if (pdata.pool) {
                 pdata.pool->erase(*this, entity);
             }
@@ -249,12 +243,12 @@ public:
         }
 
         using Comp = std::remove_const_t<Component>;
-        const auto* cpool = pool_if_exists<Comp>();
+        const auto *cpool = pool_if_exists<Comp>();
         if (!cpool) {
             details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
-        auto* component = cpool->try_get(entity);
+        auto *component = cpool->try_get(entity);
         if (!component) {
             details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
@@ -264,7 +258,7 @@ public:
 
     template<typename Component>
     decltype(auto) get_component(const Entity entity) {
-        return const_cast<Component&>(std::as_const(*this).get_component<Component>(entity));
+        return const_cast<Component &>(std::as_const(*this).get_component<Component>(entity));
     }
 
     template<typename... Components>
@@ -282,15 +276,14 @@ public:
         if (!is_valid(entity)) {
             details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
-        auto* cpool = pool_if_exists<std::remove_const_t<Component>>();
+        auto *cpool = pool_if_exists<std::remove_const_t<Component>>();
         return cpool ? cpool->try_get(entity) : nullptr;
     }
 
     template<typename Component>
-    Component* try_get_component(const Entity entity) {
-        return const_cast<Component*>(std::as_const(*this).try_get_component<Component>(entity));
+    Component *try_get_component(const Entity entity) {
+        return const_cast<Component *>(std::as_const(*this).try_get_component<Component>(entity));
     }
-
 
     template<typename... Components>
     decltype(auto) try_get_components(const Entity entity) const {
@@ -304,30 +297,30 @@ public:
 
     template<typename... Components>
     BasicView<Entity, Components...> view() const {
-        static_assert((std::min)({ std::is_const_v<Components> ... }), "Invalid non-const type");
-        //static_assert((std::is_const_v<Components> && ...), "Invalid non-const type"); // For over C++17
+        static_assert((std::min)({std::is_const_v<Components>...}), "Invalid non-const type");
+        // static_assert((std::is_const_v<Components> && ...), "Invalid non-const type"); // For over C++17
 
-        return { *pool_assured<std::remove_const_t<Components>>()... };
+        return {*pool_assured<std::remove_const_t<Components>>()...};
     }
 
     template<typename... Components>
     BasicView<Entity, Components...> view() {
-        return { *pool_assured<std::remove_const_t<Components>>()... };
+        return {*pool_assured<std::remove_const_t<Components>>()...};
     }
 
     /**
-    * @brief Visits an entity and returns the type seq index and opaque pointer for its components.
-    *
-    * The signature of the function should be equivalent to the following:
-    *
-    * @code{.cpp}
-    * void(int type_seq_index, void* component);
-    * @endcode
-    */
+     * @brief Visits an entity and returns the type seq index and opaque pointer for its components.
+     *
+     * The signature of the function should be equivalent to the following:
+     *
+     * @code{.cpp}
+     * void(int type_seq_index, void* component);
+     * @endcode
+     */
     template<typename Func>
     void visit(Entity entity, Func func) const {
         for (auto pos = pools.size(); pos; --pos) {
-            const auto& pdata = pools[pos - 1];
+            const auto &pdata = pools[pos - 1];
             if (!pdata.pool) {
                 continue;
             }
@@ -342,31 +335,30 @@ public:
     }
 
     /**
-    * @brief Returns signal interface for the given component.
-    */
+     * @brief Returns signal interface for the given component.
+     */
     template<typename Component>
     decltype(auto) component_constructed() {
         return pool_assured<Component>()->element_constructed();
     }
 
     /**
-    * @brief Returns signal interface for the given component.
-    */
+     * @brief Returns signal interface for the given component.
+     */
     template<typename Component>
     decltype(auto) component_destroyed() {
         return pool_assured<Component>()->element_destroyed();
     }
 
-
 private:
     mutable std::vector<PoolData> pools{};
     std::vector<Entity> entities;
-    Entity free_list{ tombstone_entity };
+    Entity free_list{tombstone_entity};
 };
 
 using Registry = BasicRegistry<Entity>;
 
-}
-}
+} // namespace entities
+} // namespace nodec
 
 #endif
