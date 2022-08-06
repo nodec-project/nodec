@@ -1,6 +1,6 @@
 /*
-* 
-*/
+ *
+ */
 
 #ifndef APP__APP_HPP_
 #define APP__APP_HPP_
@@ -9,35 +9,31 @@
 
 #define EDITOR_MODE
 
-
 #include <nodec_engine/nodec_engine.hpp>
 #include <nodec_input/input.hpp>
-#include <screen/screen.hpp>
-#include <scene_set/scene.hpp>
-#include <scene_set/components/basic.hpp>
-#include <resources/resources.hpp>
 #include <rendering/components/mesh_renderer.hpp>
 #include <rendering/resources/mesh.hpp>
-#include <scene_serialization/scene_serialization.hpp>
-#include <scene_audio/resources/audio_clip.hpp>
+#include <resources/resources.hpp>
 #include <scene_audio/components/audio_listener.hpp>
 #include <scene_audio/components/audio_source.hpp>
+#include <scene_audio/resources/audio_clip.hpp>
+#include <scene_serialization/scene_serialization.hpp>
+#include <scene_set/components/basic.hpp>
+#include <scene_set/scene.hpp>
+#include <screen/screen.hpp>
 
 #include <nodec/logging.hpp>
 
-
 #include <cereal/types/polymorphic.hpp>
 
+#include <cereal/archives/binary.hpp>
 #include <cereal/archives/json.hpp>
 #include <cereal/archives/portable_binary.hpp>
-#include <cereal/archives/binary.hpp>
 #include <cereal/archives/xml.hpp>
 
-
-
 #ifdef EDITOR_MODE
-#include <scene_editor/scene_editor.hpp>
-#include <imgui.h>
+#    include <imgui.h>
+#    include <scene_editor/scene_editor.hpp>
 #endif
 
 //
@@ -69,11 +65,11 @@
 //#include <nodec/math/gfx.hpp>
 //
 //
-//class App
+// class App
 //{
 //    using Camera = nodec_modules::rendering::interfaces::Camera;
 //
-//public:
+// public:
 //    static nodec::NodecObject::Reference<Camera> main_camera;
 //
 //};

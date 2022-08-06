@@ -1,7 +1,6 @@
 #ifndef NODEC_INPUT__KEYBOARD__KEY_HPP_
 #define NODEC_INPUT__KEYBOARD__KEY_HPP_
 
-
 namespace nodec_input {
 namespace keyboard {
 
@@ -13,7 +12,6 @@ namespace keyboard {
 //
 //  Unity:
 //      * https://docs.unity3d.com/2021.2/Documentation/ScriptReference/KeyCode.html
-
 
 enum class Key {
     None = 0x00,
@@ -93,8 +91,7 @@ enum class Key {
 
 };
 
-
-inline std::ostream& operator<<(std::ostream& stream, const Key& key) {
+inline std::ostream &operator<<(std::ostream &stream, const Key &key) {
     switch (key) {
     case Key::None: return stream << "None";
 
@@ -103,10 +100,10 @@ inline std::ostream& operator<<(std::ostream& stream, const Key& key) {
 
     case Key::Space: return stream << "Space";
 
-    case Key::LeftArrow:  return stream << "LeftArrow";
-    case Key::UpArrow:    return stream << "UpArrow";
+    case Key::LeftArrow: return stream << "LeftArrow";
+    case Key::UpArrow: return stream << "UpArrow";
     case Key::RightArrow: return stream << "RightArrow";
-    case Key::DownArrow:  return stream << "DownArrow";
+    case Key::DownArrow: return stream << "DownArrow";
 
     case Key::Alpha0: return stream << "Alpha0";
     case Key::Alpha1: return stream << "Alpha1";
@@ -171,13 +168,11 @@ inline std::ostream& operator<<(std::ostream& stream, const Key& key) {
     case Key::F23: return stream << "F23";
     case Key::F24: return stream << "F24";
 
-
     default: return stream << "Unknown";
     }
 }
 
-}
-}
-
+} // namespace keyboard
+} // namespace nodec_input
 
 #endif

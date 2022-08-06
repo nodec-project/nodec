@@ -8,7 +8,6 @@
 
 #include <sstream>
 
-
 namespace nodec_input {
 namespace keyboard {
 
@@ -19,16 +18,14 @@ struct KeyEvent {
     };
 
     KeyEvent(Type type, Key key)
-        : type(type)
-        , key(key) {
+        : type(type), key(key) {
     }
 
     Type type;
     Key key;
 };
 
-
-inline std::ostream& operator<<(std::ostream& stream, const KeyEvent::Type& type) {
+inline std::ostream &operator<<(std::ostream &stream, const KeyEvent::Type &type) {
     switch (type) {
     case KeyEvent::Type::Press: return stream << "Press";
     case KeyEvent::Type::Release: return stream << "Release";
@@ -36,13 +33,13 @@ inline std::ostream& operator<<(std::ostream& stream, const KeyEvent::Type& type
     }
 }
 
-inline std::ostream& operator<<(std::ostream& stream, const KeyEvent& keyEvent) {
+inline std::ostream &operator<<(std::ostream &stream, const KeyEvent &keyEvent) {
     return stream << "{ type: " << keyEvent.type << ", key: " << keyEvent.key << " )";
 }
 
 class Keyboard {
 public:
-    using KeyEventSignal = nodec::signals::Signal<void(const KeyEvent&)>;
+    using KeyEventSignal = nodec::signals::Signal<void(const KeyEvent &)>;
 
 public:
     Keyboard() = default;
@@ -54,7 +51,7 @@ private:
     NODEC_DISABLE_COPY(Keyboard);
 };
 
-}
-}
+} // namespace keyboard
+} // namespace nodec_input
 
 #endif

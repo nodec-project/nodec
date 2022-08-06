@@ -4,29 +4,24 @@
 #include "../input.hpp"
 #include "../keyboard/impl/keyboard_impl.hpp"
 
-
 namespace nodec_input {
 namespace impl {
 
 class InputModule : public Input {
 public:
-
-    virtual keyboard::Keyboard& keyboard() override {
+    virtual keyboard::Keyboard &keyboard() override {
         return keyboard_impl_;
     }
 
-    keyboard::impl::KeyboardImpl& keyboard_impl() {
+    keyboard::impl::KeyboardImpl &keyboard_impl() {
         return keyboard_impl_;
     }
-
 
 private:
     keyboard::impl::KeyboardImpl keyboard_impl_;
-
 };
 
-}
-}
-
+} // namespace impl
+} // namespace nodec_input
 
 #endif

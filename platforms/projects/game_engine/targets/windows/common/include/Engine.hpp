@@ -1,30 +1,27 @@
 #pragma once
 
-#include "ScreenHandler.hpp"
-#include "Window.hpp"
+#include "Audio/AudioPlatform.hpp"
 #include "ImguiManager.hpp"
+#include "Rendering/SceneRenderer.hpp"
 #include "Resources/ResourceLoader.hpp"
 #include "Resources/ResourcesModuleBackend.hpp"
-#include "SceneSerialization/SceneSerializationModuleBackend.hpp"
-#include "Rendering/SceneRenderer.hpp"
-#include "Audio/AudioPlatform.hpp"
 #include "SceneAudio/SceneAudioSystem.hpp"
-
+#include "SceneSerialization/SceneSerializationModuleBackend.hpp"
+#include "ScreenHandler.hpp"
+#include "Window.hpp"
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <nodec_input/impl/input_module.hpp>
-#include <screen/impl/screen_module.hpp>
-#include <scene_set/impl/scene_module.hpp>
-#include <scene_set/systems/transform_system.hpp>
 #include <resources/impl/resources_module.hpp>
 #include <scene_serialization/scene_serialization.hpp>
+#include <scene_set/impl/scene_module.hpp>
+#include <scene_set/systems/transform_system.hpp>
+#include <screen/impl/screen_module.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/unicode.hpp>
 
-
 class Engine : public nodec_engine::impl::NodecEngineModule {
-
     using Screen = screen::Screen;
     using ScreenModule = screen::impl::ScreenModule;
 
@@ -67,14 +64,13 @@ public:
         scene_serialization_module_.reset(new SceneSerializationModuleBackend(&resources_module_->registry()));
         add_module<SceneSerialization>(scene_serialization_module_);
 
-
-        initialized().connect([=](NodecEngine&) {
+        initialized().connect([=](NodecEngine &) {
             scene_module_->registry().clear();
-            });
+        });
 
-        stepped().connect([=](NodecEngine&) {
+        stepped().connect([=](NodecEngine &) {
             scene_audio_system_->UpdateAudio(scene_module_->registry());
-            });
+        });
     }
 
     ~Engine() {
@@ -84,7 +80,8 @@ public:
     void setup() {
         using namespace nodec;
 
-        window_.reset(new Window(screen_module_->internal_size.x, screen_module_->internal_size.y,
+        window_.reset(new Window(
+            screen_module_->internal_size.x, screen_module_->internal_size.y,
             screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
             unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str(),
             input_module_.get()));
@@ -107,7 +104,7 @@ public:
     void frame_end() {
         using namespace scene_set::systems;
 
-        for (auto& root : scene_module_->hierarchy_system().root_entities()) {
+        for (auto &root : scene_module_->hierarchy_system().root_entities()) {
             update_transform(scene_module_->registry(), root);
         }
 
@@ -116,11 +113,21 @@ public:
         window_->GetGraphics().EndFrame();
     }
 
-    ScreenModule& screen_module() { return *screen_module_; }
-    SceneModule& scene_module() { return *scene_module_; }
-    ResourcesModule& resources_module() { return *resources_module_; }
-    SceneSerialization& scene_serialization() { return *scene_serialization_module_; }
-    AudioPlatform& audio_platform() { return *audio_platform_; }
+    ScreenModule &screen_module() {
+        return *screen_module_;
+    }
+    SceneModule &scene_module() {
+        return *scene_module_;
+    }
+    ResourcesModule &resources_module() {
+        return *resources_module_;
+    }
+    SceneSerialization &scene_serialization() {
+        return *scene_serialization_module_;
+    }
+    AudioPlatform &audio_platform() {
+        return *audio_platform_;
+    }
 
 private:
     // imgui must be destroyed after window.
@@ -142,5 +149,4 @@ private:
     std::unique_ptr<SceneRenderer> scene_renderer_;
 
     std::unique_ptr<SceneAudioSystem> scene_audio_system_;
-
 };

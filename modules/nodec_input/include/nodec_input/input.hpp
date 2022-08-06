@@ -3,18 +3,13 @@
 
 #include "keyboard/keyboard.hpp"
 
-
 namespace nodec_input {
 
 class Input {
 public:
-    
-    virtual keyboard::Keyboard& keyboard() = 0;
-
-
+    virtual keyboard::Keyboard &keyboard() = 0;
 };
 
-}
-
+} // namespace nodec_input
 
 #endif
