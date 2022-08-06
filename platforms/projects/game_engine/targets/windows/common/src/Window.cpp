@@ -6,6 +6,7 @@
 #include <string>
 #include <sstream>
 
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 
@@ -47,9 +48,11 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept {
 // END Window Class ===
 
 Window::Window(int width, int height,
-               int gfxWidth, int gfxHeight,
-               const wchar_t* name)
-    : mWidth(width), mHeight(height) {
+    int gfxWidth, int gfxHeight,
+    const wchar_t* name,
+    nodec_input::impl::InputModule* pInputModule)
+    : mWidth(width), mHeight(height)
+    , mpInputModule(pInputModule) {
     RECT wr;
     wr.left = 100;
     wr.right = width + wr.left;
@@ -140,6 +143,8 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         return true;
     }
 
+    const auto& imio = ImGui::GetIO();
+
     switch (msg) {
         // We don't want the DefProc to handle this message because
         // we want our destructor to destoroy the window, so return 0 instead of break.
@@ -147,103 +152,123 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         PostQuitMessage(0);
         return 0;
 
-    //    // when window loses funcs to prevent input
-    //case WM_KILLFOCUS:
-    //    //SetTitle("A");
-    //    break;
+        //    // when window loses funcs to prevent input
+        //case WM_KILLFOCUS:
+        //    //SetTitle("A");
+        //    break;
 
-    //    // on window to foreground/background
-    //case WM_ACTIVATE:
-    //    if (wParam & WA_ACTIVE) {
-    //        // active by keyboard not mouse
-    //        //SetTitle("b");
+        //    // on window to foreground/background
+        //case WM_ACTIVATE:
+        //    if (wParam & WA_ACTIVE) {
+        //        // active by keyboard not mouse
+        //        //SetTitle("b");
 
-    //    }
-    //    else {
-    //        // active by mouse
-    //        //SetTitle("c");
-    //    }
-    //    break;
+        //    }
+        //    else {
+        //        // active by mouse
+        //        //SetTitle("c");
+        //    }
+        //    break;
 
-    //    // --- KEYBOARD MESSAGE ---
-    //case WM_KEYDOWN:
-    //    // syskey commands need to be handled to track ALT key (VK_MENU) and F10
-    //case WM_SYSKEYDOWN:
-    //    // filter autorepeat
-    //    if (!(lParam & 0x40000000)) {
-    //        keyboardModule->handle_key_press(static_cast<input::keyboard::Key>(wParam));
-    //    }
-    //    break;
+        // --- KEYBOARD MESSAGE ---
+    case WM_KEYDOWN:
+        // syskey commands need to be handled to track ALT key (VK_MENU) and F10
+    case WM_SYSKEYDOWN: {
 
-    //case WM_KEYUP:
-    //case WM_SYSKEYUP:
+        if (imio.WantCaptureKeyboard) break;
 
-    //    keyboardModule->handle_key_release(static_cast<input::keyboard::Key>(wParam));
+        //nodec::logging::InfoStream(__FILE__, __LINE__) << lParam << ", " << wParam;
 
-    //    break;
+        // filter autorepeat
+        //if (!(lParam & 0x40000000)) {
 
-    //case WM_CHAR:
+        using namespace nodec_input::keyboard;
+        mpInputModule->keyboard_impl().key_event_impl()(
+            KeyEvent{
+                KeyEvent::Type::Press,
+                static_cast<Key>(wParam)
+            });
 
-    //    keyboardModule->handle_text_input(static_cast<unsigned char>(wParam));
+    } break;
 
-    //    break;
 
-    //    // END KEYBOARD MESSAGE ---
+    case WM_KEYUP:
+    case WM_SYSKEYUP: {
 
-    //    // --- MOUSE MESSAGE ---
-    //case WM_MOUSEMOVE:
-    //{
-    //    const POINTS pt = MAKEPOINTS(lParam);
+        if (imio.WantCaptureKeyboard) break;
 
-    //    mouseModule->handle_mouse_move({ pt.x, pt.y });
-    //    /*if (ImGui::GetCurrentContext()) {
+        using namespace nodec_input::keyboard;
+        mpInputModule->keyboard_impl().key_event_impl()(
+            KeyEvent{
+                KeyEvent::Type::Release,
+                static_cast<Key>(wParam)
+            });
 
-    //        ImGui::GetIO().MousePos = ImVec2(pt.x / 1.5, pt.y / 1.5);
-    //    }*/
-    //    break;
-    //}
-    //case WM_LBUTTONDOWN:
-    //{
-    //    const POINTS pt = MAKEPOINTS(lParam);
+    } break;
 
-    //    mouseModule->handle_button_press(input::mouse::MouseButton::Left,
-    //                                     { pt.x, pt.y });
 
-    //    break;
-    //}
-    //case WM_RBUTTONDOWN:
-    //{
-    //    const POINTS pt = MAKEPOINTS(lParam);
+        //case WM_CHAR:
 
-    //    mouseModule->handle_button_press(input::mouse::MouseButton::Right,
-    //                                     { pt.x, pt.y });
+        //    keyboardModule->handle_text_input(static_cast<unsigned char>(wParam));
 
-    //    break;
-    //}
-    //case WM_LBUTTONUP:
-    //{
-    //    const POINTS pt = MAKEPOINTS(lParam);
+        //    break;
 
-    //    mouseModule->handle_button_release(input::mouse::MouseButton::Left,
-    //                                       { pt.x, pt.y });
+        //    // END KEYBOARD MESSAGE ---
 
-    //    break;
-    //}
-    //case WM_RBUTTONUP:
-    //{
-    //    const POINTS pt = MAKEPOINTS(lParam);
+        //    // --- MOUSE MESSAGE ---
+        //case WM_MOUSEMOVE:
+        //{
+        //    const POINTS pt = MAKEPOINTS(lParam);
 
-    //    mouseModule->handle_button_release(input::mouse::MouseButton::Right,
-    //                                       { pt.x, pt.y });
+        //    mouseModule->handle_mouse_move({ pt.x, pt.y });
+        //    /*if (ImGui::GetCurrentContext()) {
 
-    //    break;
-    //}
-    //case WM_MOUSEWHEEL:
-    //{
+        //        ImGui::GetIO().MousePos = ImVec2(pt.x / 1.5, pt.y / 1.5);
+        //    }*/
+        //    break;
+        //}
+        //case WM_LBUTTONDOWN:
+        //{
+        //    const POINTS pt = MAKEPOINTS(lParam);
 
-    //    break;
-    //}
-    // END MOUSE MESSAGE ---
+        //    mouseModule->handle_button_press(input::mouse::MouseButton::Left,
+        //                                     { pt.x, pt.y });
+
+        //    break;
+        //}
+        //case WM_RBUTTONDOWN:
+        //{
+        //    const POINTS pt = MAKEPOINTS(lParam);
+
+        //    mouseModule->handle_button_press(input::mouse::MouseButton::Right,
+        //                                     { pt.x, pt.y });
+
+        //    break;
+        //}
+        //case WM_LBUTTONUP:
+        //{
+        //    const POINTS pt = MAKEPOINTS(lParam);
+
+        //    mouseModule->handle_button_release(input::mouse::MouseButton::Left,
+        //                                       { pt.x, pt.y });
+
+        //    break;
+        //}
+        //case WM_RBUTTONUP:
+        //{
+        //    const POINTS pt = MAKEPOINTS(lParam);
+
+        //    mouseModule->handle_button_release(input::mouse::MouseButton::Right,
+        //                                       { pt.x, pt.y });
+
+        //    break;
+        //}
+        //case WM_MOUSEWHEEL:
+        //{
+
+        //    break;
+        //}
+        // END MOUSE MESSAGE ---
 
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);

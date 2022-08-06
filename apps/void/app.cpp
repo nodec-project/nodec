@@ -5,6 +5,7 @@
 
 using namespace nodec;
 using namespace nodec_engine;
+using namespace nodec_input;
 using namespace scene_set;
 using namespace screen;
 using namespace resources;
@@ -59,6 +60,14 @@ public:
                     auto& comp = registry.get_component<HelloComponent>(entity);
                     comp.my_field = serializable.my_field;
                 });
+        }
+
+        {
+            auto& input = engine.get_module<Input>();
+            input.keyboard().key_event().connect([](const keyboard::KeyEvent& event){
+                logging::InfoStream(__FILE__, __LINE__) << event;
+                });
+
         }
 
 #ifdef EDITOR_MODE

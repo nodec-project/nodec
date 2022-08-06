@@ -42,12 +42,15 @@ public:
 
         BaseConnection(BaseSignal* sig, size_t idx) : sig(sig), idx(idx) {}
         ~BaseConnection() {
-            unblock();
-
-            if (sig) {
-                sig->calls[idx] = nullptr;
-                sig->conns[idx] = nullptr;
-                sig->dirty = true;
+            if (!blocked) {
+                if (sig) {
+                    sig->calls[idx] = nullptr;
+                    sig->conns[idx] = nullptr;
+                    sig->dirty = true;
+                }
+            }
+            else {
+                delete blocked_conn;
             }
         }
 
@@ -61,9 +64,7 @@ public:
         }
 
         void block() {
-            if (blocked) {
-                return;
-            };
+            if (blocked) return;
 
             blocked = true;
             BaseSignal* orig_sig = sig;
@@ -74,9 +75,7 @@ public:
         }
 
         void unblock() {
-            if (!blocked) {
-                return;
-            }
+            if (!blocked) return;
 
             BaseSignal* orig_sig = blocked_conn->sig;
             std::swap(blocked_conn->call, orig_sig->calls[idx]);

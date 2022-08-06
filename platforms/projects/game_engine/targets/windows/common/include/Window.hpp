@@ -2,6 +2,8 @@
 
 #include "Graphics/Graphics.hpp"
 
+#include <nodec_input/impl/input_module.hpp>
+
 #include <nodec/formatter.hpp>
 #include <nodec/macros.hpp>
 #include <nodec/signals.hpp>
@@ -11,6 +13,7 @@
 
 #include <stdexcept>
 #include <cassert>
+#include <array>
 
 
 class Window {
@@ -58,7 +61,8 @@ private:
 public:
     Window(int width, int height,
         int gfxWidth, int gfxHeight,
-        const wchar_t* name);
+        const wchar_t* name,
+        nodec_input::impl::InputModule* pInputModule);
 
     ~Window();
 
@@ -86,6 +90,7 @@ private:
     int mHeight;
     HWND hWnd;
     std::unique_ptr<Graphics> mpGraphics;
+    nodec_input::impl::InputModule* mpInputModule;
 
 private:
     NODEC_DISABLE_COPY(Window);

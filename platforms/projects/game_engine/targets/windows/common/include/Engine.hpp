@@ -12,6 +12,7 @@
 
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
+#include <nodec_input/impl/input_module.hpp>
 #include <screen/impl/screen_module.hpp>
 #include <scene_set/impl/scene_module.hpp>
 #include <scene_set/systems/transform_system.hpp>
@@ -52,6 +53,10 @@ public:
         scene_module_.reset(new SceneModule());
         add_module<Scene>(scene_module_);
 
+        // --- input ---
+        input_module_.reset(new nodec_input::impl::InputModule());
+        add_module<nodec_input::Input>(input_module_);
+
         // --- resources ---
         resources_module_.reset(new ResourcesModuleBackend());
         add_module<Resources>(resources_module_);
@@ -81,7 +86,8 @@ public:
 
         window_.reset(new Window(screen_module_->internal_size.x, screen_module_->internal_size.y,
             screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
-            unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str()));
+            unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str(),
+            input_module_.get()));
 
         screen_handler_->Setup(window_.get());
 
@@ -124,6 +130,8 @@ private:
 
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
+
+    std::shared_ptr<nodec_input::impl::InputModule> input_module_;
 
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
