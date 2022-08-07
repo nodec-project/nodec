@@ -1,6 +1,8 @@
 #ifndef NODEC_INPUT__KEYBOARD__KEY_HPP_
 #define NODEC_INPUT__KEYBOARD__KEY_HPP_
 
+#include <sstream>
+
 namespace nodec_input {
 namespace keyboard {
 

@@ -176,10 +176,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // if (!(lParam & 0x40000000)) {
 
         using namespace nodec_input::keyboard;
-        mpInputModule->keyboard_impl().key_event_impl()(
-            KeyEvent{
-                KeyEvent::Type::Press,
-                static_cast<Key>(wParam)});
+        mpInputModule->keyboard_impl().handle_key_event(
+            KeyEvent::Type::Press,
+            static_cast<Key>(wParam));
 
     } break;
 
@@ -188,10 +187,9 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         if (imio.WantCaptureKeyboard) break;
 
         using namespace nodec_input::keyboard;
-        mpInputModule->keyboard_impl().key_event_impl()(
-            KeyEvent{
-                KeyEvent::Type::Release,
-                static_cast<Key>(wParam)});
+        mpInputModule->keyboard_impl().handle_key_event(
+            KeyEvent::Type::Release,
+            static_cast<Key>(wParam));
 
     } break;
 
@@ -203,54 +201,74 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
 
         //    // END KEYBOARD MESSAGE ---
 
-        //    // --- MOUSE MESSAGE ---
-        // case WM_MOUSEMOVE:
-        //{
-        //    const POINTS pt = MAKEPOINTS(lParam);
+        // --- MOUSE MESSAGE ---
+    case WM_MOUSEMOVE: {
+        if (imio.WantCaptureMouse) break;
 
-        //    mouseModule->handle_mouse_move({ pt.x, pt.y });
-        //    /*if (ImGui::GetCurrentContext()) {
+        const POINTS pt = MAKEPOINTS(lParam);
 
-        //        ImGui::GetIO().MousePos = ImVec2(pt.x / 1.5, pt.y / 1.5);
-        //    }*/
-        //    break;
-        //}
-        // case WM_LBUTTONDOWN:
-        //{
-        //    const POINTS pt = MAKEPOINTS(lParam);
+        using namespace nodec_input::mouse;
 
-        //    mouseModule->handle_button_press(input::mouse::MouseButton::Left,
-        //                                     { pt.x, pt.y });
+        MouseButtons buttons = MouseButton::None;
+        if (wParam & MK_LBUTTON) buttons |= MouseButton::Left;
+        if (wParam & MK_RBUTTON) buttons |= MouseButton::Right;
+        if (wParam & MK_MBUTTON) buttons |= MouseButton::Middle;
 
-        //    break;
-        //}
-        // case WM_RBUTTONDOWN:
-        //{
-        //    const POINTS pt = MAKEPOINTS(lParam);
+        mpInputModule->mouse_impl().handle_mouse_move_event(buttons, {pt.x, pt.y});
 
-        //    mouseModule->handle_button_press(input::mouse::MouseButton::Right,
-        //                                     { pt.x, pt.y });
+    } break;
 
-        //    break;
-        //}
-        // case WM_LBUTTONUP:
-        //{
-        //    const POINTS pt = MAKEPOINTS(lParam);
+    case WM_LBUTTONDOWN:
+    case WM_RBUTTONDOWN:
+    case WM_MBUTTONDOWN:
+    case WM_LBUTTONUP:
+    case WM_RBUTTONUP:
+    case WM_MBUTTONUP: {
+        if (imio.WantCaptureMouse) break;
 
-        //    mouseModule->handle_button_release(input::mouse::MouseButton::Left,
-        //                                       { pt.x, pt.y });
+        const POINTS pt = MAKEPOINTS(lParam);
+        const nodec::Vector2i position{pt.x, pt.y};
 
-        //    break;
-        //}
-        // case WM_RBUTTONUP:
-        //{
-        //    const POINTS pt = MAKEPOINTS(lParam);
+        using namespace nodec_input::mouse;
 
-        //    mouseModule->handle_button_release(input::mouse::MouseButton::Right,
-        //                                       { pt.x, pt.y });
+        MouseButton button;
+        switch (msg) {
+        case WM_LBUTTONDOWN:
+        case WM_LBUTTONUP:
+            button = MouseButton::Left;
+            break;
+        case WM_RBUTTONDOWN:
+        case WM_RBUTTONUP:
+            button = MouseButton::Right;
+            break;
+        case WM_MBUTTONDOWN:
+        case WM_MBUTTONUP:
+            button = MouseButton::Middle;
+            break;
+        default: break;
+        }
 
-        //    break;
-        //}
+        MouseButtons buttons = MouseButton::None;
+        if (wParam & MK_LBUTTON) buttons |= MouseButton::Left;
+        if (wParam & MK_RBUTTON) buttons |= MouseButton::Right;
+        if (wParam & MK_MBUTTON) buttons |= MouseButton::Middle;
+
+        switch (msg) {
+        case WM_LBUTTONDOWN:
+        case WM_RBUTTONDOWN:
+        case WM_MBUTTONDOWN:
+            mpInputModule->mouse_impl().handle_mouse_press_event(button, buttons, position);
+            break;
+        case WM_LBUTTONUP:
+        case WM_RBUTTONUP:
+        case WM_MBUTTONUP:
+            mpInputModule->mouse_impl().handle_mouse_release_event(button, buttons, position);
+            break;
+        default: break;
+        }
+
+    } break;
+
         // case WM_MOUSEWHEEL:
         //{
 

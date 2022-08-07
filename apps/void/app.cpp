@@ -61,6 +61,12 @@ public:
             input.keyboard().key_event().connect([](const keyboard::KeyEvent &event) {
                 logging::InfoStream(__FILE__, __LINE__) << event;
             });
+
+            input.mouse().mouse_event().connect([](const mouse::MouseEvent &event) {
+                logging::InfoStream(__FILE__, __LINE__)  << event;
+                std::ostringstream oss;
+                oss << 1 << event;
+            });
         }
 
 #ifdef EDITOR_MODE
@@ -112,7 +118,7 @@ private:
         auto entity = scene.create_entity("Audio Source Test");
         scene.registry().emplace_component<AudioSource>(entity);
         auto &source = scene.registry().get_component<AudioSource>(entity);
-        source.clip = dodon_clip;
+        source.clip = miku_clip;
         source.is_playing = true;
     }
 

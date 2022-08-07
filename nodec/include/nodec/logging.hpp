@@ -129,9 +129,27 @@ public:
     FatalStream(const char *file, size_t line);
 };
 
-std::ostream &operator<<(std::ostream &stream, const nodec::logging::Level &level);
+inline std::ostream &operator<<(std::ostream &stream, const nodec::logging::Level &level) {
+    switch (level) {
+    case nodec::logging::Level::Unset:
+        return stream << "Unset";
+    case nodec::logging::Level::Debug:
+        return stream << "Debug";
+    case nodec::logging::Level::Info:
+        return stream << "Info";
+    case nodec::logging::Level::Warn:
+        return stream << "Warn";
+    case nodec::logging::Level::Error:
+        return stream << "Error";
+    case nodec::logging::Level::Fatal:
+        return stream << "Fatal";
+    }
+    return stream << "Unknown";
+}
 
-std::ostream &operator<<(std::ostream &stream, const nodec::logging::LogRecord &record);
+inline std::ostream &operator<<(std::ostream &stream, const nodec::logging::LogRecord &record) {
+    return stream << nodec::logging::formatter(record);
+}
 
 } // namespace logging
 } // namespace nodec

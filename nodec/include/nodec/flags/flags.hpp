@@ -1,6 +1,10 @@
 #ifndef NODEC__FLAGS__FLAGS_HPP_
 #define NODEC__FLAGS__FLAGS_HPP_
 
+/**
+ * https://github.com/grisumbras/enum-flags
+ */
+
 #include "allow_flags.hpp"
 #include "iterator.hpp"
 
@@ -21,8 +25,8 @@ template<class E>
 class Flags {
 public:
     static_assert(is_flags<E>::value,
-                  "flags::flags is disallowed for this type; "
-                  "use ALLOW_FLAGS_FOR_ENUM macro.");
+                  "nodec::flags is disallowed for this type; "
+                  "use NODEC_ALLOW_FLAGS_FOR_ENUM macro.");
 
     using enum_type = typename std::decay<E>::type;
     using underlying_type = typename std::underlying_type<enum_type>::type;
@@ -148,57 +152,6 @@ public:
         return {};
     }
 
-    // template <class E>
-    // friend constexpr auto operator<<(std::ostream& stream, const Flags<E>& fl)
-    //     -> typename std::enable_if<
-    //     nodec::is_printable<E>::value, std::ostream&
-    //     >::type {
-    //     return stream << "printable. ";
-    // }
-
-    // template <class E>
-    // friend constexpr auto operator<<(std::ostream& stream, const Flags<E>& fl)
-    //     -> typename std::enable_if<
-    //     !nodec::is_printable<E>::value, std::ostream&
-    //     >::type {
-    //     return stream << "not printable. ";
-    // }
-
-    // friend auto operator<<(std::ostream& stream, const Flags& fl)
-    //     -> typename std::enable_if<
-    //     nodec::is_printable<E>::value, std::ostream&
-    //     >::type {
-    //     return stream << "printable. ";
-    // }
-
-    // friend auto operator<<(std::ostream& stream, const Flags& fl)
-    //     -> typename std::enable_if<
-    //     !nodec::is_printable<E>::value, std::ostream&
-    //     >::type {
-    //     return stream << "not printable. ";
-    // }
-
-    // friend constexpr auto operator<<(std::ostream& stream, const Flags& fl)
-    //     -> typename std::enable_if<
-    //     nodec::is_printable<enum_type>::value, std::ostream&
-    //     >::type {
-    //     return stream << "printable. " << fl.val_;
-    // }
-
-    // friend auto operator<<(std::ostream& stream, const Flags& fl)
-    //     -> typename std::enable_if<
-    //     !nodec::is_printable<enum_type>::value, std::ostream&
-    //     >::type {
-    //     return stream << "not printable. " << fl.val_;
-    // }
-
-    // friend constexpr auto operator<<(std::ostream& stream, const Flags& fl)
-    //     -> typename std::enable_if<
-    //     nodec::is_printable<enum_type>::value,
-    //     std::ostream&>::type {
-    //     return stream << fl.val_;
-    // }
-
 private:
     constexpr explicit Flags(impl_type val) noexcept
         : val_(val) {
@@ -206,6 +159,33 @@ private:
 
     impl_type val_;
 };
+
+template<class E>
+auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
+    -> typename std::enable_if<
+        nodec::can_stream_out<std::ostream, E>::value, std::ostream &>::type {
+    auto iter = flags.begin();
+    if (iter == flags.end()) {
+        return stream << "None";
+    }
+
+    stream << *iter;
+    while (++iter != flags.end()) {
+        stream << "|" << *iter;
+    }
+
+    // std::copy(flags.begin(), flags.end(), std::ostream_iterator<E>(stream, "|"));
+
+    return stream;
+}
+
+template<class E>
+auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
+    -> typename std::enable_if<
+        !nodec::can_stream_out<std::ostream, E>::value, std::ostream &>::type {
+    return stream << std::bitset<flags.size()>(flags.underlying_value())
+                  << "(" << std::showbase << std::hex << flags.underlying_value() << ")";
+}
 
 } // namespace flags
 } // namespace nodec
@@ -240,50 +220,6 @@ constexpr auto operator~(E e1) noexcept
         nodec::flags::is_flags<E>::value,
         nodec::flags::Flags<E>>::type {
     return ~nodec::flags::Flags<E>(e1);
-}
-
-//
-// template <class E>
-// auto print(std::ostream& stream, const nodec::flags::Flags<E>& fl)
-//-> typename std::enable_if<
-//    nodec::is_printable<E>::value, std::ostream&
-//>::type {
-//    return stream << "printable. ";
-//}
-//
-// template <class E>
-// auto print(std::ostream& stream, const nodec::flags::Flags<E>& fl)
-//-> typename std::enable_if<
-//    !nodec::is_printable<E>::value, std::ostream&
-//>::type {
-//    return stream << "not printable. ";
-//}
-
-template<class E>
-auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
-    -> typename std::enable_if<
-        nodec::is_printable<E>::value, std::ostream &>::type {
-    auto iter = flags.begin();
-    if (iter == flags.end()) {
-        return stream << "None";
-    }
-
-    stream << *iter;
-    while (++iter != flags.end()) {
-        stream << "|" << *iter;
-    }
-
-    // std::copy(flags.begin(), flags.end(), std::ostream_iterator<E>(stream, "|"));
-
-    return stream;
-}
-
-template<class E>
-auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
-    -> typename std::enable_if<
-        !nodec::is_printable<E>::value, std::ostream &>::type {
-    return stream << std::bitset<flags.size()>(flags.underlying_value())
-                  << "(" << std::showbase << std::hex << flags.underlying_value() << ")";
 }
 
 #endif

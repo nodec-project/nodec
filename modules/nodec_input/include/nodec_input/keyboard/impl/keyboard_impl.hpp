@@ -3,9 +3,8 @@
 
 #include "../keyboard.hpp";
 
-#include <queue>
 #include <bitset>
-
+#include <queue>
 
 namespace nodec_input {
 namespace keyboard {
@@ -17,16 +16,21 @@ public:
     KeyboardImpl() = default;
 
 public:
-    KeyEventSignal::SignalInterface key_event() { return key_event_.signal_interface(); }
-    KeyEventSignal& key_event_impl() { return key_event_; }
+    KeyEventSignal::SignalInterface key_event() {
+        return key_event_.signal_interface();
+    }
+
+public:
+    void handle_key_event(const KeyEvent::Type &type, const Key &key) {
+        key_event_({type, key});
+    }
 
 private:
     KeyEventSignal key_event_;
 };
 
-}
-}
-}
-
+} // namespace impl
+} // namespace keyboard
+} // namespace nodec_input
 
 #endif
