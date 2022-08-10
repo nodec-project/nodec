@@ -22,7 +22,7 @@ public:
         using namespace nodec;
         using namespace rendering::resources;
         using namespace scene_serialization;
-        using namespace scene_audio::resources;
+        using namespace nodec_scene_audio::resources;
 
 
         resource_path_changed_connection_.disconnect();

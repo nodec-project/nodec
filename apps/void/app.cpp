@@ -12,8 +12,8 @@ using namespace resources;
 using namespace rendering::components;
 using namespace rendering::resources;
 using namespace scene_serialization;
-using namespace scene_audio::resources;
-using namespace scene_audio::components;
+using namespace nodec_scene_audio::resources;
+using namespace nodec_scene_audio::components;
 
 class HelloWorld {
 public:
@@ -58,14 +58,28 @@ public:
 
         {
             auto &input = engine.get_module<Input>();
-            input.keyboard().key_event().connect([](const keyboard::KeyEvent &event) {
-                logging::InfoStream(__FILE__, __LINE__) << event;
+            input.keyboard().key_event().connect([=, &engine](const keyboard::KeyEvent &event) {
+                //logging::InfoStream(__FILE__, __LINE__) << event;
+
+                auto &scene = engine.get_module<Scene>();
+
+                if (event.key == keyboard::Key::A && event.type == keyboard::KeyEvent::Type::Release) {
+                    logging::InfoStream(__FILE__, __LINE__) << "AAA";
+                    auto& source = scene.registry().get_component<AudioSource>(audioEntity);
+
+                    source.is_playing = true;
+                }
+
+                if (event.key == keyboard::Key::D && event.type == keyboard::KeyEvent::Type::Release) {
+                    logging::InfoStream(__FILE__, __LINE__) << "DDD";
+                    auto &source = scene.registry().get_component<AudioSource>(audioEntity);
+
+                    source.is_playing = false;
+                }
             });
 
             input.mouse().mouse_event().connect([](const mouse::MouseEvent &event) {
-                logging::InfoStream(__FILE__, __LINE__)  << event;
-                std::ostringstream oss;
-                oss << 1 << event;
+                //logging::InfoStream(__FILE__, __LINE__) << event;
             });
         }
 
@@ -115,10 +129,12 @@ private:
         auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
         auto miku_clip = resources.registry().get_resource<AudioClip>("audios/miku-activated.wav").get();
 
-        auto entity = scene.create_entity("Audio Source Test");
-        scene.registry().emplace_component<AudioSource>(entity);
-        auto &source = scene.registry().get_component<AudioSource>(entity);
-        source.clip = miku_clip;
+        audioEntity = scene.create_entity("Audio Source Test");
+        scene.registry().emplace_component<AudioSource>(audioEntity);
+        auto &source = scene.registry().get_component<AudioSource>(audioEntity);
+        source.clip = dodon_clip;
+        //source.clip = miku_clip;
+        //source.loop = true;
         source.is_playing = true;
     }
 
@@ -127,6 +143,7 @@ private:
 
 private:
     std::shared_ptr<Material> target_material;
+    SceneEntity audioEntity;
 };
 
 CEREAL_REGISTER_TYPE(HelloWorld::SerializableHelloComponent);

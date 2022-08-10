@@ -5,24 +5,24 @@
 #include <Audio/SouceVoice.hpp>
 
 #include <memory>
+#include <chrono>
 
 
 /**
-* ECS Component
-*/
+ * ECS Component
+ */
 class AudioSourceActivity {
 public:
 
-    bool loop{ false };
-
     enum class State {
-        Inactive,
         Stopped,
         Playing
     };
 
-    State state{ State::Inactive };
+    State state{State::Stopped};
     std::shared_ptr<AudioClipBackend> pClip;
     std::unique_ptr<SourceVoice> pVoice;
+    std::chrono::milliseconds playBeginTime;
+
 
 };

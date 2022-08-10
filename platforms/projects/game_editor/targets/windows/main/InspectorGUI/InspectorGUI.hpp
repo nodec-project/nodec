@@ -1,18 +1,19 @@
 #pragma once
 
-#include <scene_set/components/basic.hpp>
-#include <rendering/components/mesh_renderer.hpp>
-#include <rendering/components/camera.hpp>
 #include <Rendering/components/light.hpp>
 
+#include <nodec_scene_audio/components/audio_source.hpp>
+#include <rendering/components/camera.hpp>
+#include <rendering/components/mesh_renderer.hpp>
+#include <scene_set/components/basic.hpp>
+
+#include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
-#include <nodec/logging.hpp>
 
 #include <imgui.h>
 
 #include <algorithm>
-
 
 class InspectorGUI {
     using MeshRenderer = rendering::components::MeshRenderer;
@@ -21,14 +22,15 @@ class InspectorGUI {
     using Transform = scene_set::components::Transform;
     using Camera = rendering::components::Camera;
     using Light = rendering::components::Light;
+    using AudioSource = nodec_scene_audio::components::AudioSource;
+    using AudioClip = nodec_scene_audio::resources::AudioClip;
 
 public:
-    InspectorGUI(ResourceRegistry* pResourceRegistry)
-        : mpResourceRegistry{ pResourceRegistry } {
-
+    InspectorGUI(ResourceRegistry *pResourceRegistry)
+        : mpResourceRegistry{pResourceRegistry} {
     }
 
-    void OnGUIName(Name& name) {
+    void OnGUIName(Name &name) {
         SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), name.name);
 
         ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue;
@@ -39,7 +41,7 @@ public:
         name.name = mTempStrBuffer;
     }
 
-    void onGUITransform(Transform& trfm) {
+    void onGUITransform(Transform &trfm) {
         using namespace nodec;
 
         {
@@ -59,7 +61,7 @@ public:
             }
 
             ImGui::Text("Rotation (XYZ Euler)");
-            
+
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
             if (ImGui::DragFloat3("##Rotation", eulerAngles.v, 0.1f, -FLT_MAX, +FLT_MAX, "%.3f")) {
@@ -79,15 +81,14 @@ public:
         }
     }
 
-
-    void OnGUIMeshRenderer(MeshRenderer& renderer) {
+    void OnGUIMeshRenderer(MeshRenderer &renderer) {
         using namespace nodec;
         using namespace rendering::resources;
 
         ImGui::Text("Meshes");
 
         for (auto i = 0; i < renderer.meshes.size(); ++i) {
-            auto& mesh = renderer.meshes[i];
+            auto &mesh = renderer.meshes[i];
 
             std::string label = Formatter() << "##mesh-" << i;
 
@@ -95,7 +96,7 @@ public:
             auto origResourceName = result.first;
             SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origResourceName);
 
-            //ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1 , ,1 ,);
+            // ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1 , ,1 ,);
             int colorStackCount = 0;
 
             if (!mesh) {
@@ -114,9 +115,7 @@ public:
                 if (newMesh) {
                     // only not null, set as new mesh.
                     mesh = newMesh;
-                }
-                else {
-
+                } else {
                 }
             }
 
@@ -126,7 +125,7 @@ public:
         ImGui::Text("Materials");
 
         for (int i = 0; i < renderer.materials.size(); ++i) {
-            auto& material = renderer.materials[i];
+            auto &material = renderer.materials[i];
 
             auto result = mpResourceRegistry->lookup_name(material);
 
@@ -148,13 +147,13 @@ public:
         }
     }
 
-    void OnGUICamera(Camera& camera) {
+    void OnGUICamera(Camera &camera) {
         ImGui::DragFloat("Near Clip Plane", &camera.nearClipPlane);
         ImGui::DragFloat("Far Clip Plane", &camera.farClipPlane);
         ImGui::DragFloat("Fov Angle", &camera.fovAngle);
     }
 
-    void OnGUILight(Light& light) {
+    void OnGUILight(Light &light) {
         using namespace rendering::components;
 
         int currentType = static_cast<int>(light.type);
@@ -166,8 +165,43 @@ public:
         ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
     }
 
+    void OnGuiAudioSource(AudioSource &source) {
+
+        {
+            std::string origName;
+            bool found;
+            std::tie(origName, found) = mpResourceRegistry->lookup_name(source.clip);
+            
+            SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origName);
+
+            if (ImGui::InputText("Clip", mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
+                std::string newName = mTempStrBuffer;
+                auto newClip = source.clip;
+                if (newName.empty()) {
+                    // if empty, set clip to null.
+                    newClip.reset();
+                } else {
+                    newClip = mpResourceRegistry->get_resource<AudioClip>(newName).get();
+                    if (!newClip) newClip = source.clip;
+                }
+                source.clip = newClip;
+            }
+        }
+
+
+        ImGui::Checkbox("Is Playing", &source.is_playing);
+
+        {
+            int position = source.position.count();
+            ImGui::DragInt("Position", &position);
+            source.position = std::chrono::milliseconds(position);
+        }
+
+        ImGui::Checkbox("Loop", &source.loop);
+    }
+
 private:
-    void SetStrBuffer(char* pBuffer, const size_t bufferSize, const std::string& source) {
+    void SetStrBuffer(char *pBuffer, const size_t bufferSize, const std::string &source) {
         source.copy(pBuffer, bufferSize - 1);
 
         auto null_pos = std::min(source.size(), bufferSize - 1);
@@ -175,7 +209,6 @@ private:
     }
 
 private:
-    ResourceRegistry* mpResourceRegistry;
-    char mTempStrBuffer[128]{ 0x00 };
-
+    ResourceRegistry *mpResourceRegistry;
+    char mTempStrBuffer[128]{0x00};
 };

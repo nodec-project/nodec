@@ -30,10 +30,20 @@ enum class SampleFormat : uint16_t {
 
 struct WAVEFormat {
     SampleFormat sample_format;
+
+    //! Number of channels
     uint16_t n_channels;
+
+    //! Samples per second.
     uint32_t sample_rate;
+
+    //! Bytes per second.
     uint32_t byte_rate;
+
+    //! Bytes per sample frame.
     uint16_t block_align;
+
+    //! Bits per sample.
     uint16_t bits_per_sample;
 };
 
