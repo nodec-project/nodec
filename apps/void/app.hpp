@@ -11,12 +11,12 @@
 
 #include <nodec_engine/nodec_engine.hpp>
 #include <nodec_input/input.hpp>
-#include <rendering/components/mesh_renderer.hpp>
-#include <rendering/resources/mesh.hpp>
-#include <resources/resources.hpp>
+#include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/resources/mesh.hpp>
 #include <nodec_scene_audio/components/audio_listener.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 #include <nodec_scene_audio/resources/audio_clip.hpp>
+#include <resources/resources.hpp>
 #include <scene_serialization/scene_serialization.hpp>
 #include <scene_set/components/basic.hpp>
 #include <scene_set/scene.hpp>

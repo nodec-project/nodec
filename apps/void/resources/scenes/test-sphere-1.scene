@@ -43,7 +43,7 @@
 },
 {
 "polymorphic_id": 2147483651,
-"polymorphic_name": "rendering::components::SerializableMeshRenderer",
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
 "id": 2147483652,
 "data": {
@@ -68,7 +68,7 @@
 "components": [
 {
 "polymorphic_id": 2147483652,
-"polymorphic_name": "rendering::components::SerializableCamera",
+"polymorphic_name": "nodec_rendering::components::SerializableCamera",
 "ptr_wrapper": {
 "id": 2147483654,
 "data": {

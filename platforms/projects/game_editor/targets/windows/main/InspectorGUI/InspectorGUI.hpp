@@ -1,10 +1,9 @@
 #pragma once
 
-#include <Rendering/components/light.hpp>
-
+#include <nodec_rendering/components/camera.hpp>
+#include <nodec_rendering/components/light.hpp>
+#include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
-#include <rendering/components/camera.hpp>
-#include <rendering/components/mesh_renderer.hpp>
 #include <scene_set/components/basic.hpp>
 
 #include <nodec/logging.hpp>
@@ -16,12 +15,12 @@
 #include <algorithm>
 
 class InspectorGUI {
-    using MeshRenderer = rendering::components::MeshRenderer;
+    using MeshRenderer = nodec_rendering::components::MeshRenderer;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
     using Name = scene_set::components::Name;
     using Transform = scene_set::components::Transform;
-    using Camera = rendering::components::Camera;
-    using Light = rendering::components::Light;
+    using Camera = nodec_rendering::components::Camera;
+    using Light = nodec_rendering::components::Light;
     using AudioSource = nodec_scene_audio::components::AudioSource;
     using AudioClip = nodec_scene_audio::resources::AudioClip;
 
@@ -83,7 +82,7 @@ public:
 
     void OnGUIMeshRenderer(MeshRenderer &renderer) {
         using namespace nodec;
-        using namespace rendering::resources;
+        using namespace nodec_rendering::resources;
 
         ImGui::Text("Meshes");
 
@@ -154,7 +153,7 @@ public:
     }
 
     void OnGUILight(Light &light) {
-        using namespace rendering::components;
+        using namespace nodec_rendering::components;
 
         int currentType = static_cast<int>(light.type);
         ImGui::Combo("Type", &currentType, "Directional\0Point\0Spot");
@@ -166,12 +165,11 @@ public:
     }
 
     void OnGuiAudioSource(AudioSource &source) {
-
         {
             std::string origName;
             bool found;
             std::tie(origName, found) = mpResourceRegistry->lookup_name(source.clip);
-            
+
             SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origName);
 
             if (ImGui::InputText("Clip", mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
@@ -187,7 +185,6 @@ public:
                 source.clip = newClip;
             }
         }
-
 
         ImGui::Checkbox("Is Playing", &source.is_playing);
 

@@ -1,12 +1,12 @@
-#ifndef SERIALIZATION__RENDERING__COMPONENTS__CAMERA_HPP_
-#define SERIALIZATION__RENDERING__COMPONENTS__CAMERA_HPP_
+#ifndef SERIALIZATION__NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
+#define SERIALIZATION__NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
 
 #include <scene_serialization/scene_serialization.hpp>
 
 #include <cereal/types/polymorphic.hpp>
 #include <cereal/types/vector.hpp>
 
-namespace rendering {
+namespace nodec_rendering {
 namespace components {
 
 class SerializableCamera : public scene_serialization::BaseSerializableComponent {
@@ -40,8 +40,8 @@ public:
 #include <cereal/archives/binary.hpp>
 #include <cereal/archives/xml.hpp>
 
-CEREAL_REGISTER_TYPE(rendering::components::SerializableCamera);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(scene_serialization::BaseSerializableComponent, rendering::components::SerializableCamera);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableCamera);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableCamera);
 
 
 #endif

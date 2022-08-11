@@ -1,6 +1,5 @@
-#ifndef SERIALIZATION__RENDERING__RESOURCES__SHADER_HPP_
-#define SERIALIZATION__RENDERING__RESOURCES__SHADER_HPP_
-
+#ifndef SERIALIZATION__NODEC_RENDERING__RESOURCES__SHADER_HPP_
+#define SERIALIZATION__NODEC_RENDERING__RESOURCES__SHADER_HPP_
 
 #include <serialization/nodec/vector4.hpp>
 
@@ -9,13 +8,11 @@
 
 #include <nodec/vector4.hpp>
 
-#include <vector>
 #include <string>
+#include <vector>
 
-
-namespace rendering {
+namespace nodec_rendering {
 namespace resources {
-
 
 struct SerializableShaderMetaInfo {
     struct FloatProperty {
@@ -38,38 +35,34 @@ struct SerializableShaderMetaInfo {
 };
 
 template<class Archive>
-void serialize(Archive& archive, SerializableShaderMetaInfo::FloatProperty &property) {
+void serialize(Archive &archive, SerializableShaderMetaInfo::FloatProperty &property) {
     archive(
         cereal::make_nvp("name", property.name),
-        cereal::make_nvp("default_value", property.default_value)
-    );
+        cereal::make_nvp("default_value", property.default_value));
 }
 
 template<class Archive>
-void serialize(Archive& archive, SerializableShaderMetaInfo::Vector4Property &property) {
+void serialize(Archive &archive, SerializableShaderMetaInfo::Vector4Property &property) {
     archive(
         cereal::make_nvp("name", property.name),
-        cereal::make_nvp("default_value", property.default_value)
-    );
+        cereal::make_nvp("default_value", property.default_value));
 }
 
 template<class Archive>
-void serialize(Archive& archive, SerializableShaderMetaInfo::TextureEntry &entry) {
+void serialize(Archive &archive, SerializableShaderMetaInfo::TextureEntry &entry) {
     archive(
-        cereal::make_nvp("name", entry.name)
-    );
+        cereal::make_nvp("name", entry.name));
 }
 
 template<class Archive>
-void serialize(Archive& archive, SerializableShaderMetaInfo &info) {
+void serialize(Archive &archive, SerializableShaderMetaInfo &info) {
     archive(
         cereal::make_nvp("float_properties", info.float_properties),
         cereal::make_nvp("vector4_properties", info.vector4_properties),
-        cereal::make_nvp("texture_entries", info.texture_entries)
-    );
+        cereal::make_nvp("texture_entries", info.texture_entries));
 }
 
-}
-}
+} // namespace resources
+} // namespace nodec_rendering
 
 #endif

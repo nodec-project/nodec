@@ -19,7 +19,7 @@ Editor::Editor(Engine *engine)
     using namespace imwindows;
     using namespace imelements;
     using namespace scene_set::components;
-    using namespace rendering::components;
+    using namespace nodec_rendering::components;
     using namespace nodec_scene_audio::components;
 
     register_menu_item("Window/Control",

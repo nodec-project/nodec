@@ -1,18 +1,17 @@
-#ifndef SERIALIZATION__RENDERING__RESOURCES__MESH_HPP_
-#define SERIALIZATION__RENDERING__RESOURCES__MESH_HPP_
+#ifndef SERIALIZATION__NODEC_RENDERING__RESOURCES__MESH_HPP_
+#define SERIALIZATION__NODEC_RENDERING__RESOURCES__MESH_HPP_
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>
 
-#include <serialization/nodec/vector3.hpp>
 #include <serialization/nodec/vector2.hpp>
+#include <serialization/nodec/vector3.hpp>
 
-#include <rendering/resources/mesh.hpp>
+#include <nodec_rendering/resources/mesh.hpp>
 
 #include <vector>
 
-
-namespace rendering {
+namespace nodec_rendering {
 namespace resources {
 
 struct SerializableMesh {
@@ -29,23 +28,21 @@ struct SerializableMesh {
 };
 
 template<class Archive>
-void serialize(Archive& archive, SerializableMesh::Vertex &vert) {
+void serialize(Archive &archive, SerializableMesh::Vertex &vert) {
     archive(
         cereal::make_nvp("position", vert.position),
         cereal::make_nvp("normal", vert.normal),
         cereal::make_nvp("uv", vert.uv),
-        cereal::make_nvp("tangent", vert.tangent)
-    );
+        cereal::make_nvp("tangent", vert.tangent));
 }
 template<class Archive>
-void serialize(Archive& archive, SerializableMesh &mesh) {
+void serialize(Archive &archive, SerializableMesh &mesh) {
     archive(
         cereal::make_nvp("vertices", mesh.vertices),
-        cereal::make_nvp("triangles", mesh.triangles)
-    );
+        cereal::make_nvp("triangles", mesh.triangles));
 }
 
-}
-}
+} // namespace resources
+} // namespace nodec_rendering
 
 #endif

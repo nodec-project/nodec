@@ -9,8 +9,8 @@ using namespace nodec_input;
 using namespace scene_set;
 using namespace screen;
 using namespace resources;
-using namespace rendering::components;
-using namespace rendering::resources;
+using namespace nodec_rendering::components;
+using namespace nodec_rendering::resources;
 using namespace scene_serialization;
 using namespace nodec_scene_audio::resources;
 using namespace nodec_scene_audio::components;
@@ -59,13 +59,13 @@ public:
         {
             auto &input = engine.get_module<Input>();
             input.keyboard().key_event().connect([=, &engine](const keyboard::KeyEvent &event) {
-                //logging::InfoStream(__FILE__, __LINE__) << event;
+                // logging::InfoStream(__FILE__, __LINE__) << event;
 
                 auto &scene = engine.get_module<Scene>();
 
                 if (event.key == keyboard::Key::A && event.type == keyboard::KeyEvent::Type::Release) {
                     logging::InfoStream(__FILE__, __LINE__) << "AAA";
-                    auto& source = scene.registry().get_component<AudioSource>(audioEntity);
+                    auto &source = scene.registry().get_component<AudioSource>(audioEntity);
 
                     source.is_playing = true;
                 }
@@ -79,7 +79,7 @@ public:
             });
 
             input.mouse().mouse_event().connect([](const mouse::MouseEvent &event) {
-                //logging::InfoStream(__FILE__, __LINE__) << event;
+                // logging::InfoStream(__FILE__, __LINE__) << event;
             });
         }
 
@@ -133,8 +133,8 @@ private:
         scene.registry().emplace_component<AudioSource>(audioEntity);
         auto &source = scene.registry().get_component<AudioSource>(audioEntity);
         source.clip = dodon_clip;
-        //source.clip = miku_clip;
-        //source.loop = true;
+        // source.clip = miku_clip;
+        // source.loop = true;
         source.is_playing = true;
     }
 

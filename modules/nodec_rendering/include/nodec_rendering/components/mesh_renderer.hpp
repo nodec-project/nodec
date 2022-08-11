@@ -1,14 +1,13 @@
-#ifndef RENDERING__COMPONENTS__MESH_RENDERER_HPP_
-#define RENDERING__COMPONENTS__MESH_RENDERER_HPP_
+#ifndef NODEC_RENDERING__COMPONENTS__MESH_RENDERER_HPP_
+#define NODEC_RENDERING__COMPONENTS__MESH_RENDERER_HPP_
 
-#include "../resources/mesh.hpp"
 #include "../resources/material.hpp"
+#include "../resources/mesh.hpp"
 
-#include <vector>
 #include <memory>
+#include <vector>
 
-
-namespace rendering {
+namespace nodec_rendering {
 namespace components {
 
 struct MeshRenderer {
@@ -19,8 +18,7 @@ struct MeshRenderer {
     std::vector<SharedMaterial> materials;
 };
 
-}
-}
-
+} // namespace components
+} // namespace nodec_rendering
 
 #endif
