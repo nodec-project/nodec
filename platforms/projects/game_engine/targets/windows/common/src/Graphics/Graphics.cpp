@@ -132,6 +132,9 @@ void Graphics::BeginFrame() noexcept {
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
+    mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), mpDSV.Get());
+
+
     const float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
     mpContext->ClearRenderTargetView(mpTarget.Get(), color);
@@ -144,6 +147,9 @@ void Graphics::EndFrame() {
     //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
 
     ImGui::Render();
+
+    mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), mpDSV.Get());
+
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
     // Update and Render additional Platform Windows
