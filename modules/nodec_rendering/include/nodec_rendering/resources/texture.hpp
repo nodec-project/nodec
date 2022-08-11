@@ -7,8 +7,16 @@ namespace nodec_rendering {
 namespace resources {
 
 class Texture {
-    //virtual int height() = 0;
-    //virtual int width() = 0;
+public:
+    /**
+     * @brief Returns the height of the texture in pixels.
+     */
+    virtual int height() const = 0;
+
+    /**
+     * @brief Returns the width of the texture in pixels.
+     */
+    virtual int width() const = 0;
 };
 
 } // namespace resources

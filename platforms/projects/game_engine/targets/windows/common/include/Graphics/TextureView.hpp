@@ -35,26 +35,25 @@ public:
         std::wstring pathW = nodec::unicode::utf8to16<std::wstring>(path);
 
         ScratchImage image;
-        TexMetadata metadata;
         switch (imageType)
         {
         case ImageType::TGA:
             ThrowIfFailedGfx(
-                LoadFromTGAFile(pathW.c_str(), &metadata, image),
+                LoadFromTGAFile(pathW.c_str(), &mMetadata, image),
                 pGfx, __FILE__, __LINE__);
             break;
 
         default:
         case ImageType::WIC:
             ThrowIfFailedGfx(
-                LoadFromWICFile(pathW.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &metadata, image),
+                LoadFromWICFile(pathW.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, &mMetadata, image),
                 pGfx, __FILE__, __LINE__);
             break;
         }
 
         // create the resource view on the texture
         ThrowIfFailedGfx(
-            CreateShaderResourceView(&pGfx->GetDevice(), image.GetImages(), image.GetImageCount(), metadata, &mpTextureView),
+            CreateShaderResourceView(&pGfx->GetDevice(), image.GetImages(), image.GetImageCount(), mMetadata, &mpTextureView),
             pGfx, __FILE__, __LINE__);
     }
 
@@ -80,7 +79,12 @@ public:
         }
     }
 
+    const DirectX::TexMetadata& metadata() const noexcept {
+        return mMetadata;
+    }
+
 private:
+    DirectX::TexMetadata mMetadata;
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mpTextureView;
 
 private:

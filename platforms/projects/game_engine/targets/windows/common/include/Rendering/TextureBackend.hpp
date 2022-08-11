@@ -13,6 +13,16 @@ public:
         texture_view_.reset(new TextureView(gfx, path));
     }
 
+public:
+    int height() const override {
+        return texture_view_->metadata().height;
+    }
+
+    int width() const override {
+        return texture_view_->metadata().width;
+    }
+
+public:
     TextureView *texture_view() {
         return texture_view_.get();
     }

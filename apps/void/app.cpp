@@ -56,32 +56,33 @@ public:
                 });
         }
 
-        {
-            auto &input = engine.get_module<Input>();
-            input.keyboard().key_event().connect([=, &engine](const keyboard::KeyEvent &event) {
-                // logging::InfoStream(__FILE__, __LINE__) << event;
+        //{
+        //    auto &input = engine.get_module<Input>();
+        //    input.keyboard().key_event().connect([=, &engine](const keyboard::KeyEvent &event) {
+        //        // logging::InfoStream(__FILE__, __LINE__) << event;
 
-                auto &scene = engine.get_module<Scene>();
+        //        auto &scene = engine.get_module<Scene>();
 
-                if (event.key == keyboard::Key::A && event.type == keyboard::KeyEvent::Type::Release) {
-                    logging::InfoStream(__FILE__, __LINE__) << "AAA";
-                    auto &source = scene.registry().get_component<AudioSource>(audioEntity);
+        //        if (event.key == keyboard::Key::A && event.type == keyboard::KeyEvent::Type::Release) {
+        //            logging::InfoStream(__FILE__, __LINE__) << "AAA";
+        //            auto &source = scene.registry().get_component<AudioSource>(audioEntity);
 
-                    source.is_playing = true;
-                }
+        //            source.is_playing = true;
+        //        }
 
-                if (event.key == keyboard::Key::D && event.type == keyboard::KeyEvent::Type::Release) {
-                    logging::InfoStream(__FILE__, __LINE__) << "DDD";
-                    auto &source = scene.registry().get_component<AudioSource>(audioEntity);
+        //        if (event.key == keyboard::Key::D && event.type == keyboard::KeyEvent::Type::Release) {
+        //            logging::InfoStream(__FILE__, __LINE__) << "DDD";
+        //            auto &source = scene.registry().get_component<AudioSource>(audioEntity);
 
-                    source.is_playing = false;
-                }
-            });
+        //            source.is_playing = false;
+        //        }
+        //    });
 
-            input.mouse().mouse_event().connect([](const mouse::MouseEvent &event) {
-                // logging::InfoStream(__FILE__, __LINE__) << event;
-            });
-        }
+        //    input.mouse().mouse_event().connect([](const mouse::MouseEvent &event) {
+        //        // logging::InfoStream(__FILE__, __LINE__) << event;
+        //    });
+        //}
+
 
 #ifdef EDITOR_MODE
         using namespace scene_editor;
@@ -124,18 +125,29 @@ private:
 
         auto &resources = engine.get_module<Resources>();
 
-        target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
+        {
+            target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
 
-        auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
-        auto miku_clip = resources.registry().get_resource<AudioClip>("audios/miku-activated.wav").get();
+            auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
+            auto miku_clip = resources.registry().get_resource<AudioClip>("audios/miku-activated.wav").get();
 
-        audioEntity = scene.create_entity("Audio Source Test");
-        scene.registry().emplace_component<AudioSource>(audioEntity);
-        auto &source = scene.registry().get_component<AudioSource>(audioEntity);
-        source.clip = dodon_clip;
-        // source.clip = miku_clip;
-        // source.loop = true;
-        source.is_playing = true;
+            audioEntity = scene.create_entity("Audio Source Test");
+            scene.registry().emplace_component<AudioSource>(audioEntity);
+            auto &source = scene.registry().get_component<AudioSource>(audioEntity);
+            source.clip = dodon_clip;
+            // source.clip = miku_clip;
+            // source.loop = true;
+            source.is_playing = true;
+        }
+
+
+        {
+            auto texture = resources.registry().get_resource<Texture>("textures/test.jpg ").get();
+            auto entt = scene.registry().create_entity();
+            if (texture) {
+                logging::InfoStream(__FILE__, __LINE__) << texture->width() << ", " << texture->height();
+            }
+        }
     }
 
     void on_stepped(NodecEngine &engine) {
