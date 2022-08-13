@@ -78,11 +78,8 @@ public:
 
         // --- lights ---
         mSceneProperties.lights.directional.enabled = 0x00;
-
-        for (auto entt : scene.registry().view<const Light, const Transform>()) {
-            auto &light = scene.registry().get_component<const Light>(entt);
-            auto &trfm = scene.registry().get_component<const Transform>(entt);
-
+        auto view = scene.registry().view<const Light, const Transform>();
+        scene.registry().view<const Light, const Transform>().each([&](auto entt, const Light &light, const Transform &trfm) {
             switch (light.type) {
             case LightType::Directional: {
                 auto &directional = mSceneProperties.lights.directional;
@@ -98,12 +95,9 @@ public:
             default:
                 break;
             }
-        }
+        });
 
-        for (auto cameraEntt : scene.registry().view<const Camera, const Transform>()) {
-            auto &camera = scene.registry().get_component<const Camera>(cameraEntt);
-            auto &cameraTrfm = scene.registry().get_component<const Transform>(cameraEntt);
-
+        scene.registry().view<const Camera, const Transform>().each([&](auto entt, const Camera &camera, const Transform &cameraTrfm) {
             auto matrixP = XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(camera.fovAngle),
                 aspect,
@@ -123,16 +117,13 @@ public:
 
             mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
-            for (auto entt : scene.registry().view<const Transform, const MeshRenderer>()) {
-                auto &trfm = scene.registry().get_component<const Transform>(entt);
-                auto &meshRenderer = scene.registry().get_component<const MeshRenderer>(entt);
-
+            scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
                 if (meshRenderer.meshes.size() == 0) {
-                    continue;
+                    return;
                 }
 
                 if (meshRenderer.meshes.size() != meshRenderer.materials.size()) {
-                    continue;
+                    return;
                 }
 
                 XMMATRIX matrixM{trfm.local2world.m};
@@ -199,10 +190,8 @@ public:
 
                     mpGfx->DrawIndexed(meshBackend->triangles.size());
                 } // End foreach mesh
-            }     // End foreach mesh renderer
-
-            break;
-        } // End foreach camera
+            });   // End foreach mesh renderer
+        });       // End foreach camera
     }
 
 private:

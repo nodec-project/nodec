@@ -1,11 +1,13 @@
 #ifndef NODEC__ENTITIES__REGISTRY_HPP_
 #define NODEC__ENTITIES__REGISTRY_HPP_
 
-#include <nodec/entities/entity.hpp>
-#include <nodec/entities/storage.hpp>
-#include <nodec/entities/view.hpp>
-#include <nodec/formatter.hpp>
-#include <nodec/type_info.hpp>
+#include "../formatter.hpp"
+#include "../type_info.hpp"
+#include "../utility.hpp"
+#include "entity.hpp"
+#include "exceptions.hpp"
+#include "storage.hpp"
+#include "view.hpp"
 
 #include <cassert>
 #include <memory>
@@ -16,28 +18,13 @@
 namespace nodec {
 namespace entities {
 
-namespace details {
-
-template<typename Entity>
-inline void throw_invalid_entity_exception(const Entity entity, const char *file, size_t line) {
-    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
-                             << "Invalid entity detected. entity: 0x" << std::hex << entity
-                             << "(entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << ")");
-}
-
-template<typename Component, typename Entity>
-inline void throw_no_component_exception(const Entity entity, const char *file, size_t line) {
-    throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
-                             << "Entity {0x" << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity)
-                             << "} doesn't have the component {" << typeid(Component).name() << "}.");
-}
-
-} // namespace details
 
 template<typename Entity>
 class BasicRegistry {
-private:
     using entt_traits = entity_traits<Entity>;
+
+    template<typename Type>
+    using Storage = storage_for_t<Type, Entity>;
 
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
@@ -45,7 +32,7 @@ private:
 
     decltype(auto) generate_identifier(const std::size_t pos) noexcept {
         assert(pos < entt_traits::to_integral(null_entity) && "No entities available");
-        return entt_traits::combine(static_cast<typename entt_traits::Entity>(pos), {});
+        return entt_traits::combine(static_cast<typename entt_traits::entity_type>(pos), {});
     }
 
     decltype(auto) recycle_identifier() {
@@ -55,15 +42,15 @@ private:
         return (entities[curr] = entt_traits::combine(curr, entt_traits::to_integral(entities[curr])));
     }
 
-    decltype(auto) release_entity(const Entity entity, const typename entt_traits::Version version) {
-        const typename entt_traits::Version vers = version + (version == entt_traits::to_version(tombstone_entity));
+    decltype(auto) release_entity(const Entity entity, const typename entt_traits::version_type version) {
+        const typename entt_traits::version_type vers = version + (version == entt_traits::to_version(tombstone_entity));
         entities[entt_traits::to_entity(entity)] = entt_traits::construct(entt_traits::to_integral(free_list), vers);
         free_list = entt_traits::combine(entt_traits::to_integral(entity), tombstone_entity);
         return vers;
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component> *pool_assured() const {
+    Storage<Component> *pool_assured() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
 
@@ -73,27 +60,27 @@ private:
 
         auto &&pdata = pools[index];
         if (!pdata.pool) {
-            pdata.pool.reset(new BasicStorage<Entity, Component>());
+            pdata.pool.reset(new Storage<Component>());
         }
 
-        return static_cast<BasicStorage<Entity, Component> *>(pools[index].pool.get());
+        return static_cast<Storage<Component> *>(pools[index].pool.get());
     }
 
     template<typename Component>
-    const BasicStorage<Entity, Component> *pool_if_exists() const {
+    const Storage<Component> *pool_if_exists() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
         return (index < pools.size() && pools[index].pool)
-                   ? static_cast<const BasicStorage<Entity, Component> *>(pools[index].pool.get())
+                   ? static_cast<const Storage<Component> *>(pools[index].pool.get())
                    : nullptr;
     }
 
     template<typename Component>
-    BasicStorage<Entity, Component> *pool_if_exists() {
+    Storage<Component> *pool_if_exists() {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_seq<Component>::value();
         return (index < pools.size() && pools[index].pool)
-                   ? static_cast<BasicStorage<Entity, Component> *>(pools[index].pool.get())
+                   ? static_cast<Storage<Component> *>(pools[index].pool.get())
                    : nullptr;
     }
 
@@ -148,7 +135,7 @@ public:
      */
     void destroy_entity(const Entity entity) {
         if (!is_valid(entity)) {
-            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         remove_all_components(entity);
@@ -204,7 +191,7 @@ public:
     template<typename Component, typename... Args>
     decltype(auto) emplace_component(const Entity entity, Args &&...args) {
         if (!is_valid(entity)) {
-            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         return pool_assured<Component>()->emplace(*this, entity, std::forward<Args>(args)...);
@@ -215,7 +202,7 @@ public:
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
         if (!is_valid(entity)) {
-            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         return std::make_tuple(([this, entity](auto *cpool) {
@@ -225,7 +212,7 @@ public:
 
     void remove_all_components(const Entity entity) {
         if (!is_valid(entity)) {
-            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         for (auto pos = pools.size(); pos; --pos) {
@@ -239,18 +226,18 @@ public:
     template<typename Component>
     decltype(auto) get_component(const Entity entity) const {
         if (!is_valid(entity)) {
-            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         using Comp = std::remove_const_t<Component>;
         const auto *cpool = pool_if_exists<Comp>();
         if (!cpool) {
-            details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
+            exceptions::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
         auto *component = cpool->try_get(entity);
         if (!component) {
-            details::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
+            exceptions::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
         return *component;
@@ -274,7 +261,7 @@ public:
     template<typename Component>
     auto try_get_component(const Entity entity) const {
         if (!is_valid(entity)) {
-            details::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
         auto *cpool = pool_if_exists<std::remove_const_t<Component>>();
         return cpool ? cpool->try_get(entity) : nullptr;
@@ -282,7 +269,7 @@ public:
 
     template<typename Component>
     Component *try_get_component(const Entity entity) {
-        return const_cast<Component *>(std::as_const(*this).try_get_component<Component>(entity));
+        return const_cast<Component *>(as_const(*this).try_get_component<Component>(entity));
     }
 
     template<typename... Components>
@@ -295,17 +282,31 @@ public:
         return std::make_tuple(try_get_component<Components>(entity)...);
     }
 
-    template<typename... Components>
-    BasicView<Entity, Components...> view() const {
-        static_assert((std::min)({std::is_const_v<Components>...}), "Invalid non-const type");
-        // static_assert((std::is_const_v<Components> && ...), "Invalid non-const type"); // For over C++17
-
-        return {*pool_assured<std::remove_const_t<Components>>()...};
+    /**
+     * @brief Returns a view for the given components.
+     *
+     * @tparam Type Type of component used to construct the view.
+     * @tparam Others Other types of components used to construct the view.
+     * @tparam Exclusions Types of components used to filter the view.
+     * @return A newly created view.
+     */
+    template<typename Type, typename... Others, typename... Exclusions>
+    BasicView<type_list<Storage<const Type>, Storage<const Others>...>, type_list<Storage<const Exclusions>...>>
+    view(type_list<Exclusions...> = {}) const {
+        return {
+            *pool_assured<std::remove_const_t<Type>>(),
+            *pool_assured<std::remove_const_t<Others>>()...,
+            *pool_assured<std::remove_const_t<Exclusions>>()...};
     }
 
-    template<typename... Components>
-    BasicView<Entity, Components...> view() {
-        return {*pool_assured<std::remove_const_t<Components>>()...};
+    /*! @copydoc view */
+    template<typename Type, typename... Others, typename... Exclusions>
+    BasicView<type_list<Storage<Type>, Storage<Others>...>, type_list<Storage<Exclusions>...>>
+    view(type_list<Exclusions...> = {}) {
+        return {
+            *pool_assured<std::remove_const_t<Type>>(),
+            *pool_assured<std::remove_const_t<Others>>()...,
+            *pool_assured<std::remove_const_t<Exclusions>>()...};
     }
 
     /**

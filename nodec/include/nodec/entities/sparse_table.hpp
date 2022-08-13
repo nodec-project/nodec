@@ -233,6 +233,8 @@ public:
     using local_iterator = typename Group::iterator;
 
 public:
+    // TODO: Support move semantics.
+
     uint16_t pos_in_group(const size_type i) const {
         return static_cast<uint16_t>(i % GROUP_SIZE);
     }

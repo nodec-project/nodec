@@ -53,6 +53,7 @@ public:
     }
 
     ~AudioPlatform() {
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[AudioPlatform] >>> Destructed.";
     }
 
     IXAudio2 &GetXAudio() noexcept {

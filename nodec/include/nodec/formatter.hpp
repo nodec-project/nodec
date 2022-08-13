@@ -57,11 +57,9 @@ public:
     }
 
     operator std::string() noexcept {
-        stream_ << "\n"
-                   "[File] "
-                << file_ << "\n"
-                            "[Line] "
-                << line_;
+        stream_ << "\n" << std::dec
+                << "[File] " << file_ << "\n"
+                << "[Line] " << line_;
         return stream_.str();
     }
 

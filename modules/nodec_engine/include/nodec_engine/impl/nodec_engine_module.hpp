@@ -1,15 +1,14 @@
 #ifndef NODEC_ENGINE__IMPL__NODEC_ENGINE_MODULE_HPP_
 #define NODEC_ENGINE__IMPL__NODEC_ENGINE_MODULE_HPP_
 
-#include <nodec_engine/nodec_engine.hpp>
-#include <nodec/signals.hpp>
 #include <nodec/logging.hpp>
+#include <nodec/signals.hpp>
+#include <nodec_engine/nodec_engine.hpp>
 
-#include <vector>
-#include <string>
-#include <memory>
 #include <cassert>
-
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace nodec_engine {
 namespace impl {
@@ -19,14 +18,12 @@ public:
     NodecEngineModule() {
         nodec::logging::InfoStream(__FILE__, __LINE__)
             << "[NodecEngineModule] >>> The engine is created!";
-
     }
 
     ~NodecEngineModule() {
         nodec::logging::InfoStream(__FILE__, __LINE__)
             << "[NodecEngineModule] >>> The engine is destroyed.\n"
             << "engine_time: " << engine_time() << "[s]";
-
     }
 
 public:
@@ -54,11 +51,9 @@ public:
     }
 
 public:
-
     float engine_time() const noexcept override {
         return std::chrono::duration<float>(engine_timer_.elapsed()).count();
     }
-
 
     EngineSignal::SignalInterface initialized() override {
         return initialized_.signal_interface();
@@ -95,7 +90,7 @@ private:
         state_ = State::Active;
         step_func = &NodecEngineModule::step_cycle;
 
-        //nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_first]";
+        // nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_first]";
 
         initialize();
     }
@@ -103,10 +98,9 @@ private:
     void step_cycle() {
         assert(state_ == State::Active);
 
-        //nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_cycle]";
+        // nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_cycle]";
         stepped_(*this);
     }
-
 
 private:
     enum class State {
@@ -115,9 +109,9 @@ private:
         Active
     };
 
-    State state_{ State::Unconfigured };
+    State state_{State::Unconfigured};
 
-    void (NodecEngineModule::* step_func)() { &NodecEngineModule::step_first };
+    void (NodecEngineModule::*step_func)(){&NodecEngineModule::step_first};
 
     EngineSignal initialized_;
     EngineSignal stepped_;
@@ -125,8 +119,7 @@ private:
     nodec::Stopwatch<std::chrono::steady_clock> engine_timer_;
 };
 
-
-}  // namespace impl
-}  // namespace game_engine
+} // namespace impl
+} // namespace nodec_engine
 
 #endif

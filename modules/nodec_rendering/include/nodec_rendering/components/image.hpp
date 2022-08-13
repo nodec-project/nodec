@@ -5,8 +5,7 @@ namespace nodec_rendering {
 namespace components {
 
 class ImageRenderer {
-    float width;
-    float height;
+    int pixelsPerUnit{1};
 
 };
 

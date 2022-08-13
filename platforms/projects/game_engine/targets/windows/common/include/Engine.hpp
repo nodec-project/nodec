@@ -74,7 +74,12 @@ public:
     }
 
     ~Engine() {
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Destroyed!";
+        nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Destructed.";
+
+        // TODO: Consider to unload all modules before backends.
+        
+        // unload all scene entities.
+        scene_module_->registry().clear();
     }
 
     void setup() {
