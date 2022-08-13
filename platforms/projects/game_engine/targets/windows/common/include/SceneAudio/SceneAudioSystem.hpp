@@ -27,11 +27,7 @@ public:
         using namespace scene_set::components;
         using namespace Exceptions;
 
-        for (auto entt : registry.view<AudioSource, Transform, AudioSourceActivity>()) {
-            auto &source = registry.get_component<AudioSource>(entt);
-            auto &trfm = registry.get_component<Transform>(entt);
-            auto &activity = registry.get_component<AudioSourceActivity>(entt);
-
+        registry.view<AudioSource, Transform, AudioSourceActivity>().each([&](auto entt, AudioSource &source, Transform &trfm, AudioSourceActivity &activity) {
             try {
                 switch (activity.state) {
                 case AudioSourceActivity::State::Stopped: {
@@ -68,13 +64,12 @@ public:
 
                     ThrowIfFailed(activity.pVoice->GetVoice().FlushSourceBuffers(), __FILE__, __LINE__);
                     activity.pVoice->SubmitSourceBuffer(&buffer);
-                    //ThrowIfFailed(activity.pVoice->GetVoice().SubmitSourceBuffer(&buffer), __FILE__, __LINE__);
+                    // ThrowIfFailed(activity.pVoice->GetVoice().SubmitSourceBuffer(&buffer), __FILE__, __LINE__);
                     ThrowIfFailed(activity.pVoice->GetVoice().Start(), __FILE__, __LINE__);
 
                     activity.state = AudioSourceActivity::State::Playing;
 
                 } break;
-
 
                 case AudioSourceActivity::State::Playing: {
                     using namespace std::chrono;
@@ -119,7 +114,7 @@ public:
                     }
                 }();
             }
-        }
+        });
     }
 
 private:
