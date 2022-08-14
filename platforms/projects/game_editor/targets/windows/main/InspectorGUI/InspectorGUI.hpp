@@ -207,5 +207,5 @@ private:
 
 private:
     ResourceRegistry *mpResourceRegistry;
-    char mTempStrBuffer[128]{0x00};
+    char mTempStrBuffer[1024]{0x00};
 };

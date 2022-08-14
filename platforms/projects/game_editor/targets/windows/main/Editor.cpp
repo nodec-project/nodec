@@ -98,8 +98,14 @@ Editor::Editor(Engine *engine)
         });
 
     inspector_component_registry_impl().register_component<AudioSource>(
-        "AudioSource",
+        "Audio Source",
         [=](auto &source) {
             inspector_gui_->OnGuiAudioSource(source);
+        });
+
+    inspector_component_registry_impl().register_component<ImageRenderer>(
+        "Image Renderer",
+        [=](auto &renderer) {
+            (void)renderer;
         });
 }

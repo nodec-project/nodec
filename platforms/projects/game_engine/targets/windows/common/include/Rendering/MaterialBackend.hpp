@@ -60,6 +60,15 @@ public:
     }
 
 public:
+    void bind(Graphics* gfx, UINT slot) {
+        update_device_memory();
+
+        if (constant_buffer_) {
+            constant_buffer_->BindVS(gfx, slot);
+            constant_buffer_->BindPS(gfx, slot);
+        }
+    }
+
     ConstantBuffer *constant_buffer() {
         return constant_buffer_.get();
     }

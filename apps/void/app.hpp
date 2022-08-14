@@ -11,6 +11,9 @@
 
 #include <nodec_engine/nodec_engine.hpp>
 #include <nodec_input/input.hpp>
+#include <nodec_rendering/components/camera.hpp>
+#include <nodec_rendering/components/image_renderer.hpp>
+#include <nodec_rendering/components/light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/resources/mesh.hpp>
 #include <nodec_scene_audio/components/audio_listener.hpp>

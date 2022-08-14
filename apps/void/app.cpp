@@ -7,6 +7,7 @@ using namespace nodec;
 using namespace nodec_engine;
 using namespace nodec_input;
 using namespace scene_set;
+using namespace scene_set::components;
 using namespace screen;
 using namespace resources;
 using namespace nodec_rendering::components;
@@ -115,7 +116,6 @@ public:
 
 private:
     void on_initialized(NodecEngine &engine) {
-        using namespace nodec;
         logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
 
         auto &scene = engine.get_module<Scene>();
@@ -124,6 +124,16 @@ private:
         // auto& renderer = scene.registry().get_component<MeshRenderer>(entity);
 
         auto &resources = engine.get_module<Resources>();
+
+        {
+            auto entt = scene.create_entity("Camera");
+            scene.registry().emplace_component<Camera>(entt);
+            scene.registry().emplace_component<Light>(entt);
+
+            auto &trfm = scene.registry().get_component<Transform>(entt);
+            trfm.local_position.z = -3;
+
+        }
 
         {
             target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
@@ -143,7 +153,12 @@ private:
 
         {
             auto texture = resources.registry().get_resource<Texture>("textures/test.jpg ").get();
-            auto entt = scene.registry().create_entity();
+            auto entt = scene.create_entity("image");
+            scene.registry().emplace_component<ImageRenderer>(entt);
+            auto &renderer = scene.registry().get_component<ImageRenderer>(entt);
+
+            renderer.image = texture;
+            renderer.material = resources.registry().get_resource<Material>("org.nodec-rendering.essentials/materials/pbr-default.material").get();
             if (texture) {
                 logging::InfoStream(__FILE__, __LINE__) << texture->width() << ", " << texture->height();
             }

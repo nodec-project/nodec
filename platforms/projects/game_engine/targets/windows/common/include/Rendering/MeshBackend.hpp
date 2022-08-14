@@ -48,6 +48,16 @@ public:
         return index_buffer_.get();
     }
 
+    void bind(Graphics *gfx) {
+        if (vertex_buffer_) {
+            vertex_buffer_->Bind(gfx);
+        }
+
+        if (index_buffer_) {
+            index_buffer_->Bind(gfx);
+        }
+    }
+
 private:
     std::unique_ptr<VertexBuffer> vertex_buffer_;
     std::unique_ptr<IndexBuffer> index_buffer_;

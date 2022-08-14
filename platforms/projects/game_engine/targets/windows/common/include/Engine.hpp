@@ -95,7 +95,7 @@ public:
 
         resources_module_->setup_on_runtime(&window_->GetGraphics());
 
-        scene_renderer_.reset(new SceneRenderer(&window_->GetGraphics()));
+        scene_renderer_.reset(new SceneRenderer(&window_->GetGraphics(), resources_module_->registry()));
 
         audio_platform_.reset(new AudioPlatform());
 

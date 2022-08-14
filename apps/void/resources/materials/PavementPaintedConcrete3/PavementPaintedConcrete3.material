@@ -1,6 +1,6 @@
 {
     "material": {
-        "shader": "shaders/pbr",
+        "shader": "org.nodec-rendering.essentials/shaders/pbr",
         "float_properties": [
             {
                 "key": "metallic",

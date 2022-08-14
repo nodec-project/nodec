@@ -126,6 +126,20 @@ public:
         return pixel_shader_.get();
     }
 
+    void bind(Graphics *gfx) {
+        if (input_layout_) {
+            input_layout_->Bind(gfx);
+        }
+
+        if (pixel_shader_) {
+            pixel_shader_->Bind(gfx);
+        }
+
+        if (vertex_shader_) {
+            vertex_shader_->Bind(gfx);
+        }
+    }
+
 private:
     template<typename T>
     static void append_property(std::vector<uint8_t> &memory, const T &value) {
