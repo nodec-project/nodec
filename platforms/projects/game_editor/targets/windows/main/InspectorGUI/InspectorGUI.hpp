@@ -83,6 +83,7 @@ public:
     void OnGUIMeshRenderer(MeshRenderer &renderer) {
         using namespace nodec;
         using namespace nodec_rendering::resources;
+        using namespace nodec_rendering;
 
         ImGui::Text("Meshes");
 

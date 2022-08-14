@@ -25,6 +25,13 @@ private:
         return shader_backend;
     }
 
+    void update_device_memory() {
+        if (!dirty_ || !constant_buffer_) return;
+
+        constant_buffer_->Update(gfx_, property_memory_.data());
+        dirty_ = false;
+    }
+
 public:
     float get_float_property(const std::string &name) const override {
         auto *shader_backend = shader_backend_assured();
@@ -60,7 +67,7 @@ public:
     }
 
 public:
-    void bind(Graphics* gfx, UINT slot) {
+    void bind_constant_buffer(Graphics* gfx, UINT slot) {
         update_device_memory();
 
         if (constant_buffer_) {
@@ -73,14 +80,6 @@ public:
         return constant_buffer_.get();
     }
 
-    void update_device_memory() {
-        if (!dirty_ && !constant_buffer_) {
-            return;
-        }
-
-        constant_buffer_->Update(gfx_, property_memory_.data());
-        dirty_ = false;
-    }
 
     const auto &texture_entries() const {
         return texture_entries_;
@@ -99,7 +98,13 @@ protected:
         }
         property_memory_ = shader_backend->create_property_memory();
 
-        constant_buffer_.reset(new ConstantBuffer(gfx_, property_memory_.size(), property_memory_.data()));
+        if (property_memory_.size() > 0) {
+            constant_buffer_.reset(new ConstantBuffer(gfx_, property_memory_.size(), property_memory_.data()));
+        } else {
+            // if the size of property memory is zero, we should not create constant buffer.
+            // Otherwise, error will occur.
+            constant_buffer_.reset();
+        }
 
         texture_entries_.resize(shader_backend->texture_entries().size());
 

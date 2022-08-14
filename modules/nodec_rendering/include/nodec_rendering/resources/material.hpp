@@ -1,6 +1,7 @@
 #ifndef NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 #define NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 
+#include "../nodec_rendering.hpp"
 #include "sampler.hpp"
 #include "shader.hpp"
 #include "texture.hpp"
@@ -47,6 +48,14 @@ public:
     };
 
 public:
+    CullMode cull_mode() const {
+        return cull_mode_;
+    }
+
+    void set_cull_mode(const CullMode &cull_mode) {
+        cull_mode_ = cull_mode;
+    }
+
     virtual float get_float_property(const std::string &name) const = 0;
     virtual void set_float_property(const std::string &name, const float &value) = 0;
 
@@ -60,6 +69,7 @@ protected:
     virtual void on_shader_changed() = 0;
 
 private:
+    CullMode cull_mode_{CullMode::Back};
     ShaderPtr shader_;
 };
 

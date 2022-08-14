@@ -158,7 +158,7 @@ private:
             auto &renderer = scene.registry().get_component<ImageRenderer>(entt);
 
             renderer.image = texture;
-            renderer.material = resources.registry().get_resource<Material>("org.nodec-rendering.essentials/materials/pbr-default.material").get();
+            renderer.material = resources.registry().get_resource<Material>("org.nodec-rendering.essentials/materials/image-default.material").get();
             if (texture) {
                 logging::InfoStream(__FILE__, __LINE__) << texture->width() << ", " << texture->height();
             }

@@ -225,6 +225,8 @@ public:
 
                 material->set_texture_entry(property.first, entry);
             }
+
+            material->set_cull_mode(source.cull_mode);
         } catch (...) {
             HandleException(Formatter() << "Material::" << path);
             return {};

@@ -2,6 +2,7 @@
 
 #include <Graphics/ConstantBuffer.hpp>
 #include <Graphics/Graphics.hpp>
+#include <Graphics/RasterizerState.hpp>
 #include <Graphics/SamplerState.hpp>
 #include <Rendering/MaterialBackend.hpp>
 #include <Rendering/MeshBackend.hpp>
@@ -54,7 +55,15 @@ public:
 
 public:
     SceneRenderer(Graphics *pGfx, nodec::resource_management::ResourceRegistry &resourceRegistry)
-        : mpGfx(pGfx), mScenePropertiesCB(pGfx, sizeof(SceneProperties), &mSceneProperties), mModelPropertiesCB(pGfx, sizeof(ModelProperties), &mModelProperties), mTextureConfigCB(pGfx, sizeof(TextureConfig), &mTextureConfig), mSamplerAnisotropic(pGfx, SamplerState::Type::Anisotropic), mSamplerBilinear(pGfx, SamplerState::Type::Bilinear), mSamplerPoint(pGfx, SamplerState::Type::Point) {
+        : mpGfx(pGfx),
+          mScenePropertiesCB(pGfx, sizeof(SceneProperties), &mSceneProperties),
+          mModelPropertiesCB(pGfx, sizeof(ModelProperties), &mModelProperties),
+          mTextureConfigCB(pGfx, sizeof(TextureConfig), &mTextureConfig),
+          mSamplerAnisotropic(pGfx, SamplerState::Type::Anisotropic),
+          mSamplerBilinear(pGfx, SamplerState::Type::Bilinear),
+          mSamplerPoint(pGfx, SamplerState::Type::Point),
+          mRSCullBack{pGfx, D3D11_CULL_BACK},
+          mRSCullNone{pGfx, D3D11_CULL_NONE} {
         using namespace nodec_rendering::resources;
         using namespace nodec::resource_management;
         using namespace nodec;
@@ -86,10 +95,8 @@ public:
         mModelPropertiesCB.BindVS(mpGfx, 1);
         mModelPropertiesCB.BindPS(mpGfx, 1);
 
-        // slot 2 is reserved for material cb
-
-        mTextureConfigCB.BindVS(mpGfx, 3);
-        mTextureConfigCB.BindPS(mpGfx, 3);
+        mTextureConfigCB.BindVS(mpGfx, 2);
+        mTextureConfigCB.BindPS(mpGfx, 2);
 
         // --- lights ---
         mSceneProperties.lights.directional.enabled = 0x00;
@@ -131,6 +138,7 @@ public:
 
             mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
+            mRSCullBack.Bind(mpGfx);
             scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
                 if (meshRenderer.meshes.size() == 0) return;
 
@@ -164,7 +172,8 @@ public:
                     auto *shaderBackend = static_cast<ShaderBackend *>(shader.get());
                     shaderBackend->bind(mpGfx);
 
-                    materialBackend->bind(mpGfx, 2);
+                    materialBackend->bind_constant_buffer(mpGfx, 3);
+                    SetCullMode(materialBackend->cull_mode());
 
                     mTextureConfig.texHasFlag = 0x00;
                     BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
@@ -190,7 +199,8 @@ public:
 
                     materialBackend->set_texture_entry("albedo", {renderer.image, Sampler::Bilinear});
 
-                    materialBackend->bind(mpGfx, 2);
+                    materialBackend->bind_constant_buffer(mpGfx, 3);
+                    SetCullMode(materialBackend->cull_mode());
 
                     mTextureConfig.texHasFlag = 0x00;
                     BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
@@ -218,6 +228,20 @@ public:
     }
 
 private:
+    void SetCullMode(const nodec_rendering::CullMode& mode) {
+        using namespace nodec_rendering;
+        switch (mode) {
+        default:
+        case CullMode::Back:
+            mRSCullBack.Bind(mpGfx);
+            break;
+        case CullMode::Front:
+            // TODO: impl
+        case CullMode::Off:
+            mRSCullNone.Bind(mpGfx);
+            break;
+        }
+    }
     void BindTextureEntries(const std::vector<TextureEntry> &textureEntries, uint32_t &texHasFlag) {
         UINT slot = 0;
 
@@ -275,6 +299,9 @@ private:
     SamplerState mSamplerAnisotropic;
     SamplerState mSamplerPoint;
     SamplerState mSamplerBilinear;
+
+    RasterizerState mRSCullNone;
+    RasterizerState mRSCullBack;
 
     Graphics *mpGfx;
 

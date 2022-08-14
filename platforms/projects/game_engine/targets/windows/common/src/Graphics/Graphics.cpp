@@ -9,19 +9,19 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "D3DCompiler.lib")
 
-
 namespace wrl = Microsoft::WRL;
-//namespace dx = DirectX;
+// namespace dx = DirectX;
 
+// About usage of D3D11
+//  * https://docs.microsoft.com/en-us/windows/win32/direct3d11/dx-graphics-overviews
 
 Graphics::Graphics(HWND hWnd, int width, int height)
-    : mWidth(width)
-    , mHeight(height) {
+    : mWidth(width), mHeight(height) {
     DXGI_SWAP_CHAIN_DESC sd = {};
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
     sd.BufferDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
-    sd.BufferDesc.RefreshRate.Numerator = 0;                               // the refresh rate 0(denominator)/0(numerator)
+    sd.BufferDesc.RefreshRate.Numerator = 0; // the refresh rate 0(denominator)/0(numerator)
     sd.BufferDesc.RefreshRate.Denominator = 0;
     sd.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
     sd.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
@@ -42,19 +42,19 @@ Graphics::Graphics(HWND hWnd, int width, int height)
 
     // create device and front/back buffers, and swap chain and rendering context.
     ThrowIfFailedGfx(D3D11CreateDeviceAndSwapChain(
-        nullptr,                  // video adapter: nullptr=default adapter
-        D3D_DRIVER_TYPE_HARDWARE, // driver type
-        nullptr,                  // Needed if D3D_DRIVER_TYPE_SOFTWARE is enabled
-        swapCreateFlags,          // flag
-        nullptr,
-        0,
-        D3D11_SDK_VERSION,
-        &sd,
-        &mpSwap,
-        &mpDevice,
-        nullptr,
-        &mpContext
-    ), this, __FILE__, __LINE__);
+                         nullptr,                  // video adapter: nullptr=default adapter
+                         D3D_DRIVER_TYPE_HARDWARE, // driver type
+                         nullptr,                  // Needed if D3D_DRIVER_TYPE_SOFTWARE is enabled
+                         swapCreateFlags,          // flag
+                         nullptr,
+                         0,
+                         D3D11_SDK_VERSION,
+                         &sd,
+                         &mpSwap,
+                         &mpDevice,
+                         nullptr,
+                         &mpContext),
+                     this, __FILE__, __LINE__);
 
     // gain access to texture subresource in swap chain (back buffer)
     wrl::ComPtr<ID3D11Texture2D> pBackBuffer;
@@ -93,8 +93,7 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     descDSV.Texture2D.MipSlice = 0u;
     ThrowIfFailedGfx(
         mpDevice->CreateDepthStencilView(pDepthStencil.Get(), &descDSV, &mpDSV),
-        this, __FILE__, __LINE__
-    );
+        this, __FILE__, __LINE__);
 
     // bind depth stencil view to OM
     mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), mpDSV.Get());
@@ -112,18 +111,19 @@ Graphics::Graphics(HWND hWnd, int width, int height)
     // init imgui d3d impl
     ImGui_ImplDX11_Init(mpDevice.Get(), mpContext.Get());
 
-    nodec::logging::InfoStream(__FILE__, __LINE__) 
-        << "[Graphics] >>> DXGI Debug Logs:\n" << mInfoLogger.Dump();
+    nodec::logging::InfoStream(__FILE__, __LINE__)
+        << "[Graphics] >>> DXGI Debug Logs:\n"
+        << mInfoLogger.Dump();
 
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> Successfully initialized." << std::flush;
 }
 
 Graphics::~Graphics() {
-
     ImGui_ImplDX11_Shutdown();
 
     nodec::logging::InfoStream(__FILE__, __LINE__)
-        << "[Graphics] >>> DXGI Debug Logs:\n" << mInfoLogger.Dump();
+        << "[Graphics] >>> DXGI Debug Logs:\n"
+        << mInfoLogger.Dump();
     nodec::logging::InfoStream(__FILE__, __LINE__) << "[Graphics] >>> End Graphics." << std::flush;
 }
 
@@ -134,17 +134,15 @@ void Graphics::BeginFrame() noexcept {
 
     mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), mpDSV.Get());
 
-
-    const float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    const float color[] = {0.1f, 0.1f, 0.1f, 1.0f};
 
     mpContext->ClearRenderTargetView(mpTarget.Get(), color);
     mpContext->ClearDepthStencilView(mpDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void Graphics::EndFrame() {
-
-    //auto& io = ImGui::GetIO();
-    //nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
+    // auto& io = ImGui::GetIO();
+    // nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
 
     ImGui::Render();
 
@@ -163,8 +161,7 @@ void Graphics::EndFrame() {
     if (FAILED(hr = mpSwap->Present(1u, 0u))) {
         if (hr == DXGI_ERROR_DEVICE_REMOVED) {
             ThrowIfFailedGfx("DeviceRemoved", hr, this, __FILE__, __LINE__);
-        }
-        else {
+        } else {
             ThrowIfFailedGfx(hr, this, __FILE__, __LINE__);
         }
     }
