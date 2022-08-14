@@ -160,6 +160,7 @@ inline bool ExportMaterial(aiMaterial *pMaterial, const std::string &destPath) {
     cereal::JSONOutputArchive archive(out);
 
     SerializableMaterial material;
+    material.shader = "org.nodec-rendering.essentials/shaders/pbr";
     // material.float_properties["albedo"];
     // material.float_properties["metalness"];
     // material.texture_properties["albedo"] = { "albedo.tga", Sampler::Bilinear };

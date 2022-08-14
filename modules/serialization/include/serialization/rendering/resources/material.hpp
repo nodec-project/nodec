@@ -25,7 +25,7 @@ struct SerializableMaterial {
     std::unordered_map<std::string, nodec::Vector4f> vector4_properties;
     std::unordered_map<std::string, TextureEntry> texture_properties;
 
-    CullMode cull_mode;
+    CullMode cull_mode{CullMode::Back};
 };
 template<class Archive>
 void serialize(Archive &archive, SerializableMaterial::TextureEntry &entry) {

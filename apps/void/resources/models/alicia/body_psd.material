@@ -1,8 +1,17 @@
 {
     "material": {
-        "shader": "",
+        "shader": "org.nodec-rendering.essentials/shaders/pbr",
+        "cull_mode": 2,
         "float_properties": [],
         "vector4_properties": [],
-        "texture_properties": []
+        "texture_properties": [
+            {
+                "key": "albedo",
+                "value": {
+                    "texture": "models/alicia/Alicia_body.tga",
+                    "sampler": 1
+                }
+            }
+        ]
     }
 }

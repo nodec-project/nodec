@@ -19,18 +19,16 @@
 namespace nodec {
 namespace resource_management {
 
+/**
+ * @brief Specifies the load policy for a task executed by the resource loader.
+ */
 enum class LoadPolicy {
-    Async = 0x01 << 0,
-    Direct = 0x01 << 1
+    //! The task is executed on a different thread.
+    Async,
+
+    //! The task is executed on the calling thread and blocks the process.
+    Direct
 };
-
-}
-} // namespace nodec
-
-NODEC_ALLOW_FLAGS_FOR_ENUM(nodec::resource_management::LoadPolicy)
-
-namespace nodec {
-namespace resource_management {
 
 namespace details {
 
@@ -196,7 +194,7 @@ public:
                 return future;
             }
 
-            if (policy & LoadPolicy::Async) {
+            if (policy == LoadPolicy::Async) {
                 // get future ticket from async loader immediately.
                 // and register the ticket.
                 future = block->async_loader(name, {block}).share();
@@ -205,7 +203,7 @@ public:
                 return future;
             }
 
-            // LoadPolicy::Direct
+            // LoadPolicy::Direct or others
             // create future ticket immediately and register it.
             future = promise.get_future().share();
             block->loading_futures[name] = future;

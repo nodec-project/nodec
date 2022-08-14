@@ -1,6 +1,7 @@
 {
     "material": {
-        "shader": "",
+        "shader": "org.nodec-rendering.essentials/shaders/pbr",
+        "cull_mode": 2,
         "float_properties": [],
         "vector4_properties": [],
         "texture_properties": []
