@@ -12,10 +12,10 @@
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <nodec_input/impl/input_module.hpp>
+#include <nodec_scene/impl/scene_module.hpp>
+#include <nodec_scene/systems/transform_system.hpp>
 #include <resources/impl/resources_module.hpp>
 #include <scene_serialization/scene_serialization.hpp>
-#include <scene_set/impl/scene_module.hpp>
-#include <scene_set/systems/transform_system.hpp>
 #include <screen/impl/screen_module.hpp>
 
 #include <nodec/logging.hpp>
@@ -25,8 +25,8 @@ class Engine : public nodec_engine::impl::NodecEngineModule {
     using Screen = screen::Screen;
     using ScreenModule = screen::impl::ScreenModule;
 
-    using SceneModule = scene_set::impl::SceneModule;
-    using Scene = scene_set::Scene;
+    using SceneModule = nodec_scene::impl::SceneModule;
+    using Scene = nodec_scene::Scene;
 
     using ResourcesModule = resources::impl::ResourcesModule;
     using Resources = resources::Resources;
@@ -64,20 +64,13 @@ public:
         scene_serialization_module_.reset(new SceneSerializationModuleBackend(&resources_module_->registry()));
         add_module<SceneSerialization>(scene_serialization_module_);
 
-        initialized().connect([=](NodecEngine &) {
-            scene_module_->registry().clear();
-        });
-
-        stepped().connect([=](NodecEngine &) {
-            scene_audio_system_->UpdateAudio(scene_module_->registry());
-        });
     }
 
     ~Engine() {
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Destructed.";
 
         // TODO: Consider to unload all modules before backends.
-        
+
         // unload all scene entities.
         scene_module_->registry().clear();
     }
@@ -100,6 +93,11 @@ public:
         audio_platform_.reset(new AudioPlatform());
 
         scene_audio_system_.reset(new SceneAudioSystem(audio_platform_.get(), &scene_module_->registry()));
+
+
+        scene_module_->stepped().connect([&](Scene &scene) {
+            scene_audio_system_->UpdateAudio(scene_module_->registry());
+        });
     }
 
     void frame_begin() {
@@ -107,10 +105,8 @@ public:
     }
 
     void frame_end() {
-        using namespace scene_set::systems;
-
         for (auto &root : scene_module_->hierarchy_system().root_entities()) {
-            update_transform(scene_module_->registry(), root);
+            nodec_scene::systems:: update_transform(scene_module_->registry(), root);
         }
 
         scene_renderer_->Render(*scene_module_);

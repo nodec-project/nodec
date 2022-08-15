@@ -1,10 +1,10 @@
-#include <nodec_extentions/nodec_serialization/scene_set/scene_object.hpp>
-#include <nodec_extentions/nodec_serialization/scene_set/transform.hpp>
+#include <nodec_extentions/nodec_serialization/nodec_scene/scene_object.hpp>
+#include <nodec_extentions/nodec_serialization/nodec_scene/transform.hpp>
 #include <nodec_extentions/nodec_serialization/vector2.hpp>
 #include <nodec_extentions/nodec_serialization/quaternion.hpp>
-#include <nodec_extentions/nodec_serialization/scene_set/component.hpp>
+#include <nodec_extentions/nodec_serialization/nodec_scene/component.hpp>
 
-#include <nodec/scene_set/scene_object.hpp>
+#include <nodec/nodec_scene/scene_object.hpp>
 #include <nodec/logging.hpp>
 
 #include <cereal/types/unordered_map.hpp>
@@ -70,7 +70,7 @@ public:
 
 };
 
-class TestComponent : public scene_set::Component
+class TestComponent : public nodec_scene::Component
 {
 public:
     std::string my_str;
@@ -120,7 +120,7 @@ template<> struct LoadAndConstruct<TestComponent>
 CEREAL_REGISTER_TYPE(TestComponent);
 //CEREAL_REGISTER_DYNAMIC_INIT(TestComponent);
 //CEREAL_REGISTER_POLYMORPHIC_RELATION(Base, TestComponent);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(scene_set::Component, TestComponent);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene::Component, TestComponent);
 
 struct MyRecord
 {
@@ -176,22 +176,22 @@ int main()
 
             //auto nodec_object = NodecObject::instanciate<NodecObject>("test");
 
-            auto root = NodecObject::instanciate<scene_set::SceneObject>("root");
-            root->append_child(NodecObject::instanciate<scene_set::SceneObject>("child_1"));
-            root->append_child(NodecObject::instanciate<scene_set::SceneObject>("child_2"));
-            auto child_3_ = root->append_child(NodecObject::instanciate<scene_set::SceneObject>("child_3"));
+            auto root = NodecObject::instanciate<nodec_scene::SceneObject>("root");
+            root->append_child(NodecObject::instanciate<nodec_scene::SceneObject>("child_1"));
+            root->append_child(NodecObject::instanciate<nodec_scene::SceneObject>("child_2"));
+            auto child_3_ = root->append_child(NodecObject::instanciate<nodec_scene::SceneObject>("child_3"));
 
             if (auto child_3 = child_3_.lock())
             {
-                child_3->append_child(NodecObject::instanciate<scene_set::SceneObject>("child_3-1"));
+                child_3->append_child(NodecObject::instanciate<nodec_scene::SceneObject>("child_3-1"));
                 child_3->transform().local_position.set(1, 3, 4);
             }
             logging::DebugStream(__FILE__, __LINE__) << root->children().size();
 
-            //std::unordered_map<NodecObject::ID, NodecObject::Holder<scene_set::SceneObject>> children = root->children();
+            //std::unordered_map<NodecObject::ID, NodecObject::Holder<nodec_scene::SceneObject>> children = root->children();
             //const std::unordered_map<int, int> test;
 
-            //root->add_component<scene_set::Component>();
+            //root->add_component<nodec_scene::Component>();
             //for (auto iter = test.begin(); iter != test.end(); ++iter)
             //{
             //    iter->second= 11;
@@ -199,19 +199,19 @@ int main()
 
             //for (auto iter = root->children().begin(); iter != root->children().end(); ++iter)
             //{
-            //    iter->second = NodecObject::instanciate<scene_set::SceneObject>("child_4");
+            //    iter->second = NodecObject::instanciate<nodec_scene::SceneObject>("child_4");
             //}
 
             //for (auto pair : root->children())
             //{
             //    logging::DebugStream(__FILE__, __LINE__) << pair.second->name;
-            //    pair.second = NodecObject::instanciate<scene_set::SceneObject>("child_4");
+            //    pair.second = NodecObject::instanciate<nodec_scene::SceneObject>("child_4");
             //}
 
             for (auto& pair : root->children())
             {
                 logging::DebugStream(__FILE__, __LINE__) << pair.second->name;
-                //pair.second = NodecObject::instanciate<scene_set::SceneObject>("child_4");
+                //pair.second = NodecObject::instanciate<nodec_scene::SceneObject>("child_4");
             }
             auto test_component = NodecObject::instanciate<TestComponent>(nullptr);
 
@@ -219,11 +219,11 @@ int main()
             test_component->set_my_str("test");
             //std::shared_ptr<Base> base = std::make_shared<TestComponent>();
             //std::shared_ptr<test_space::BaseClass> ptr1 = std::make_shared<DerivedClassOne>();
-            //std::shared_ptr<scene_set::Component> ptr1 = std::make_shared<scene_set::Transform>(nullptr);
-            //std::shared_ptr<scene_set::Component> ptr1 = std::make_shared<TestComponent>();
+            //std::shared_ptr<nodec_scene::Component> ptr1 = std::make_shared<nodec_scene::Transform>(nullptr);
+            //std::shared_ptr<nodec_scene::Component> ptr1 = std::make_shared<TestComponent>();
 
             //archive(test_component);
-            //auto transform = NodecObject::instanciate<scene_set::Transform>(nullptr);
+            //auto transform = NodecObject::instanciate<nodec_scene::Transform>(nullptr);
             //archive(root, ptr1);
             //archive(ptr1);
             archive(root);
@@ -241,10 +241,10 @@ int main()
             cereal::XMLInputArchive iarchive(is);
 
             NodecObject::Holder<NodecObject> nodec_object;
-            NodecObject::Holder<scene_set::SceneObject> root;
+            NodecObject::Holder<nodec_scene::SceneObject> root;
             std::shared_ptr<Vector2f> vec;
             Quaternionf quaternion;
-            //NodecObject::Holder<scene_set::Transform> transform;
+            //NodecObject::Holder<nodec_scene::Transform> transform;
 
             //archive(vec, quaternion);
             //archive(root, transform);
@@ -253,7 +253,7 @@ int main()
             for (auto& pair : root->children())
             {
                 logging::DebugStream(__FILE__, __LINE__) << pair.second->name;
-                //pair.second = NodecObject::instanciate<scene_set::SceneObject>("child_4");
+                //pair.second = NodecObject::instanciate<nodec_scene::SceneObject>("child_4");
             }
             //logging::DebugStream(__FILE__, __LINE__) << *vec << quaternion << nodec_object->name << nodec_object->id();
             oarchive(root);

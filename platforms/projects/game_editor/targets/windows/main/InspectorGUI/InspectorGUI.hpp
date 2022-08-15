@@ -5,7 +5,7 @@
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
-#include <scene_set/components/basic.hpp>
+#include <nodec_scene/components/basic.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
@@ -18,8 +18,8 @@
 class InspectorGUI {
     using MeshRenderer = nodec_rendering::components::MeshRenderer;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
-    using Name = scene_set::components::Name;
-    using Transform = scene_set::components::Transform;
+    using Name = nodec_scene::components::Name;
+    using Transform = nodec_scene::components::Transform;
     using Camera = nodec_rendering::components::Camera;
     using Light = nodec_rendering::components::Light;
     using AudioSource = nodec_scene_audio::components::AudioSource;

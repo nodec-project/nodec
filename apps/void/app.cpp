@@ -6,8 +6,8 @@
 using namespace nodec;
 using namespace nodec_engine;
 using namespace nodec_input;
-using namespace scene_set;
-using namespace scene_set::components;
+using namespace nodec_scene;
+using namespace nodec_scene::components;
 using namespace screen;
 using namespace resources;
 using namespace nodec_rendering::components;
@@ -36,10 +36,17 @@ public:
         }
     };
 
-    HelloWorld(NodecEngine &engine) {
-        engine.stepped().connect([=](NodecEngine &engine) { on_stepped(engine); });
-        engine.initialized().connect([=](NodecEngine &engine) { on_initialized(engine); });
+    HelloWorld(NodecEngine &engine)
+        : engine{engine} {
+        //engine.stepped().connect([=](NodecEngine &engine) { on_stepped(engine); });
+        //engine.initialized().connect([=](NodecEngine &engine) { on_initialized(engine); });
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
+        {
+            auto &scene = engine.get_module<Scene>();
+            scene.initialized().connect([&](Scene &scene) { on_initialized(scene); });
+            scene.stepped().connect([&](Scene &scene) { on_stepped(scene); });
+            
+        }
 
         {
             auto &scene_serialization = engine.get_module<SceneSerialization>();
@@ -115,10 +122,9 @@ public:
     }
 
 private:
-    void on_initialized(NodecEngine &engine) {
+    void on_initialized(Scene &scene) {
         logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
 
-        auto &scene = engine.get_module<Scene>();
         // auto entity = scene.create_entity("Hello World!!");
         // scene.registry().emplace_component<MeshRenderer>(entity);
         // auto& renderer = scene.registry().get_component<MeshRenderer>(entity);
@@ -165,10 +171,11 @@ private:
         }
     }
 
-    void on_stepped(NodecEngine &engine) {
+    void on_stepped(Scene &scene) {
     }
 
 private:
+    NodecEngine &engine;
     std::shared_ptr<Material> target_material;
     SceneEntity audioEntity;
 };
@@ -226,13 +233,13 @@ void nodec_engine::on_boot(NodecEngine &engine) {
 //    engine.screen().set_title("[ void ]");
 //
 //
-//    auto player = NodecObject::instanciate<scene_set::SceneObject>("Player");
+//    auto player = NodecObject::instanciate<nodec_scene::SceneObject>("Player");
 //    player->add_component<Player>();
 //    App::main_camera = player->add_component<Camera>();
 //    engine.root_scene_object().append_child(player);
 //
 //
-//    auto test_object_1 = NodecObject::instanciate<nodec::scene_set::SceneObject>("test_1");
+//    auto test_object_1 = NodecObject::instanciate<nodec::nodec_scene::SceneObject>("test_1");
 //    test_object_1->add_component<TestCube>();
 //    test_object_1->transform().local_position.y = 1.6;
 //    test_object_1->transform().local_position.z = 2;
@@ -259,12 +266,12 @@ void nodec_engine::on_boot(NodecEngine &engine) {
 //    auto child1_1 = engine.scene_registry().create_entity();
 //    auto child2 = engine.scene_registry().create_entity();
 //
-//    scene_set::systems::append_child(engine.scene_registry(), root, child1);
-//    scene_set::systems::append_child(engine.scene_registry(), root, child2);
-//    scene_set::systems::append_child(engine.scene_registry(), child1, child1_1);
+//    nodec_scene::systems::append_child(engine.scene_registry(), root, child1);
+//    nodec_scene::systems::append_child(engine.scene_registry(), root, child2);
+//    nodec_scene::systems::append_child(engine.scene_registry(), child1, child1_1);
 //
-//    engine.scene_registry().emplace_component<scene_set::components::Name>(root);
-//    engine.scene_registry().get_component<scene_set::components::Name>(root).name = "root";
+//    engine.scene_registry().emplace_component<nodec_scene::components::Name>(root);
+//    engine.scene_registry().get_component<nodec_scene::components::Name>(root).name = "root";
 //
 //
 //}

@@ -10,17 +10,17 @@
 
 
 class SceneSerializationWindow : public imelements::BaseWindow {
-    using SceneEntity = scene_set::SceneEntity;
+    using SceneEntity = nodec_scene::SceneEntity;
     using SelectedEntityChangedSignal = nodec::signals::Signal<void(SceneEntity)>;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
     using SceneSerialization = scene_serialization::SceneSerialization;
-    using Scene = scene_set::Scene;
+    using Scene = nodec_scene::Scene;
 
 public:
 
     static void init(
         imelements::WindowManager& manager,
-        scene_set::Scene* scene,
+        nodec_scene::Scene* scene,
         SceneSerialization* scene_serialization,
         const std::string& resource_path,
         ResourceRegistry* resource_registry,

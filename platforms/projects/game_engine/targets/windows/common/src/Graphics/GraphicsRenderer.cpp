@@ -7,7 +7,7 @@
 #include <nodec_modules/rendering/interfaces/shader.hpp>
 #include <nodec_modules/rendering/interfaces/material.hpp>
 
-#include <nodec/scene_set/scene_object.hpp>
+#include <nodec/nodec_scene/scene_object.hpp>
 #include <nodec/math/math.hpp>
 
 using namespace nodec;

@@ -66,13 +66,13 @@ public:
     }
 
     virtual float engine_time() const noexcept = 0;
-
-public:
-    using EngineSignal = nodec::signals::Signal<void(NodecEngine &)>;
-
-    virtual EngineSignal::SignalInterface initialized() = 0;
-
-    virtual EngineSignal::SignalInterface stepped() = 0;
+//
+//public:
+//    using EngineSignal = nodec::signals::Signal<void(NodecEngine &)>;
+//
+//    virtual EngineSignal::SignalInterface initialized() = 0;
+//
+//    virtual EngineSignal::SignalInterface stepped() = 0;
 
 private:
     std::vector<ModuleContainerData> modules;

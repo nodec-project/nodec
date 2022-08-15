@@ -1,7 +1,7 @@
 #pragma once
 
-#include <scene_set/scene_registry.hpp>
-#include <scene_set/scene.hpp>
+#include <nodec_scene/scene_registry.hpp>
+#include <nodec_scene/scene.hpp>
 #include <scene_serialization/scene_serialization.hpp>
 #include <scene_serialization/serializable_scene_graph.hpp>
 
@@ -16,10 +16,10 @@ namespace internal {
 void ProcessSceneEntityNode(
     std::shared_ptr<scene_serialization::SerializableEntityNode> node,
     const scene_serialization::SceneSerialization& sceneSerialization,
-    scene_set::SceneEntity parent,
-    scene_set::Scene& scene)
+    nodec_scene::SceneEntity parent,
+    nodec_scene::Scene& scene)
 {
-    using namespace scene_set::components;
+    using namespace nodec_scene::components;
     using namespace nodec::entities;
     auto entity = sceneSerialization.emplace_entity(node, scene.registry());
 
@@ -39,9 +39,9 @@ void ProcessSceneEntityNode(
 
 bool ImportSceneGraph(
     const std::string& path,
-    scene_set::SceneEntity destEntity,
+    nodec_scene::SceneEntity destEntity,
     nodec::resource_management::ResourceRegistry& resourceRegistry,
-    scene_set::Scene& scene,
+    nodec_scene::Scene& scene,
     const scene_serialization::SceneSerialization& sceneSerialization)
 {
     using namespace nodec;

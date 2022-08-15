@@ -8,7 +8,7 @@
 "components": [
 {
 "polymorphic_id": 2147483649,
-"polymorphic_name": "scene_set::components::SerializableTransform",
+"polymorphic_name": "nodec_scene::components::SerializableTransform",
 "ptr_wrapper": {
 "id": 2147483650,
 "data": {
@@ -33,7 +33,7 @@
 },
 {
 "polymorphic_id": 2147483650,
-"polymorphic_name": "scene_set::components::SerializableName",
+"polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
 "id": 2147483651,
 "data": {

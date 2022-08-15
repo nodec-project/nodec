@@ -4,7 +4,7 @@
 #include "serializable_component.hpp"
 #include "serializable_entity_node.hpp"
 
-#include <scene_set/scene_registry.hpp>
+#include <nodec_scene/scene_registry.hpp>
 
 #include <vector>
 #include <unordered_map>
@@ -14,8 +14,8 @@ namespace scene_serialization {
 
 
 class SceneSerialization {
-    using SceneRegistry = scene_set::SceneRegistry;
-    using SceneEntity = scene_set::SceneEntity;
+    using SceneRegistry = nodec_scene::SceneRegistry;
+    using SceneEntity = nodec_scene::SceneEntity;
 
     class BaseComponentSerialization {
     public:

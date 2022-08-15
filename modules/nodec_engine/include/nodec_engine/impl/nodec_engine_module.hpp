@@ -34,45 +34,47 @@ public:
 
         boot();
 
-        state_ = State::Inactive;
+        //state_ = State::Inactive;
+        state_ = State::Active;
     }
 
-    void step() {
-        assert(state_ != State::Unconfigured);
+    //void step() {
+    //    assert(state_ != State::Unconfigured);
 
-        (this->*step_func)();
-    }
+    //    (this->*step_func)();
+    //}
 
-    void deactivate() {
-        assert(state_ != State::Unconfigured);
+    //void deactivate() {
+    //    assert(state_ != State::Unconfigured);
 
-        step_func = &NodecEngineModule::step_first;
-        state_ = State::Inactive;
-    }
+    //    step_func = &NodecEngineModule::step_first;
+    //    state_ = State::Inactive;
+    //}
 
 public:
     float engine_time() const noexcept override {
         return std::chrono::duration<float>(engine_timer_.elapsed()).count();
     }
 
-    EngineSignal::SignalInterface initialized() override {
-        return initialized_.signal_interface();
-    }
+    //EngineSignal::SignalInterface initialized() override {
+    //    return initialized_.signal_interface();
+    //}
 
-    EngineSignal::SignalInterface stepped() override {
-        return stepped_.signal_interface();
-    }
+    //EngineSignal::SignalInterface stepped() override {
+    //    return stepped_.signal_interface();
+    //}
 
 private:
-    void initialize() {
-        nodec::logging::InfoStream(__FILE__, __LINE__)
-            << "[NodecEngineModule] >>> Initializing...";
-        {
-            initialized_(*this);
-        }
-        nodec::logging::InfoStream(__FILE__, __LINE__)
-            << "[NodecEngineModule] >>> Initializing finished.";
-    }
+
+    //void initialize() {
+    //    nodec::logging::InfoStream(__FILE__, __LINE__)
+    //        << "[NodecEngineModule] >>> Initializing...";
+    //    {
+    //        initialized_(*this);
+    //    }
+    //    nodec::logging::InfoStream(__FILE__, __LINE__)
+    //        << "[NodecEngineModule] >>> Initializing finished.";
+    //}
 
     void boot() {
         nodec::logging::InfoStream(__FILE__, __LINE__)
@@ -84,37 +86,37 @@ private:
             << "[NodecEngineModule] >>> Booting finished.";
     }
 
-    void step_first() {
-        assert(state_ == State::Inactive);
+    //void step_first() {
+    //    assert(state_ == State::Inactive);
 
-        state_ = State::Active;
-        step_func = &NodecEngineModule::step_cycle;
+    //    state_ = State::Active;
+    //    step_func = &NodecEngineModule::step_cycle;
 
-        // nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_first]";
+    //    // nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_first]";
 
-        initialize();
-    }
+    //    initialize();
+    //}
 
-    void step_cycle() {
-        assert(state_ == State::Active);
+    //void step_cycle() {
+    //    assert(state_ == State::Active);
 
-        // nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_cycle]";
-        stepped_(*this);
-    }
+    //    // nodec::logging::InfoStream(__FILE__, __LINE__) << "[step_cycle]";
+    //    stepped_(*this);
+    //}
 
 private:
     enum class State {
         Unconfigured,
-        Inactive,
+        //Inactive,
         Active
     };
 
     State state_{State::Unconfigured};
 
-    void (NodecEngineModule::*step_func)(){&NodecEngineModule::step_first};
+    //void (NodecEngineModule::*step_func)(){&NodecEngineModule::step_first};
 
-    EngineSignal initialized_;
-    EngineSignal stepped_;
+    //EngineSignal initialized_;
+    //EngineSignal stepped_;
 
     nodec::Stopwatch<std::chrono::steady_clock> engine_timer_;
 };

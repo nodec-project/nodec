@@ -3,12 +3,12 @@
 #include "AudioSourceActivity.hpp"
 
 #include <nodec_scene_audio/components/audio_source.hpp>
-#include <scene_set/components/basic.hpp>
-#include <scene_set/scene_registry.hpp>
+#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/scene_registry.hpp>
 
 class SceneAudioSystem {
-    using SceneRegistry = scene_set::SceneRegistry;
-    using SceneEntity = scene_set::SceneEntity;
+    using SceneRegistry = nodec_scene::SceneRegistry;
+    using SceneEntity = nodec_scene::SceneEntity;
 
 public:
     SceneAudioSystem(AudioPlatform *audioPlatform, SceneRegistry *pSceneRegistry)
@@ -24,7 +24,7 @@ public:
     void UpdateAudio(SceneRegistry &registry) {
         using namespace nodec;
         using namespace nodec_scene_audio::components;
-        using namespace scene_set::components;
+        using namespace nodec_scene::components;
         using namespace Exceptions;
 
         registry.view<AudioSource, Transform, AudioSourceActivity>().each([&](auto entt, AudioSource &source, Transform &trfm, AudioSourceActivity &activity) {

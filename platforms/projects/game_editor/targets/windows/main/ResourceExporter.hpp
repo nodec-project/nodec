@@ -6,11 +6,11 @@
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/resources/material.hpp>
 #include <nodec_serialization/nodec_rendering/resources/mesh.hpp>
-#include <nodec_serialization/scene_set/components/basic.hpp>
+#include <nodec_serialization/nodec_scene/components/basic.hpp>
 #include <scene_serialization/scene_serialization.hpp>
 #include <scene_serialization/serializable_scene_graph.hpp>
-#include <scene_set/scene.hpp>
-#include <scene_set/scene_registry.hpp>
+#include <nodec_scene/scene.hpp>
+#include <nodec_scene/scene_registry.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -39,14 +39,14 @@ inline void ProcessNode(
     aiNode *pNode, const aiScene *pScene,
     const std::string &resource_name_prefix,
     const ResourceNameMap &nameMap,
-    scene_set::SceneEntity parentEntity,
-    scene_set::Scene &destScene,
+    nodec_scene::SceneEntity parentEntity,
+    nodec_scene::Scene &destScene,
     nodec::resource_management::ResourceRegistry &resourceRegistry) {
     using namespace nodec;
     using namespace nodec::entities;
     using namespace nodec_rendering::components;
     using namespace nodec_rendering::resources;
-    using namespace scene_set::components;
+    using namespace nodec_scene::components;
 
     auto myEntity = destScene.create_entity(pNode->mName.C_Str());
 
@@ -171,7 +171,7 @@ inline bool ExportMaterial(aiMaterial *pMaterial, const std::string &destPath) {
     return true;
 }
 
-inline void ExportScene(const aiScene *pScene, scene_set::Scene &destScene, const std::string &resource_name_prefix, const ResourceNameMap &nameMap,
+inline void ExportScene(const aiScene *pScene, nodec_scene::Scene &destScene, const std::string &resource_name_prefix, const ResourceNameMap &nameMap,
                         nodec::resource_management::ResourceRegistry &resourceRegistry) {
     using namespace nodec::entities;
 
@@ -181,10 +181,10 @@ inline void ExportScene(const aiScene *pScene, scene_set::Scene &destScene, cons
 namespace internal {
 
 inline std::shared_ptr<scene_serialization::SerializableEntityNode> ProcessSceneEntityNode(
-    scene_set::SceneEntity entity,
-    const scene_set::SceneRegistry &sceneRegistry,
+    nodec_scene::SceneEntity entity,
+    const nodec_scene::SceneRegistry &sceneRegistry,
     const scene_serialization::SceneSerialization &sceneSerializaton) {
-    using namespace scene_set::components;
+    using namespace nodec_scene::components;
 
     auto node = sceneSerializaton.make_serializable_node(entity, sceneRegistry);
 
@@ -201,8 +201,8 @@ inline std::shared_ptr<scene_serialization::SerializableEntityNode> ProcessScene
 } // namespace internal
 
 inline bool ExportSceneGraph(
-    const std::vector<scene_set::SceneEntity> &roots,
-    const scene_set::SceneRegistry &sceneRegistry,
+    const std::vector<nodec_scene::SceneEntity> &roots,
+    const nodec_scene::SceneRegistry &sceneRegistry,
     const scene_serialization::SceneSerialization &sceneSerialization,
     const std::string &destPath) {
     using namespace nodec;

@@ -21,8 +21,8 @@
 #include <nodec_scene_audio/resources/audio_clip.hpp>
 #include <resources/resources.hpp>
 #include <scene_serialization/scene_serialization.hpp>
-#include <scene_set/components/basic.hpp>
-#include <scene_set/scene.hpp>
+#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/scene.hpp>
 #include <screen/screen.hpp>
 
 #include <nodec/logging.hpp>
@@ -44,10 +44,10 @@
 //
 
 //
-//#include <scene_set/scene_registry.hpp>
-//#include <scene_set/components/standard.hpp>
-//#include <scene_set/systems/hierarchy_system.hpp>
-//#include <scene_set/systems/transform_system.hpp>
+//#include <nodec_scene/scene_registry.hpp>
+//#include <nodec_scene/components/standard.hpp>
+//#include <nodec_scene/systems/hierarchy_system.hpp>
+//#include <nodec_scene/systems/transform_system.hpp>
 
 //
 //#include <game_engine/game_engine.hpp>
@@ -61,7 +61,7 @@
 //#include <nodec_extentions/material_set/brdf_material.hpp>
 //#include <nodec_extentions/mesh_factory/mesh_factory.hpp>
 //
-//#include <nodec/scene_set/scene_object.hpp>
+//#include <nodec/nodec_scene/scene_object.hpp>
 //#include <nodec/event.hpp>
 //#include <nodec/logging.hpp>
 //#include <nodec/math/math.hpp>

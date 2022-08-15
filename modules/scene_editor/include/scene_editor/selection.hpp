@@ -1,7 +1,7 @@
 #ifndef SCENE_EDITOR__SELECTION_HPP_
 #define SCENE_EDITOR__SELECTION_HPP_
 
-#include <scene_set/scene_registry.hpp>
+#include <nodec_scene/scene_registry.hpp>
 
 #include <nodec/signals.hpp>
 
@@ -9,7 +9,7 @@ namespace scene_editor {
 
 
 class Selection {
-    using SceneEntity = scene_set::SceneEntity;
+    using SceneEntity = nodec_scene::SceneEntity;
 
 public:
     SceneEntity active_scene_entity() const noexcept {

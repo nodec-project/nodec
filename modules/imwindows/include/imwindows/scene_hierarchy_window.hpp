@@ -2,15 +2,15 @@
 #define IMWINDOWS__SCENE_HIERARCHY_WINDOW_HPP_
 
 #include <imelements/window.hpp>
-#include <scene_set/scene.hpp>
+#include <nodec_scene/scene.hpp>
 
 #include <imgui.h>
 
 namespace imwindows {
 
 class SceneHierarchyWindow : public imelements::BaseWindow {
-    using Scene = scene_set::Scene;
-    using SceneEntity = scene_set::SceneEntity;
+    using Scene = nodec_scene::Scene;
+    using SceneEntity = nodec_scene::SceneEntity;
 
 public:
     static decltype(auto) init(imelements::WindowManager& manager, Scene* scene) {
@@ -27,7 +27,7 @@ public:
     }
 
     void on_gui() override {
-        using namespace scene_set::components;
+        using namespace nodec_scene::components;
         using namespace nodec::entities;
 
         if (!scene_) {
@@ -54,7 +54,7 @@ public:
 private:
     void show_entity_node(const SceneEntity entity) {
         using namespace nodec;
-        using namespace scene_set::components;
+        using namespace nodec_scene::components;
 
         bool node_open = false;
         {

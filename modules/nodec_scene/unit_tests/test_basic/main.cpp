@@ -1,8 +1,8 @@
 
-#include <scene_set/impl/scene_module.hpp>
-#include <scene_set/components/standard.hpp>
-#include <scene_set/systems/hierarchy_system.hpp>
-#include <scene_set/systems/impl/impl_hierarchy_system.hpp>
+#include <nodec_scene/impl/scene_module.hpp>
+#include <nodec_scene/components/standard.hpp>
+#include <nodec_scene/systems/hierarchy_system.hpp>
+#include <nodec_scene/systems/impl/impl_hierarchy_system.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/formatter.hpp>
@@ -12,7 +12,7 @@
 
 
 using namespace nodec;
-using namespace scene_set;
+using namespace nodec_scene;
 
 void print_hierarchy(SceneRegistry& registry) {
     auto view = registry.view<components::Hierarchy>();
@@ -36,7 +36,7 @@ int main() {
 
 
     try {
-        scene_set::impl::SceneModule scene_module;
+        nodec_scene::impl::SceneModule scene_module;
 
         Scene& scene = scene_module;
 
@@ -44,11 +44,11 @@ int main() {
         auto entity_child_1 = scene.registry().create_entity();
         auto entity_child_1_1 = scene.registry().create_entity();
 
-        scene_set::systems::append_child(scene.registry(), entity_root, entity_child_1);
-        scene_set::systems::append_child(scene.registry(), entity_child_1, entity_root);
+        nodec_scene::systems::append_child(scene.registry(), entity_root, entity_child_1);
+        nodec_scene::systems::append_child(scene.registry(), entity_child_1, entity_root);
 
 
-        //scene_set::systems::append_child(scene.registry())
+        //nodec_scene::systems::append_child(scene.registry())
 
         
 

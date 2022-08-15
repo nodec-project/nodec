@@ -18,7 +18,7 @@ Editor::Editor(Engine *engine)
     : engine_{engine} {
     using namespace imwindows;
     using namespace imelements;
-    using namespace scene_set::components;
+    using namespace nodec_scene::components;
     using namespace nodec_rendering::components;
     using namespace nodec_scene_audio::components;
 

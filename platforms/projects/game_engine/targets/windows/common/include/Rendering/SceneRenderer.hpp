@@ -13,8 +13,8 @@
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
-#include <scene_set/components/basic.hpp>
-#include <scene_set/scene.hpp>
+#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/scene.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 #include <nodec/vector4.hpp>
@@ -78,9 +78,9 @@ public:
         mPlaneMesh = std::static_pointer_cast<MeshBackend>(planeMesh);
     }
 
-    void Render(scene_set::Scene &scene) {
+    void Render(nodec_scene::Scene &scene) {
         using namespace nodec;
-        using namespace scene_set::components;
+        using namespace nodec_scene::components;
         using namespace nodec_rendering::components;
         using namespace nodec_rendering::resources;
         using namespace DirectX;

@@ -1,13 +1,13 @@
-#ifndef SCENE_SET__SYSTEMS__TRANSFORM_SYSTEM_HPP_
-#define SCENE_SET__SYSTEMS__TRANSFORM_SYSTEM_HPP_
+#ifndef NODEC_SCENE__SYSTEMS__TRANSFORM_SYSTEM_HPP_
+#define NODEC_SCENE__SYSTEMS__TRANSFORM_SYSTEM_HPP_
 
-#include <scene_set/components/basic.hpp>
-#include <scene_set/scene_registry.hpp>
+#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/scene_registry.hpp>
 
 #include <nodec/math/gfx.hpp>
 #include <nodec/matrix4x4.hpp>
 
-namespace scene_set {
+namespace nodec_scene {
 namespace systems {
 
 namespace internal {
@@ -18,7 +18,7 @@ inline void update_transform(SceneRegistry &registry,
                              components::Hierarchy &hier,
                              bool dirty) {
     using namespace nodec;
-    using namespace scene_set::components;
+    using namespace nodec_scene::components;
 
     // logging::InfoStream info(__FILE__, __LINE__);
 
@@ -55,6 +55,6 @@ inline void update_transform(SceneRegistry &registry, SceneEntity root) {
 }
 
 } // namespace systems
-} // namespace scene_set
+} // namespace nodec_scene
 
 #endif

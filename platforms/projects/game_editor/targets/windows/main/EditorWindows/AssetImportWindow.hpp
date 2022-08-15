@@ -21,7 +21,7 @@ public:
     static void init(
         imelements::WindowManager& manager, 
         const std::string& resource_path,
-        scene_set::Scene* dest_scene,
+        nodec_scene::Scene* dest_scene,
         ResourceRegistry* resource_registry) 
     {
 
@@ -274,7 +274,7 @@ private:
 private:
     std::string resource_path_;
     ResourceRegistry* resource_registry_;
-    scene_set::Scene* dest_scene_;
+    nodec_scene::Scene* dest_scene_;
 
     char source_path[256]{ 0 };
     bool last_import_failed{ false };

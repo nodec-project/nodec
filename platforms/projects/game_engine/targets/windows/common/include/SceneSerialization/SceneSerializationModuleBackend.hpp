@@ -1,18 +1,18 @@
 #pragma once
 
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_scene/components/basic.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/light.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
-#include <nodec_serialization/scene_set/components/basic.hpp>
+#include <nodec_serialization/nodec_scene/components/basic.hpp>
 #include <scene_serialization/scene_serialization.hpp>
-#include <scene_set/components/basic.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
 class SceneSerializationModuleBackend : public scene_serialization::SceneSerialization {
-    using SceneEntity = scene_set::SceneEntity;
-    using SceneRegistry = scene_set::SceneRegistry;
+    using SceneEntity = nodec_scene::SceneEntity;
+    using SceneRegistry = nodec_scene::SceneRegistry;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
 
 public:
@@ -20,7 +20,7 @@ public:
         : mpResourceRegistry(pResourceRegistry) {
         using namespace nodec_rendering::components;
         using namespace nodec_rendering::resources;
-        using namespace scene_set::components;
+        using namespace nodec_scene::components;
 
         register_component<MeshRenderer, SerializableMeshRenderer>(
             [=](const MeshRenderer &component) {
