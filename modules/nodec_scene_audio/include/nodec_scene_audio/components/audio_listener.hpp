@@ -4,8 +4,8 @@
 namespace nodec_scene_audio {
 namespace components {
 
-class AudioListener {
-public:
+struct AudioListener {
+
 };
 
 } // namespace components

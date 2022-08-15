@@ -13,10 +13,10 @@ struct ImageRenderer {
     using MaterialPtr = std::shared_ptr<resources::Material>;
     using TexturePtr = std::shared_ptr<resources::Texture>;
 
-    MaterialPtr material;
     TexturePtr image;
+    MaterialPtr material;
 
-    int pixelsPerUnit{1};
+    int pixelsPerUnit{100};
 };
 
 } // namespace components

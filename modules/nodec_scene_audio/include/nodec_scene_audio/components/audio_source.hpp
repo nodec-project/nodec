@@ -9,8 +9,7 @@
 namespace nodec_scene_audio {
 namespace components {
 
-class AudioSource {
-public:
+struct AudioSource {
     using AudioClipPtr = std::shared_ptr<resources::AudioClip>;
 
     AudioClipPtr clip;

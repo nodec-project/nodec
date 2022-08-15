@@ -106,6 +106,6 @@ Editor::Editor(Engine *engine)
     inspector_component_registry_impl().register_component<ImageRenderer>(
         "Image Renderer",
         [=](auto &renderer) {
-            (void)renderer;
+            inspector_gui_->OnGuiImageRenderer(renderer);
         });
 }

@@ -12,8 +12,7 @@ enum class LightType {
     Spot
 };
 
-class Light {
-public:
+struct Light {
     LightType type{LightType::Directional};
     nodec::Vector4f color{1.0f, 1.0f, 1.0f, 1.0f};
     float intensity{1.0f};

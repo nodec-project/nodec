@@ -3,6 +3,7 @@
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 #include <scene_set/components/basic.hpp>
 
@@ -23,7 +24,7 @@ class InspectorGUI {
     using Light = nodec_rendering::components::Light;
     using AudioSource = nodec_scene_audio::components::AudioSource;
     using AudioClip = nodec_scene_audio::resources::AudioClip;
-
+    using ImageRenderer = nodec_rendering::components::ImageRenderer;
 public:
     InspectorGUI(ResourceRegistry *pResourceRegistry)
         : mpResourceRegistry{pResourceRegistry} {
@@ -166,26 +167,8 @@ public:
     }
 
     void OnGuiAudioSource(AudioSource &source) {
-        {
-            std::string origName;
-            bool found;
-            std::tie(origName, found) = mpResourceRegistry->lookup_name(source.clip);
 
-            SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origName);
-
-            if (ImGui::InputText("Clip", mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
-                std::string newName = mTempStrBuffer;
-                auto newClip = source.clip;
-                if (newName.empty()) {
-                    // if empty, set clip to null.
-                    newClip.reset();
-                } else {
-                    newClip = mpResourceRegistry->get_resource<AudioClip>(newName).get();
-                    if (!newClip) newClip = source.clip;
-                }
-                source.clip = newClip;
-            }
-        }
+        source.clip = ResourceNameEdit("Clip", source.clip);
 
         ImGui::Checkbox("Is Playing", &source.is_playing);
 
@@ -198,7 +181,34 @@ public:
         ImGui::Checkbox("Loop", &source.loop);
     }
 
+    void OnGuiImageRenderer(ImageRenderer& renderer) {
+        renderer.image = ResourceNameEdit("Image", renderer.image);
+        renderer.material = ResourceNameEdit("Material", renderer.material);
+        ImGui::DragInt("Pixels Per Unit", &renderer.pixelsPerUnit);
+    }
+
 private:
+    template<typename T>
+    std::shared_ptr<T> ResourceNameEdit(const char* label, std::shared_ptr<T> resource) {
+        std::string origName;
+        bool found;
+        std::tie(origName, found) = mpResourceRegistry->lookup_name(resource);
+
+        SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origName);
+
+        if (ImGui::InputText(label, mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
+            std::string newName = mTempStrBuffer;
+            if (newName.empty()) {
+                // if empty, set resource to null.
+                resource.reset();
+            } else {
+                auto newResource = mpResourceRegistry->get_resource<T>(newName).get();
+                resource = newResource ? newResource : resource;
+            }
+        }
+        return resource;
+    }
+
     void SetStrBuffer(char *pBuffer, const size_t bufferSize, const std::string &source) {
         source.copy(pBuffer, bufferSize - 1);
 

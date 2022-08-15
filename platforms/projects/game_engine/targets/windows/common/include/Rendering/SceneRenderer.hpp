@@ -189,6 +189,7 @@ public:
                 scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
                     if (!renderer.image || !renderer.material) return;
 
+                    auto *imageBackend = static_cast<TextureBackend *>(renderer.image.get());
                     auto *materialBackend = static_cast<MaterialBackend *>(renderer.material.get());
                     auto shader = materialBackend->shader();
                     if (!shader) return;
@@ -207,6 +208,11 @@ public:
                     mTextureConfigCB.Update(mpGfx, &mTextureConfig);
 
                     XMMATRIX matrixM{trfm.local2world.m};
+                    const auto width = (imageBackend->width() / 2.0f) / renderer.pixelsPerUnit;
+                    const auto height = (imageBackend->height() / 2.0f) / renderer.pixelsPerUnit;
+                    matrixM = XMMatrixScaling(width, height, 1.0f) * matrixM;
+
+                    // matrixM
                     auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
 
                     // DirectX Math using row-major representation
@@ -228,7 +234,7 @@ public:
     }
 
 private:
-    void SetCullMode(const nodec_rendering::CullMode& mode) {
+    void SetCullMode(const nodec_rendering::CullMode &mode) {
         using namespace nodec_rendering;
         switch (mode) {
         default:
@@ -269,6 +275,7 @@ private:
                 mSamplerAnisotropic.BindVS(mpGfx, slot);
                 mSamplerAnisotropic.BindPS(mpGfx, slot);
                 break;
+
             case nodec_rendering::resources::Sampler::Point:
                 mSamplerPoint.BindVS(mpGfx, slot);
                 mSamplerPoint.BindPS(mpGfx, slot);
