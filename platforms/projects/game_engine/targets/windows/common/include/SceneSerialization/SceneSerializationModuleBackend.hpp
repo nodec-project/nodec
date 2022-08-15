@@ -1,12 +1,12 @@
 #pragma once
 
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_serialization/nodec_rendering/components/camera.hpp>
+#include <nodec_serialization/nodec_rendering/components/light.hpp>
+#include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_serialization/scene_set/components/basic.hpp>
 #include <scene_serialization/scene_serialization.hpp>
 #include <scene_set/components/basic.hpp>
-#include <serialization/rendering/components/camera.hpp>
-#include <serialization/rendering/components/light.hpp>
-#include <serialization/rendering/components/mesh_renderer.hpp>
-#include <serialization/scene_set/components/basic.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 

@@ -1,12 +1,12 @@
-#ifndef SERIALIZATION__NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
-#define SERIALIZATION__NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
+#ifndef NODEC_SERIALIZATION__NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
+#define NODEC_SERIALIZATION__NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 
-#include <serialization/nodec/vector2.hpp>
-#include <serialization/nodec/vector3.hpp>
-#include <serialization/nodec/vector4.hpp>
+#include <nodec_serialization/nodec/vector2.hpp>
+#include <nodec_serialization/nodec/vector3.hpp>
+#include <nodec_serialization/nodec/vector4.hpp>
 
 #include <nodec_rendering/resources/material.hpp>
 

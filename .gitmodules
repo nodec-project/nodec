@@ -1,5 +1,5 @@
 [submodule "3rd_party/libs/cereal"]
-	path = modules/serialization/cereal
+	path = modules/nodec_serialization/cereal
 	url = https://github.com/USCiLab/cereal.git
 [submodule "3rd_party/imgui/imgui"]
 	path = modules/imgui/imgui

@@ -1,7 +1,7 @@
-#ifndef SERIALIZATION__NODEC_RENDERING__RESOURCES__SHADER_HPP_
-#define SERIALIZATION__NODEC_RENDERING__RESOURCES__SHADER_HPP_
+#ifndef NODEC_SERIALIZATION__NODEC_RENDERING__RESOURCES__SHADER_HPP_
+#define NODEC_SERIALIZATION__NODEC_RENDERING__RESOURCES__SHADER_HPP_
 
-#include <serialization/nodec/vector4.hpp>
+#include <nodec_serialization/nodec/vector4.hpp>
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/vector.hpp>

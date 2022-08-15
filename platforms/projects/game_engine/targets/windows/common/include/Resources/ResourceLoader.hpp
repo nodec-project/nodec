@@ -8,10 +8,10 @@
 
 #include <SceneAudio/AudioClipBackend.hpp>
 
+#include <nodec_serialization/nodec_rendering/resources/material.hpp>
+#include <nodec_serialization/nodec_rendering/resources/mesh.hpp>
+#include <nodec_serialization/nodec_rendering/resources/shader.hpp>
 #include <scene_serialization/serializable_scene_graph.hpp>
-#include <serialization/rendering/resources/material.hpp>
-#include <serialization/rendering/resources/mesh.hpp>
-#include <serialization/rendering/resources/shader.hpp>
 
 #include <nodec/concurrent/thread_pool_executor.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
