@@ -11,7 +11,7 @@
 #include <nodec_serialization/nodec_rendering/resources/material.hpp>
 #include <nodec_serialization/nodec_rendering/resources/mesh.hpp>
 #include <nodec_serialization/nodec_rendering/resources/shader.hpp>
-#include <scene_serialization/serializable_scene_graph.hpp>
+#include <nodec_scene_serialization/serializable_scene_graph.hpp>
 
 #include <nodec/concurrent/thread_pool_executor.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
@@ -31,7 +31,7 @@ class ResourceLoader {
     template<typename T>
     using ResourcePtr = std::shared_ptr<T>;
 
-    using SerializableSceneGraph = scene_serialization::SerializableSceneGraph;
+    using SerializableSceneGraph = nodec_scene_serialization::SerializableSceneGraph;
 
     static void HandleException(const std::string &identifier) {
         using namespace nodec;

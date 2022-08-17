@@ -2,9 +2,9 @@
 
 #include "ResourceLoader.hpp"
 
-#include <resources/impl/resources_module.hpp>
+#include <nodec_resources/impl/resources_module.hpp>
 
-class ResourcesModuleBackend : public resources::impl::ResourcesModule {
+class ResourcesModuleBackend : public nodec_resources::impl::ResourcesModule {
 public:
     void setup_on_boot() {
         resource_path_changed_connection_ = resource_path_changed().connect(
@@ -16,7 +16,7 @@ public:
     void setup_on_runtime(Graphics *graphics) {
         using namespace nodec;
         using namespace nodec_rendering::resources;
-        using namespace scene_serialization;
+        using namespace nodec_scene_serialization;
         using namespace nodec_scene_audio::resources;
 
         resource_path_changed_connection_.disconnect();

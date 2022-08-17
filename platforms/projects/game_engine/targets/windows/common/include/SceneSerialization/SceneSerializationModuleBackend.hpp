@@ -6,11 +6,11 @@
 #include <nodec_serialization/nodec_rendering/components/light.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
-#include <scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/scene_serialization.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
-class SceneSerializationModuleBackend : public scene_serialization::SceneSerialization {
+class SceneSerializationModuleBackend : public nodec_scene_serialization::SceneSerialization {
     using SceneEntity = nodec_scene::SceneEntity;
     using SceneRegistry = nodec_scene::SceneRegistry;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;

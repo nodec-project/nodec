@@ -1,5 +1,5 @@
-#ifndef SCENE_SERIALIZATION__SERIALIZABLE_SCENE_GRAPH_HPP_
-#define SCENE_SERIALIZATION__SERIALIZABLE_SCENE_GRAPH_HPP_
+#ifndef NODEC_SCENE_SERIALIZATION__SERIALIZABLE_SCENE_GRAPH_HPP_
+#define NODEC_SCENE_SERIALIZATION__SERIALIZABLE_SCENE_GRAPH_HPP_
 
 #include "serializable_entity_node.hpp"
 
@@ -9,8 +9,7 @@
 #include <memory>
 #include <vector>
 
-
-namespace scene_serialization {
+namespace nodec_scene_serialization {
 
 class SerializableSceneGraph {
 public:
@@ -18,12 +17,10 @@ public:
 };
 
 template<class Archive>
-void serialize(Archive& archive, SerializableSceneGraph& graph) {
-
+void serialize(Archive &archive, SerializableSceneGraph &graph) {
     archive(cereal::make_nvp("roots", graph.roots));
-
 }
 
-}
+} // namespace nodec_scene_serialization
 
 #endif

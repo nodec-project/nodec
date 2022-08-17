@@ -9,7 +9,7 @@
 namespace nodec_scene {
 namespace components {
 
-class SerializableName : public scene_serialization::BaseSerializableComponent {
+class SerializableName : public nodec_scene_serialization::BaseSerializableComponent {
 public:
     SerializableName()
         : BaseSerializableComponent(this) {
@@ -23,7 +23,7 @@ public:
     }
 };
 
-class SerializableTransform : public scene_serialization::BaseSerializableComponent {
+class SerializableTransform : public nodec_scene_serialization::BaseSerializableComponent {
 public:
     SerializableTransform()
         : BaseSerializableComponent(this) {
@@ -50,9 +50,9 @@ public:
 #include <cereal/archives/xml.hpp>
 
 CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableName);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableName);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableName);
 
 CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableTransform);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableTransform);
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableTransform);
 
 #endif

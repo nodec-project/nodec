@@ -12,10 +12,10 @@
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <nodec_input/impl/input_module.hpp>
+#include <nodec_resources/impl/resources_module.hpp>
 #include <nodec_scene/impl/scene_module.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
-#include <resources/impl/resources_module.hpp>
-#include <scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/scene_serialization.hpp>
 #include <screen/impl/screen_module.hpp>
 
 #include <nodec/logging.hpp>
@@ -28,10 +28,10 @@ class Engine : public nodec_engine::impl::NodecEngineModule {
     using SceneModule = nodec_scene::impl::SceneModule;
     using Scene = nodec_scene::Scene;
 
-    using ResourcesModule = resources::impl::ResourcesModule;
-    using Resources = resources::Resources;
+    using ResourcesModule = nodec_resources::impl::ResourcesModule;
+    using Resources = nodec_resources::Resources;
 
-    using SceneSerialization = scene_serialization::SceneSerialization;
+    using SceneSerialization = nodec_scene_serialization::SceneSerialization;
 
 public:
     Engine() {
@@ -63,7 +63,6 @@ public:
         // --- scene serialization ---
         scene_serialization_module_.reset(new SceneSerializationModuleBackend(&resources_module_->registry()));
         add_module<SceneSerialization>(scene_serialization_module_);
-
     }
 
     ~Engine() {
@@ -94,7 +93,6 @@ public:
 
         scene_audio_system_.reset(new SceneAudioSystem(audio_platform_.get(), &scene_module_->registry()));
 
-
         scene_module_->stepped().connect([&](Scene &scene) {
             scene_audio_system_->UpdateAudio(scene_module_->registry());
         });
@@ -106,7 +104,7 @@ public:
 
     void frame_end() {
         for (auto &root : scene_module_->hierarchy_system().root_entities()) {
-            nodec_scene::systems:: update_transform(scene_module_->registry(), root);
+            nodec_scene::systems::update_transform(scene_module_->registry(), root);
         }
 
         scene_renderer_->Render(*scene_module_);

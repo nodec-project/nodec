@@ -4,7 +4,7 @@
 #include "../ResourceImporter.hpp"
 
 #include <imelements/window.hpp>
-#include <scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/scene_serialization.hpp>
 
 #include <imgui.h>
 
@@ -13,7 +13,7 @@ class SceneSerializationWindow : public imelements::BaseWindow {
     using SceneEntity = nodec_scene::SceneEntity;
     using SelectedEntityChangedSignal = nodec::signals::Signal<void(SceneEntity)>;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
-    using SceneSerialization = scene_serialization::SceneSerialization;
+    using SceneSerialization = nodec_scene_serialization::SceneSerialization;
     using Scene = nodec_scene::Scene;
 
 public:

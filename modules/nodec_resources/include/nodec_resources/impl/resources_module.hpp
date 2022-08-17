@@ -1,26 +1,25 @@
-#ifndef RESOURCES__IMPL__RESOURCES_HPP_
-#define RESOURCES__IMPL__RESOURCES_HPP_
+#ifndef NODEC_RESOURCES__IMPL__RESOURCES_HPP_
+#define NODEC_RESOURCES__IMPL__RESOURCES_HPP_
 
-#include <resources/resources.hpp>
+#include "../resources.hpp"
 
 #include <nodec/signals.hpp>
 
-
-namespace resources {
+namespace nodec_resources {
 namespace impl {
 
 class ResourcesModule : public Resources {
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
 
 public:
-    using ResourcePathChangedSignal = nodec::signals::Signal<void(ResourcesModule&, const std::string&)>;
+    using ResourcePathChangedSignal = nodec::signals::Signal<void(ResourcesModule &, const std::string &)>;
 
 public:
-    ResourceRegistry& registry() override {
+    ResourceRegistry &registry() override {
         return registry_;
     }
 
-    void set_resource_path(const std::string& path) {
+    void set_resource_path(const std::string &path) {
         resource_path_changed_(*this, path);
     }
 
@@ -29,7 +28,7 @@ public:
     }
 
 public:
-    std::string internal_resource_path{ "resources" };
+    std::string internal_resource_path{"resources"};
 
 public:
     decltype(auto) resource_path_changed() {
@@ -39,14 +38,10 @@ public:
 private:
     ResourceRegistry registry_;
     ResourcePathChangedSignal resource_path_changed_;
-
 };
 
-}
+} // namespace impl
 
-
-
-}
-
+} // namespace nodec_resources
 
 #endif

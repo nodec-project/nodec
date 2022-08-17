@@ -2,8 +2,8 @@
 
 #include <nodec_scene/scene_registry.hpp>
 #include <nodec_scene/scene.hpp>
-#include <scene_serialization/scene_serialization.hpp>
-#include <scene_serialization/serializable_scene_graph.hpp>
+#include <nodec_scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/serializable_scene_graph.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -14,8 +14,8 @@ namespace ResourceImporter {
 namespace internal {
 
 void ProcessSceneEntityNode(
-    std::shared_ptr<scene_serialization::SerializableEntityNode> node,
-    const scene_serialization::SceneSerialization& sceneSerialization,
+    std::shared_ptr<nodec_scene_serialization::SerializableEntityNode> node,
+    const nodec_scene_serialization::SceneSerialization& sceneSerialization,
     nodec_scene::SceneEntity parent,
     nodec_scene::Scene& scene)
 {
@@ -42,10 +42,10 @@ bool ImportSceneGraph(
     nodec_scene::SceneEntity destEntity,
     nodec::resource_management::ResourceRegistry& resourceRegistry,
     nodec_scene::Scene& scene,
-    const scene_serialization::SceneSerialization& sceneSerialization)
+    const nodec_scene_serialization::SceneSerialization& sceneSerialization)
 {
     using namespace nodec;
-    using namespace scene_serialization;
+    using namespace nodec_scene_serialization;
 
     auto graph = resourceRegistry.get_resource<SerializableSceneGraph>(path).get();
 
