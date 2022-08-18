@@ -122,7 +122,7 @@ public:
         return node;
     }
 
-    SceneEntity emplace_entity(
+    SceneEntity make_entity(
         std::shared_ptr<SerializableEntityNode> entity_node,
         SceneRegistry &scene_registry) const {
         using namespace nodec;

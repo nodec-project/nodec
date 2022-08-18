@@ -128,9 +128,10 @@ private:
         auto &resources = engine.get_module<Resources>();
 
         {
+            auto &serialization = engine.get_module<SceneSerialization>();
             auto mainScene = resources.registry().get_resource<SerializableSceneGraph>("org.nodec.hello-nodec/scenes/main.scene").get();
-            if (mainScene) {
-            }
+
+            SceneEntityEmplacer{mainScene, scene, entities::null_entity, serialization}.emplace_all();
         }
 
         //{

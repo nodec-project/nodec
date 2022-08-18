@@ -20,6 +20,7 @@
 #include <nodec_scene_audio/resources/audio_clip.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_scene_serialization/serializable_scene_graph.hpp>
+#include <nodec_scene_serialization/scene_entity_emplacer.hpp>
 
 #include <screen/screen.hpp>
 

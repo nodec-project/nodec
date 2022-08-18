@@ -1,0 +1,122 @@
+{
+"scene_graph": {
+"roots": [
+{
+"ptr_wrapper": {
+"id": 2147483649,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483649,
+"polymorphic_name": "nodec_rendering::components::SerializableLight",
+"ptr_wrapper": {
+"id": 2147483650,
+"data": {
+"type": 0,
+"color": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0,
+"w": 1.0
+},
+"intensity": 1.0
+}
+}
+},
+{
+"polymorphic_id": 2147483650,
+"polymorphic_name": "nodec_scene::components::SerializableTransform",
+"ptr_wrapper": {
+"id": 2147483651,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2147483651,
+"polymorphic_name": "nodec_scene::components::SerializableName",
+"ptr_wrapper": {
+"id": 2147483652,
+"data": {
+"name": "Camera"
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483653,
+"data": {
+"components": [
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483654,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483655,
+"data": {
+"name": "Plane"
+}
+}
+},
+{
+"polymorphic_id": 2147483652,
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
+"ptr_wrapper": {
+"id": 2147483656,
+"data": {
+"meshes": [],
+"materials": []
+}
+}
+}
+],
+"children": []
+}
+}
+}
+]
+}
+}
