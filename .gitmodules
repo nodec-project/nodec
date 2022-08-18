@@ -15,3 +15,6 @@
 	path = modules/nodec_physics/bullet3
 	url = https://github.com/bulletphysics/bullet3.git
 	ignore = dirty
+[submodule "modules/imguizmo/ImGuizmo"]
+	path = modules/imguizmo/ImGuizmo
+	url = https://github.com/CedricGuillemet/ImGuizmo.git
