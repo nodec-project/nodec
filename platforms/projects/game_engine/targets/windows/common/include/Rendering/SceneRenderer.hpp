@@ -68,14 +68,14 @@ public:
         using namespace nodec::resource_management;
         using namespace nodec;
 
-        auto planeMesh = resourceRegistry.get_resource<Mesh>("org.nodec-rendering.essentials/meshes/plane.mesh", LoadPolicy::Direct).get();
+        auto quadMesh = resourceRegistry.get_resource<Mesh>("org.nodec-rendering.essentials/meshes/quad.mesh", LoadPolicy::Direct).get();
 
-        if (!planeMesh) {
-            logging::WarnStream(__FILE__, __LINE__) << "[SceneRenderer] >>> Cannot load the essential resource 'plane.mesh'.\n"
+        if (!quadMesh) {
+            logging::WarnStream(__FILE__, __LINE__) << "[SceneRenderer] >>> Cannot load the essential resource 'quad.mesh'.\n"
                                                        "Make sure the 'org.nodec-rendering.essentials' resource-package is installed.";
         }
 
-        mPlaneMesh = std::static_pointer_cast<MeshBackend>(planeMesh);
+        mQuadMesh = std::static_pointer_cast<MeshBackend>(quadMesh);
     }
 
     void Render(nodec_scene::Scene &scene) {
@@ -185,7 +185,7 @@ public:
                 } // End foreach mesh
             });   // End foreach mesh renderer
 
-            if (mPlaneMesh) {
+            if (mQuadMesh) {
                 scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
                     if (!renderer.image || !renderer.material) return;
 
@@ -208,8 +208,8 @@ public:
                     mTextureConfigCB.Update(mpGfx, &mTextureConfig);
 
                     XMMATRIX matrixM{trfm.local2world.m};
-                    const auto width = (imageBackend->width() / 2.0f) / renderer.pixelsPerUnit;
-                    const auto height = (imageBackend->height() / 2.0f) / renderer.pixelsPerUnit;
+                    const auto width = imageBackend->width() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
+                    const auto height = imageBackend->height() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
                     matrixM = XMMatrixScaling(width, height, 1.0f) * matrixM;
 
                     // matrixM
@@ -225,9 +225,9 @@ public:
 
                     mModelPropertiesCB.Update(mpGfx, &mModelProperties);
 
-                    mPlaneMesh->bind(mpGfx);
+                    mQuadMesh->bind(mpGfx);
 
-                    mpGfx->DrawIndexed(mPlaneMesh->triangles.size());
+                    mpGfx->DrawIndexed(mQuadMesh->triangles.size());
                 });
             }
         }); // End foreach camera
@@ -312,5 +312,5 @@ private:
 
     Graphics *mpGfx;
 
-    std::shared_ptr<MeshBackend> mPlaneMesh;
+    std::shared_ptr<MeshBackend> mQuadMesh;
 };

@@ -8,51 +8,48 @@
 "components": [
 {
 "polymorphic_id": 2147483649,
-"polymorphic_name": "nodec_scene::components::SerializableTransform",
+"polymorphic_name": "nodec_rendering::components::SerializableCamera",
 "ptr_wrapper": {
 "id": 2147483650,
 "data": {
-"local_position": {
-"x": 0.0,
-"y": 0.0,
-"z": 3.819999933242798
-},
-"local_scale": {
-"x": 10.0,
-"y": 10.0,
-"z": 10.0
-},
-"local_rotation": {
-"x": 0.7071067690849304,
-"y": 0.0,
-"z": 0.0,
-"w": 0.7071067690849304
-}
+"farClipPlane": 100.0,
+"nearClipPlane": 0.009999999776482582,
+"fovAngle": 45.0
 }
 }
 },
 {
 "polymorphic_id": 2147483650,
-"polymorphic_name": "nodec_scene::components::SerializableName",
+"polymorphic_name": "nodec_scene::components::SerializableTransform",
 "ptr_wrapper": {
 "id": 2147483651,
 "data": {
-"name": "Plane"
+"local_position": {
+"x": 0.029999999329447748,
+"y": 1.5,
+"z": -10.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": -3.388132192913985e-21,
+"y": 1.8189890566011614e-11,
+"z": -6.162975234291979e-32,
+"w": 1.0
+}
 }
 }
 },
 {
 "polymorphic_id": 2147483651,
-"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
+"polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
 "id": 2147483652,
 "data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/plane.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
-]
+"name": "Camera"
 }
 }
 }
@@ -74,8 +71,8 @@
 "data": {
 "type": 0,
 "color": {
-"x": 1.0,
-"y": 1.0,
+"x": 0.5490195751190186,
+"y": 0.827566385269165,
 "z": 1.0,
 "w": 1.0
 },
@@ -84,25 +81,114 @@
 }
 },
 {
-"polymorphic_id": 2147483653,
-"polymorphic_name": "nodec_rendering::components::SerializableCamera",
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483655,
 "data": {
-"farClipPlane": 100.0,
-"nearClipPlane": 0.009999999776482582,
-"fovAngle": 45.0
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.3535534143447876,
+"y": -0.3535534143447876,
+"z": -0.14644663035869599,
+"w": 0.8535533547401428
+}
 }
 }
 },
 {
-"polymorphic_id": 1,
+"polymorphic_id": 3,
 "ptr_wrapper": {
 "id": 2147483656,
 "data": {
+"name": "Light"
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483657,
+"data": {
+"components": [
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483658,
+"data": {
 "local_position": {
 "x": 0.0,
-"y": 1.5,
+"y": 1.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.35355344414711,
+"y": -0.3535534143447876,
+"z": -0.14644664525985719,
+"w": 0.8535533547401428
+}
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483659,
+"data": {
+"name": "Cube"
+}
+}
+},
+{
+"polymorphic_id": 2147483653,
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
+"ptr_wrapper": {
+"id": 2147483660,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483661,
+"data": {
+"components": [
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483662,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
 "z": 0.0
 },
 "local_scale": {
@@ -120,11 +206,25 @@
 }
 },
 {
-"polymorphic_id": 2,
+"polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483657,
+"id": 2147483663,
 "data": {
-"name": "Camera"
+"name": "Plane"
+}
+}
+},
+{
+"polymorphic_id": 5,
+"ptr_wrapper": {
+"id": 2147483664,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/plane.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-default.material"
+]
 }
 }
 }

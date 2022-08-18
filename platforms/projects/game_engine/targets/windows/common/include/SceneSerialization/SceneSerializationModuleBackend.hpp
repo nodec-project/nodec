@@ -2,11 +2,12 @@
 
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_scene/components/basic.hpp>
+#include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
+#include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/light.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
-#include <nodec_scene_serialization/scene_serialization.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -51,6 +52,22 @@ public:
                     auto material = mpResourceRegistry->get_resource<Material>(name).get();
                     component.materials.push_back(material);
                 }
+            });
+
+        register_component<ImageRenderer, SerializableImageRenderer>(
+            [=](const ImageRenderer &renderer) {
+                auto serializable = std::make_shared<SerializableImageRenderer>();
+                serializable->image = mpResourceRegistry->lookup_name<Texture>(renderer.image).first;
+                serializable->material = mpResourceRegistry->lookup_name<Material>(renderer.material).first;
+                serializable->pixelsPerUnit = renderer.pixelsPerUnit;
+                return serializable;
+            },
+            [=](const SerializableImageRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
+                registry.emplace_component<ImageRenderer>(entity);
+                auto &renderer = registry.get_component<ImageRenderer>(entity);
+                renderer.image = mpResourceRegistry->get_resource<Texture>(serializable.image).get();
+                renderer.material = mpResourceRegistry->get_resource<Material>(serializable.material).get();
+                renderer.pixelsPerUnit = serializable.pixelsPerUnit;
             });
 
         register_component<Name, SerializableName>(
