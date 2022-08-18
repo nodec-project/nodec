@@ -8,53 +8,51 @@
 "components": [
 {
 "polymorphic_id": 2147483649,
-"polymorphic_name": "nodec_rendering::components::SerializableLight",
+"polymorphic_name": "nodec_scene::components::SerializableTransform",
 "ptr_wrapper": {
 "id": 2147483650,
 "data": {
-"type": 0,
-"color": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0,
-"w": 1.0
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 3.819999933242798
 },
-"intensity": 1.0
+"local_scale": {
+"x": 10.0,
+"y": 10.0,
+"z": 10.0
+},
+"local_rotation": {
+"x": 0.7071067690849304,
+"y": 0.0,
+"z": 0.0,
+"w": 0.7071067690849304
+}
 }
 }
 },
 {
 "polymorphic_id": 2147483650,
-"polymorphic_name": "nodec_scene::components::SerializableTransform",
+"polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
 "id": 2147483651,
 "data": {
-"local_position": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
+"name": "Plane"
 }
 }
 },
 {
 "polymorphic_id": 2147483651,
-"polymorphic_name": "nodec_scene::components::SerializableName",
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
 "id": 2147483652,
 "data": {
-"name": "Camera"
+"meshes": [
+"org.nodec-rendering.essentials/meshes/plane.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-default.material"
+]
 }
 }
 }
@@ -69,13 +67,42 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 2147483652,
+"polymorphic_name": "nodec_rendering::components::SerializableLight",
 "ptr_wrapper": {
 "id": 2147483654,
 "data": {
+"type": 0,
+"color": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0,
+"w": 1.0
+},
+"intensity": 1.0
+}
+}
+},
+{
+"polymorphic_id": 2147483653,
+"polymorphic_name": "nodec_rendering::components::SerializableCamera",
+"ptr_wrapper": {
+"id": 2147483655,
+"data": {
+"farClipPlane": 100.0,
+"nearClipPlane": 0.009999999776482582,
+"fovAngle": 45.0
+}
+}
+},
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483656,
+"data": {
 "local_position": {
 "x": 0.0,
-"y": 0.0,
+"y": 1.5,
 "z": 0.0
 },
 "local_scale": {
@@ -93,22 +120,11 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483655,
+"id": 2147483657,
 "data": {
-"name": "Plane"
-}
-}
-},
-{
-"polymorphic_id": 2147483652,
-"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
-"ptr_wrapper": {
-"id": 2147483656,
-"data": {
-"meshes": [],
-"materials": []
+"name": "Camera"
 }
 }
 }

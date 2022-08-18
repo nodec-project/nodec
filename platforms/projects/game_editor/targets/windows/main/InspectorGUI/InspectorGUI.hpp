@@ -1,11 +1,11 @@
 #pragma once
 
 #include <nodec_rendering/components/camera.hpp>
+#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
-#include <nodec_rendering/components/image_renderer.hpp>
-#include <nodec_scene_audio/components/audio_source.hpp>
 #include <nodec_scene/components/basic.hpp>
+#include <nodec_scene_audio/components/audio_source.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
@@ -25,6 +25,7 @@ class InspectorGUI {
     using AudioSource = nodec_scene_audio::components::AudioSource;
     using AudioClip = nodec_scene_audio::resources::AudioClip;
     using ImageRenderer = nodec_rendering::components::ImageRenderer;
+
 public:
     InspectorGUI(ResourceRegistry *pResourceRegistry)
         : mpResourceRegistry{pResourceRegistry} {
@@ -43,7 +44,6 @@ public:
 
     void onGUITransform(Transform &trfm) {
         using namespace nodec;
-
         {
             ImGui::Text("Position");
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
@@ -85,66 +85,49 @@ public:
         using namespace nodec;
         using namespace nodec_rendering::resources;
         using namespace nodec_rendering;
+        {
+            ImGui::PushID("meshes");
+            ImGui::Text("Meshes");
 
-        ImGui::Text("Meshes");
-
-        for (auto i = 0; i < renderer.meshes.size(); ++i) {
-            auto &mesh = renderer.meshes[i];
-
-            std::string label = Formatter() << "##mesh-" << i;
-
-            auto result = mpResourceRegistry->lookup_name(mesh);
-            auto origResourceName = result.first;
-            SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origResourceName);
-
-            // ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(1 , ,1 ,);
-            int colorStackCount = 0;
-
-            if (!mesh) {
-                // if mesh empty, show invalid resource by red color.
-                ImGui::PushStyleColor(ImGuiCol_FrameBg, (ImVec4)ImColor::HSV(0.0f / 7.0f, 0.5f, 0.5f));
-                ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, (ImVec4)ImColor::HSV(0.0f / 7.0f, 0.6f, 0.5f));
-                ImGui::PushStyleColor(ImGuiCol_FrameBgActive, (ImVec4)ImColor::HSV(0.0f / 7.0f, 0.7f, 0.5f));
-                ImGui::PushStyleColor(ImGuiCol_SliderGrab, (ImVec4)ImColor::HSV(0.0f / 7.0f, 0.9f, 0.9f));
-                colorStackCount += 4;
-            }
-
-            if (ImGui::InputText(label.c_str(), mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
-                std::string newResourceName = mTempStrBuffer;
-
-                auto newMesh = mpResourceRegistry->get_resource<Mesh>(newResourceName).get();
-                if (newMesh) {
-                    // only not null, set as new mesh.
-                    mesh = newMesh;
-                } else {
+            for (auto i = renderer.meshes.size(); i-- != 0;) {
+                ImGui::PushID(i);
+                auto &mesh = renderer.meshes[i];
+                mesh = ResourceNameEdit("", mesh);
+                ImGui::SameLine();
+                if (ImGui::Button("-")) {
+                    renderer.meshes.erase(renderer.meshes.begin() + i);
                 }
+                ImGui::PopID();
             }
 
-            ImGui::PopStyleColor(colorStackCount);
+            if (ImGui::Button("+")) {
+                auto empty = mpResourceRegistry->get_resource<Mesh>("").get();
+                renderer.meshes.emplace_back(empty);
+            }
+
+            ImGui::PopID();
         }
+        {
+            ImGui::PushID("materials");
 
-        ImGui::Text("Materials");
-
-        for (int i = 0; i < renderer.materials.size(); ++i) {
-            auto &material = renderer.materials[i];
-
-            auto result = mpResourceRegistry->lookup_name(material);
-
-            auto origResourceName = result.first;
-
-            std::string label = Formatter() << "##material-" << i;
-
-            SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origResourceName);
-
-            if (ImGui::InputText(label.c_str(), mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
-                std::string newResourceName = mTempStrBuffer;
-
-                auto newMaterial = mpResourceRegistry->get_resource<Material>(newResourceName).get();
-
-                if (newMaterial) {
-                    material = newMaterial;
+            ImGui::Text("Materials");
+            for (auto i = renderer.materials.size(); i-- != 0;) {
+                ImGui::PushID(i);
+                auto &material = renderer.materials[i];
+                material = ResourceNameEdit("", material);
+                ImGui::SameLine();
+                if (ImGui::Button("-")) {
+                    renderer.materials.erase(renderer.materials.begin() + i);
                 }
+                ImGui::PopID();
             }
+
+            if (ImGui::Button("+")) {
+                auto empty = mpResourceRegistry->get_resource<Material>("").get();
+                renderer.materials.emplace_back(empty);
+            }
+
+            ImGui::PopID();
         }
     }
 
@@ -167,7 +150,6 @@ public:
     }
 
     void OnGuiAudioSource(AudioSource &source) {
-
         source.clip = ResourceNameEdit("Clip", source.clip);
 
         ImGui::Checkbox("Is Playing", &source.is_playing);
@@ -181,7 +163,7 @@ public:
         ImGui::Checkbox("Loop", &source.loop);
     }
 
-    void OnGuiImageRenderer(ImageRenderer& renderer) {
+    void OnGuiImageRenderer(ImageRenderer &renderer) {
         renderer.image = ResourceNameEdit("Image", renderer.image);
         renderer.material = ResourceNameEdit("Material", renderer.material);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixelsPerUnit);
@@ -189,7 +171,7 @@ public:
 
 private:
     template<typename T>
-    std::shared_ptr<T> ResourceNameEdit(const char* label, std::shared_ptr<T> resource) {
+    std::shared_ptr<T> ResourceNameEdit(const char *label, std::shared_ptr<T> resource) {
         std::string origName;
         bool found;
         std::tie(origName, found) = mpResourceRegistry->lookup_name(resource);
