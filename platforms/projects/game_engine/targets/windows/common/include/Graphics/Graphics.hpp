@@ -13,6 +13,7 @@
 
 #include <stdexcept>
 
+
 class Graphics {
 public:
     Graphics(HWND hWnd, int width, int height);
@@ -31,6 +32,10 @@ public:
     DxgiInfoLogger &GetInfoLogger() noexcept {
         return mInfoLogger;
     };
+
+    ID3D11RenderTargetView &GetRenderTargetView() noexcept {
+        return *mpTarget.Get();
+    }
 
     UINT GetWidth() const noexcept {
         return mWidth;

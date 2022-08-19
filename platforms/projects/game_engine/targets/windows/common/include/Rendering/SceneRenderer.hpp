@@ -4,6 +4,7 @@
 #include <Graphics/Graphics.hpp>
 #include <Graphics/RasterizerState.hpp>
 #include <Graphics/SamplerState.hpp>
+#include <Graphics/GeometryBuffer.hpp>
 #include <Rendering/MaterialBackend.hpp>
 #include <Rendering/MeshBackend.hpp>
 #include <Rendering/ShaderBackend.hpp>
@@ -68,14 +69,45 @@ public:
         using namespace nodec::resource_management;
         using namespace nodec;
 
-        auto quadMesh = resourceRegistry.get_resource<Mesh>("org.nodec-rendering.essentials/meshes/quad.mesh", LoadPolicy::Direct).get();
+        // Get quad mesh from resource registry.
+        {
+            auto quadMesh = resourceRegistry.get_resource<Mesh>("org.nodec-rendering.essentials/meshes/quad.mesh", LoadPolicy::Direct).get();
 
-        if (!quadMesh) {
-            logging::WarnStream(__FILE__, __LINE__) << "[SceneRenderer] >>> Cannot load the essential resource 'quad.mesh'.\n"
-                                                       "Make sure the 'org.nodec-rendering.essentials' resource-package is installed.";
+            if (!quadMesh) {
+                logging::WarnStream(__FILE__, __LINE__) << "[SceneRenderer] >>> Cannot load the essential resource 'quad.mesh'.\n"
+                                                           "Make sure the 'org.nodec-rendering.essentials' resource-package is installed.";
+            }
+
+            mQuadMesh = std::static_pointer_cast<MeshBackend>(quadMesh);
         }
 
-        mQuadMesh = std::static_pointer_cast<MeshBackend>(quadMesh);
+        // Make screen quad mesh in NDC space which is not depend on target view size.
+        {
+            mScreenQuadMesh.reset(new MeshBackend());
+
+            mScreenQuadMesh->vertices.resize(4);
+            mScreenQuadMesh->triangles.resize(6);
+
+            mScreenQuadMesh->vertices[0] = {{-1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 1.0f}};
+            mScreenQuadMesh->vertices[1] = {{-1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {0.0f, 0.0f}};
+            mScreenQuadMesh->vertices[2] = {{1.0f, 1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 0.0f}};
+            mScreenQuadMesh->vertices[3] = {{1.0f, -1.0f, 0.0f}, {0.0f, 0.0f, -1.0f}, {1.0f, 1.0f}};
+
+            mScreenQuadMesh->triangles[0] = 0;
+            mScreenQuadMesh->triangles[1] = 1;
+            mScreenQuadMesh->triangles[2] = 2;
+
+            mScreenQuadMesh->triangles[3] = 0;
+            mScreenQuadMesh->triangles[4] = 2;
+            mScreenQuadMesh->triangles[5] = 3;
+            mScreenQuadMesh->update_device_memory(mpGfx);
+        }
+
+        {
+            for (auto& pBuffer : mGeometryBuffers) {
+                pBuffer.reset(new GeometryBuffer(pGfx, pGfx->GetWidth(), pGfx->GetHeight()));
+            }
+        }
     }
 
     void Render(nodec_scene::Scene &scene) {
@@ -118,6 +150,7 @@ public:
             }
         });
 
+        // --- per camera ---
         scene.registry().view<const Camera, const Transform>().each([&](auto entt, const Camera &camera, const Transform &cameraTrfm) {
             auto matrixP = XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(camera.fovAngle),
@@ -293,6 +326,7 @@ private:
         }
     }
 
+
 private:
     SceneProperties mSceneProperties;
     ConstantBuffer mScenePropertiesCB;
@@ -313,4 +347,7 @@ private:
     Graphics *mpGfx;
 
     std::shared_ptr<MeshBackend> mQuadMesh;
+    std::unique_ptr<MeshBackend> mScreenQuadMesh;
+    std::array<std::unique_ptr<GeometryBuffer>, 3> mGeometryBuffers;
+    
 };
