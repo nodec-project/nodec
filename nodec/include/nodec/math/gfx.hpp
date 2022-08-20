@@ -35,14 +35,11 @@ inline Matrix4x4f trs(const Vector3f &t, const Quaternionf &r, const Vector3f &s
         0.0f, 0.0f, 0.0f, 1.0f};
 }
 
-inline void set_angle_axis(Quaternionf &quaternion, float angle_deg, const Vector3f &axis) {
+inline Quaternionf angle_axis(const float &angle_deg, const Vector3f &axis) {
     auto theta = angle_deg * deg2rad<float> / 2.0f;
     auto s = std::sin(theta);
     auto a = normalize(axis);
-    quaternion.x = a.x * s;
-    quaternion.y = a.y * s;
-    quaternion.z = a.z * s;
-    quaternion.w = std::cos(theta);
+    return {a.x * s, a.y * s, a.z * s, std::cos(theta)};
 }
 
 // * <https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles>

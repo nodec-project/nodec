@@ -25,6 +25,7 @@
 #include <screen/screen.hpp>
 
 #include <nodec/logging.hpp>
+#include <nodec/math/gfx.hpp>
 
 #include <cereal/types/polymorphic.hpp>
 

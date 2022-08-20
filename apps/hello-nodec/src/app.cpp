@@ -1,4 +1,5 @@
 #include "app.hpp"
+#include "camera_controller.hpp"
 
 using namespace nodec;
 using namespace nodec_engine;
@@ -39,12 +40,44 @@ public:
         // engine.initialized().connect([=](NodecEngine &engine) { on_initialized(engine); });
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
 
+        auto &scene = engine.get_module<Scene>();
+        auto &input = engine.get_module<Input>();
+        auto &serialization = engine.get_module<SceneSerialization>();
+
+#ifdef EDITOR_MODE
+        using namespace scene_editor;
+        auto &editor = engine.get_module<SceneEditor>();
+
+        // editor.inspector_component_registry().register_component<HelloComponent>(
+        //     "Hello Component", [=](HelloComponent &comp) {
+        //         /*ImGui::Text("My Field"); ImGui::SameLine();*/
+        //         // ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
+
+        //        if (target_material) {
+        //            float metallic, roughness;
+
+        //            metallic = target_material->get_float_property("metallic");
+        //            roughness = target_material->get_float_property("roughness");
+
+        //            ImGui::DragFloat("metallic", &metallic, 0.01f, 0.0f, 1.0f);
+        //            ImGui::DragFloat("roughness", &roughness, 0.01f, 0.0f, 1.0f);
+
+        //            target_material->set_float_property("metallic", metallic);
+        //            target_material->set_float_property("roughness", roughness);
+        //        }
+        //    });
+#endif
         {
-            auto &scene = engine.get_module<Scene>();
             scene.initialized().connect([&](Scene &scene) { on_initialized(scene); });
             scene.stepped().connect([&](Scene &scene) { on_stepped(scene); });
         }
 
+        {
+            camera_controller_system_ = std::make_shared<CameraControllerSystem>(scene, input, serialization);
+#ifdef EDITOR_MODE
+            CameraControllerSystem::setup_editor(editor);
+#endif
+        }
         //{
         //    auto &scene_serialization = engine.get_module<SceneSerialization>();
 
@@ -87,30 +120,6 @@ public:
         //        // logging::InfoStream(__FILE__, __LINE__) << event;
         //    });
         //}
-
-#ifdef EDITOR_MODE
-        using namespace scene_editor;
-        auto &editor = engine.get_module<SceneEditor>();
-
-        // editor.inspector_component_registry().register_component<HelloComponent>(
-        //     "Hello Component", [=](HelloComponent &comp) {
-        //         /*ImGui::Text("My Field"); ImGui::SameLine();*/
-        //         // ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
-
-        //        if (target_material) {
-        //            float metallic, roughness;
-
-        //            metallic = target_material->get_float_property("metallic");
-        //            roughness = target_material->get_float_property("roughness");
-
-        //            ImGui::DragFloat("metallic", &metallic, 0.01f, 0.0f, 1.0f);
-        //            ImGui::DragFloat("roughness", &roughness, 0.01f, 0.0f, 1.0f);
-
-        //            target_material->set_float_property("metallic", metallic);
-        //            target_material->set_float_property("roughness", roughness);
-        //        }
-        //    });
-#endif
     }
 
     ~HelloWorld() {
@@ -177,6 +186,7 @@ private:
 
 private:
     NodecEngine &engine;
+    std::shared_ptr<CameraControllerSystem> camera_controller_system_;
     // std::shared_ptr<Material> target_material;
     // SceneEntity audioEntity;
 };
@@ -190,8 +200,8 @@ void nodec_engine::on_boot(NodecEngine &engine) {
 
     auto &screen = engine.get_module<Screen>();
 
-    // screen.set_size({1920, 1080});
-    // screen.set_resolution({1920, 1080});
+     //screen.set_size({1920, 1080});
+     //screen.set_resolution({1920, 1080});
 
     screen.set_size({1280, 720});
     screen.set_resolution({1280, 720});

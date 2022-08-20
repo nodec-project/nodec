@@ -50,6 +50,7 @@ Window::Window(int width, int height,
                const wchar_t *name,
                nodec_input::impl::InputModule *pInputModule)
     : mWidth(width), mHeight(height), mpInputModule(pInputModule) {
+
     RECT wr;
     wr.left = 100;
     wr.right = width + wr.left;

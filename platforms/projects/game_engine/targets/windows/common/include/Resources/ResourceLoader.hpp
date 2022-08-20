@@ -144,31 +144,34 @@ public:
 
         cereal::JSONInputArchive archive(file);
 
-        SerializableShaderMetaInfo sourceMetaInfo;
+        ShaderMetaInfo metaInfo;
         try {
-            archive(sourceMetaInfo);
+            archive(metaInfo);
         } catch (...) {
             HandleException(Formatter() << "Shader::" << path);
             return {};
         }
 
-        ShaderBackend::MetaInfo metaInfo;
-        metaInfo.float_properties.reserve(sourceMetaInfo.float_properties.size());
-        for (auto &&property : sourceMetaInfo.float_properties) {
-            metaInfo.float_properties.push_back({property.name, property.default_value});
+        std::vector<SubShaderMetaInfo> subShaderMetaInfos;
+        for (const auto& subShaderName : metaInfo.pass) {
+            std::ifstream file(Formatter() << path << "/" << subShaderName << ".meta");
+            if (!file) return {};
+            cereal::JSONInputArchive archive(file);
+            SubShaderMetaInfo info;
+            try {
+                archive(info);
+                subShaderMetaInfos.push_back(std::move(info));
+            }
+            catch (...) {
+                HandleException(Formatter() << "Shader::" << path);
+                return {};
+            }
         }
-        metaInfo.vector4_properties.reserve(sourceMetaInfo.vector4_properties.size());
-        for (auto &&property : sourceMetaInfo.vector4_properties) {
-            metaInfo.vector4_properties.push_back({property.name, property.default_value});
-        }
-        metaInfo.texture_entries.reserve(sourceMetaInfo.texture_entries.size());
-        for (auto &&property : sourceMetaInfo.texture_entries) {
-            metaInfo.texture_entries.push_back({property.name});
-        };
+
 
         std::shared_ptr<ShaderBackend> shader;
         try {
-            shader = std::make_shared<ShaderBackend>(mpGraphics, path, metaInfo);
+            shader = std::make_shared<ShaderBackend>(mpGraphics, path, metaInfo, subShaderMetaInfos);
         } catch (...) {
             HandleException(Formatter() << "Shader::" << path);
             return {};

@@ -41,6 +41,9 @@
                 "name": "ambient_occlusion"
             }
         ],
-        "pass": []
+        "pass": [
+            "geometry",
+            "lighting"
+        ]
     }
 }

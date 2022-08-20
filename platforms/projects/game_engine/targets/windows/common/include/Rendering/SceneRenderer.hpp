@@ -1,10 +1,10 @@
 #pragma once
 
 #include <Graphics/ConstantBuffer.hpp>
+#include <Graphics/GeometryBuffer.hpp>
 #include <Graphics/Graphics.hpp>
 #include <Graphics/RasterizerState.hpp>
 #include <Graphics/SamplerState.hpp>
-#include <Graphics/GeometryBuffer.hpp>
 #include <Rendering/MaterialBackend.hpp>
 #include <Rendering/MeshBackend.hpp>
 #include <Rendering/ShaderBackend.hpp>
@@ -21,6 +21,8 @@
 #include <nodec/vector4.hpp>
 
 #include <DirectXMath.h>
+
+#include <unordered_set>
 
 class SceneRenderer {
     using TextureEntry = nodec_rendering::resources::Material::TextureEntry;
@@ -104,9 +106,32 @@ public:
         }
 
         {
-            for (auto& pBuffer : mGeometryBuffers) {
+            for (auto &pBuffer : mGeometryBuffers) {
                 pBuffer.reset(new GeometryBuffer(pGfx, pGfx->GetWidth(), pGfx->GetHeight()));
             }
+
+            // Generate the depth stencil buffer texture.
+            Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
+            D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
+            depthStencilBufferDesc.Width = pGfx->GetWidth();
+            depthStencilBufferDesc.Height = mpGfx->GetHeight();
+            depthStencilBufferDesc.MipLevels = 1;
+            depthStencilBufferDesc.ArraySize = 1;
+            depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+            depthStencilBufferDesc.SampleDesc.Count = 1;
+            depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+            depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+            ThrowIfFailedGfx(
+                pGfx->GetDevice().CreateTexture2D(&depthStencilBufferDesc, nullptr, &depthStencilTexture),
+                pGfx, __FILE__, __LINE__);
+
+            D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
+            depthStencilViewDesc.Format = depthStencilBufferDesc.Format;
+            depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+
+            ThrowIfFailedGfx(
+                pGfx->GetDevice().CreateDepthStencilView(depthStencilTexture.Get(), &depthStencilViewDesc, &mpDepthStencilView),
+                pGfx, __FILE__, __LINE__);
         }
     }
 
@@ -117,38 +142,56 @@ public:
         using namespace nodec_rendering::resources;
         using namespace DirectX;
 
-        auto aspect = static_cast<float>(mpGfx->GetWidth()) / mpGfx->GetHeight();
-
-        mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
         mScenePropertiesCB.BindVS(mpGfx, 0);
         mScenePropertiesCB.BindPS(mpGfx, 0);
 
-        mModelPropertiesCB.BindVS(mpGfx, 1);
-        mModelPropertiesCB.BindPS(mpGfx, 1);
-
-        mTextureConfigCB.BindVS(mpGfx, 2);
-        mTextureConfigCB.BindPS(mpGfx, 2);
-
         // --- lights ---
-        mSceneProperties.lights.directional.enabled = 0x00;
-        scene.registry().view<const Light, const Transform>().each([&](auto entt, const Light &light, const Transform &trfm) {
-            switch (light.type) {
-            case LightType::Directional: {
-                auto &directional = mSceneProperties.lights.directional;
-                directional.enabled = 0x01;
-                directional.color = light.color;
-                directional.intensity = light.intensity;
+        {
+            mSceneProperties.lights.directional.enabled = 0x00;
+            scene.registry().view<const Light, const Transform>().each([&](auto entt, const Light &light, const Transform &trfm) {
+                switch (light.type) {
+                case LightType::Directional: {
+                    auto &directional = mSceneProperties.lights.directional;
+                    directional.enabled = 0x01;
+                    directional.color = light.color;
+                    directional.intensity = light.intensity;
 
-                auto direction = trfm.local2world * Vector4f{0.0f, 0.0f, 1.0f, 0.0f};
-                directional.direction.set(direction.x, direction.y, direction.z);
-                break;
-            }
+                    auto direction = trfm.local2world * Vector4f{0.0f, 0.0f, 1.0f, 0.0f};
+                    directional.direction.set(direction.x, direction.y, direction.z);
+                    break;
+                }
 
-            default:
-                break;
-            }
-        });
+                default:
+                    break;
+                }
+            });
+        }
+
+        // At first, we get the active shaders to render for each shader.
+        std::unordered_set<ShaderBackend *> activeShaders;
+        {
+            scene.registry().view<const MeshRenderer, const Transform>().each([&](auto entt, const MeshRenderer &renderer, const Transform &trfm) {
+                for (auto &material : renderer.materials) {
+                    if (!material) continue;
+                    auto *backend = static_cast<const MaterialBackend *>(material.get());
+                    auto *shader = static_cast<ShaderBackend *>(backend->shader().get());
+                    if (!shader) continue;
+                    activeShaders.emplace(shader);
+                }
+            });
+
+            scene.registry().view<const ImageRenderer, const Transform>().each([&](auto entt, const ImageRenderer &renderer, const Transform &trfm) {
+                auto *material = static_cast<const MaterialBackend *>(renderer.material.get());
+                if (!material) return;
+                auto *shader = static_cast<ShaderBackend *>(material->shader().get());
+                if (!shader) return;
+                activeShaders.emplace(shader);
+            });
+        }
+
+        if (activeShaders.size() == 0) return;
+
+        const auto aspect = static_cast<float>(mpGfx->GetWidth()) / mpGfx->GetHeight();
 
         // --- per camera ---
         scene.registry().view<const Camera, const Transform>().each([&](auto entt, const Camera &camera, const Transform &cameraTrfm) {
@@ -166,18 +209,159 @@ public:
                 XMVectorGetByIndex(trans, 1),
                 XMVectorGetByIndex(trans, 2),
                 XMVectorGetByIndex(trans, 3));
+            mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
             auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
 
-            mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
+            for (auto *activeShader : activeShaders) {
+                if (activeShader->pass_count() == 1) {
+                    auto *target = &mpGfx->GetRenderTargetView();
+                    mpGfx->GetContext().OMSetRenderTargets(1, &target, mpDepthStencilView.Get());
+                    mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+                    mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                    activeShader->bind(mpGfx);
 
-            mRSCullBack.Bind(mpGfx);
-            scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
-                if (meshRenderer.meshes.size() == 0) return;
+                    // now lets draw the mesh.
+                    RenderModel(scene, activeShader, matrixV, matrixP);
+                } else {
+                    const auto passCount = activeShader->pass_count();
+                    // first pass
+                    {
+                        const auto &targets = activeShader->render_targerts(0);
+                        std::vector<ID3D11RenderTargetView *> renderTargerts(targets.size());
+                        for (size_t i = 0; i < targets.size(); ++i) {
+                            const auto &name = targets[i];
+                            renderTargerts[i] = &mGeometryBuffers[i]->GetRenderTargetView();
+                            mpGfx->GetContext().ClearRenderTargetView(renderTargerts[i], Vector4f::zero.v);
+                            mGeometryBufferNameMap[name] = i;
+                        }
 
-                if (meshRenderer.meshes.size() != meshRenderer.materials.size()) return;
+                        mpGfx->GetContext().OMSetRenderTargets(renderTargerts.size(), renderTargerts.data(), mpDepthStencilView.Get());
+                        mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+                        mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                        activeShader->bind(mpGfx, 0);
+
+                        RenderModel(scene, activeShader, matrixV, matrixP);
+                    }
+
+                    // medium pass
+                    {
+
+                    }
+
+                    // final pass
+                    {
+                        const auto passNum = passCount - 1;
+                        const auto &textureResources = activeShader->texture_resources(passNum);
+                        for (size_t i = 0; i < textureResources.size(); ++i) {
+                            const auto &name = textureResources[i];
+                            const auto index = mGeometryBufferNameMap[name];
+                            auto* view = &mGeometryBuffers[index]->GetShaderResourceView();
+                            mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
+                        }
+
+                        auto *target = &mpGfx->GetRenderTargetView();
+                        mpGfx->GetContext().OMSetRenderTargets(1, &target, nullptr);
+                        mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                        activeShader->bind(mpGfx, passNum);
+
+                        mSamplerBilinear.BindPS(mpGfx, 0);
+
+                        mScreenQuadMesh->bind(mpGfx);
+                        mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+                    }
+                }
+            }
+
+            // TODO: post processing
+        }); // End foreach camera
+    }
+
+private:
+    void RenderModel(nodec_scene::Scene &scene, ShaderBackend *activeShader, 
+        const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixP) {
+        if (activeShader == nullptr) return;
+
+        using namespace nodec;
+        using namespace nodec_scene::components;
+        using namespace nodec_rendering::components;
+        using namespace nodec_rendering::resources;
+        using namespace DirectX;
+
+        mModelPropertiesCB.BindVS(mpGfx, 1);
+        mModelPropertiesCB.BindPS(mpGfx, 1);
+
+        mTextureConfigCB.BindVS(mpGfx, 2);
+        mTextureConfigCB.BindPS(mpGfx, 2);
+
+        scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
+            if (meshRenderer.meshes.size() == 0) return;
+            if (meshRenderer.meshes.size() != meshRenderer.materials.size()) return;
+
+            XMMATRIX matrixM{trfm.local2world.m};
+            auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
+
+            // DirectX Math using row-major representation
+            // HLSL using column-major representation
+            auto matrixMVP = matrixM * matrixV * matrixP;
+
+            XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
+            XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
+            XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
+
+            mModelPropertiesCB.Update(mpGfx, &mModelProperties);
+
+            for (int i = 0; i < meshRenderer.meshes.size(); ++i) {
+                auto &mesh = meshRenderer.meshes[i];
+                auto &material = meshRenderer.materials[i];
+                if (!mesh || !material) continue;
+
+                auto *meshBackend = static_cast<MeshBackend *>(mesh.get());
+                auto *materialBackend = static_cast<MaterialBackend *>(material.get());
+                auto *shaderBackend = static_cast<ShaderBackend *>(material->shader().get());
+
+                if (shaderBackend != activeShader) continue;
+
+                materialBackend->bind_constant_buffer(mpGfx, 3);
+                SetCullMode(materialBackend->cull_mode());
+
+                mTextureConfig.texHasFlag = 0x00;
+                BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
+
+                meshBackend->bind(mpGfx);
+                mpGfx->DrawIndexed(meshBackend->triangles.size());
+            } // End foreach mesh
+        });   // End foreach mesh renderer
+
+        if (mQuadMesh) {
+            scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
+                auto &image = renderer.image;
+                auto &material = renderer.material;
+                if (!image || !material) return;
+
+                auto *imageBackend = static_cast<TextureBackend *>(image.get());
+                auto *materialBackend = static_cast<MaterialBackend *>(material.get());
+                auto *shaderBackend = static_cast<ShaderBackend *>(material->shader().get());
+
+                if (shaderBackend != activeShader) return;
+
+                materialBackend->set_texture_entry("albedo", {image, Sampler::Bilinear});
+
+                materialBackend->bind_constant_buffer(mpGfx, 3);
+                SetCullMode(materialBackend->cull_mode());
+
+                mTextureConfig.texHasFlag = 0x00;
+                BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
 
                 XMMATRIX matrixM{trfm.local2world.m};
+                const auto width = imageBackend->width() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
+                const auto height = imageBackend->height() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
+                matrixM = XMMatrixScaling(width, height, 1.0f) * matrixM;
+
+                // matrixM
                 auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
 
                 // DirectX Math using row-major representation
@@ -190,83 +374,12 @@ public:
 
                 mModelPropertiesCB.Update(mpGfx, &mModelProperties);
 
-                for (int i = 0; i < meshRenderer.meshes.size(); ++i) {
-                    auto mesh = meshRenderer.meshes[i];
-                    auto material = meshRenderer.materials[i];
-
-                    if (!(mesh && material)) continue;
-
-                    auto *meshBackend = static_cast<MeshBackend *>(mesh.get());
-                    auto *materialBackend = static_cast<MaterialBackend *>(material.get());
-                    auto shader = materialBackend->shader();
-
-                    if (!shader) continue;
-
-                    auto *shaderBackend = static_cast<ShaderBackend *>(shader.get());
-                    shaderBackend->bind(mpGfx);
-
-                    materialBackend->bind_constant_buffer(mpGfx, 3);
-                    SetCullMode(materialBackend->cull_mode());
-
-                    mTextureConfig.texHasFlag = 0x00;
-                    BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
-                    mTextureConfigCB.Update(mpGfx, &mTextureConfig);
-
-                    meshBackend->bind(mpGfx);
-
-                    mpGfx->DrawIndexed(meshBackend->triangles.size());
-                } // End foreach mesh
-            });   // End foreach mesh renderer
-
-            if (mQuadMesh) {
-                scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
-                    if (!renderer.image || !renderer.material) return;
-
-                    auto *imageBackend = static_cast<TextureBackend *>(renderer.image.get());
-                    auto *materialBackend = static_cast<MaterialBackend *>(renderer.material.get());
-                    auto shader = materialBackend->shader();
-                    if (!shader) return;
-
-                    auto *shaderBackend = static_cast<ShaderBackend *>(shader.get());
-
-                    shaderBackend->bind(mpGfx);
-
-                    materialBackend->set_texture_entry("albedo", {renderer.image, Sampler::Bilinear});
-
-                    materialBackend->bind_constant_buffer(mpGfx, 3);
-                    SetCullMode(materialBackend->cull_mode());
-
-                    mTextureConfig.texHasFlag = 0x00;
-                    BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
-                    mTextureConfigCB.Update(mpGfx, &mTextureConfig);
-
-                    XMMATRIX matrixM{trfm.local2world.m};
-                    const auto width = imageBackend->width() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
-                    const auto height = imageBackend->height() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
-                    matrixM = XMMatrixScaling(width, height, 1.0f) * matrixM;
-
-                    // matrixM
-                    auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
-
-                    // DirectX Math using row-major representation
-                    // HLSL using column-major representation
-                    auto matrixMVP = matrixM * matrixV * matrixP;
-
-                    XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
-                    XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
-                    XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
-
-                    mModelPropertiesCB.Update(mpGfx, &mModelProperties);
-
-                    mQuadMesh->bind(mpGfx);
-
-                    mpGfx->DrawIndexed(mQuadMesh->triangles.size());
-                });
-            }
-        }); // End foreach camera
+                mQuadMesh->bind(mpGfx);
+                mpGfx->DrawIndexed(mQuadMesh->triangles.size());
+            });
+        }
     }
 
-private:
     void SetCullMode(const nodec_rendering::CullMode &mode) {
         using namespace nodec_rendering;
         switch (mode) {
@@ -281,6 +394,7 @@ private:
             break;
         }
     }
+
     void BindTextureEntries(const std::vector<TextureEntry> &textureEntries, uint32_t &texHasFlag) {
         UINT slot = 0;
 
@@ -326,7 +440,6 @@ private:
         }
     }
 
-
 private:
     SceneProperties mSceneProperties;
     ConstantBuffer mScenePropertiesCB;
@@ -349,5 +462,7 @@ private:
     std::shared_ptr<MeshBackend> mQuadMesh;
     std::unique_ptr<MeshBackend> mScreenQuadMesh;
     std::array<std::unique_ptr<GeometryBuffer>, 3> mGeometryBuffers;
-    
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mpDepthStencilView;
+
+    std::unordered_map<std::string, int> mGeometryBufferNameMap;
 };

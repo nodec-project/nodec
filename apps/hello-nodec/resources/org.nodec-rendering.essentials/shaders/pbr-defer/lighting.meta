@@ -1,0 +1,8 @@
+{
+    "meta": {
+        "render_targets": [],
+        "texture_resources": [
+            "albedo", "normal", "matProps"
+        ]
+    }
+}
