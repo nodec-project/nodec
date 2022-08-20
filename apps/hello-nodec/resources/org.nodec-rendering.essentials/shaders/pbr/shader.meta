@@ -42,6 +42,6 @@
             }
         ],
         "pass": [],
-        "render_priority": 0
+        "rendering_priority": 0
     }
 }

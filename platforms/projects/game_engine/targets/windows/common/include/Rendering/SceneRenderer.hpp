@@ -194,7 +194,7 @@ public:
             activeShaders.resize(shaders.size());
             std::copy(shaders.begin(), shaders.end(), activeShaders.begin());
             std::sort(activeShaders.begin(), activeShaders.end(),
-                      [](const auto &a, const auto &b) { return a->render_priority() < b->render_priority(); });
+                      [](const auto &a, const auto &b) { return a->rendering_priority() < b->rendering_priority(); });
         }
 
         if (activeShaders.size() == 0) return;

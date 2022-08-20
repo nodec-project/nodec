@@ -45,6 +45,6 @@
             "geometry",
             "lighting"
         ],
-        "render_priority": -10
+        "rendering_priority": -10
     }
 }

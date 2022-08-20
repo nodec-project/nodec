@@ -29,7 +29,7 @@ struct ShaderMetaInfo {
     std::vector<TextureEntry> texture_entries;
 
     std::vector<std::string> pass;
-    int render_priority{0};
+    int rendering_priority{0};
 };
 
 struct SubShaderMetaInfo {
