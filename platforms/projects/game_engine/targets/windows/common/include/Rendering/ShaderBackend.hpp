@@ -35,6 +35,7 @@ public:
         float_properties_ = meta_info.float_properties;
         vector4_properties_ = meta_info.vector4_properties;
         texture_entries_ = meta_info.texture_entries;
+        render_priority_ = meta_info.render_priority;
 
         if (sub_shader_meta_infos.size() == 0) {
             // no sub shader, only one shader set (vertex, pixel).
@@ -160,6 +161,10 @@ public:
 
         sub_shaders_[pass_num].vertex_shader->Bind(gfx);
         sub_shaders_[pass_num].pixel_shader->Bind(gfx);
+    }
+
+    int render_priority() const noexcept {
+        return render_priority_;
     }
 
 private:

@@ -22,6 +22,7 @@
 
 #include <DirectXMath.h>
 
+#include <algorithm>
 #include <unordered_set>
 
 class SceneRenderer {
@@ -168,15 +169,16 @@ public:
         }
 
         // At first, we get the active shaders to render for each shader.
-        std::unordered_set<ShaderBackend *> activeShaders;
+        std::vector<ShaderBackend *> activeShaders;
         {
+            std::unordered_set<ShaderBackend *> shaders;
             scene.registry().view<const MeshRenderer, const Transform>().each([&](auto entt, const MeshRenderer &renderer, const Transform &trfm) {
                 for (auto &material : renderer.materials) {
                     if (!material) continue;
                     auto *backend = static_cast<const MaterialBackend *>(material.get());
                     auto *shader = static_cast<ShaderBackend *>(backend->shader().get());
                     if (!shader) continue;
-                    activeShaders.emplace(shader);
+                    shaders.emplace(shader);
                 }
             });
 
@@ -185,15 +187,21 @@ public:
                 if (!material) return;
                 auto *shader = static_cast<ShaderBackend *>(material->shader().get());
                 if (!shader) return;
-                activeShaders.emplace(shader);
+                shaders.emplace(shader);
             });
+
+            // now let's sort by priority.
+            activeShaders.resize(shaders.size());
+            std::copy(shaders.begin(), shaders.end(), activeShaders.begin());
+            std::sort(activeShaders.begin(), activeShaders.end(),
+                      [](const auto &a, const auto &b) { return a->render_priority() < b->render_priority(); });
         }
 
         if (activeShaders.size() == 0) return;
 
         const auto aspect = static_cast<float>(mpGfx->GetWidth()) / mpGfx->GetHeight();
 
-        // --- per camera ---
+        // Render the scene per each camera.
         scene.registry().view<const Camera, const Transform>().each([&](auto entt, const Camera &camera, const Transform &cameraTrfm) {
             auto matrixP = XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(camera.fovAngle),
@@ -213,17 +221,22 @@ public:
 
             auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
 
+            // Reset depth buffer.
+            mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+            // Executes the shader programs.
             for (auto *activeShader : activeShaders) {
                 if (activeShader->pass_count() == 1) {
+                    // One pass shader.
                     auto *target = &mpGfx->GetRenderTargetView();
                     mpGfx->GetContext().OMSetRenderTargets(1, &target, mpDepthStencilView.Get());
-                    mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
                     mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
                     activeShader->bind(mpGfx);
 
                     // now lets draw the mesh.
                     RenderModel(scene, activeShader, matrixV, matrixP);
                 } else {
+                    // Multi pass shader.
                     const auto passCount = activeShader->pass_count();
                     // first pass
                     {
@@ -246,6 +259,8 @@ public:
                     }
 
                     // medium pass
+                    // NOTE: This pass maybe not necessary.
+                    //  Alternatively, we can use the another shader pass.
                     {
 
                     }
@@ -253,17 +268,20 @@ public:
                     // final pass
                     {
                         const auto passNum = passCount - 1;
+
+                        auto *target = &mpGfx->GetRenderTargetView();
+                        mpGfx->GetContext().OMSetRenderTargets(1, &target, nullptr);
+                        //mpGfx->GetContext().ClearRenderTargetView(target, Vector3f::zero.v);
+                        mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
                         const auto &textureResources = activeShader->texture_resources(passNum);
                         for (size_t i = 0; i < textureResources.size(); ++i) {
                             const auto &name = textureResources[i];
                             const auto index = mGeometryBufferNameMap[name];
-                            auto* view = &mGeometryBuffers[index]->GetShaderResourceView();
+                            auto *view = &mGeometryBuffers[index]->GetShaderResourceView();
                             mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
                         }
 
-                        auto *target = &mpGfx->GetRenderTargetView();
-                        mpGfx->GetContext().OMSetRenderTargets(1, &target, nullptr);
-                        mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
                         activeShader->bind(mpGfx, passNum);
 
                         mSamplerBilinear.BindPS(mpGfx, 0);
@@ -279,8 +297,8 @@ public:
     }
 
 private:
-    void RenderModel(nodec_scene::Scene &scene, ShaderBackend *activeShader, 
-        const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixP) {
+    void RenderModel(nodec_scene::Scene &scene, ShaderBackend *activeShader,
+                     const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixP) {
         if (activeShader == nullptr) return;
 
         using namespace nodec;

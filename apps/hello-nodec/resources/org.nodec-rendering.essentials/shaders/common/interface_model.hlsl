@@ -7,29 +7,7 @@
 //  * Accessing model properties (model matrix, mvp-matrix, ...)
 //  * Flag to validate texture slot
 
-struct DirectionalLight
-{
-    float3 direction;
-    float intensity;
-    float4 color;
-    int enabled;
-};
-
-struct SceneLighting
-{
-    DirectionalLight directional;
-};
-
-struct SceneProperties
-{
-    float4 cameraPos;
-    SceneLighting lights;
-};
-
-cbuffer cbSceneProperties : register(b0)
-{
-    SceneProperties sceneProperties;
-};
+#include "interface_scene.hlsl"
 
 struct ModelProperties
 {
@@ -53,10 +31,12 @@ cbuffer cbTextureConfig : register(b2)
     TextureConfig textureConfig;
 }
 
-struct VSIn
+// @note
+// <https://forum.unity.com/threads/world-space-normal.58810/>
+float3 ModelToWorldNormal(float3 normal)
 {
-    float3 position : POSITION;
-    float3 normal : NORMAL;
-    float2 texcoord : TEXCOORD0;
-    float3 tangent : TANGENT0;
-};
+    return normalize(
+        modelProperties.matrixMInverse[0].xyz * normal.x
+        + modelProperties.matrixMInverse[1].xyz * normal.y 
+        + modelProperties.matrixMInverse[2].xyz * normal.z);
+}

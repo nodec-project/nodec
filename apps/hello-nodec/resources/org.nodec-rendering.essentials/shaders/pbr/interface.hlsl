@@ -1,6 +1,6 @@
 // --- PBR Shader Interface ---
 
-#include "../common/interface.hlsl"
+#include "../common/interface_model.hlsl"
 
 struct MaterialProperties
 {

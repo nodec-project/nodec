@@ -13,9 +13,9 @@
 "id": 2147483650,
 "data": {
 "local_position": {
-"x": 0.0,
-"y": 0.0,
-"z": -2.674999952316284
+"x": -2.7149999141693117,
+"y": 0.33000001311302187,
+"z": 0.0
 },
 "local_scale": {
 "x": 1.0,
@@ -37,7 +37,7 @@
 "ptr_wrapper": {
 "id": 2147483651,
 "data": {
-"name": "RetroTV"
+"name": "nodec"
 }
 }
 }
@@ -52,465 +52,6 @@
 "polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483653,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.0,
-"z": -0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.7071068286895752,
-"y": 0.0,
-"z": 0.0,
-"w": 0.7071067094802856
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483654,
-"data": {
-"name": "TV"
-}
-}
-},
-{
-"polymorphic_id": 2147483651,
-"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
-"ptr_wrapper": {
-"id": 2147483655,
-"data": {
-"meshes": [
-"models/retrotv/Cube.001##mesh-0.mesh",
-"models/retrotv/Cube.001##mesh-1.mesh"
-],
-"materials": [
-"models/retrotv/Main.material",
-"models/retrotv/Screen.material"
-]
-}
-}
-}
-],
-"children": [
-{
-"ptr_wrapper": {
-"id": 2147483656,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483657,
-"data": {
-"local_position": {
-"x": 0.38620999455451968,
-"y": -0.21689057350158692,
-"z": -0.6514682173728943
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": -0.07236453890800476,
-"w": 0.9973782300949097
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483658,
-"data": {
-"name": "Switch"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483659,
-"data": {
-"meshes": [
-"models/retrotv/Cube.002##mesh-3.mesh"
-],
-"materials": [
-"models/retrotv/Main.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483660,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483661,
-"data": {
-"local_position": {
-"x": 0.3862101137638092,
-"y": -0.21742378175258637,
-"z": -0.7118658423423767
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483662,
-"data": {
-"name": "Selector"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483663,
-"data": {
-"meshes": [
-"models/retrotv/Circle.001##mesh-2.mesh"
-],
-"materials": [
-"models/retrotv/Main.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
-}
-}
-}
-]
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483664,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483665,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483666,
-"data": {
-"name": "Plane"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483667,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/plane.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
-]
-}
-}
-}
-],
-"children": [
-{
-"ptr_wrapper": {
-"id": 2147483668,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483669,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 2.569999933242798,
-"z": 0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.35355344414711,
-"y": -0.3535534143447876,
-"z": -0.14644664525985719,
-"w": 0.8535533547401428
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483670,
-"data": {
-"name": "Cube"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483671,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483672,
-"data": {
-"components": [
-{
-"polymorphic_id": 2147483652,
-"polymorphic_name": "SerializableCameraController",
-"ptr_wrapper": {
-"id": 2147483673,
-"data": {
-"speed": 1.0
-}
-}
-},
-{
-"polymorphic_id": 2147483653,
-"polymorphic_name": "nodec_rendering::components::SerializableCamera",
-"ptr_wrapper": {
-"id": 2147483674,
-"data": {
-"farClipPlane": 100.0,
-"nearClipPlane": 0.009999999776482582,
-"fovAngle": 45.0
-}
-}
-},
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483675,
-"data": {
-"local_position": {
-"x": 0.7850000262260437,
-"y": 1.2999999523162842,
-"z": -8.220000267028809
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 1.818988709656466e-11,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483676,
-"data": {
-"name": "Camera"
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483677,
-"data": {
-"components": [
-{
-"polymorphic_id": 2147483654,
-"polymorphic_name": "nodec_rendering::components::SerializableLight",
-"ptr_wrapper": {
-"id": 2147483678,
-"data": {
-"type": 0,
-"color": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0,
-"w": 1.0
-},
-"intensity": 1.0
-}
-}
-},
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483679,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.3583679795265198,
-"y": 9.019331947968113e-9,
-"z": -2.3496159684555097e-8,
-"w": 0.9335803985595703
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483680,
-"data": {
-"name": "Light"
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483681,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483682,
-"data": {
-"local_position": {
-"x": -2.7149999141693117,
-"y": 0.33000001311302187,
-"z": 0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483683,
-"data": {
-"name": "nodec"
-}
-}
-}
-],
-"children": [
-{
-"ptr_wrapper": {
-"id": 2147483684,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483685,
 "data": {
 "local_position": {
 "x": 1.5,
@@ -534,7 +75,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483686,
+"id": 2147483654,
 "data": {
 "name": "o"
 }
@@ -544,13 +85,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483687,
+"id": 2147483655,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483688,
+"id": 2147483656,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -574,16 +115,17 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483689,
+"id": 2147483657,
 "data": {
 "name": "Bottom"
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2147483651,
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
-"id": 2147483690,
+"id": 2147483658,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -601,13 +143,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483691,
+"id": 2147483659,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483692,
+"id": 2147483660,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -631,7 +173,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483693,
+"id": 2147483661,
 "data": {
 "name": "Top"
 }
@@ -640,7 +182,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483694,
+"id": 2147483662,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -658,13 +200,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483695,
+"id": 2147483663,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483696,
+"id": 2147483664,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -688,7 +230,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483697,
+"id": 2147483665,
 "data": {
 "name": "Left"
 }
@@ -697,7 +239,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483698,
+"id": 2147483666,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -715,13 +257,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483699,
+"id": 2147483667,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483700,
+"id": 2147483668,
 "data": {
 "local_position": {
 "x": 0.675000011920929,
@@ -745,7 +287,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483701,
+"id": 2147483669,
 "data": {
 "name": "Right"
 }
@@ -754,7 +296,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483702,
+"id": 2147483670,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -776,13 +318,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483703,
+"id": 2147483671,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483704,
+"id": 2147483672,
 "data": {
 "local_position": {
 "x": 6.0,
@@ -806,7 +348,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483705,
+"id": 2147483673,
 "data": {
 "name": "c"
 }
@@ -816,13 +358,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483706,
+"id": 2147483674,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483707,
+"id": 2147483675,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -846,7 +388,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483708,
+"id": 2147483676,
 "data": {
 "name": "Bottom"
 }
@@ -855,7 +397,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483709,
+"id": 2147483677,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -873,13 +415,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483710,
+"id": 2147483678,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483711,
+"id": 2147483679,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -903,7 +445,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483712,
+"id": 2147483680,
 "data": {
 "name": "Top"
 }
@@ -912,7 +454,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483713,
+"id": 2147483681,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -930,13 +472,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483714,
+"id": 2147483682,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483715,
+"id": 2147483683,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -960,7 +502,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483716,
+"id": 2147483684,
 "data": {
 "name": "Left"
 }
@@ -969,7 +511,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483717,
+"id": 2147483685,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -991,13 +533,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483718,
+"id": 2147483686,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483719,
+"id": 2147483687,
 "data": {
 "local_position": {
 "x": 3.0,
@@ -1021,7 +563,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483720,
+"id": 2147483688,
 "data": {
 "name": "d"
 }
@@ -1031,13 +573,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483721,
+"id": 2147483689,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483722,
+"id": 2147483690,
 "data": {
 "local_position": {
 "x": 0.675000011920929,
@@ -1061,7 +603,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483723,
+"id": 2147483691,
 "data": {
 "name": "Right"
 }
@@ -1070,7 +612,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483724,
+"id": 2147483692,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1088,13 +630,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483725,
+"id": 2147483693,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483726,
+"id": 2147483694,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1118,7 +660,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483727,
+"id": 2147483695,
 "data": {
 "name": "Left"
 }
@@ -1127,7 +669,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483728,
+"id": 2147483696,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1145,13 +687,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483729,
+"id": 2147483697,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483730,
+"id": 2147483698,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1175,7 +717,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483731,
+"id": 2147483699,
 "data": {
 "name": "Top"
 }
@@ -1184,7 +726,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483732,
+"id": 2147483700,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1202,13 +744,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483733,
+"id": 2147483701,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483734,
+"id": 2147483702,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1232,7 +774,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483735,
+"id": 2147483703,
 "data": {
 "name": "Bottom"
 }
@@ -1241,7 +783,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483736,
+"id": 2147483704,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1263,13 +805,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483737,
+"id": 2147483705,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483738,
+"id": 2147483706,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1293,7 +835,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483739,
+"id": 2147483707,
 "data": {
 "name": "n"
 }
@@ -1303,13 +845,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483740,
+"id": 2147483708,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483741,
+"id": 2147483709,
 "data": {
 "local_position": {
 "x": 0.33500000834465029,
@@ -1333,7 +875,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483742,
+"id": 2147483710,
 "data": {
 "name": "Top"
 }
@@ -1342,7 +884,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483743,
+"id": 2147483711,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1360,13 +902,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483744,
+"id": 2147483712,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483745,
+"id": 2147483713,
 "data": {
 "local_position": {
 "x": 0.675000011920929,
@@ -1390,7 +932,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483746,
+"id": 2147483714,
 "data": {
 "name": "Right"
 }
@@ -1399,7 +941,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483747,
+"id": 2147483715,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1417,13 +959,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483748,
+"id": 2147483716,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483749,
+"id": 2147483717,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1447,7 +989,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483750,
+"id": 2147483718,
 "data": {
 "name": "Left"
 }
@@ -1456,7 +998,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483751,
+"id": 2147483719,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1478,13 +1020,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483752,
+"id": 2147483720,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483753,
+"id": 2147483721,
 "data": {
 "local_position": {
 "x": 4.5,
@@ -1508,7 +1050,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483754,
+"id": 2147483722,
 "data": {
 "name": "e"
 }
@@ -1518,13 +1060,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483755,
+"id": 2147483723,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483756,
+"id": 2147483724,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1548,7 +1090,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483757,
+"id": 2147483725,
 "data": {
 "name": "Mid"
 }
@@ -1557,7 +1099,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483758,
+"id": 2147483726,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1575,13 +1117,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483759,
+"id": 2147483727,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483760,
+"id": 2147483728,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1605,7 +1147,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483761,
+"id": 2147483729,
 "data": {
 "name": "Left"
 }
@@ -1614,7 +1156,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483762,
+"id": 2147483730,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1632,13 +1174,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483763,
+"id": 2147483731,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483764,
+"id": 2147483732,
 "data": {
 "local_position": {
 "x": 0.6700000166893005,
@@ -1662,7 +1204,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483765,
+"id": 2147483733,
 "data": {
 "name": "Right"
 }
@@ -1671,7 +1213,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483766,
+"id": 2147483734,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1689,13 +1231,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483767,
+"id": 2147483735,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483768,
+"id": 2147483736,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1719,7 +1261,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483769,
+"id": 2147483737,
 "data": {
 "name": "Top"
 }
@@ -1728,7 +1270,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483770,
+"id": 2147483738,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1746,13 +1288,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483771,
+"id": 2147483739,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483772,
+"id": 2147483740,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1776,7 +1318,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483773,
+"id": 2147483741,
 "data": {
 "name": "Bottom"
 }
@@ -1785,7 +1327,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483774,
+"id": 2147483742,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"

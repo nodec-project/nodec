@@ -41,7 +41,8 @@ void serialize(Archive &archive, ShaderMetaInfo &info) {
         cereal::make_nvp("float_properties", info.float_properties),
         cereal::make_nvp("vector4_properties", info.vector4_properties),
         cereal::make_nvp("texture_entries", info.texture_entries),
-        cereal::make_nvp("pass", info.pass));
+        cereal::make_nvp("pass", info.pass),
+        cereal::make_nvp("render_priority", info.render_priority));
 }
 
 

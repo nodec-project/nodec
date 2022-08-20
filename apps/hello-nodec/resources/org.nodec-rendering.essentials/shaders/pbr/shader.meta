@@ -41,6 +41,7 @@
                 "name": "ambient_occlusion"
             }
         ],
-        "pass": []
+        "pass": [],
+        "render_priority": 0
     }
 }
