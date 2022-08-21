@@ -36,7 +36,7 @@
 
 #ifdef EDITOR_MODE
 #    include <imgui.h>
-#    include <scene_editor/scene_editor.hpp>
+#    include <nodec_scene_editor/scene_editor.hpp>
 #endif
 
 #endif

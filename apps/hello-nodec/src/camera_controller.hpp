@@ -73,7 +73,7 @@ public:
     }
 
 #ifdef EDITOR_MODE
-    static void setup_editor(scene_editor::SceneEditor &editor) {
+    static void setup_editor(nodec_scene_editor::SceneEditor &editor) {
         editor.inspector_component_registry().register_component<CameraController>(
             "Camera Controller",
             [](CameraController &ctrl) {

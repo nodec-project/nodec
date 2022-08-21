@@ -6,9 +6,9 @@
 
 #include <imelements/impl/menu_impl.hpp>
 #include <imelements/impl/window_impl.hpp>
-#include <scene_editor/impl/scene_editor_module.hpp>
+#include <nodec_scene_editor/impl/scene_editor_module.hpp>
 
-class Editor : public scene_editor::impl::SceneEditorModule {
+class Editor : public nodec_scene_editor::impl::SceneEditorModule {
 public:
     enum class Mode {
         Edit,

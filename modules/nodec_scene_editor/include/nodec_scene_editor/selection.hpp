@@ -1,12 +1,11 @@
-#ifndef SCENE_EDITOR__SELECTION_HPP_
-#define SCENE_EDITOR__SELECTION_HPP_
+#ifndef NODEC_SCENE_EDITOR__SELECTION_HPP_
+#define NODEC_SCENE_EDITOR__SELECTION_HPP_
 
 #include <nodec_scene/scene_registry.hpp>
 
 #include <nodec/signals.hpp>
 
-namespace scene_editor {
-
+namespace nodec_scene_editor {
 
 class Selection {
     using SceneEntity = nodec_scene::SceneEntity;
@@ -28,13 +27,12 @@ public:
     decltype(auto) active_scene_entity_changed() {
         return active_scene_entity_changed_.signal_interface();
     }
-    
 
 private:
-    SceneEntity active_scene_entity_{ nodec::entities::null_entity };
+    SceneEntity active_scene_entity_{nodec::entities::null_entity};
     nodec::signals::Signal<void(SceneEntity)> active_scene_entity_changed_;
 };
 
-}
+} // namespace nodec_scene_editor
 
 #endif

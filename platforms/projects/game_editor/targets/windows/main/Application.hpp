@@ -8,7 +8,7 @@
 #include <Engine.hpp>
 #include <Window.hpp>
 
-#include <scene_editor/impl/scene_editor_module.hpp>
+#include <nodec_scene_editor/impl/scene_editor_module.hpp>
 
 
 class Application : public WinDesktopApplication {
@@ -20,8 +20,8 @@ protected:
 
     void setup() {
         using namespace nodec;
-        using namespace scene_editor::impl;
-        using namespace scene_editor;
+        using namespace nodec_scene_editor::impl;
+        using namespace nodec_scene_editor;
 
         engine.reset(new Engine);
 

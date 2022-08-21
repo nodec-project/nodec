@@ -45,7 +45,7 @@ public:
         auto &serialization = engine.get_module<SceneSerialization>();
 
 #ifdef EDITOR_MODE
-        using namespace scene_editor;
+        using namespace nodec_scene_editor;
         auto &editor = engine.get_module<SceneEditor>();
 
         // editor.inspector_component_registry().register_component<HelloComponent>(
