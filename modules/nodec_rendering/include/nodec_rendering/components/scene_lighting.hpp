@@ -5,7 +5,7 @@ namespace nodec_rendering {
 namespace components {
 
 struct SceneLighting {
-}
+};
 
 } // namespace components
 } // namespace nodec_rendering

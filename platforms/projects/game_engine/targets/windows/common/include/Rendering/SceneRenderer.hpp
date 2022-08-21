@@ -43,6 +43,8 @@ public:
 
     struct SceneProperties {
         nodec::Vector4f cameraPos;
+        DirectX::XMFLOAT4X4 matrixPInverse;
+        DirectX::XMFLOAT4X4 matrixVInverse;
         SceneLighting lights;
     };
 
@@ -107,10 +109,6 @@ public:
         }
 
         {
-            for (auto &pBuffer : mGeometryBuffers) {
-                pBuffer.reset(new GeometryBuffer(pGfx, pGfx->GetWidth(), pGfx->GetHeight()));
-            }
-
             // Generate the depth stencil buffer texture.
             Microsoft::WRL::ComPtr<ID3D11Texture2D> depthStencilTexture;
             D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
@@ -203,23 +201,29 @@ public:
 
         // Render the scene per each camera.
         scene.registry().view<const Camera, const Transform>().each([&](auto entt, const Camera &camera, const Transform &cameraTrfm) {
-            auto matrixP = XMMatrixPerspectiveFovLH(
+            const auto matrixP = XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(camera.fovAngle),
                 aspect,
                 camera.nearClipPlane, camera.farClipPlane);
+            const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
+            
+            XMStoreFloat4x4(&mSceneProperties.matrixPInverse, matrixPInverse);
 
             XMMATRIX cameraLocal2Wrold{cameraTrfm.local2world.m};
             XMVECTOR scale, rotQuat, trans;
             XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2Wrold);
+            
+            auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
+            XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2Wrold);
 
             mSceneProperties.cameraPos.set(
                 XMVectorGetByIndex(trans, 0),
                 XMVectorGetByIndex(trans, 1),
                 XMVectorGetByIndex(trans, 2),
                 XMVectorGetByIndex(trans, 3));
+            
             mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
-            auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
 
             // Reset depth buffer.
             mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
@@ -244,9 +248,12 @@ public:
                         std::vector<ID3D11RenderTargetView *> renderTargerts(targets.size());
                         for (size_t i = 0; i < targets.size(); ++i) {
                             const auto &name = targets[i];
-                            renderTargerts[i] = &mGeometryBuffers[i]->GetRenderTargetView();
+                            auto &buffer = mGeometryBuffers[name];
+                            if (!buffer) {
+                                buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
+                            }
+                            renderTargerts[i] = &buffer->GetRenderTargetView();
                             mpGfx->GetContext().ClearRenderTargetView(renderTargerts[i], Vector4f::zero.v);
-                            mGeometryBufferNameMap[name] = i;
                         }
 
                         mpGfx->GetContext().OMSetRenderTargets(renderTargerts.size(), renderTargerts.data(), mpDepthStencilView.Get());
@@ -271,14 +278,15 @@ public:
 
                         auto *target = &mpGfx->GetRenderTargetView();
                         mpGfx->GetContext().OMSetRenderTargets(1, &target, nullptr);
-                        //mpGfx->GetContext().ClearRenderTargetView(target, Vector3f::zero.v);
+                        // mpGfx->GetContext().ClearRenderTargetView(target, Vector3f::zero.v);
                         mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
                         const auto &textureResources = activeShader->texture_resources(passNum);
                         for (size_t i = 0; i < textureResources.size(); ++i) {
                             const auto &name = textureResources[i];
-                            const auto index = mGeometryBufferNameMap[name];
-                            auto *view = &mGeometryBuffers[index]->GetShaderResourceView();
+                            auto &buffer = mGeometryBuffers[name];
+                            if (!buffer) continue;
+                            auto *view = &buffer->GetShaderResourceView();
                             mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
                         }
 
@@ -479,8 +487,7 @@ private:
 
     std::shared_ptr<MeshBackend> mQuadMesh;
     std::unique_ptr<MeshBackend> mScreenQuadMesh;
-    std::array<std::unique_ptr<GeometryBuffer>, 3> mGeometryBuffers;
-    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mpDepthStencilView;
+    std::unordered_map<std::string, std::unique_ptr<GeometryBuffer>> mGeometryBuffers;
 
-    std::unordered_map<std::string, int> mGeometryBufferNameMap;
+    Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mpDepthStencilView;
 };

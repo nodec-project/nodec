@@ -15,6 +15,10 @@ V2P VSMain(VSIn input) {
     output.worldTangent = normalize(mul(modelProperties.matrixM, float4(input.tangent, 0)).xyz);
     
     output.texcoord = input.texcoord;
+
+    // Store the position value in a second input value for depth value calculations.
+    // https://www.rastertek.com/dx10tut35.html
+    output.depth = output.position;
     
     return output;
 }

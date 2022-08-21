@@ -269,7 +269,7 @@
 "org.nodec-rendering.essentials/meshes/plane.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -589,7 +589,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -646,7 +646,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -703,7 +703,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -760,7 +760,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -861,7 +861,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -918,7 +918,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -975,7 +975,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1076,7 +1076,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1133,7 +1133,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1190,7 +1190,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1247,7 +1247,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1348,7 +1348,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1405,7 +1405,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1462,7 +1462,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1563,7 +1563,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1620,7 +1620,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1677,7 +1677,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1734,7 +1734,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
@@ -1791,7 +1791,7 @@
 "org.nodec-rendering.essentials/meshes/cube.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }

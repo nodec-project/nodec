@@ -8,7 +8,7 @@
 
 #include "interface.hlsl"
 
-#include "brdf.hlsl"
+#include "../common/brdf.hlsl"
 
 float2 ApplyParallaxOffset(float2 uv, float3 viewDirInTangentSpace, Texture2D heightMap, SamplerState samplerHeightMap, float dotVN)
 {

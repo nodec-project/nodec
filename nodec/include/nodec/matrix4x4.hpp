@@ -26,7 +26,11 @@ namespace nodec {
  *
  *   DirectX-HLSL:
  *       Column-major representation
- *       Column-major ordar
+ *       Column-major ordar?
+ *          * Maybe Row-major
+ *              * https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math
+ * 
+ *      
  */
 template<typename T>
 class Matrix4x4 {
