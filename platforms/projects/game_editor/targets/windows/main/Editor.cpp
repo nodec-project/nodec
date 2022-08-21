@@ -12,6 +12,7 @@
 
 #include <imwindows/entity_inspector_window.hpp>
 #include <imwindows/log_window.hpp>
+#include <imwindows/material_editor_window.hpp>
 #include <imwindows/scene_hierarchy_window.hpp>
 
 Editor::Editor(Engine *engine)
@@ -24,6 +25,12 @@ Editor::Editor(Engine *engine)
 
     register_menu_item("Window/Control",
                        [=]() { ControlWindow::init(window_manager(), this); });
+
+    register_menu_item("Window/Scene Hierarchy",
+                       [=]() {
+                           auto &window = SceneHierarchyWindow::init(window_manager(), &engine->scene_module());
+                           window.selected_entity_changed().connect([=](auto entity) { selection().select(entity); });
+                       });
 
     register_menu_item("Window/Entity Inspector",
                        [=]() {
@@ -38,11 +45,11 @@ Editor::Editor(Engine *engine)
     register_menu_item("Window/Log",
                        [=]() { LogWindow::init(window_manager()); });
 
-    register_menu_item("Window/Scene Hierarchy",
-                       [=]() {
-                           auto &window = SceneHierarchyWindow::init(window_manager(), &engine->scene_module());
-                           window.selected_entity_changed().connect([=](auto entity) { selection().select(entity); });
-                       });
+    register_menu_item("Window/Material Editor",
+                       [=]() { MaterialEditorWindow::init(
+                        window_manager(),
+                        &engine->resources_module().registry()
+                        ); });
 
     register_menu_item("Window/Asset Importer",
                        [=]() {

@@ -38,6 +38,14 @@ struct SubShaderMetaInfo {
 };
 
 class Shader {
+public:
+    virtual std::size_t float_property_count() const noexcept = 0;
+    virtual std::size_t vector4_property_count() const noexcept = 0;
+    virtual std::size_t texture_entry_count() const noexcept = 0;
+
+    virtual const std::string& get_float_property_name(int index) const = 0;
+    virtual const std::string& get_vector4_property_name(int index) const = 0;
+    virtual const std::string& get_texture_entry_name(int index) const = 0;
 };
 
 } // namespace resources

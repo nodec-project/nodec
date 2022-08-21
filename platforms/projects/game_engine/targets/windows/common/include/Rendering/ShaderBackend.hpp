@@ -95,6 +95,30 @@ public:
         }
     }
 
+public:
+    std::size_t float_property_count() const noexcept override {
+        return float_properties_.size();
+    }
+
+    std::size_t vector4_property_count() const noexcept override {
+        return vector4_properties_.size();
+    }
+
+    std::size_t texture_entry_count() const noexcept override {
+        return texture_entries_.size();
+    }
+
+    const std::string& get_float_property_name(int index) const override {
+        return float_properties_[index].name;
+    }
+    const std::string& get_vector4_property_name(int index) const override {
+        return vector4_properties_[index].name;
+    }
+    const std::string& get_texture_entry_name(int index) const override {
+        return texture_entries_[index].name;
+    }
+
+public:
     std::vector<uint8_t> create_property_memory() const {
         return property_memory_prototype;
     }

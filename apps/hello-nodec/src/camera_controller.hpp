@@ -66,9 +66,15 @@ public:
         });
 
         serialization.register_component<CameraController, SerializableCameraController>(
-            [&](const CameraController &controller) { return std::make_shared<SerializableCameraController>(); },
+            [&](const CameraController &controller) {
+                auto serializable = std::make_shared<SerializableCameraController>();
+                serializable->speed = controller.speed;
+                return serializable;
+            },
             [&](const const SerializableCameraController &serializable, SceneEntity entity, SceneRegistry &registry) {
                 registry.emplace_component<CameraController>(entity);
+                auto& controller = registry.get_component<CameraController>(entity);
+                controller.speed = serializable.speed;
             });
     }
 
