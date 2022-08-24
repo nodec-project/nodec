@@ -9,6 +9,7 @@ struct DirectionalLight
 
 struct SceneLighting
 {
+    float4 ambientColor;
     DirectionalLight directional;
 };
 

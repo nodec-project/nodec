@@ -56,7 +56,17 @@ float4 PSMain(V2P input) : SV_TARGET {
         outDiffuseSpecular += BRDF(surface, wi, -viewDir) * radiance * saturate(dot(surface.normal, wi));
     }
 
-    float3 illumination = outDiffuseSpecular;
+    // float3 outAmbient = sceneProperties.lights.ambientColor * surface.albedo;
+    float3 outAmbient = EnvironmentBRDF(surface, -viewDir, sceneProperties.lights.ambientColor, sceneProperties.lights.ambientColor);
+
+    float3 illumination = outDiffuseSpecular + outAmbient;
+
+    // we need to gamma correct at the end of the shader.
+    // details: https://learnopengl.com/PBR/Lighting
+    // TODO: Move to postprocess.
+    // illumination = illumination / (illumination + float3(1.0, 1.0, 1.0));
+    illumination = pow(illumination, 1.0/2.2);  
+
     return float4(illumination, 1.0f);
     
     // return float4(1, 0, 0.5, 1);

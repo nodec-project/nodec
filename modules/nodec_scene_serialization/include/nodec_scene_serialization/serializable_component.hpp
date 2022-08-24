@@ -37,4 +37,15 @@ private:
 
 } // namespace nodec_scene_serialization
 
+// NOTE: We pre-include cereal archivers.
+//  SerializableComponent will be inherited from BaseSerializableComponent class,
+//  and should be registered in cereal by using CEREAL_REGISTER_TYPE, CEREAL_REGISTER_POLYMORPHIC_RELATION.
+//  Before registering the class in cereal, we need to include the archivers we plan to use.
+//  So, we pre-include these headers.
+#include <cereal/archives/binary.hpp>
+#include <cereal/archives/json.hpp>
+#include <cereal/archives/portable_binary.hpp>
+#include <cereal/archives/xml.hpp>
+
+
 #endif

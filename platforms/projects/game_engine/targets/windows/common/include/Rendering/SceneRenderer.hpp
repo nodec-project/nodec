@@ -14,6 +14,7 @@
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene/scene.hpp>
 
@@ -38,6 +39,7 @@ public:
     };
 
     struct SceneLighting {
+        nodec::Vector4f ambientColor;
         DirectionalLight directional;
     };
 
@@ -164,6 +166,9 @@ public:
                     break;
                 }
             });
+            scene.registry().view<const nodec_rendering::components::SceneLighting>().each([&](auto entt, const nodec_rendering::components::SceneLighting &lighting) {
+                mSceneProperties.lights.ambientColor = lighting.ambient_color;
+            });
         }
 
         // At first, we get the active shaders to render for each shader.
@@ -206,13 +211,13 @@ public:
                 aspect,
                 camera.nearClipPlane, camera.farClipPlane);
             const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
-            
+
             XMStoreFloat4x4(&mSceneProperties.matrixPInverse, matrixPInverse);
 
             XMMATRIX cameraLocal2Wrold{cameraTrfm.local2world.m};
             XMVECTOR scale, rotQuat, trans;
             XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2Wrold);
-            
+
             auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
             XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2Wrold);
 
@@ -221,9 +226,8 @@ public:
                 XMVectorGetByIndex(trans, 1),
                 XMVectorGetByIndex(trans, 2),
                 XMVectorGetByIndex(trans, 3));
-            
-            mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
+            mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
             // Reset depth buffer.
             mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);

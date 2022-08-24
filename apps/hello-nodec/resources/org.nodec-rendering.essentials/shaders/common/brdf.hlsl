@@ -152,11 +152,11 @@ float3 BRDF(BRDFSurface surface, float3 wi, float3 wo)
     return (oDiffuse + oSpecular);
 }
 
-float3 EnvironmentBRDF(BRDFSurface surface, float3 viewDir, float3 irradience, float3 envSpecular)
+float3 EnvironmentBRDF(BRDFSurface surface, float3 wi, float3 irradience, float3 envSpecular)
 {
     const float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), surface.albedo, surface.metallic);
-    const float3 ks = FresnelWithRoughness(max(dot(surface.normal, viewDir), 0.0), f0, surface.roughness);
-    const float kd = (1.0f - ks) * (1.0f - surface.metallic);
+    const float3 ks = FresnelWithRoughness(max(dot(surface.normal, wi), 0.0), f0, surface.roughness);
+    const float kd = (1.0f - ks);
     
     const float3 diffuse = irradience * surface.albedo;
     const float3 specular = envSpecular * ks;

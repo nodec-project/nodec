@@ -4,6 +4,7 @@
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 
@@ -147,6 +148,9 @@ public:
         ImGui::ColorEdit4("Color", light.color.v, ImGuiColorEditFlags_Float);
 
         ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
+    }
+    void OnGuiSceneLighting(nodec_rendering::components::SceneLighting &lighting) {
+        ImGui::ColorEdit4("Ambient Color", lighting.ambient_color.v, ImGuiColorEditFlags_Float);
     }
 
     void OnGuiAudioSource(AudioSource &source) {

@@ -7,6 +7,7 @@
 #include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/light.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_serialization/nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
@@ -129,6 +130,18 @@ public:
                 light.type = serializable_light.type;
                 light.color = serializable_light.color;
                 light.intensity = serializable_light.intensity;
+            });
+
+        register_component<SceneLighting, SerializableSceneLighting>(
+            [](const SceneLighting &lighting) {
+                auto serializable = std::make_shared<SerializableSceneLighting>();
+                serializable->ambient_color = lighting.ambient_color;
+                return serializable;
+            },
+            [](const SerializableSceneLighting &serializable, SceneEntity entity, SceneRegistry &registry) {
+                registry.emplace_component<SceneLighting>(entity);
+                auto &lighting = registry.get_component<SceneLighting>(entity);
+                lighting.ambient_color = serializable.ambient_color;
             });
     }
 
