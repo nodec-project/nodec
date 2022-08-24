@@ -144,7 +144,10 @@ float3 BRDF(BRDFSurface surface, float3 wi, float3 wo)
     // contribution of any light that hits the surface. From kS we can then calculate the 
     // ratio of refraction kD:
     const float3 ks = fresnel;
-    const float3 kd = (float3(1.0f, 1.0f, 1.0f) - ks) * (1.0f - metallic);
+
+    // Furthermore, because metallic surfaces don't refract light and thus have no diffuse 
+    // reflections we enforce this property by nullifying kD if the surface is metallic.
+    const float3 kd = (1.0 - ks) * (1.0f - metallic);
     
     // Diffuse BRDF
     const float3 oDiffuse = FLambertDiffuse(kd * albedo);
@@ -154,9 +157,10 @@ float3 BRDF(BRDFSurface surface, float3 wi, float3 wo)
 
 float3 EnvironmentBRDF(BRDFSurface surface, float3 wi, float3 irradience, float3 envSpecular)
 {
+    // https://learnopengl.com/PBR/IBL/Specular-IBL
     const float3 f0 = lerp(float3(0.04f, 0.04f, 0.04f), surface.albedo, surface.metallic);
     const float3 ks = FresnelWithRoughness(max(dot(surface.normal, wi), 0.0), f0, surface.roughness);
-    const float kd = (1.0f - ks);
+    const float3 kd = (1.0f - ks) * (1.0 - surface.metallic);
     
     const float3 diffuse = irradience * surface.albedo;
     const float3 specular = envSpecular * ks;

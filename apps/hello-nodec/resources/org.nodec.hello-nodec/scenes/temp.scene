@@ -13,9 +13,9 @@
 "id": 2147483650,
 "data": {
 "local_position": {
-"x": 4.5,
-"y": 0.0,
-"z": 0.0
+"x": 1.4249999523162842,
+"y": 1.5099999904632569,
+"z": -2.990000009536743
 },
 "local_scale": {
 "x": 1.0,
@@ -37,47 +37,7 @@
 "ptr_wrapper": {
 "id": 2147483651,
 "data": {
-"name": "e"
-}
-}
-}
-],
-"children": [
-{
-"ptr_wrapper": {
-"id": 2147483652,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483653,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 0.6000000238418579,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483654,
-"data": {
-"name": "Cube"
+"name": "Sphere"
 }
 }
 },
@@ -85,251 +45,19 @@
 "polymorphic_id": 2147483651,
 "polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
-"id": 2147483655,
+"id": 2147483652,
 "data": {
 "meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
+"org.nodec-rendering.essentials/meshes/sphere.mesh"
 ],
 "materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
 ]
 }
 }
 }
 ],
 "children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483656,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483657,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 0.16500000655651093,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483658,
-"data": {
-"name": "Cube"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483659,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483660,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483661,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 1.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483662,
-"data": {
-"name": "Top"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483663,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483664,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483665,
-"data": {
-"local_position": {
-"x": 0.6700000166893005,
-"y": 0.8949999809265137,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 0.5,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483666,
-"data": {
-"name": "Cube"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483667,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483668,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483669,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483670,
-"data": {
-"name": "Cube"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483671,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
 }
 }
 }
