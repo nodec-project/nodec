@@ -16,19 +16,9 @@ struct ModelProperties
     matrix matrixMInverse;
 };
 
-cbuffer cbModelProperties : register(b1)
+cbuffer cbModelProperties : register(b2)
 {
     ModelProperties modelProperties;
-}
-
-struct TextureConfig
-{
-    uint texHasFlag;
-};
-
-cbuffer cbTextureConfig : register(b2)
-{
-    TextureConfig textureConfig;
 }
 
 // @note

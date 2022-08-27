@@ -38,6 +38,16 @@ cbuffer cbSceneProperties : register(b0)
     SceneProperties sceneProperties;
 };
 
+struct TextureConfig
+{
+    uint texHasFlag;
+};
+
+cbuffer cbTextureConfig : register(b1)
+{
+    TextureConfig textureConfig;
+}
+
 struct VSIn
 {
     float3 position : POSITION;

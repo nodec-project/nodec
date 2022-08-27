@@ -1,10 +1,11 @@
 #pragma once
 
 #include <nodec_rendering/components/camera.hpp>
-#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
-#include <nodec_rendering/components/point_light.hpp>
+#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/point_light.hpp>
+#include <nodec_rendering/components/post_process.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
@@ -90,6 +91,7 @@ public:
             ImGui::PushID("meshes");
             ImGui::Text("Meshes");
 
+            // FIXME: Should iterate in forward order.
             for (auto i = renderer.meshes.size(); i-- != 0;) {
                 ImGui::PushID(i);
                 auto &mesh = renderer.meshes[i];
@@ -112,6 +114,8 @@ public:
             ImGui::PushID("materials");
 
             ImGui::Text("Materials");
+            
+            // FIXME: Should iterate in forward order.
             for (auto i = renderer.materials.size(); i-- != 0;) {
                 ImGui::PushID(i);
                 auto &material = renderer.materials[i];
@@ -154,6 +158,36 @@ public:
         ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
 
         ImGui::DragFloat("Range", &light.range, 0.005f);
+    }
+
+    void OnGUIPostProcess(nodec_rendering::components::PostProcess &postProcess) {
+        using namespace nodec_rendering::components;
+        using namespace nodec_rendering::resources;
+
+        {
+            ImGui::PushID("materials");
+            for (auto iter = postProcess.materials.begin(); iter != postProcess.materials.end();) {
+                ImGui::PushID(&*iter);
+                auto &material = *iter;
+                material = ResourceNameEdit("", material);
+
+                ImGui::SameLine();
+                if (ImGui::Button("-")) {
+                    iter = postProcess.materials.erase(iter);
+                    ImGui::PopID();
+                    continue;
+                }
+                ++iter;
+                ImGui::PopID();
+            }
+
+            if (ImGui::Button("+")) {
+                auto empty = mpResourceRegistry->get_resource<Material>("").get();
+                postProcess.materials.emplace_back(empty);
+            }
+
+            ImGui::PopID();
+        }
     }
 
     void OnGuiSceneLighting(nodec_rendering::components::SceneLighting &lighting) {

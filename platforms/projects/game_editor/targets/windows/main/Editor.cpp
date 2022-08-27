@@ -127,4 +127,10 @@ Editor::Editor(Engine *engine)
         [=](auto &renderer) {
             inspector_gui_->OnGuiImageRenderer(renderer);
         });
+        
+    inspector_component_registry_impl().register_component<PostProcess>(
+        "Post Process",
+        [=](auto &process) {
+            inspector_gui_->OnGUIPostProcess(process);
+        });
 }

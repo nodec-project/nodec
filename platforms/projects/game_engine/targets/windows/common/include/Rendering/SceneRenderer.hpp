@@ -16,6 +16,7 @@
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
+#include <nodec_rendering/components/post_process.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene/scene.hpp>
 
@@ -160,6 +161,9 @@ public:
         mScenePropertiesCB.BindVS(mpGfx, 0);
         mScenePropertiesCB.BindPS(mpGfx, 0);
 
+        mTextureConfigCB.BindVS(mpGfx, 1);
+        mTextureConfigCB.BindPS(mpGfx, 1);
+
         // --- lights ---
         {
             mSceneProperties.lights.directional.enabled = 0x00;
@@ -211,7 +215,27 @@ public:
         const auto aspect = static_cast<float>(mpGfx->GetWidth()) / mpGfx->GetHeight();
 
         // Render the scene per each camera.
-        scene.registry().view<const Camera, const Transform>().each([&](auto entt, const Camera &camera, const Transform &cameraTrfm) {
+        scene.registry().view<const Camera, const Transform>().each([&](auto cameraEntt, const Camera &camera, const Transform &cameraTrfm) {
+            
+            ID3D11RenderTargetView *pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
+
+            const PostProcess *postProcess = scene.registry().try_get_component<const PostProcess>(cameraEntt);
+            
+            if (postProcess && postProcess->materials.size() > 0) {
+                auto &buffer = mGeometryBuffers["screen"];
+                if (!buffer) {
+                    buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
+                }
+                pCameraRenderTargetView = &buffer->GetRenderTargetView();
+            }
+
+            // Clear render target view with solid color.
+            // TODO: Consider skybox.
+            {
+                const float color[] = {0.1f, 0.1f, 0.1f, 1.0f};
+                mpGfx->GetContext().ClearRenderTargetView(pCameraRenderTargetView, color);
+            }
+
             const auto matrixP = XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(camera.fovAngle),
                 aspect,
@@ -256,7 +280,6 @@ public:
                 }
             }
 
-
             mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
             // Reset depth buffer.
@@ -266,8 +289,7 @@ public:
             for (auto *activeShader : activeShaders) {
                 if (activeShader->pass_count() == 1) {
                     // One pass shader.
-                    auto *target = &mpGfx->GetRenderTargetView();
-                    mpGfx->GetContext().OMSetRenderTargets(1, &target, mpDepthStencilView.Get());
+                    mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, mpDepthStencilView.Get());
                     mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
                     activeShader->bind(mpGfx);
 
@@ -310,9 +332,7 @@ public:
                     {
                         const auto passNum = passCount - 1;
 
-                        auto *target = &mpGfx->GetRenderTargetView();
-                        mpGfx->GetContext().OMSetRenderTargets(1, &target, nullptr);
-                        // mpGfx->GetContext().ClearRenderTargetView(target, Vector3f::zero.v);
+                        mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
                         mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
                         const auto &textureResources = activeShader->texture_resources(passNum);
@@ -334,7 +354,46 @@ public:
                 }
             }
 
-            // TODO: post processing
+            // --- Post Processing ---
+            if (postProcess) {
+                mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+                mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
+                for (std::size_t i = 0; i < postProcess->materials.size(); ++i) {
+                    if (i == postProcess->materials.size() - 1) {
+                        // if last
+                        pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
+                        mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
+                    }
+
+                    auto materialBackend = std::static_pointer_cast<MaterialBackend>(postProcess->materials[i]);
+                    if (!materialBackend) continue;
+                    auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
+                    if (!shaderBackend) continue;
+
+                    materialBackend->bind_constant_buffer(mpGfx, 3);
+                    SetCullMode(materialBackend->cull_mode());
+
+                    mTextureConfig.texHasFlag = 0x00;
+                    BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                    mTextureConfigCB.Update(mpGfx, &mTextureConfig);
+
+                    const auto &textureResources = shaderBackend->texture_resources(0);
+                    for (std::size_t i = 0; i < textureResources.size(); ++i) {
+                        const auto &name = textureResources[i];
+                        auto &buffer = mGeometryBuffers[name];
+                        if (!buffer) continue;
+                        auto *view = &buffer->GetShaderResourceView();
+                        mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
+                    }
+                    shaderBackend->bind(mpGfx, 0);
+
+                    mSamplerBilinear.BindPS(mpGfx, 0);
+
+                    mScreenQuadMesh->bind(mpGfx);
+                    mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+                }
+            }
         }); // End foreach camera
     }
 
@@ -349,11 +408,8 @@ private:
         using namespace nodec_rendering::resources;
         using namespace DirectX;
 
-        mModelPropertiesCB.BindVS(mpGfx, 1);
-        mModelPropertiesCB.BindPS(mpGfx, 1);
-
-        mTextureConfigCB.BindVS(mpGfx, 2);
-        mTextureConfigCB.BindPS(mpGfx, 2);
+        mModelPropertiesCB.BindVS(mpGfx, 2);
+        mModelPropertiesCB.BindPS(mpGfx, 2);
 
         scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
             if (meshRenderer.meshes.size() == 0) return;
@@ -508,14 +564,17 @@ private:
     }
 
 private:
+    // slot 0
     SceneProperties mSceneProperties;
     ConstantBuffer mScenePropertiesCB;
 
-    ModelProperties mModelProperties;
-    ConstantBuffer mModelPropertiesCB;
-
+    // slot 1
     TextureConfig mTextureConfig;
     ConstantBuffer mTextureConfigCB;
+
+    // slot 2
+    ModelProperties mModelProperties;
+    ConstantBuffer mModelPropertiesCB;
 
     SamplerState mSamplerAnisotropic;
     SamplerState mSamplerPoint;
