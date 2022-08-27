@@ -12,7 +12,8 @@
 
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
-#include <nodec_rendering/components/light.hpp>
+#include <nodec_rendering/components/directional_light.hpp>
+#include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
@@ -38,14 +39,27 @@ public:
         uint32_t padding[3];
     };
 
+    struct PointLight {
+        nodec::Vector3f position;
+        float range;
+        nodec::Vector3f color;
+        float intensity;
+    };
+
+    static constexpr size_t MAX_NUM_OF_POINT_LIGHTS = 100;
+
     struct SceneLighting {
         nodec::Vector4f ambientColor;
+        uint32_t numOfPointLights;
+        uint32_t padding[3];
         DirectionalLight directional;
+        PointLight pointLights[MAX_NUM_OF_POINT_LIGHTS];
     };
 
     struct SceneProperties {
         nodec::Vector4f cameraPos;
         DirectX::XMFLOAT4X4 matrixPInverse;
+        DirectX::XMFLOAT4X4 matrixV;
         DirectX::XMFLOAT4X4 matrixVInverse;
         SceneLighting lights;
     };
@@ -149,22 +163,14 @@ public:
         // --- lights ---
         {
             mSceneProperties.lights.directional.enabled = 0x00;
-            scene.registry().view<const Light, const Transform>().each([&](auto entt, const Light &light, const Transform &trfm) {
-                switch (light.type) {
-                case LightType::Directional: {
-                    auto &directional = mSceneProperties.lights.directional;
-                    directional.enabled = 0x01;
-                    directional.color = light.color;
-                    directional.intensity = light.intensity;
+            scene.registry().view<const nodec_rendering::components::DirectionalLight, const Transform>().each([&](auto entt, const nodec_rendering::components::DirectionalLight &light, const Transform &trfm) {
+                auto &directional = mSceneProperties.lights.directional;
+                directional.enabled = 0x01;
+                directional.color = light.color;
+                directional.intensity = light.intensity;
 
-                    auto direction = trfm.local2world * Vector4f{0.0f, 0.0f, 1.0f, 0.0f};
-                    directional.direction.set(direction.x, direction.y, direction.z);
-                    break;
-                }
-
-                default:
-                    break;
-                }
+                auto direction = trfm.local2world * Vector4f{0.0f, 0.0f, 1.0f, 0.0f};
+                directional.direction.set(direction.x, direction.y, direction.z);
             });
             scene.registry().view<const nodec_rendering::components::SceneLighting>().each([&](auto entt, const nodec_rendering::components::SceneLighting &lighting) {
                 mSceneProperties.lights.ambientColor = lighting.ambient_color;
@@ -219,6 +225,7 @@ public:
             XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2Wrold);
 
             auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
+            XMStoreFloat4x4(&mSceneProperties.matrixV, cameraLocal2Wrold);
             XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2Wrold);
 
             mSceneProperties.cameraPos.set(
@@ -226,6 +233,29 @@ public:
                 XMVectorGetByIndex(trans, 1),
                 XMVectorGetByIndex(trans, 2),
                 XMVectorGetByIndex(trans, 3));
+
+            // Update active point lights.
+            {
+                mSceneProperties.lights.numOfPointLights = 0;
+                auto view = scene.registry().view<const Transform, const nodec_rendering::components::PointLight>();
+                for (const auto& entt : view) {
+                    // TODO: Light culling.
+                    const auto index = mSceneProperties.lights.numOfPointLights;
+                    if (index >= MAX_NUM_OF_POINT_LIGHTS) break;
+
+                    const auto &trfm = view.get<const Transform>(entt);
+                    const auto &light = view.get<const nodec_rendering::components::PointLight>(entt);
+                    const auto pos = trfm.local2world * Vector4f(trfm.local_position.x, trfm.local_position.y, trfm.local_position.z, 1.0f);
+
+                    mSceneProperties.lights.pointLights[index].position.set(pos.x, pos.y, pos.z);
+                    mSceneProperties.lights.pointLights[index].color.set(light.color.x, light.color.y, light.color.z);
+                    mSceneProperties.lights.pointLights[index].intensity = light.intensity;
+                    mSceneProperties.lights.pointLights[index].range = light.range;
+
+                    ++mSceneProperties.lights.numOfPointLights;
+                }
+            }
+
 
             mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
@@ -329,11 +359,18 @@ private:
             if (meshRenderer.meshes.size() == 0) return;
             if (meshRenderer.meshes.size() != meshRenderer.materials.size()) return;
 
+            // DirectX Math using row-major representation, row-major memory order.
+            // nodec using column-major representation, column-major memory order.
+            // HLSL using column-major representation, row-major memory order.
+            //
+            // nodec -> DirectX Math
+            //  Mathematically, when a matrix is converted from column-major representation to row-major representation,
+            //  it needs to be transposed. 
+            //  However, memory ordering of nodec and DirectX Math is different.
+            //  Therefore, the matrix is automatically transposed when it is assigned to each other.
             XMMATRIX matrixM{trfm.local2world.m};
             auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
 
-            // DirectX Math using row-major representation
-            // HLSL using column-major representation
             auto matrixMVP = matrixM * matrixV * matrixP;
 
             XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);

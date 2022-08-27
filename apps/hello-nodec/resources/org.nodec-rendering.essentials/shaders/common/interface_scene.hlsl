@@ -7,16 +7,28 @@ struct DirectionalLight
     int enabled;
 };
 
+struct PointLight {
+    float3 position;
+    float range;
+    float3 color;
+    float intensity;
+};
+
+#define MAX_NUM_OF_POINT_LIGHTS 100
+
 struct SceneLighting
 {
     float4 ambientColor;
+    int numOfPointLights;
     DirectionalLight directional;
+    PointLight pointLights[MAX_NUM_OF_POINT_LIGHTS];
 };
 
 struct SceneProperties
 {
     float4 cameraPos;
     float4x4 matrixPInverse;
+    float4x4 matrixV;
     float4x4 matrixVInverse;
     SceneLighting lights;
 };

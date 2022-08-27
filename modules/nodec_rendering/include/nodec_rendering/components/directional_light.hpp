@@ -1,19 +1,12 @@
-#ifndef NODEC_RENDERING__COMPONENTS__LIGHT_HPP_
-#define NODEC_RENDERING__COMPONENTS__LIGHT_HPP_
+#ifndef NODEC_RENDERING__COMPONENTS__DIRECTIONAL_LIGHT_HPP_
+#define NODEC_RENDERING__COMPONENTS__DIRECTIONAL_LIGHT_HPP_
 
 #include <nodec/vector4.hpp>
 
 namespace nodec_rendering {
 namespace components {
 
-enum class LightType {
-    Directional,
-    Point,
-    Spot
-};
-
-struct Light {
-    LightType type{LightType::Directional};
+struct DirectionalLight {
     nodec::Vector4f color{1.0f, 1.0f, 1.0f, 1.0f};
     float intensity{1.0f};
 };

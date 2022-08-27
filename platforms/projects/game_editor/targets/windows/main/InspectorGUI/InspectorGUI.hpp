@@ -2,7 +2,8 @@
 
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
-#include <nodec_rendering/components/light.hpp>
+#include <nodec_rendering/components/directional_light.hpp>
+#include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
@@ -22,7 +23,6 @@ class InspectorGUI {
     using Name = nodec_scene::components::Name;
     using Transform = nodec_scene::components::Transform;
     using Camera = nodec_rendering::components::Camera;
-    using Light = nodec_rendering::components::Light;
     using AudioSource = nodec_scene_audio::components::AudioSource;
     using AudioClip = nodec_scene_audio::resources::AudioClip;
     using ImageRenderer = nodec_rendering::components::ImageRenderer;
@@ -138,17 +138,24 @@ public:
         ImGui::DragFloat("Fov Angle", &camera.fovAngle);
     }
 
-    void OnGUILight(Light &light) {
+    void OnGUIDirectionalLight(nodec_rendering::components::DirectionalLight &light) {
         using namespace nodec_rendering::components;
-
-        int currentType = static_cast<int>(light.type);
-        ImGui::Combo("Type", &currentType, "Directional\0Point\0Spot");
-        light.type = static_cast<LightType>(currentType);
 
         ImGui::ColorEdit4("Color", light.color.v, ImGuiColorEditFlags_Float);
 
         ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
     }
+
+    void OnGUIPointLight(nodec_rendering::components::PointLight &light) {
+        using namespace nodec_rendering::components;
+
+        ImGui::ColorEdit4("Color", light.color.v, ImGuiColorEditFlags_Float);
+
+        ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
+
+        ImGui::DragFloat("Range", &light.range, 0.005f);
+    }
+
     void OnGuiSceneLighting(nodec_rendering::components::SceneLighting &lighting) {
         ImGui::ColorEdit4("Ambient Color", lighting.ambient_color.v, ImGuiColorEditFlags_Float);
     }

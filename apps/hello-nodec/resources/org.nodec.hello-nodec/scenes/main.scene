@@ -8,24 +8,9 @@
 "components": [
 {
 "polymorphic_id": 2147483649,
-"polymorphic_name": "nodec_rendering::components::SerializableSceneLighting",
-"ptr_wrapper": {
-"id": 2147483650,
-"data": {
-"ambient_color": {
-"x": 0.044117629528045657,
-"y": 0.044117629528045657,
-"z": 0.044117629528045657,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2147483650,
 "polymorphic_name": "nodec_scene::components::SerializableTransform",
 "ptr_wrapper": {
-"id": 2147483651,
+"id": 2147483650,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -47,39 +32,53 @@
 }
 },
 {
-"polymorphic_id": 2147483651,
+"polymorphic_id": 2147483650,
 "polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
-"id": 2147483652,
+"id": 2147483651,
 "data": {
-"name": "Scene Lighting"
+"name": "Point Lights"
 }
 }
 }
 ],
-"children": []
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483652,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483651,
+"polymorphic_name": "nodec_rendering::components::SerializablePointLight",
+"ptr_wrapper": {
+"id": 2147483653,
+"data": {
+"color": {
+"x": 1.0,
+"y": 0.8823529481887817,
+"z": 0.0,
+"w": 1.0
+},
+"intensity": 1.0,
+"range": 5.0
 }
 }
 },
 {
-"ptr_wrapper": {
-"id": 2147483653,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483654,
 "data": {
 "local_position": {
-"x": 1.4249999523162842,
-"y": 1.5099999904632569,
-"z": -2.990000009536743
+"x": 0.0,
+"y": 4.394999980926514,
+"z": 0.0
 },
 "local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
+"x": 0.10000000149011612,
+"y": 0.10000000149011612,
+"z": 0.10000000149011612
 },
 "local_rotation": {
 "x": 0.0,
@@ -91,11 +90,11 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483655,
 "data": {
-"name": "Sphere"
+"name": "Light"
 }
 }
 },
@@ -118,6 +117,10 @@
 "children": []
 }
 }
+}
+]
+}
+}
 },
 {
 "ptr_wrapper": {
@@ -125,9 +128,124 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 2147483653,
+"polymorphic_name": "nodec_rendering::components::SerializableSceneLighting",
 "ptr_wrapper": {
 "id": 2147483658,
+"data": {
+"ambient_color": {
+"x": 0.044117629528045657,
+"y": 0.044117629528045657,
+"z": 0.044117629528045657,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483659,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483660,
+"data": {
+"name": "Scene Lighting"
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483661,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483662,
+"data": {
+"local_position": {
+"x": 1.4249999523162842,
+"y": 1.5099999904632569,
+"z": -2.990000009536743
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483663,
+"data": {
+"name": "Sphere"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483664,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/sphere.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483665,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483666,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -149,9 +267,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483659,
+"id": 2147483667,
 "data": {
 "name": "RetroTV"
 }
@@ -161,13 +279,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483660,
+"id": 2147483668,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483661,
+"id": 2147483669,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -189,9 +307,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483662,
+"id": 2147483670,
 "data": {
 "name": "TV"
 }
@@ -200,7 +318,7 @@
 {
 "polymorphic_id": 4,
 "ptr_wrapper": {
-"id": 2147483663,
+"id": 2147483671,
 "data": {
 "meshes": [
 "models/retrotv/Cube.001##mesh-0.mesh",
@@ -217,13 +335,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483664,
+"id": 2147483672,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483665,
+"id": 2147483673,
 "data": {
 "local_position": {
 "x": 0.38620999455451968,
@@ -245,9 +363,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483666,
+"id": 2147483674,
 "data": {
 "name": "Switch"
 }
@@ -256,7 +374,7 @@
 {
 "polymorphic_id": 4,
 "ptr_wrapper": {
-"id": 2147483667,
+"id": 2147483675,
 "data": {
 "meshes": [
 "models/retrotv/Cube.002##mesh-3.mesh"
@@ -274,13 +392,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483668,
+"id": 2147483676,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483669,
+"id": 2147483677,
 "data": {
 "local_position": {
 "x": 0.3862101137638092,
@@ -302,9 +420,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483670,
+"id": 2147483678,
 "data": {
 "name": "Selector"
 }
@@ -313,7 +431,7 @@
 {
 "polymorphic_id": 4,
 "ptr_wrapper": {
-"id": 2147483671,
+"id": 2147483679,
 "data": {
 "meshes": [
 "models/retrotv/Circle.001##mesh-2.mesh"
@@ -339,13 +457,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483672,
+"id": 2147483680,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483673,
+"id": 2147483681,
 "data": {
 "local_position": {
 "x": -2.7149999141693117,
@@ -367,9 +485,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483674,
+"id": 2147483682,
 "data": {
 "name": "nodec"
 }
@@ -379,13 +497,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483675,
+"id": 2147483683,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483676,
+"id": 2147483684,
 "data": {
 "local_position": {
 "x": 4.5,
@@ -407,9 +525,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483677,
+"id": 2147483685,
 "data": {
 "name": "e"
 }
@@ -419,13 +537,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483678,
+"id": 2147483686,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483679,
+"id": 2147483687,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -447,125 +565,11 @@
 }
 },
 {
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483680,
-"data": {
-"name": "Bottom"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483681,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483682,
-"data": {
-"components": [
-{
 "polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483683,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 1.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483684,
-"data": {
-"name": "Top"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483685,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483686,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483687,
-"data": {
-"local_position": {
-"x": 0.6700000166893005,
-"y": 0.8949999809265137,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 0.5,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
 "ptr_wrapper": {
 "id": 2147483688,
 "data": {
-"name": "Right"
+"name": "Bottom"
 }
 }
 },
@@ -594,13 +598,13 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483691,
 "data": {
 "local_position": {
-"x": 0.0,
-"y": 0.5,
+"x": 0.3400000035762787,
+"y": 1.0,
 "z": 0.0
 },
 "local_scale": {
@@ -611,18 +615,18 @@
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.0,
-"w": 1.0
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
 }
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483692,
 "data": {
-"name": "Left"
+"name": "Top"
 }
 }
 },
@@ -651,35 +655,35 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483695,
 "data": {
 "local_position": {
-"x": 0.3400000035762787,
-"y": 0.6000000238418579,
+"x": 0.6700000166893005,
+"y": 0.8949999809265137,
 "z": 0.0
 },
 "local_scale": {
 "x": 0.33000001311302187,
-"y": 1.0,
+"y": 0.5,
 "z": 1.0
 },
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
+"z": 0.0,
+"w": 1.0
 }
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483696,
 "data": {
-"name": "Mid"
+"name": "Right"
 }
 }
 },
@@ -701,10 +705,6 @@
 "children": []
 }
 }
-}
-]
-}
-}
 },
 {
 "ptr_wrapper": {
@@ -712,9 +712,127 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483699,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483700,
+"data": {
+"name": "Left"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483701,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483702,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483703,
+"data": {
+"local_position": {
+"x": 0.3400000035762787,
+"y": 0.6000000238418579,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483704,
+"data": {
+"name": "Mid"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483705,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483706,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483707,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -736,9 +854,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483700,
+"id": 2147483708,
 "data": {
 "name": "n"
 }
@@ -748,131 +866,17 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483701,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483702,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483703,
-"data": {
-"name": "Left"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483704,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483705,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483706,
-"data": {
-"local_position": {
-"x": 0.675000011920929,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483707,
-"data": {
-"name": "Right"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483708,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
 "id": 2147483709,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483710,
 "data": {
 "local_position": {
-"x": 0.33500000834465029,
-"y": 1.0,
+"x": 0.0,
+"y": 0.5,
 "z": 0.0
 },
 "local_scale": {
@@ -883,18 +887,18 @@
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
+"z": 0.0,
+"w": 1.0
 }
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483711,
 "data": {
-"name": "Top"
+"name": "Left"
 }
 }
 },
@@ -916,10 +920,6 @@
 "children": []
 }
 }
-}
-]
-}
-}
 },
 {
 "ptr_wrapper": {
@@ -927,9 +927,127 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483714,
+"data": {
+"local_position": {
+"x": 0.675000011920929,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483715,
+"data": {
+"name": "Right"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483716,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483717,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483718,
+"data": {
+"local_position": {
+"x": 0.33500000834465029,
+"y": 1.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483719,
+"data": {
+"name": "Top"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483720,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483721,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483722,
 "data": {
 "local_position": {
 "x": 3.0,
@@ -951,9 +1069,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483715,
+"id": 2147483723,
 "data": {
 "name": "d"
 }
@@ -963,13 +1081,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483716,
+"id": 2147483724,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483717,
+"id": 2147483725,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -991,125 +1109,11 @@
 }
 },
 {
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483718,
-"data": {
-"name": "Bottom"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483719,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483720,
-"data": {
-"components": [
-{
 "polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483721,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 1.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483722,
-"data": {
-"name": "Top"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483723,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483724,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483725,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
 "ptr_wrapper": {
 "id": 2147483726,
 "data": {
-"name": "Left"
+"name": "Bottom"
 }
 }
 },
@@ -1138,35 +1142,35 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483729,
 "data": {
 "local_position": {
-"x": 0.675000011920929,
+"x": 0.3400000035762787,
 "y": 1.0,
 "z": 0.0
 },
 "local_scale": {
 "x": 0.33000001311302187,
-"y": 1.600000023841858,
+"y": 1.0,
 "z": 1.0
 },
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.0,
-"w": 1.0
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
 }
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483730,
 "data": {
-"name": "Right"
+"name": "Top"
 }
 }
 },
@@ -1188,10 +1192,6 @@
 "children": []
 }
 }
-}
-]
-}
-}
 },
 {
 "ptr_wrapper": {
@@ -1199,9 +1199,127 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483733,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483734,
+"data": {
+"name": "Left"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483735,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483736,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483737,
+"data": {
+"local_position": {
+"x": 0.675000011920929,
+"y": 1.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.600000023841858,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483738,
+"data": {
+"name": "Right"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483739,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483740,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483741,
 "data": {
 "local_position": {
 "x": 6.0,
@@ -1223,9 +1341,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483734,
+"id": 2147483742,
 "data": {
 "name": "c"
 }
@@ -1235,13 +1353,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483735,
+"id": 2147483743,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483736,
+"id": 2147483744,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1263,125 +1381,11 @@
 }
 },
 {
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483737,
-"data": {
-"name": "Left"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483738,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483739,
-"data": {
-"components": [
-{
 "polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483740,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 1.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483741,
-"data": {
-"name": "Top"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483742,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483743,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483744,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 0.16500000655651093,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
 "ptr_wrapper": {
 "id": 2147483745,
 "data": {
-"name": "Bottom"
+"name": "Left"
 }
 }
 },
@@ -1403,10 +1407,6 @@
 "children": []
 }
 }
-}
-]
-}
-}
 },
 {
 "ptr_wrapper": {
@@ -1414,163 +1414,9 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483748,
-"data": {
-"local_position": {
-"x": 1.5,
-"y": 0.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483749,
-"data": {
-"name": "o"
-}
-}
-}
-],
-"children": [
-{
-"ptr_wrapper": {
-"id": 2147483750,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483751,
-"data": {
-"local_position": {
-"x": 0.675000011920929,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483752,
-"data": {
-"name": "Right"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483753,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483754,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483755,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483756,
-"data": {
-"name": "Left"
-}
-}
-},
-{
-"polymorphic_id": 4,
-"ptr_wrapper": {
-"id": 2147483757,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483758,
-"data": {
-"components": [
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483759,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1592,11 +1438,169 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483749,
+"data": {
+"name": "Top"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483750,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483751,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483752,
+"data": {
+"local_position": {
+"x": 0.3400000035762787,
+"y": 0.16500000655651093,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483753,
+"data": {
+"name": "Bottom"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483754,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+}
+]
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483755,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483756,
+"data": {
+"local_position": {
+"x": 1.5,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483757,
+"data": {
+"name": "o"
+}
+}
+}
+],
+"children": [
+{
+"ptr_wrapper": {
+"id": 2147483758,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483759,
+"data": {
+"local_position": {
+"x": 0.675000011920929,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483760,
 "data": {
-"name": "Top"
+"name": "Right"
 }
 }
 },
@@ -1625,13 +1629,13 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483763,
 "data": {
 "local_position": {
-"x": 0.3400000035762787,
-"y": 0.16500000655651093,
+"x": 0.0,
+"y": 0.5,
 "z": 0.0
 },
 "local_scale": {
@@ -1642,18 +1646,18 @@
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
+"z": 0.0,
+"w": 1.0
 }
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
 "id": 2147483764,
 "data": {
-"name": "Bottom"
+"name": "Left"
 }
 }
 },
@@ -1675,6 +1679,120 @@
 "children": []
 }
 }
+},
+{
+"ptr_wrapper": {
+"id": 2147483766,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483767,
+"data": {
+"local_position": {
+"x": 0.3400000035762787,
+"y": 1.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483768,
+"data": {
+"name": "Top"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483769,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483770,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483771,
+"data": {
+"local_position": {
+"x": 0.3400000035762787,
+"y": 0.16500000655651093,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483772,
+"data": {
+"name": "Bottom"
+}
+}
+},
+{
+"polymorphic_id": 4,
+"ptr_wrapper": {
+"id": 2147483773,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
 }
 ]
 }
@@ -1686,16 +1804,15 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483766,
+"id": 2147483774,
 "data": {
 "components": [
 {
-"polymorphic_id": 2147483653,
-"polymorphic_name": "nodec_rendering::components::SerializableLight",
+"polymorphic_id": 2147483654,
+"polymorphic_name": "nodec_rendering::components::SerializableDirectionalLight",
 "ptr_wrapper": {
-"id": 2147483767,
+"id": 2147483775,
 "data": {
-"type": 0,
 "color": {
 "x": 1.0,
 "y": 1.0,
@@ -1707,9 +1824,9 @@
 }
 },
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483768,
+"id": 2147483776,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1731,9 +1848,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483769,
+"id": 2147483777,
 "data": {
 "name": "Light"
 }
@@ -1746,24 +1863,24 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483770,
+"id": 2147483778,
 "data": {
 "components": [
 {
-"polymorphic_id": 2147483654,
+"polymorphic_id": 2147483655,
 "polymorphic_name": "SerializableCameraController",
 "ptr_wrapper": {
-"id": 2147483771,
+"id": 2147483779,
 "data": {
 "speed": 4.0
 }
 }
 },
 {
-"polymorphic_id": 2147483655,
+"polymorphic_id": 2147483656,
 "polymorphic_name": "nodec_rendering::components::SerializableCamera",
 "ptr_wrapper": {
-"id": 2147483772,
+"id": 2147483780,
 "data": {
 "farClipPlane": 100.0,
 "nearClipPlane": 0.009999999776482582,
@@ -1772,14 +1889,14 @@
 }
 },
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483773,
+"id": 2147483781,
 "data": {
 "local_position": {
-"x": 0.012681822292506695,
-"y": 1.5614887475967408,
-"z": -7.1264848709106449
+"x": -0.10747557133436203,
+"y": 1.3943783044815064,
+"z": -10.73139476776123
 },
 "local_scale": {
 "x": 1.0,
@@ -1787,18 +1904,18 @@
 "z": 1.0
 },
 "local_rotation": {
-"x": 0.029658261686563493,
-"y": -0.003477418562397361,
-"z": 0.000006379174010362476,
-"w": 0.9995536804199219
+"x": -0.00873943604528904,
+"y": 0.0034650072921067478,
+"z": -0.000701370881870389,
+"w": 0.9999556541442871
 }
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483774,
+"id": 2147483782,
 "data": {
 "name": "Camera"
 }
@@ -1811,13 +1928,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483775,
+"id": 2147483783,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483776,
+"id": 2147483784,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1825,9 +1942,9 @@
 "z": 0.0
 },
 "local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
+"x": 2.0,
+"y": 2.0,
+"z": 2.0
 },
 "local_rotation": {
 "x": 0.0,
@@ -1839,9 +1956,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483777,
+"id": 2147483785,
 "data": {
 "name": "Plane"
 }
@@ -1850,7 +1967,7 @@
 {
 "polymorphic_id": 4,
 "ptr_wrapper": {
-"id": 2147483778,
+"id": 2147483786,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/plane.mesh"
@@ -1862,16 +1979,19 @@
 }
 }
 ],
-"children": [
+"children": []
+}
+}
+},
 {
 "ptr_wrapper": {
-"id": 2147483779,
+"id": 2147483787,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483780,
+"id": 2147483788,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1893,9 +2013,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483781,
+"id": 2147483789,
 "data": {
 "name": "Cube"
 }
@@ -1904,7 +2024,7 @@
 {
 "polymorphic_id": 4,
 "ptr_wrapper": {
-"id": 2147483782,
+"id": 2147483790,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -1919,20 +2039,16 @@
 "children": []
 }
 }
-}
-]
-}
-}
 },
 {
 "ptr_wrapper": {
-"id": 2147483783,
+"id": 2147483791,
 "data": {
 "components": [
 {
-"polymorphic_id": 2,
+"polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483784,
+"id": 2147483792,
 "data": {
 "local_position": {
 "x": -1.4500000476837159,
@@ -1954,9 +2070,9 @@
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483785,
+"id": 2147483793,
 "data": {
 "name": "Sphere"
 }
@@ -1965,7 +2081,7 @@
 {
 "polymorphic_id": 4,
 "ptr_wrapper": {
-"id": 2147483786,
+"id": 2147483794,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/sphere.mesh"

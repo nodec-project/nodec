@@ -104,10 +104,16 @@ Editor::Editor(Engine *engine)
             inspector_gui_->OnGuiSceneLighting(lighting);
         });
 
-    inspector_component_registry_impl().register_component<Light>(
-        "Light",
+    inspector_component_registry_impl().register_component<DirectionalLight>(
+        "Directional Light",
         [=](auto &light) {
-            inspector_gui_->OnGUILight(light);
+            inspector_gui_->OnGUIDirectionalLight(light);
+        });
+        
+    inspector_component_registry_impl().register_component<PointLight>(
+        "Point Light",
+        [=](auto &light) {
+            inspector_gui_->OnGUIPointLight(light);
         });
 
     inspector_component_registry_impl().register_component<AudioSource>(

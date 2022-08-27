@@ -5,7 +5,8 @@
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
-#include <nodec_serialization/nodec_rendering/components/light.hpp>
+#include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
+#include <nodec_serialization/nodec_rendering/components/point_light.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
@@ -116,20 +117,34 @@ public:
                 camera.fovAngle = serializable_camera.fovAngle;
             });
 
-        register_component<Light, SerializableLight>(
-            [](const Light &light) {
-                auto serializable_light = std::make_shared<SerializableLight>();
-                serializable_light->type = light.type;
+        register_component<DirectionalLight, SerializableDirectionalLight>(
+            [](const DirectionalLight &light) {
+                auto serializable_light = std::make_shared<SerializableDirectionalLight>();
                 serializable_light->color = light.color;
                 serializable_light->intensity = light.intensity;
                 return serializable_light;
             },
-            [](const SerializableLight &serializable_light, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<Light>(entity);
-                auto &light = registry.get_component<Light>(entity);
-                light.type = serializable_light.type;
+            [](const SerializableDirectionalLight &serializable_light, SceneEntity entity, SceneRegistry &registry) {
+                registry.emplace_component<DirectionalLight>(entity);
+                auto &light = registry.get_component<DirectionalLight>(entity);
                 light.color = serializable_light.color;
                 light.intensity = serializable_light.intensity;
+            });
+
+        register_component<PointLight, SerializablePointLight>(
+            [](const PointLight &light) {
+                auto serializable = std::make_shared<SerializablePointLight>();
+                serializable->color = light.color;
+                serializable->intensity = light.intensity;
+                serializable->range = light.range;
+                return serializable;
+            },
+            [](const SerializablePointLight &serializable, SceneEntity entity, SceneRegistry &registry) {
+                registry.emplace_component<PointLight>(entity);
+                auto &light = registry.get_component<PointLight>(entity);
+                light.color = serializable.color;
+                light.intensity = serializable.intensity;
+                light.range = serializable.range;
             });
 
         register_component<SceneLighting, SerializableSceneLighting>(

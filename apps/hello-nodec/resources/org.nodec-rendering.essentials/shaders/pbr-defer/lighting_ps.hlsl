@@ -48,7 +48,20 @@ float4 PSMain(V2P input) : SV_TARGET {
     // return float4(worldPosition, 1);
 
     float3 outDiffuseSpecular = float3(0.0f, 0.0f, 0.0f);
+
+    // --- Point lights ---
+    for (int i = 0; i < sceneProperties.lights.numOfPointLights; ++i) {
+        const float distance = length(sceneProperties.lights.pointLights[i].position - worldPosition);
+        if (sceneProperties.lights.pointLights[i].range < distance) continue;
+
+        const float3 lightPositionInViewSpace = mul(sceneProperties.matrixV, float4(sceneProperties.lights.pointLights[i].position, 1.0f));
+        const float3 wi = normalize(lightPositionInViewSpace - viewSpacePosition);
+        const float3 radiance = sceneProperties.lights.pointLights[i].color
+                                * sceneProperties.lights.pointLights[i].intensity;
+        outDiffuseSpecular += BRDF(surface, wi, -viewDir) * radiance;
+    }
     
+    // --- Directional light ---
     if (sceneProperties.lights.directional.enabled != 0) {
         const float3 wi = normalize(-sceneProperties.lights.directional.direction);
         const float3 radiance = sceneProperties.lights.directional.color * sceneProperties.lights.directional.intensity;
