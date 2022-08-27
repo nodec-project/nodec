@@ -225,7 +225,7 @@ public:
             XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2Wrold);
 
             auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
-            XMStoreFloat4x4(&mSceneProperties.matrixV, cameraLocal2Wrold);
+            XMStoreFloat4x4(&mSceneProperties.matrixV, matrixV);
             XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2Wrold);
 
             mSceneProperties.cameraPos.set(
@@ -245,9 +245,9 @@ public:
 
                     const auto &trfm = view.get<const Transform>(entt);
                     const auto &light = view.get<const nodec_rendering::components::PointLight>(entt);
-                    const auto pos = trfm.local2world * Vector4f(trfm.local_position.x, trfm.local_position.y, trfm.local_position.z, 1.0f);
+                    const auto worldPosition = trfm.local2world * Vector4f(0, 0, 0, 1.0f);
 
-                    mSceneProperties.lights.pointLights[index].position.set(pos.x, pos.y, pos.z);
+                    mSceneProperties.lights.pointLights[index].position.set(worldPosition.x, worldPosition.y, worldPosition.z);
                     mSceneProperties.lights.pointLights[index].color.set(light.color.x, light.color.y, light.color.z);
                     mSceneProperties.lights.pointLights[index].intensity = light.intensity;
                     mSceneProperties.lights.pointLights[index].range = light.range;
