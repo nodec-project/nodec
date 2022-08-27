@@ -28,11 +28,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/json.hpp>
-#include <cereal/archives/portable_binary.hpp>
-#include <cereal/archives/xml.hpp>
-
 CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableMeshRenderer);
 CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableMeshRenderer);
 

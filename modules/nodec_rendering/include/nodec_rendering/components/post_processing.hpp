@@ -10,10 +10,15 @@ namespace nodec_rendering {
 
 namespace components {
 
-struct PostProcess {
+struct PostProcessing {
     using MaterialSharedPtr = std::shared_ptr<resources::Material>;
 
-    std::vector<MaterialSharedPtr> materials;
+    struct Effect {
+        bool enabled;
+        MaterialSharedPtr material;
+    };
+
+    std::vector<Effect> effects;
 };
 } // namespace components
 

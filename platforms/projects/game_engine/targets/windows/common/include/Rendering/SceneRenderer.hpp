@@ -16,7 +16,7 @@
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
-#include <nodec_rendering/components/post_process.hpp>
+#include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene/scene.hpp>
 
@@ -219,14 +219,29 @@ public:
             
             ID3D11RenderTargetView *pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
 
-            const PostProcess *postProcess = scene.registry().try_get_component<const PostProcess>(cameraEntt);
-            
-            if (postProcess && postProcess->materials.size() > 0) {
-                auto &buffer = mGeometryBuffers["screen"];
-                if (!buffer) {
-                    buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
+            // --- Get active post process effects. ---
+            std::vector<const PostProcessing::Effect *> activePostProcessEffects;
+            {
+                const PostProcessing *postProcessing = scene.registry().try_get_component<const PostProcessing>(cameraEntt);
+
+                if (postProcessing) {
+                    for (const auto &effect : postProcessing->effects) {
+                        if (effect.enabled && effect.material && effect.material->shader()) {
+                            activePostProcessEffects.push_back(&effect);
+                        }
+                    }
                 }
-                pCameraRenderTargetView = &buffer->GetRenderTargetView();
+
+                // If some effects, the off-screen buffer is neeeded.
+                if (activePostProcessEffects.size() > 0) {
+                    auto &buffer = mGeometryBuffers["screen"];
+                    if (!buffer) {
+                        buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
+                    }
+
+                    // Set the render target.
+                    pCameraRenderTargetView = &buffer->GetRenderTargetView();
+                }
             }
 
             // Clear render target view with solid color.
@@ -355,21 +370,21 @@ public:
             }
 
             // --- Post Processing ---
-            if (postProcess) {
+            if (activePostProcessEffects.size() > 0) {
                 mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
                 mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
-                for (std::size_t i = 0; i < postProcess->materials.size(); ++i) {
-                    if (i == postProcess->materials.size() - 1) {
+                for (std::size_t i = 0; i < activePostProcessEffects.size(); ++i) {
+                    if (i == activePostProcessEffects.size() - 1) {
                         // if last
                         pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
                         mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
                     }
 
-                    auto materialBackend = std::static_pointer_cast<MaterialBackend>(postProcess->materials[i]);
-                    if (!materialBackend) continue;
+                    // It is assured that material and shader are exists.
+                    // It is checked at the begining of rendering pass of camera.
+                    auto materialBackend = std::static_pointer_cast<MaterialBackend>(activePostProcessEffects[i]->material);
                     auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
-                    if (!shaderBackend) continue;
 
                     materialBackend->bind_constant_buffer(mpGfx, 3);
                     SetCullMode(materialBackend->cull_mode());

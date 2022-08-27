@@ -4,10 +4,11 @@
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
-#include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
-#include <nodec_serialization/nodec_rendering/components/point_light.hpp>
+#include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_serialization/nodec_rendering/components/point_light.hpp>
+#include <nodec_serialization/nodec_rendering/components/post_processing.hpp>
 #include <nodec_serialization/nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
 
@@ -70,6 +71,24 @@ public:
                 renderer.image = mpResourceRegistry->get_resource<Texture>(serializable.image).get();
                 renderer.material = mpResourceRegistry->get_resource<Material>(serializable.material).get();
                 renderer.pixelsPerUnit = serializable.pixelsPerUnit;
+            });
+
+        register_component<PostProcessing, SerializablePostProcessing>(
+            [=](const PostProcessing &processing) {
+                auto serializable = std::make_shared<SerializablePostProcessing>();
+
+                for (const auto& effect : processing.effects) {
+                    const auto name = mpResourceRegistry->lookup_name<Material>(effect.material).first;
+                    serializable->effects.push_back({effect.enabled, name});
+                }
+                return serializable;
+            },
+            [=](const SerializablePostProcessing &serializable, SceneEntity entity, SceneRegistry &registry) {
+                registry.emplace_component<PostProcessing>(entity);
+                auto &processing = registry.get_component<PostProcessing>(entity);
+                for (const auto& effect : serializable.effects) {
+                    processing.effects.push_back({effect.enabled, mpResourceRegistry->get_resource<Material>(effect.material).get()});
+                }
             });
 
         register_component<Name, SerializableName>(

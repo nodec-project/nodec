@@ -5,7 +5,7 @@
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/components/point_light.hpp>
-#include <nodec_rendering/components/post_process.hpp>
+#include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
@@ -160,20 +160,25 @@ public:
         ImGui::DragFloat("Range", &light.range, 0.005f);
     }
 
-    void OnGUIPostProcess(nodec_rendering::components::PostProcess &postProcess) {
+    void OnGUIPostProcessing(nodec_rendering::components::PostProcessing &postProcessing) {
         using namespace nodec_rendering::components;
         using namespace nodec_rendering::resources;
 
         {
-            ImGui::PushID("materials");
-            for (auto iter = postProcess.materials.begin(); iter != postProcess.materials.end();) {
+            ImGui::PushID("effects");
+            ImGui::Text("Effects");
+            for (auto iter = postProcessing.effects.begin(); iter != postProcessing.effects.end();) {
                 ImGui::PushID(&*iter);
-                auto &material = *iter;
-                material = ResourceNameEdit("", material);
+
+                ImGui::Checkbox("##enabled", &(iter->enabled));
+                ImGui::SameLine();
+
+                auto &material = iter->material;
+                material = ResourceNameEdit("##material", material);
 
                 ImGui::SameLine();
                 if (ImGui::Button("-")) {
-                    iter = postProcess.materials.erase(iter);
+                    iter = postProcessing.effects.erase(iter);
                     ImGui::PopID();
                     continue;
                 }
@@ -182,8 +187,8 @@ public:
             }
 
             if (ImGui::Button("+")) {
-                auto empty = mpResourceRegistry->get_resource<Material>("").get();
-                postProcess.materials.emplace_back(empty);
+                auto material = mpResourceRegistry->get_resource<Material>("").get();
+                postProcessing.effects.push_back({false, material});
             }
 
             ImGui::PopID();
