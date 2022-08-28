@@ -1,0 +1,27 @@
+{
+    "meta": {
+        "float_properties": [
+            {
+                "name": "radius",
+                "default_value": 0.5
+            },
+            {
+                "name": "bias",
+                "default_value": 0.025
+            }
+        ],
+        "vector4_properties": [],
+        "texture_entries": [
+            {
+                "name": "noise"
+            }, 
+            {
+                "name": "samples"
+            }
+        ],
+        "pass": [
+            "occlusion"
+        ],
+        "rendering_priority": 0
+    }
+}

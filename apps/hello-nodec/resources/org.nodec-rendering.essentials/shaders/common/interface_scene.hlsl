@@ -27,6 +27,7 @@ struct SceneLighting
 struct SceneProperties
 {
     float4 cameraPos;
+    float4x4 matrixP;
     float4x4 matrixPInverse;
     float4x4 matrixV;
     float4x4 matrixVInverse;

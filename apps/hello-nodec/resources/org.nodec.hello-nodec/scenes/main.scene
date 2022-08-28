@@ -13,65 +13,6 @@
 "id": 2147483650,
 "data": {
 "local_position": {
-"x": -1.4500000476837159,
-"y": 1.5099999904632569,
-"z": -2.990000009536743
-},
-"local_scale": {
-"x": 1.0,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2147483650,
-"polymorphic_name": "nodec_scene::components::SerializableName",
-"ptr_wrapper": {
-"id": 2147483651,
-"data": {
-"name": "Sphere"
-}
-}
-},
-{
-"polymorphic_id": 2147483651,
-"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
-"ptr_wrapper": {
-"id": 2147483652,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/sphere.mesh"
-],
-"materials": [
-"org.nodec.hello-nodec/materials/pbr-defer-rustediron2.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483653,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483654,
-"data": {
-"local_position": {
 "x": 0.0,
 "y": 2.569999933242798,
 "z": 0.0
@@ -91,18 +32,20 @@
 }
 },
 {
-"polymorphic_id": 2,
+"polymorphic_id": 2147483650,
+"polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
-"id": 2147483655,
+"id": 2147483651,
 "data": {
 "name": "Cube"
 }
 }
 },
 {
-"polymorphic_id": 3,
+"polymorphic_id": 2147483651,
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
-"id": 2147483656,
+"id": 2147483652,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -120,13 +63,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483657,
+"id": 2147483653,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483658,
+"id": 2147483654,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -150,7 +93,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483659,
+"id": 2147483655,
 "data": {
 "name": "Plane"
 }
@@ -159,7 +102,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483660,
+"id": 2147483656,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/plane.mesh"
@@ -177,14 +120,14 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483661,
+"id": 2147483657,
 "data": {
 "components": [
 {
 "polymorphic_id": 2147483652,
 "polymorphic_name": "SerializableCameraController",
 "ptr_wrapper": {
-"id": 2147483662,
+"id": 2147483658,
 "data": {
 "speed": 4.0
 }
@@ -194,7 +137,7 @@
 "polymorphic_id": 2147483653,
 "polymorphic_name": "nodec_rendering::components::SerializableCamera",
 "ptr_wrapper": {
-"id": 2147483663,
+"id": 2147483659,
 "data": {
 "farClipPlane": 100.0,
 "nearClipPlane": 0.009999999776482582,
@@ -205,7 +148,7 @@
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483664,
+"id": 2147483660,
 "data": {
 "local_position": {
 "x": 0.26400259137153628,
@@ -229,7 +172,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483665,
+"id": 2147483661,
 "data": {
 "name": "Camera"
 }
@@ -239,9 +182,13 @@
 "polymorphic_id": 2147483654,
 "polymorphic_name": "nodec_rendering::components::SerializablePostProcessing",
 "ptr_wrapper": {
-"id": 2147483666,
+"id": 2147483662,
 "data": {
 "effects": [
+{
+"enabled": true,
+"material": "org.nodec-rendering.essentials/materials/post-processings/ssao.material"
+},
 {
 "enabled": true,
 "material": "org.nodec-rendering.essentials/materials/post-processings/gamma-correction.material"
@@ -257,14 +204,14 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483667,
+"id": 2147483663,
 "data": {
 "components": [
 {
 "polymorphic_id": 2147483655,
 "polymorphic_name": "nodec_rendering::components::SerializableDirectionalLight",
 "ptr_wrapper": {
-"id": 2147483668,
+"id": 2147483664,
 "data": {
 "color": {
 "x": 0.14417530596256257,
@@ -279,7 +226,7 @@
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483669,
+"id": 2147483665,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -303,7 +250,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483670,
+"id": 2147483666,
 "data": {
 "name": "Light"
 }
@@ -316,13 +263,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483671,
+"id": 2147483667,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483672,
+"id": 2147483668,
 "data": {
 "local_position": {
 "x": -2.7149999141693117,
@@ -346,7 +293,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483673,
+"id": 2147483669,
 "data": {
 "name": "nodec"
 }
@@ -356,13 +303,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483674,
+"id": 2147483670,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483675,
+"id": 2147483671,
 "data": {
 "local_position": {
 "x": 1.5,
@@ -386,7 +333,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483676,
+"id": 2147483672,
 "data": {
 "name": "o"
 }
@@ -396,13 +343,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483677,
+"id": 2147483673,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483678,
+"id": 2147483674,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -426,9 +373,66 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483679,
+"id": 2147483675,
 "data": {
 "name": "Bottom"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483676,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483677,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483678,
+"data": {
+"local_position": {
+"x": 0.3400000035762787,
+"y": 1.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483679,
+"data": {
+"name": "Top"
 }
 }
 },
@@ -462,8 +466,8 @@
 "id": 2147483682,
 "data": {
 "local_position": {
-"x": 0.3400000035762787,
-"y": 1.0,
+"x": 0.0,
+"y": 0.5,
 "z": 0.0
 },
 "local_scale": {
@@ -474,8 +478,8 @@
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
+"z": 0.0,
+"w": 1.0
 }
 }
 }
@@ -485,7 +489,7 @@
 "ptr_wrapper": {
 "id": 2147483683,
 "data": {
-"name": "Top"
+"name": "Left"
 }
 }
 },
@@ -519,7 +523,7 @@
 "id": 2147483686,
 "data": {
 "local_position": {
-"x": 0.0,
+"x": 0.675000011920929,
 "y": 0.5,
 "z": 0.0
 },
@@ -542,7 +546,7 @@
 "ptr_wrapper": {
 "id": 2147483687,
 "data": {
-"name": "Left"
+"name": "Right"
 }
 }
 },
@@ -564,6 +568,10 @@
 "children": []
 }
 }
+}
+]
+}
+}
 },
 {
 "ptr_wrapper": {
@@ -574,67 +582,6 @@
 "polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483690,
-"data": {
-"local_position": {
-"x": 0.675000011920929,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483691,
-"data": {
-"name": "Right"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483692,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483693,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483694,
 "data": {
 "local_position": {
 "x": 6.0,
@@ -658,7 +605,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483695,
+"id": 2147483691,
 "data": {
 "name": "c"
 }
@@ -668,13 +615,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483696,
+"id": 2147483692,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483697,
+"id": 2147483693,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -698,9 +645,66 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483698,
+"id": 2147483694,
 "data": {
 "name": "Bottom"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483695,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483696,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483697,
+"data": {
+"local_position": {
+"x": 0.3400000035762787,
+"y": 1.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483698,
+"data": {
+"name": "Top"
 }
 }
 },
@@ -734,63 +738,6 @@
 "id": 2147483701,
 "data": {
 "local_position": {
-"x": 0.3400000035762787,
-"y": 1.0,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483702,
-"data": {
-"name": "Top"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483703,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483704,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483705,
-"data": {
-"local_position": {
 "x": 0.0,
 "y": 0.5,
 "z": 0.0
@@ -812,7 +759,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483706,
+"id": 2147483702,
 "data": {
 "name": "Left"
 }
@@ -821,7 +768,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483707,
+"id": 2147483703,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/cube.mesh"
@@ -843,13 +790,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483708,
+"id": 2147483704,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483709,
+"id": 2147483705,
 "data": {
 "local_position": {
 "x": 3.0,
@@ -873,7 +820,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483710,
+"id": 2147483706,
 "data": {
 "name": "d"
 }
@@ -883,13 +830,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483711,
+"id": 2147483707,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483712,
+"id": 2147483708,
 "data": {
 "local_position": {
 "x": 0.675000011920929,
@@ -913,9 +860,66 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483713,
+"id": 2147483709,
 "data": {
 "name": "Right"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483710,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483711,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483712,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483713,
+"data": {
+"name": "Left"
 }
 }
 },
@@ -949,8 +953,8 @@
 "id": 2147483716,
 "data": {
 "local_position": {
-"x": 0.0,
-"y": 0.5,
+"x": 0.3400000035762787,
+"y": 1.0,
 "z": 0.0
 },
 "local_scale": {
@@ -961,8 +965,8 @@
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.0,
-"w": 1.0
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
 }
 }
 }
@@ -972,7 +976,7 @@
 "ptr_wrapper": {
 "id": 2147483717,
 "data": {
-"name": "Left"
+"name": "Top"
 }
 }
 },
@@ -1007,7 +1011,7 @@
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
-"y": 1.0,
+"y": 0.16500000655651093,
 "z": 0.0
 },
 "local_scale": {
@@ -1029,7 +1033,7 @@
 "ptr_wrapper": {
 "id": 2147483721,
 "data": {
-"name": "Top"
+"name": "Bottom"
 }
 }
 },
@@ -1051,6 +1055,10 @@
 "children": []
 }
 }
+}
+]
+}
+}
 },
 {
 "ptr_wrapper": {
@@ -1061,67 +1069,6 @@
 "polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483724,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 0.16500000655651093,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483725,
-"data": {
-"name": "Bottom"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483726,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483727,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483728,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1145,7 +1092,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483729,
+"id": 2147483725,
 "data": {
 "name": "n"
 }
@@ -1155,13 +1102,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483730,
+"id": 2147483726,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483731,
+"id": 2147483727,
 "data": {
 "local_position": {
 "x": 0.33500000834465029,
@@ -1185,9 +1132,66 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483732,
+"id": 2147483728,
 "data": {
 "name": "Top"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483729,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483730,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483731,
+"data": {
+"local_position": {
+"x": 0.675000011920929,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483732,
+"data": {
+"name": "Right"
 }
 }
 },
@@ -1221,7 +1225,7 @@
 "id": 2147483735,
 "data": {
 "local_position": {
-"x": 0.675000011920929,
+"x": 0.0,
 "y": 0.5,
 "z": 0.0
 },
@@ -1244,7 +1248,7 @@
 "ptr_wrapper": {
 "id": 2147483736,
 "data": {
-"name": "Right"
+"name": "Left"
 }
 }
 },
@@ -1266,6 +1270,10 @@
 "children": []
 }
 }
+}
+]
+}
+}
 },
 {
 "ptr_wrapper": {
@@ -1276,67 +1284,6 @@
 "polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483739,
-"data": {
-"local_position": {
-"x": 0.0,
-"y": 0.5,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.0,
-"w": 1.0
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483740,
-"data": {
-"name": "Left"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483741,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483742,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483743,
 "data": {
 "local_position": {
 "x": 4.5,
@@ -1360,7 +1307,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483744,
+"id": 2147483740,
 "data": {
 "name": "e"
 }
@@ -1370,13 +1317,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483745,
+"id": 2147483741,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483746,
+"id": 2147483742,
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
@@ -1400,9 +1347,66 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483747,
+"id": 2147483743,
 "data": {
 "name": "Mid"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483744,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483745,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483746,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.5,
+"z": 0.0
+},
+"local_scale": {
+"x": 0.33000001311302187,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483747,
+"data": {
+"name": "Left"
 }
 }
 },
@@ -1436,13 +1440,13 @@
 "id": 2147483750,
 "data": {
 "local_position": {
-"x": 0.0,
-"y": 0.5,
+"x": 0.6700000166893005,
+"y": 0.8949999809265137,
 "z": 0.0
 },
 "local_scale": {
 "x": 0.33000001311302187,
-"y": 1.0,
+"y": 0.5,
 "z": 1.0
 },
 "local_rotation": {
@@ -1459,7 +1463,7 @@
 "ptr_wrapper": {
 "id": 2147483751,
 "data": {
-"name": "Left"
+"name": "Right"
 }
 }
 },
@@ -1493,20 +1497,20 @@
 "id": 2147483754,
 "data": {
 "local_position": {
-"x": 0.6700000166893005,
-"y": 0.8949999809265137,
+"x": 0.3400000035762787,
+"y": 1.0,
 "z": 0.0
 },
 "local_scale": {
 "x": 0.33000001311302187,
-"y": 0.5,
+"y": 1.0,
 "z": 1.0
 },
 "local_rotation": {
 "x": 0.0,
 "y": 0.0,
-"z": 0.0,
-"w": 1.0
+"z": 0.7071067690849304,
+"w": 0.7071067690849304
 }
 }
 }
@@ -1516,7 +1520,7 @@
 "ptr_wrapper": {
 "id": 2147483755,
 "data": {
-"name": "Right"
+"name": "Top"
 }
 }
 },
@@ -1551,7 +1555,7 @@
 "data": {
 "local_position": {
 "x": 0.3400000035762787,
-"y": 1.0,
+"y": 0.16500000655651093,
 "z": 0.0
 },
 "local_scale": {
@@ -1573,7 +1577,7 @@
 "ptr_wrapper": {
 "id": 2147483759,
 "data": {
-"name": "Top"
+"name": "Bottom"
 }
 }
 },
@@ -1595,6 +1599,14 @@
 "children": []
 }
 }
+}
+]
+}
+}
+}
+]
+}
+}
 },
 {
 "ptr_wrapper": {
@@ -1605,71 +1617,6 @@
 "polymorphic_id": 1,
 "ptr_wrapper": {
 "id": 2147483762,
-"data": {
-"local_position": {
-"x": 0.3400000035762787,
-"y": 0.16500000655651093,
-"z": 0.0
-},
-"local_scale": {
-"x": 0.33000001311302187,
-"y": 1.0,
-"z": 1.0
-},
-"local_rotation": {
-"x": 0.0,
-"y": 0.0,
-"z": 0.7071067690849304,
-"w": 0.7071067690849304
-}
-}
-}
-},
-{
-"polymorphic_id": 2,
-"ptr_wrapper": {
-"id": 2147483763,
-"data": {
-"name": "Bottom"
-}
-}
-},
-{
-"polymorphic_id": 3,
-"ptr_wrapper": {
-"id": 2147483764,
-"data": {
-"meshes": [
-"org.nodec-rendering.essentials/meshes/cube.mesh"
-],
-"materials": [
-"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
-]
-}
-}
-}
-],
-"children": []
-}
-}
-}
-]
-}
-}
-}
-]
-}
-}
-},
-{
-"ptr_wrapper": {
-"id": 2147483765,
-"data": {
-"components": [
-{
-"polymorphic_id": 1,
-"ptr_wrapper": {
-"id": 2147483766,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1693,7 +1640,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483767,
+"id": 2147483763,
 "data": {
 "name": "RetroTV"
 }
@@ -1703,13 +1650,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483768,
+"id": 2147483764,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483769,
+"id": 2147483765,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1733,7 +1680,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483770,
+"id": 2147483766,
 "data": {
 "name": "TV"
 }
@@ -1742,7 +1689,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483771,
+"id": 2147483767,
 "data": {
 "meshes": [
 "models/retrotv/Cube.001##mesh-0.mesh",
@@ -1759,13 +1706,13 @@
 "children": [
 {
 "ptr_wrapper": {
-"id": 2147483772,
+"id": 2147483768,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483773,
+"id": 2147483769,
 "data": {
 "local_position": {
 "x": 0.3862101137638092,
@@ -1789,7 +1736,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483774,
+"id": 2147483770,
 "data": {
 "name": "Selector"
 }
@@ -1798,7 +1745,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483775,
+"id": 2147483771,
 "data": {
 "meshes": [
 "models/retrotv/Circle.001##mesh-2.mesh"
@@ -1816,13 +1763,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483776,
+"id": 2147483772,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483777,
+"id": 2147483773,
 "data": {
 "local_position": {
 "x": 0.38620999455451968,
@@ -1846,7 +1793,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483778,
+"id": 2147483774,
 "data": {
 "name": "Switch"
 }
@@ -1855,7 +1802,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483779,
+"id": 2147483775,
 "data": {
 "meshes": [
 "models/retrotv/Cube.002##mesh-3.mesh"
@@ -1881,13 +1828,13 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483780,
+"id": 2147483776,
 "data": {
 "components": [
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483781,
+"id": 2147483777,
 "data": {
 "local_position": {
 "x": 1.4249999523162842,
@@ -1911,7 +1858,7 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483782,
+"id": 2147483778,
 "data": {
 "name": "Sphere"
 }
@@ -1920,7 +1867,7 @@
 {
 "polymorphic_id": 3,
 "ptr_wrapper": {
-"id": 2147483783,
+"id": 2147483779,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/sphere.mesh"
@@ -1938,14 +1885,14 @@
 },
 {
 "ptr_wrapper": {
-"id": 2147483784,
+"id": 2147483780,
 "data": {
 "components": [
 {
 "polymorphic_id": 2147483656,
 "polymorphic_name": "nodec_rendering::components::SerializableSceneLighting",
 "ptr_wrapper": {
-"id": 2147483785,
+"id": 2147483781,
 "data": {
 "ambient_color": {
 "x": 0.019607841968536378,
@@ -1959,7 +1906,7 @@
 {
 "polymorphic_id": 1,
 "ptr_wrapper": {
-"id": 2147483786,
+"id": 2147483782,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -1983,9 +1930,66 @@
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
-"id": 2147483787,
+"id": 2147483783,
 "data": {
 "name": "Scene Lighting"
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"id": 2147483784,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"id": 2147483785,
+"data": {
+"local_position": {
+"x": -1.4500000476837159,
+"y": 1.5099999904632569,
+"z": -2.990000009536743
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483786,
+"data": {
+"name": "Sphere"
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483787,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/sphere.mesh"
+],
+"materials": [
+"org.nodec.hello-nodec/materials/pbr-defer-rustediron2.material"
+]
 }
 }
 }

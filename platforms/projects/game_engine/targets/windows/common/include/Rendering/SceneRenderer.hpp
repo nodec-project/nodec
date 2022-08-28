@@ -11,12 +11,12 @@
 #include <Rendering/TextureBackend.hpp>
 
 #include <nodec_rendering/components/camera.hpp>
-#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
-#include <nodec_rendering/components/point_light.hpp>
+#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
-#include <nodec_rendering/components/scene_lighting.hpp>
+#include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/post_processing.hpp>
+#include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene/scene.hpp>
 
@@ -59,6 +59,7 @@ public:
 
     struct SceneProperties {
         nodec::Vector4f cameraPos;
+        DirectX::XMFLOAT4X4 matrixP;
         DirectX::XMFLOAT4X4 matrixPInverse;
         DirectX::XMFLOAT4X4 matrixV;
         DirectX::XMFLOAT4X4 matrixVInverse;
@@ -216,7 +217,6 @@ public:
 
         // Render the scene per each camera.
         scene.registry().view<const Camera, const Transform>().each([&](auto cameraEntt, const Camera &camera, const Transform &cameraTrfm) {
-            
             ID3D11RenderTargetView *pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
 
             // --- Get active post process effects. ---
@@ -257,6 +257,7 @@ public:
                 camera.nearClipPlane, camera.farClipPlane);
             const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
 
+            XMStoreFloat4x4(&mSceneProperties.matrixP, matrixP);
             XMStoreFloat4x4(&mSceneProperties.matrixPInverse, matrixPInverse);
 
             XMMATRIX cameraLocal2Wrold{cameraTrfm.local2world.m};
@@ -277,7 +278,7 @@ public:
             {
                 mSceneProperties.lights.numOfPointLights = 0;
                 auto view = scene.registry().view<const Transform, const nodec_rendering::components::PointLight>();
-                for (const auto& entt : view) {
+                for (const auto &entt : view) {
                     // TODO: Light culling.
                     const auto index = mSceneProperties.lights.numOfPointLights;
                     if (index >= MAX_NUM_OF_POINT_LIGHTS) break;
@@ -373,13 +374,23 @@ public:
             if (activePostProcessEffects.size() > 0) {
                 mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-                mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
-                for (std::size_t i = 0; i < activePostProcessEffects.size(); ++i) {
-                    if (i == activePostProcessEffects.size() - 1) {
-                        // if last
-                        pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
-                        mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
+                if (activePostProcessEffects.size() > 1) {
+                    // if multiple effects, needs the back buffer.
+                    auto &backBuffer = mGeometryBuffers["screen_back"];
+                    if (!backBuffer) {
+                        backBuffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
                     }
+                }
+
+                for (std::size_t i = 0; i < activePostProcessEffects.size(); ++i) {
+                    if (i != activePostProcessEffects.size() - 1) {
+                        pCameraRenderTargetView = &mGeometryBuffers["screen_back"]->GetRenderTargetView();
+                    } else {
+                        // if last, render target is frame buffer.
+                        pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
+                    }
+
+                    mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
 
                     // It is assured that material and shader are exists.
                     // It is checked at the begining of rendering pass of camera.
@@ -390,16 +401,16 @@ public:
                     SetCullMode(materialBackend->cull_mode());
 
                     mTextureConfig.texHasFlag = 0x00;
-                    BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                    auto slot = BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
                     mTextureConfigCB.Update(mpGfx, &mTextureConfig);
 
                     const auto &textureResources = shaderBackend->texture_resources(0);
-                    for (std::size_t i = 0; i < textureResources.size(); ++i) {
+                    for (std::size_t i = 0; i < textureResources.size(); ++i, ++slot) {
                         const auto &name = textureResources[i];
                         auto &buffer = mGeometryBuffers[name];
                         if (!buffer) continue;
                         auto *view = &buffer->GetShaderResourceView();
-                        mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
+                        mpGfx->GetContext().PSSetShaderResources(slot, 1u, &view);
                     }
                     shaderBackend->bind(mpGfx, 0);
 
@@ -407,6 +418,8 @@ public:
 
                     mScreenQuadMesh->bind(mpGfx);
                     mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+
+                    std::swap(mGeometryBuffers["screen"], mGeometryBuffers["screen_back"]);
                 }
             }
         }); // End foreach camera
@@ -436,7 +449,7 @@ private:
             //
             // nodec -> DirectX Math
             //  Mathematically, when a matrix is converted from column-major representation to row-major representation,
-            //  it needs to be transposed. 
+            //  it needs to be transposed.
             //  However, memory ordering of nodec and DirectX Math is different.
             //  Therefore, the matrix is automatically transposed when it is assigned to each other.
             XMMATRIX matrixM{trfm.local2world.m};
@@ -533,7 +546,14 @@ private:
         }
     }
 
-    void BindTextureEntries(const std::vector<TextureEntry> &textureEntries, uint32_t &texHasFlag) {
+    /**
+     * @brief
+     *
+     * @param textureEntries
+     * @param texHasFlag
+     * @return UINT next slot number.
+     */
+    UINT BindTextureEntries(const std::vector<TextureEntry> &textureEntries, uint32_t &texHasFlag) {
         UINT slot = 0;
 
         for (auto &entry : textureEntries) {
@@ -544,7 +564,7 @@ private:
                 mSamplerBilinear.BindPS(mpGfx, slot);
                 mSamplerBilinear.BindVS(mpGfx, slot);
 
-                slot++;
+                ++slot;
                 continue;
             }
 
@@ -576,6 +596,7 @@ private:
 
             ++slot;
         }
+        return slot;
     }
 
 private:
