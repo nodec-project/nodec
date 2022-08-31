@@ -30,6 +30,11 @@
 
 class SceneRenderer {
     using TextureEntry = nodec_rendering::resources::Material::TextureEntry;
+    
+    static constexpr UINT SCENE_PROPERTIES_CB_SLOT = 0;
+    static constexpr UINT TEXTURE_CONFIG_CB_SLOT = 1;
+    static constexpr UINT MODEL_PROPERTIES_CB_SLOT = 2;
+    static constexpr UINT MATERIAL_PROPERTIES_CB_SLOT = 3;
 
 public:
     struct DirectionalLight {
@@ -76,6 +81,7 @@ public:
         uint32_t texHasFlag;
         uint32_t padding[3];
     };
+
 
 public:
     SceneRenderer(Graphics *pGfx, nodec::resource_management::ResourceRegistry &resourceRegistry)
@@ -159,11 +165,11 @@ public:
         using namespace nodec_rendering::resources;
         using namespace DirectX;
 
-        mScenePropertiesCB.BindVS(mpGfx, 0);
-        mScenePropertiesCB.BindPS(mpGfx, 0);
+        mScenePropertiesCB.BindVS(mpGfx, SCENE_PROPERTIES_CB_SLOT);
+        mScenePropertiesCB.BindPS(mpGfx, SCENE_PROPERTIES_CB_SLOT);
 
-        mTextureConfigCB.BindVS(mpGfx, 1);
-        mTextureConfigCB.BindPS(mpGfx, 1);
+        mTextureConfigCB.BindVS(mpGfx, TEXTURE_CONFIG_CB_SLOT);
+        mTextureConfigCB.BindPS(mpGfx, TEXTURE_CONFIG_CB_SLOT);
 
         // --- lights ---
         {
@@ -390,37 +396,63 @@ public:
                         pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
                     }
 
-                    mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
-
                     // It is assured that material and shader are exists.
                     // It is checked at the begining of rendering pass of camera.
                     auto materialBackend = std::static_pointer_cast<MaterialBackend>(activePostProcessEffects[i]->material);
                     auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
 
-                    materialBackend->bind_constant_buffer(mpGfx, 3);
                     SetCullMode(materialBackend->cull_mode());
+                    materialBackend->bind_constant_buffer(mpGfx, MATERIAL_PROPERTIES_CB_SLOT);
 
                     mTextureConfig.texHasFlag = 0x00;
-                    auto slot = BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                    const auto slotOffset = BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
                     mTextureConfigCB.Update(mpGfx, &mTextureConfig);
 
-                    const auto &textureResources = shaderBackend->texture_resources(0);
-                    for (std::size_t i = 0; i < textureResources.size(); ++i, ++slot) {
-                        const auto &name = textureResources[i];
-                        auto &buffer = mGeometryBuffers[name];
-                        if (!buffer) continue;
-                        auto *view = &buffer->GetShaderResourceView();
-                        mpGfx->GetContext().PSSetShaderResources(slot, 1u, &view);
-                    }
-                    shaderBackend->bind(mpGfx, 0);
+                    for (int passNum = 0; passNum < shaderBackend->pass_count(); ++passNum) {
+                        if (passNum == shaderBackend->pass_count() - 1) {
+                            // If last pass.
+                            // The render target must be one final target.
 
-                    mSamplerBilinear.BindPS(mpGfx, 0);
+                            mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
 
-                    mScreenQuadMesh->bind(mpGfx);
-                    mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+                        } else {
+                            // If halfway pass.
+                            // Support the multiple render targets.
+
+                            const auto &targets = shaderBackend->render_targerts(passNum);
+                            std::vector<ID3D11RenderTargetView *> renderTargerts(targets.size());
+                            for (size_t i = 0; i < targets.size(); ++i) {
+                                const auto &name = targets[i];
+                                auto &buffer = mGeometryBuffers[name];
+                                if (!buffer) {
+                                    buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
+                                }
+                                renderTargerts[i] = &buffer->GetRenderTargetView();
+                                mpGfx->GetContext().ClearRenderTargetView(renderTargerts[i], Vector4f::zero.v);
+                            }
+
+                            mpGfx->GetContext().OMSetRenderTargets(renderTargerts.size(), renderTargerts.data(), nullptr);
+                        }
+
+                        // --- Bind texture resources.
+                        // Bind sampler for textures.
+                        mSamplerBilinear.BindPS(mpGfx, slotOffset);
+                        const auto &textureResources = shaderBackend->texture_resources(passNum);
+                        for (std::size_t i = 0; i < textureResources.size(); ++i) {
+                            const auto &name = textureResources[i];
+                            auto &buffer = mGeometryBuffers[name];
+                            if (!buffer) continue;
+                            auto *view = &buffer->GetShaderResourceView();
+                            mpGfx->GetContext().PSSetShaderResources(slotOffset + i, 1u, &view);
+                        }
+                        shaderBackend->bind(mpGfx, passNum);
+
+                        mScreenQuadMesh->bind(mpGfx);
+                        mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+                    } // End foreach pass.
 
                     std::swap(mGeometryBuffers["screen"], mGeometryBuffers["screen_back"]);
-                }
+                } // End foreach effect.
             }
         }); // End foreach camera
     }

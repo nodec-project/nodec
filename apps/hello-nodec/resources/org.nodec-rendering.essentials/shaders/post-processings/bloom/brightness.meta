@@ -1,0 +1,10 @@
+{
+    "meta": {
+        "render_targets": [
+            "brightness_a"
+        ],
+        "texture_resources": [
+            "screen"
+        ]
+    }
+}

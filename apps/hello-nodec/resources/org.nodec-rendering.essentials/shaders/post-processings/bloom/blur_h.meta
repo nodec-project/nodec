@@ -1,0 +1,10 @@
+{
+    "meta": {
+        "render_targets": [
+            "brightness_b"
+        ],
+        "texture_resources": [
+            "brightness_a"
+        ]
+    }
+}
