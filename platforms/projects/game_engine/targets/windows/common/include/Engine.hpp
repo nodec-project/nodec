@@ -16,14 +16,14 @@
 #include <nodec_scene/impl/scene_module.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
-#include <screen/impl/screen_module.hpp>
+#include <nodec_screen/impl/screen_module.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/unicode.hpp>
 
 class Engine : public nodec_engine::impl::NodecEngineModule {
-    using Screen = screen::Screen;
-    using ScreenModule = screen::impl::ScreenModule;
+    using Screen = nodec_screen::Screen;
+    using ScreenModule = nodec_screen::impl::ScreenModule;
 
     using SceneModule = nodec_scene::impl::SceneModule;
     using Scene = nodec_scene::Scene;

@@ -1,10 +1,10 @@
-#ifndef SCREEN__SCREEN_HPP_
-#define SCREEN__SCREEN_HPP_
+#ifndef NODEC_SCREEN__SCREEN_HPP_
+#define NODEC_SCREEN__SCREEN_HPP_
 
 #include <nodec/vector2.hpp>
 #include <nodec/macros.hpp>
 
-namespace screen {
+namespace nodec_screen {
 
 
 class Screen {

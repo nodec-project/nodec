@@ -6,7 +6,7 @@ using namespace nodec_engine;
 using namespace nodec_input;
 using namespace nodec_scene;
 using namespace nodec_scene::components;
-using namespace screen;
+using namespace nodec_screen;
 using namespace nodec_resources;
 using namespace nodec_rendering::components;
 using namespace nodec_rendering::resources;

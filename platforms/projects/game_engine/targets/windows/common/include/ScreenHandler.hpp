@@ -2,7 +2,7 @@
 
 #include "Window.hpp"
 
-#include <screen/impl/screen_module.hpp>
+#include <nodec_screen/impl/screen_module.hpp>
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 
 #include <nodec/macros.hpp>
@@ -12,7 +12,7 @@
 
 
 class ScreenHandler {
-    using ScreenModule = screen::impl::ScreenModule;
+    using ScreenModule = nodec_screen::impl::ScreenModule;
 
 public:
     ScreenHandler(ScreenModule* pScreenModule)

@@ -1,12 +1,12 @@
-#ifndef SCREEN__IMPL__SCREEN_MODULE_HPP_
-#define SCREEN__IMPL__SCREEN_MODULE_HPP_
+#ifndef NODEC_SCREEN__IMPL__SCREEN_MODULE_HPP_
+#define NODEC_SCREEN__IMPL__SCREEN_MODULE_HPP_
 
-#include <screen/screen.hpp>
+#include "../screen.hpp"
 
 #include <nodec/signals.hpp>
 #include <nodec/logging.hpp>
 
-namespace screen {
+namespace nodec_screen {
 namespace impl {
 
 class ScreenModule : public Screen {
