@@ -58,7 +58,7 @@ public:
         case State::Paused:
 
             if (do_one_step_) {
-                engine_->world_module().step();
+                engine_->world_module().step(1 / 60.0f);
                 do_one_step_ = false;
             }
 

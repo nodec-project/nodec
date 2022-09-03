@@ -46,15 +46,17 @@ public:
     }
 
     void reset() {
-        stop();
+        is_running_ = false;
         start_time = time_point();
         stop_time = time_point();
         checkpoint_time = time_point();
     }
 
     void restart() {
-        reset();
-        start();
+        stop_time = time_point();
+        start_time = clock::now();
+        checkpoint_time = clock::now();
+        is_running_ = true;
     }
 
     duration lap() {

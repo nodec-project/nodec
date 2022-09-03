@@ -1,5 +1,6 @@
 #include "app.hpp"
 #include "camera_controller.hpp"
+#include "light_particle.hpp"
 
 using namespace nodec;
 using namespace nodec_engine;
@@ -44,6 +45,7 @@ public:
         auto &world = engine.get_module<World>();
         auto &input = engine.get_module<Input>();
         auto &serialization = engine.get_module<SceneSerialization>();
+        auto &resources = engine.get_module<Resources>();
 
 #ifdef EDITOR_MODE
         using namespace nodec_scene_editor;
@@ -78,6 +80,9 @@ public:
 #ifdef EDITOR_MODE
             CameraControllerSystem::setup_editor(editor);
 #endif
+        }
+        {
+            light_particle = std::make_shared<LightParticle>(world, resources.registry(), serialization);
         }
         //{
         //    auto &scene_serialization = engine.get_module<SceneSerialization>();
@@ -188,6 +193,7 @@ private:
 private:
     NodecEngine &engine;
     std::shared_ptr<CameraControllerSystem> camera_controller_system_;
+    std::shared_ptr<LightParticle> light_particle;
     // std::shared_ptr<Material> target_material;
     // SceneEntity audioEntity;
 };

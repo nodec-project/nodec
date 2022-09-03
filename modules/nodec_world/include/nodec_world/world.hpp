@@ -1,6 +1,8 @@
 #ifndef NODEC_WORLD__WORLD_HPP_
 #define NODEC_WORLD__WORLD_HPP_
 
+#include "world_clock.hpp"
+
 #include <nodec_scene/scene.hpp>
 
 #include <nodec/signals.hpp>
@@ -14,9 +16,11 @@ public:
 
     World(nodec_scene::Scene *scene,
           WorldSignal::SignalInterface initialized_signal,
-          WorldSignal::SignalInterface stepped_signal)
+          WorldSignal::SignalInterface stepped_signal,
+          WorldClock::WorldClockInterface clock_interface)
         : scene_{scene}, initialized_{initialized_signal},
-          stepped_{stepped_signal} {}
+          stepped_{stepped_signal},
+          clock_{clock_interface} {}
 
     virtual ~World() {}
 
@@ -28,7 +32,6 @@ public:
         return *scene_;
     }
 
-public:
     // About scene (world) lifecycle.
     //  * https://docs.unity3d.com/Packages/com.unity.entities@0.17/manual/world.html
     //  * https://www.gymlibrary.ml/content/environment_creation/
@@ -41,10 +44,19 @@ public:
         return stepped_;
     }
 
+    const WorldClock::WorldClockInterface& clock() const noexcept {
+        return clock_;
+    }
+    
+    WorldClock::WorldClockInterface& clock() noexcept {
+        return clock_;
+    }
+
 private:
     nodec_scene::Scene *scene_;
     WorldSignal::SignalInterface initialized_;
     WorldSignal::SignalInterface stepped_;
+    WorldClock::WorldClockInterface clock_;
 
     NODEC_DISABLE_COPY(World);
 };

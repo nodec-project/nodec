@@ -95,9 +95,10 @@ private:
         using namespace nodec_scene::components;
         using namespace nodec_rendering::components;
 
+        // logging::InfoStream(__FILE__, __LINE__) << world.clock().current_time() << ", " << world.clock().delta_time();
+
         world.scene().registry().view<Camera, Transform, CameraController>().each([&](const SceneEntity &entity, Camera &camera, Transform &trfm, CameraController &ctrl) {
-            // TODO: Get delta time from scene.
-            const float delta_time = 1.0f / 60;
+            const float delta_time = world.clock().delta_time();
 
             auto forward = math::gfx::transform(Vector3f(0, 0, 1), trfm.local_rotation);
             auto right = math::gfx::transform(Vector3f(1, 0, 0), trfm.local_rotation);
@@ -116,12 +117,12 @@ private:
                 trfm.local_position += move_vec.y * forward * ctrl.speed * delta_time;
                 trfm.local_position += move_vec.x * right * ctrl.speed * delta_time;
 
-                logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
+                //logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
                 trfm.dirty = true;
             }
 
             if (math::norm(rotation_delta) > 1) {
-                logging::InfoStream(__FILE__, __LINE__) << rotation_delta;
+                //logging::InfoStream(__FILE__, __LINE__) << rotation_delta;
 
                 trfm.local_rotation *= math::gfx::angle_axis(rotation_delta.x * 0.1f, Vector3f(0, 1, 0));
                 trfm.local_rotation *= math::gfx::angle_axis(rotation_delta.y * 0.1f, Vector3f(1, 0, 0));

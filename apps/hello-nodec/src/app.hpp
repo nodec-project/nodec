@@ -11,6 +11,7 @@
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/resources/mesh.hpp>
 #include <nodec_resources/resources.hpp>
 #include <nodec_scene/components/basic.hpp>
