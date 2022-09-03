@@ -1,6 +1,6 @@
 {
     "material": {
-        "shader": "org.nodec-rendering.essentials/shaders/post-processings/gamma-correction",
+        "shader": "org.nodec-rendering.essentials/shaders/post-processings/hdr",
         "cull_mode": 2,
         "float_properties": [],
         "vector4_properties": [],

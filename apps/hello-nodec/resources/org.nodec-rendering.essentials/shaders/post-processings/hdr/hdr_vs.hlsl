@@ -1,4 +1,4 @@
-#include "process_interface.hlsl"
+#include "hdr_interface.hlsl"
 
 V2P VSMain(VSIn input) {
     V2P output;

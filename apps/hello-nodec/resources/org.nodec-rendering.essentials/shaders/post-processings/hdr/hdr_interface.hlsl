@@ -2,6 +2,14 @@
 
 
 // --- shader.meta properties ---
+struct MaterialProperties {
+    float gamma;
+    float exposure;
+};
+
+cbuffer cbMaterialProperties : register(b3) {
+    MaterialProperties materialProperties;
+};
 
 // ---
 

@@ -1995,7 +1995,7 @@
 },
 {
 "enabled": true,
-"material": "org.nodec-rendering.essentials/materials/post-processings/gamma-correction.material"
+"material": "org.nodec-rendering.essentials/materials/post-processings/hdr.material"
 }
 ]
 }
