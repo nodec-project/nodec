@@ -26,7 +26,7 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializable
 
 class CameraControllerSystem {
 public:
-    CameraControllerSystem(nodec_scene::Scene &scene,
+    CameraControllerSystem(nodec_world::World &world,
                            nodec_input::Input &input,
                            nodec_scene_serialization::SceneSerialization &serialization) {
         using namespace nodec;
@@ -34,7 +34,7 @@ public:
         using namespace nodec_input::keyboard;
         using namespace nodec_input::mouse;
 
-        scene.stepped().connect([&](nodec_scene::Scene &scene) { on_stepped(scene); });
+        world.stepped().connect([&](nodec_world::World &world) { on_stepped(world); });
         input.keyboard().key_event().connect([&](const nodec_input::keyboard::KeyEvent &event) {
             // logging::InfoStream(__FILE__, __LINE__) << event;
             if (event.key == Key::W) {
@@ -89,13 +89,13 @@ public:
 #endif
 
 private:
-    void on_stepped(nodec_scene::Scene &scene) {
+    void on_stepped(nodec_world::World &world) {
         using namespace nodec;
         using namespace nodec_scene;
         using namespace nodec_scene::components;
         using namespace nodec_rendering::components;
 
-        scene.registry().view<Camera, Transform, CameraController>().each([&](const SceneEntity &entity, Camera &camera, Transform &trfm, CameraController &ctrl) {
+        world.scene().registry().view<Camera, Transform, CameraController>().each([&](const SceneEntity &entity, Camera &camera, Transform &trfm, CameraController &ctrl) {
             // TODO: Get delta time from scene.
             const float delta_time = 1.0f / 60;
 

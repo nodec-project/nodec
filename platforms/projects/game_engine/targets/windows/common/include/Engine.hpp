@@ -13,6 +13,7 @@
 #include <nodec_engine/impl/nodec_engine_module.hpp>
 #include <nodec_input/impl/input_module.hpp>
 #include <nodec_resources/impl/resources_module.hpp>
+#include <nodec_world/impl/world_module.hpp>
 #include <nodec_scene/impl/scene_module.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
@@ -35,6 +36,9 @@ class Engine : public nodec_engine::impl::NodecEngineModule {
 
 public:
     Engine() {
+        using namespace nodec_world;
+        using namespace nodec_world::impl;
+
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Created!";
 
         imgui_manager_.reset(new ImguiManager);
@@ -47,8 +51,8 @@ public:
         screen_handler_->BindHandlersOnBoot();
 
         // --- scene ---
-        scene_module_.reset(new SceneModule());
-        add_module<Scene>(scene_module_);
+        world_module_.reset(new WorldModule());
+        add_module<World>(world_module_);
 
         // --- input ---
         input_module_.reset(new nodec_input::impl::InputModule());
@@ -71,7 +75,7 @@ public:
         // TODO: Consider to unload all modules before backends.
 
         // unload all scene entities.
-        scene_module_->registry().clear();
+        world_module_->scene().registry().clear();
     }
 
     void setup() {
@@ -91,10 +95,10 @@ public:
 
         audio_platform_.reset(new AudioPlatform());
 
-        scene_audio_system_.reset(new SceneAudioSystem(audio_platform_.get(), &scene_module_->registry()));
+        scene_audio_system_.reset(new SceneAudioSystem(audio_platform_.get(), &world_module_->scene().registry()));
 
-        scene_module_->stepped().connect([&](Scene &scene) {
-            scene_audio_system_->UpdateAudio(scene_module_->registry());
+        world_module_->stepped().connect([&](auto &world) {
+            scene_audio_system_->UpdateAudio(world_module_->scene().registry());
         });
     }
 
@@ -103,11 +107,11 @@ public:
     }
 
     void frame_end() {
-        for (auto &root : scene_module_->hierarchy_system().root_entities()) {
-            nodec_scene::systems::update_transform(scene_module_->registry(), root);
+        for (auto &root : world_module_->scene_module().hierarchy_system().root_entities()) {
+            nodec_scene::systems::update_transform(world_module_->scene().registry(), root);
         }
 
-        scene_renderer_->Render(*scene_module_);
+        scene_renderer_->Render(world_module_->scene());
 
         window_->GetGraphics().EndFrame();
     }
@@ -116,8 +120,13 @@ public:
         return *screen_module_;
     }
     SceneModule &scene_module() {
-        return *scene_module_;
+        return world_module_->scene_module();
     }
+
+    nodec_world::impl::WorldModule& world_module() {
+        return *world_module_;
+    }
+
     ResourcesModule &resources_module() {
         return *resources_module_;
     }
@@ -143,7 +152,7 @@ private:
 
     std::shared_ptr<SceneSerializationModuleBackend> scene_serialization_module_;
 
-    std::shared_ptr<SceneModule> scene_module_;
+    std::shared_ptr<nodec_world::impl::WorldModule> world_module_;
 
     std::unique_ptr<SceneRenderer> scene_renderer_;
 

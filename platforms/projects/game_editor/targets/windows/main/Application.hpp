@@ -36,7 +36,7 @@ protected:
         engine->setup();
 
         // Do first step (initialize).
-        engine->scene_module().reset();
+        engine->world_module().reset();
     }
 
     void loop() {

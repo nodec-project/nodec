@@ -13,6 +13,7 @@ using namespace nodec_rendering::resources;
 using namespace nodec_scene_serialization;
 using namespace nodec_scene_audio::resources;
 using namespace nodec_scene_audio::components;
+using namespace nodec_world;
 
 class HelloWorld {
 public:
@@ -40,7 +41,7 @@ public:
         // engine.initialized().connect([=](NodecEngine &engine) { on_initialized(engine); });
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
 
-        auto &scene = engine.get_module<Scene>();
+        auto &world = engine.get_module<World>();
         auto &input = engine.get_module<Input>();
         auto &serialization = engine.get_module<SceneSerialization>();
 
@@ -68,12 +69,12 @@ public:
         //    });
 #endif
         {
-            scene.initialized().connect([&](Scene &scene) { on_initialized(scene); });
-            scene.stepped().connect([&](Scene &scene) { on_stepped(scene); });
+            world.initialized().connect([&](World &world) { on_initialized(world); });
+            world.stepped().connect([&](World &world) { on_stepped(world); });
         }
 
         {
-            camera_controller_system_ = std::make_shared<CameraControllerSystem>(scene, input, serialization);
+            camera_controller_system_ = std::make_shared<CameraControllerSystem>(world, input, serialization);
 #ifdef EDITOR_MODE
             CameraControllerSystem::setup_editor(editor);
 #endif
@@ -127,7 +128,7 @@ public:
     }
 
 private:
-    void on_initialized(Scene &scene) {
+    void on_initialized(World &world) {
         logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
 
         // auto entity = scene.create_entity("Hello World!!");
@@ -140,7 +141,7 @@ private:
             auto &serialization = engine.get_module<SceneSerialization>();
             auto mainScene = resources.registry().get_resource<SerializableSceneGraph>("org.nodec.hello-nodec/scenes/main.scene").get();
 
-            SceneEntityEmplacer{mainScene, scene, entities::null_entity, serialization}.emplace_all();
+            SceneEntityEmplacer{mainScene, world.scene(), entities::null_entity, serialization}.emplace_all();
         }
 
         //{
@@ -181,7 +182,7 @@ private:
         //}
     }
 
-    void on_stepped(Scene &scene) {
+    void on_stepped(World &scene) {
     }
 
 private:
@@ -223,16 +224,6 @@ void nodec_engine::on_boot(NodecEngine &engine) {
     engine.add_module(std::make_shared<HelloWorld>(engine));
 }
 
-//
-// using namespace nodec;
-// using namespace game_engine;
-// using namespace nodec_modules::rendering::interfaces;
-// using namespace nodec_modules::screen::interfaces;
-// using namespace nodec_extentions::material_set;
-//
-// NodecObject::Reference<Camera> App::main_camera;
-//
-//
 // void game_engine::on_boot(GameEngine& engine)
 //{
 //    nodec::logging::info("booting... in application layer", __FILE__, __LINE__);

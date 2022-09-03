@@ -42,33 +42,33 @@ public:
         return entity;
     }
 
-    SceneSignal::SignalInterface initialized() override {
-        return initialized_.signal_interface();
-    }
+    // SceneSignal::SignalInterface initialized() override {
+    //     return initialized_.signal_interface();
+    // }
 
-    SceneSignal::SignalInterface stepped() override {
-        return stepped_.signal_interface();
-    }
+    // SceneSignal::SignalInterface stepped() override {
+    //     return stepped_.signal_interface();
+    // }
 
 public:
     systems::HierarchySystem &hierarchy_system() noexcept {
         return hierarchy_system_;
     }
 
-    void step() {
-        stepped_(*this);
-    }
+    // void step() {
+    //     stepped_(*this);
+    // }
 
-    void reset() {
-        registry_.clear();
-        initialized_(*this);
-    }
+    // void reset() {
+    //     registry_.clear();
+    //     initialized_(*this);
+    // }
 
 private:
     SceneRegistry registry_;
     systems::HierarchySystem hierarchy_system_;
-    SceneSignal stepped_;
-    SceneSignal initialized_;
+    // SceneSignal stepped_;
+    // SceneSignal initialized_;
 };
 
 } // namespace impl

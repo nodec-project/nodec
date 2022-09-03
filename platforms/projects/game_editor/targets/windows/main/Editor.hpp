@@ -33,7 +33,7 @@ public:
     }
 
     void reset() {
-        engine_->scene_module().reset();
+        engine_->world_module().reset();
         state_ = State::Paused;
     }
 
@@ -52,13 +52,13 @@ public:
     void update() {
         switch (state_) {
         case State::Playing:
-            engine_->scene_module().step();
+            engine_->world_module().step();
             break;
 
         case State::Paused:
 
             if (do_one_step_) {
-                engine_->scene_module().step();
+                engine_->world_module().step();
                 do_one_step_ = false;
             }
 

@@ -1,9 +1,9 @@
 #ifndef NODEC__ENTITIES__STORAGE_HPP_
 #define NODEC__ENTITIES__STORAGE_HPP_
 
+#include "../containers/sparse_table.hpp"
 #include "../signals.hpp"
 #include "../type_traits.hpp"
-#include "../containers/sparse_table.hpp"
 
 #include <cassert>
 #include <vector>
@@ -29,8 +29,6 @@ public:
         : packed_{packed}, sparse_table_{sparse_table} {}
 
     virtual ~BaseStorage() {}
-
-    // TODO: Support move semantics.
 
 public:
     const_iterator begin() const noexcept {
@@ -117,7 +115,7 @@ public:
         return &instances[*pos];
     }
 
-    const value_type& get(const Entity entity) const {
+    const value_type &get(const Entity entity) const {
         auto *pos = sparse_table.try_get(entity);
         if (!pos) throw_out_of_range_exception(entity, __FILE__, __LINE__);
 

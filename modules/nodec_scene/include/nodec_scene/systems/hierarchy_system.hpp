@@ -14,7 +14,6 @@ class HierarchySystem {
 public:
     HierarchySystem(SceneRegistry *registry)
         : registry_{registry} {
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "[HierarchySystem] >>> init()";
 
         hierarchy_created_connection_ = registry_->component_constructed<components::Hierarchy>()
                                             .connect(
