@@ -3,7 +3,7 @@
 
 #include "../signals.hpp"
 #include "../type_traits.hpp"
-#include "sparse_table.hpp"
+#include "../containers/sparse_table.hpp"
 
 #include <cassert>
 #include <vector>
@@ -17,7 +17,7 @@ class BasicRegistry;
 template<typename EntityT>
 class BaseStorage {
     using PackedContainer = std::vector<EntityT>;
-    using SparseTable = SparseTable<size_t>;
+    using SparseTable = containers::SparseTable<size_t>;
 
 public:
     using Entity = EntityT;
@@ -193,7 +193,7 @@ public:
     }
 
 private:
-    SparseTable<size_t> sparse_table;
+    containers::SparseTable<size_t> sparse_table;
     std::vector<Entity> packed;
     std::vector<Value> instances;
 

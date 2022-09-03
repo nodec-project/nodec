@@ -1,12 +1,10 @@
-#ifndef NODEC__ENTITIES__SPARSE_TABLE_HPP_
-#define NODEC__ENTITIES__SPARSE_TABLE_HPP_
-
-#include <nodec/logging.hpp>
+#ifndef NODEC__CONTAINERS__SPARSE_TABLE_HPP_
+#define NODEC__CONTAINERS__SPARSE_TABLE_HPP_
 
 #include <vector>
 
 namespace nodec {
-namespace entities {
+namespace containers {
 
 // This code based on
 //  * <https://github.com/sparsehash/sparsehash/blob/master/src/sparsehash/sparsetable>
@@ -337,7 +335,7 @@ private:
 template<typename T>
 using SparseTable = BasicSparseTable<T, DEFAULT_SPARSE_GROUP_SIZE>;
 
-} // namespace entities
+} // namespace containers
 } // namespace nodec
 
 #endif
