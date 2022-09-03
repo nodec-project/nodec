@@ -28,6 +28,7 @@ class BasicRegistry {
 
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
+        const type_info* type_info;
     };
 
     decltype(auto) generate_identifier(const std::size_t pos) noexcept {
@@ -52,7 +53,7 @@ class BasicRegistry {
     template<typename Component>
     Storage<Component> *pool_assured() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
-        const auto index = type_seq<Component>::value();
+        const auto index = type_id<Component>().seq_index();
 
         if (!(index < pools.size())) {
             pools.resize(index + 1u);
@@ -61,6 +62,7 @@ class BasicRegistry {
         auto &&pdata = pools[index];
         if (!pdata.pool) {
             pdata.pool.reset(new Storage<Component>());
+            pdata.type_info = &type_id<Component>();
         }
 
         return static_cast<Storage<Component> *>(pools[index].pool.get());
@@ -69,7 +71,7 @@ class BasicRegistry {
     template<typename Component>
     const Storage<Component> *pool_if_exists() const {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
-        const auto index = type_seq<Component>::value();
+        const auto index = type_id<Component>().seq_index();
         return (index < pools.size() && pools[index].pool)
                    ? static_cast<const Storage<Component> *>(pools[index].pool.get())
                    : nullptr;
@@ -78,7 +80,7 @@ class BasicRegistry {
     template<typename Component>
     Storage<Component> *pool_if_exists() {
         static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
-        const auto index = type_seq<Component>::value();
+        const auto index = type_id<Component>().seq_index();
         return (index < pools.size() && pools[index].pool)
                    ? static_cast<Storage<Component> *>(pools[index].pool.get())
                    : nullptr;
@@ -245,7 +247,7 @@ public:
 
     template<typename Component>
     decltype(auto) get_component(const Entity entity) {
-        return const_cast<Component &>(std::as_const(*this).get_component<Component>(entity));
+        return const_cast<Component &>(nodec::as_const(*this).get_component<Component>(entity));
     }
 
     template<typename... Components>
@@ -315,23 +317,19 @@ public:
      * The signature of the function should be equivalent to the following:
      *
      * @code{.cpp}
-     * void(int type_seq_index, void* component);
+     * void(const type_info&, void* component);
      * @endcode
      */
     template<typename Func>
     void visit(Entity entity, Func func) const {
         for (auto pos = pools.size(); pos; --pos) {
             const auto &pdata = pools[pos - 1];
-            if (!pdata.pool) {
-                continue;
-            }
+            if (!pdata.pool) continue;
 
             auto component = pdata.pool->try_get_opaque(entity);
-            if (!component) {
-                continue;
-            }
+            if (!component) continue;
 
-            func(pos - 1, component);
+            func(*pdata.type_info, component);
         }
     }
 

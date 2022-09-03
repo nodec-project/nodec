@@ -130,6 +130,8 @@ int main() {
     try {
         logging::record_handlers().connect(logging::record_to_stdout_handler);
 
+
+
         Stopwatch<std::chrono::steady_clock> sw;
 
         {

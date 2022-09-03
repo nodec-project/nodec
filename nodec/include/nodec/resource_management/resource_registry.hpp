@@ -123,7 +123,7 @@ private:
     ResourceBlock<Type> *resource_block_assured() {
         std::lock_guard<std::mutex> lock(resource_blocks_mutex);
 
-        const auto index = type_seq<Type>::value();
+        const auto index = type_seq_index<Type>::value();
 
         if (!(index < resource_blocks.size())) {
             resource_blocks.resize(index + 1u);

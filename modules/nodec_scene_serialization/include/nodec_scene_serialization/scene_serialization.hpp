@@ -38,7 +38,7 @@ class SceneSerialization {
             using namespace nodec;
 
             assert(serializable_component);
-            assert(serializable_component->type_id() == type_seq<SerializableComponent>::value());
+            assert(serializable_component->type_info() == type_id<SerializableComponent>());
 
             emplacer(*static_cast<const SerializableComponent *>(serializable_component), entity, scene_registry);
         }
@@ -64,8 +64,8 @@ public:
     void register_component(Serializer &&serializer, Emplacer &&emplacer) {
         using namespace nodec;
 
-        TypeId component_type_id = type_seq<Component>::value();
-        TypeId serializable_component_type_id = type_seq<SerializableComponent>::value();
+        type_seq_index_type component_type_id = type_seq_index<Component>::value();
+        type_seq_index_type serializable_component_type_id = type_seq_index<SerializableComponent>::value();
 
         assert(component_dict.find(component_type_id) == component_dict.end());
         assert(serializable_component_dict.find(serializable_component_type_id) == serializable_component_dict.end());
@@ -86,7 +86,7 @@ public:
 
         auto node = std::make_shared<SerializableEntityNode>();
 
-        auto exception_handler = [=](TypeId component_type_id) {
+        auto exception_handler = [=](type_seq_index_type component_type_id) {
             std::string details;
 
             try {
@@ -104,18 +104,18 @@ public:
                 << details;
         };
 
-        scene_registry.visit(entity, [=, &node](int type_id, void *comp) {
+        scene_registry.visit(entity, [=, &node](const nodec::type_info type_info, void *comp) {
             assert(comp);
 
             try {
-                auto &serialization = component_dict.at(type_id);
+                auto &serialization = component_dict.at(type_info.seq_index());
 
                 assert(static_cast<bool>(serialization));
 
                 auto serializable_component = serialization->serialize(comp);
                 node->components.push_back(serializable_component);
             } catch (...) {
-                exception_handler(type_id);
+                exception_handler(type_info.seq_index());
             }
         });
 
@@ -131,7 +131,7 @@ public:
             return entities::null_entity;
         }
 
-        auto exception_handler = [](TypeId component_type_id) {
+        auto exception_handler = [](type_seq_index_type component_type_id) {
             std::string details;
 
             try {
@@ -151,18 +151,16 @@ public:
         auto entity = scene_registry.create_entity();
 
         for (auto &comp : entity_node->components) {
-            if (!comp) {
-                continue;
-            }
+            if (!comp) continue;
 
             try {
-                auto &serialization = serializable_component_dict.at(comp->type_id());
+                auto &serialization = serializable_component_dict.at(comp->type_info().seq_index());
 
                 assert(static_cast<bool>(serialization));
 
                 serialization->emplace_component(comp.get(), entity, scene_registry);
             } catch (...) {
-                exception_handler(comp->type_id());
+                exception_handler(comp->type_info().seq_index());
             }
         }
 
@@ -170,8 +168,8 @@ public:
     }
 
 private:
-    std::unordered_map<nodec::TypeId, std::shared_ptr<BaseComponentSerialization>> component_dict;
-    std::unordered_map<nodec::TypeId, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict;
+    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> component_dict;
+    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict;
 };
 
 } // namespace nodec_scene_serialization

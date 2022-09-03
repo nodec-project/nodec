@@ -11,11 +11,11 @@ class BaseSerializableComponent {
 public:
     template<class Derived>
     BaseSerializableComponent(Derived *)
-        : type_id_{nodec::type_seq<Derived>::value()} {
+        : type_info_{&nodec::type_id<Derived>()} {
     }
 
     BaseSerializableComponent()
-        : type_id_{nodec::type_seq<BaseSerializableComponent>::value()} {
+        : type_info_{&nodec::type_id<BaseSerializableComponent>()} {
     }
 
     virtual ~BaseSerializableComponent(){};
@@ -24,12 +24,12 @@ public:
     void serialize(Archive &) {}
 
 public:
-    nodec::TypeId type_id() const {
-        return type_id_;
+    const nodec::type_info& type_info() const noexcept {
+        return *type_info_;
     }
 
 private:
-    const nodec::TypeId type_id_;
+    const nodec::type_info *type_info_;
 };
 //
 // template<class Archive>

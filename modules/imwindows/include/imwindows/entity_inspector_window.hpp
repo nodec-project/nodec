@@ -89,7 +89,7 @@ public:
         decltype(auto) register_component(const std::string& name, const Callback&& on_gui_callback) {
             using namespace nodec;
 
-            const auto index = type_seq<Component>::value();
+            const auto index = type_seq_index<Component>::value();
 
             auto iter = handlers.find(index);
             if (iter == handlers.end()) {
@@ -99,7 +99,7 @@ public:
             }
         }
 
-        BaseComponentHandler* get_handler(nodec::TypeId type_seq_index) {
+        BaseComponentHandler* get_handler(nodec::type_seq_index_type type_seq_index) {
             using namespace nodec;
 
             auto iter = handlers.find(type_seq_index);
@@ -123,7 +123,7 @@ public:
         }
 
     private:
-        std::unordered_map<nodec::TypeId, std::unique_ptr<BaseComponentHandler>> handlers;
+        std::unordered_map<nodec::type_seq_index_type, std::unique_ptr<BaseComponentHandler>> handlers;
     };
 
 
@@ -159,9 +159,9 @@ public:
         }
 
         logging::InfoStream info(__FILE__, __LINE__);
-        entity_registry_->visit(target_entity_, [&](int type_seq_index, void* component) {
+        entity_registry_->visit(target_entity_, [&](const nodec::type_info& type_info, void* component) {
 
-            auto* handler = component_registry_->get_handler(type_seq_index);
+            auto *handler = component_registry_->get_handler(type_info.seq_index());
             if (!handler) {
                 return;
             }

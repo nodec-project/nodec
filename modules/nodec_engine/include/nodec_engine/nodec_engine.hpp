@@ -36,7 +36,7 @@ public:
 public:
     template<typename Module>
     decltype(auto) get_module() const {
-        const auto index = nodec::type_seq<Module>::value();
+        const auto index = nodec::type_seq_index<Module>::value();
         if (index < modules.size() && modules[index].container) {
             return *static_cast<ModuleContainer<Module> *>(modules[index].container.get())->data;
         }
@@ -48,7 +48,7 @@ public:
 
     template<typename Module>
     decltype(auto) add_module(std::shared_ptr<Module> module) {
-        const auto index = nodec::type_seq<Module>::value();
+        const auto index = nodec::type_seq_index<Module>::value();
 
         if (!(index < modules.size())) {
             modules.resize(index + 1u);

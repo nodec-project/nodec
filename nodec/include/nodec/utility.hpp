@@ -20,6 +20,19 @@ constexpr std::add_const_t<T> &as_const(T &t) noexcept {
 template<class T>
 void as_const(const T &&) = delete;
 
+/**
+ * @brief 
+ * Waiting for C++17.
+ * @tparam T 
+ */
+template<class T>
+struct in_place_type_t {
+    explicit in_place_type_t() = default;
+};
+
+template<class T>
+constexpr in_place_type_t<T> in_place_type{};
+
 } // namespace nodec
 
 #endif
