@@ -8,36 +8,19 @@
 "components": [
 {
 "polymorphic_id": 2147483649,
-"polymorphic_name": "nodec_rendering::components::SerializablePointLight",
+"polymorphic_name": "nodec_scene::components::SerializableTransform",
 "ptr_wrapper": {
 "id": 2147483650,
 "data": {
-"color": {
-"x": 1.0,
-"y": 0.38235294818878176,
-"z": 0.0,
-"w": 1.0
-},
-"intensity": 1.0,
-"range": 5.0
-}
-}
-},
-{
-"polymorphic_id": 2147483650,
-"polymorphic_name": "nodec_scene::components::SerializableTransform",
-"ptr_wrapper": {
-"id": 2147483651,
-"data": {
 "local_position": {
-"x": 0.0,
-"y": 1.5950000286102296,
-"z": -1.6649999618530274
+"x": 1.4249999523162842,
+"y": 1.5149999856948853,
+"z": -2.990000009536743
 },
 "local_scale": {
-"x": 0.10000000149011612,
-"y": 0.10000000149011612,
-"z": 0.10000000149011612
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
 },
 "local_rotation": {
 "x": 0.0,
@@ -49,20 +32,20 @@
 }
 },
 {
-"polymorphic_id": 2147483651,
+"polymorphic_id": 2147483650,
 "polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
-"id": 2147483652,
+"id": 2147483651,
 "data": {
-"name": "Light"
+"name": "Sphere"
 }
 }
 },
 {
-"polymorphic_id": 2147483652,
+"polymorphic_id": 2147483651,
 "polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
-"id": 2147483653,
+"id": 2147483652,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/sphere.mesh"

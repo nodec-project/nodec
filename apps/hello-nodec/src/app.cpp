@@ -223,9 +223,9 @@ void nodec_engine::on_boot(NodecEngine &engine) {
 
     auto &resources = engine.get_module<Resources>();
 
-#ifdef _DEBUG
+//#ifdef _DEBUG
     resources.set_resource_path("C:/Users/onete/OneDrive/Documents/Projects/nodec_project/nodec/apps/hello-nodec/resources");
-#endif // _DEBUG
+//#endif // _DEBUG
 
     engine.add_module(std::make_shared<HelloWorld>(engine));
 }

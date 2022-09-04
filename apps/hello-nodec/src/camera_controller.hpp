@@ -71,7 +71,7 @@ public:
                 serializable->speed = controller.speed;
                 return serializable;
             },
-            [&](const const SerializableCameraController &serializable, SceneEntity entity, SceneRegistry &registry) {
+            [&](const SerializableCameraController &serializable, SceneEntity entity, SceneRegistry &registry) {
                 registry.emplace_component<CameraController>(entity);
                 auto& controller = registry.get_component<CameraController>(entity);
                 controller.speed = serializable.speed;

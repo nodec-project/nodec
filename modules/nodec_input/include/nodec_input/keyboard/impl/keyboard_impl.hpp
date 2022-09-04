@@ -1,7 +1,7 @@
 #ifndef NODEC_INPUT__KEYBOARD__IMPL__KEYBOARD_MODULE_HPP_
 #define NODEC_INPUT__KEYBOARD__IMPL__KEYBOARD_MODULE_HPP_
 
-#include "../keyboard.hpp";
+#include "../keyboard.hpp"
 
 #include <bitset>
 #include <queue>
