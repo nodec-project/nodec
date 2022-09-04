@@ -257,10 +257,15 @@ public:
                 mpGfx->GetContext().ClearRenderTargetView(pCameraRenderTargetView, color);
             }
 
+            //const auto matrixP = XMMatrixOrthographicLH(
+            //    10 * aspect, 10,
+            //    camera.nearClipPlane, camera.farClipPlane);
+
             const auto matrixP = XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(camera.fovAngle),
                 aspect,
                 camera.nearClipPlane, camera.farClipPlane);
+
             const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
 
             XMStoreFloat4x4(&mSceneProperties.matrixP, matrixP);
