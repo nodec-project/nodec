@@ -7,8 +7,8 @@
 
 class LightParticle {
 public:
-    LightParticle(nodec_world::World &world, nodec::resource_management::ResourceRegistry &resource_registry, 
-        nodec_scene_serialization::SceneSerialization &serialization) {
+    LightParticle(nodec_world::World &world, nodec::resource_management::ResourceRegistry &resource_registry,
+                  nodec_scene_serialization::SceneSerialization &serialization) {
         using namespace nodec;
         using namespace nodec_rendering::components;
         using namespace nodec_scene::components;
@@ -44,7 +44,6 @@ public:
             auto &trfm = world.scene().registry().get_component<Transform>(center_entt);
             trfm.local_rotation *= math::gfx::angle_axis(10 * world.clock().delta_time(), Vector3f{0.0f, 1.0f, 0.0f});
             trfm.dirty = true;
-
         });
     }
 

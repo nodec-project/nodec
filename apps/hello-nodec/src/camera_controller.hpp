@@ -73,7 +73,7 @@ public:
             },
             [&](const SerializableCameraController &serializable, SceneEntity entity, SceneRegistry &registry) {
                 registry.emplace_component<CameraController>(entity);
-                auto& controller = registry.get_component<CameraController>(entity);
+                auto &controller = registry.get_component<CameraController>(entity);
                 controller.speed = serializable.speed;
             });
     }
@@ -117,12 +117,12 @@ private:
                 trfm.local_position += move_vec.y * forward * ctrl.speed * delta_time;
                 trfm.local_position += move_vec.x * right * ctrl.speed * delta_time;
 
-                //logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
+                // logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
                 trfm.dirty = true;
             }
 
             if (math::norm(rotation_delta) > 1) {
-                //logging::InfoStream(__FILE__, __LINE__) << rotation_delta;
+                // logging::InfoStream(__FILE__, __LINE__) << rotation_delta;
 
                 trfm.local_rotation *= math::gfx::angle_axis(rotation_delta.x * 0.1f, Vector3f(0, 1, 0));
                 trfm.local_rotation *= math::gfx::angle_axis(rotation_delta.y * 0.1f, Vector3f(1, 0, 0));
