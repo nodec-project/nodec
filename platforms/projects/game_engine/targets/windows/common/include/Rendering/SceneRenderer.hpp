@@ -30,7 +30,7 @@
 
 class SceneRenderer {
     using TextureEntry = nodec_rendering::resources::Material::TextureEntry;
-    
+
     static constexpr UINT SCENE_PROPERTIES_CB_SLOT = 0;
     static constexpr UINT TEXTURE_CONFIG_CB_SLOT = 1;
     static constexpr UINT MODEL_PROPERTIES_CB_SLOT = 2;
@@ -81,7 +81,6 @@ public:
         uint32_t texHasFlag;
         uint32_t padding[3];
     };
-
 
 public:
     SceneRenderer(Graphics *pGfx, nodec::resource_management::ResourceRegistry &resourceRegistry)
@@ -257,14 +256,23 @@ public:
                 mpGfx->GetContext().ClearRenderTargetView(pCameraRenderTargetView, color);
             }
 
-            //const auto matrixP = XMMatrixOrthographicLH(
-            //    10 * aspect, 10,
-            //    camera.nearClipPlane, camera.farClipPlane);
+            auto matrixP = XMMatrixIdentity();
 
-            const auto matrixP = XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(camera.fovAngle),
-                aspect,
-                camera.nearClipPlane, camera.farClipPlane);
+            switch (camera.projection) {
+            case Camera::Projection::Perspective:
+                matrixP = XMMatrixPerspectiveFovLH(
+                    XMConvertToRadians(camera.fov_angle),
+                    aspect,
+                    camera.near_clip_plane, camera.far_clip_plane);
+                break;
+            case Camera::Projection::Orthographic:
+                matrixP = XMMatrixOrthographicLH(
+                    camera.ortho_width, camera.ortho_width / aspect,
+                    camera.near_clip_plane, camera.far_clip_plane);
+                break;
+            default:
+                break;
+            }
 
             const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
 

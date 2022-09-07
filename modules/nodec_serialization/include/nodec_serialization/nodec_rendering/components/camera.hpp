@@ -15,15 +15,21 @@ public:
         : BaseSerializableComponent(this) {
     }
 
-    float farClipPlane{100.0f};
-    float nearClipPlane{0.01f};
-    float fovAngle{45.0f};
+    float far_clip_plane{100.0f};
+    float near_clip_plane{0.01f};
+
+    Camera::Projection projection{Camera::Projection::Perspective};
+    
+    float fov_angle{45.0f};
+    float ortho_width{10.0f};
 
     template<class Archive>
     void serialize(Archive &archive) {
-        archive(cereal::make_nvp("farClipPlane", farClipPlane));
-        archive(cereal::make_nvp("nearClipPlane", nearClipPlane));
-        archive(cereal::make_nvp("fovAngle", fovAngle));
+        archive(cereal::make_nvp("far_clip_plane", far_clip_plane));
+        archive(cereal::make_nvp("near_clip_plane", near_clip_plane));
+        archive(cereal::make_nvp("projection", projection));
+        archive(cereal::make_nvp("fov_angle", fov_angle));
+        archive(cereal::make_nvp("ortho_width", ortho_width));
     }
 };
 

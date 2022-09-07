@@ -1,7 +1,6 @@
 #ifndef NODEC_RENDERING__COMPONENTS__MESH_RENDERER_HPP_
 #define NODEC_RENDERING__COMPONENTS__MESH_RENDERER_HPP_
 
-#include "../nodec_rendering.hpp"
 #include "../resources/material.hpp"
 #include "../resources/mesh.hpp"
 

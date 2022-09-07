@@ -1,7 +1,7 @@
 #ifndef NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 #define NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 
-#include "../nodec_rendering.hpp"
+#include "../rendering.hpp"
 #include "sampler.hpp"
 #include "shader.hpp"
 #include "texture.hpp"

@@ -137,9 +137,24 @@ public:
     }
 
     void OnGUICamera(Camera &camera) {
-        ImGui::DragFloat("Near Clip Plane", &camera.nearClipPlane);
-        ImGui::DragFloat("Far Clip Plane", &camera.farClipPlane);
-        ImGui::DragFloat("Fov Angle", &camera.fovAngle);
+        ImGui::DragFloat("Near Clip Plane", &camera.near_clip_plane);
+        ImGui::DragFloat("Far Clip Plane", &camera.far_clip_plane);
+        
+        {
+            int current = static_cast<int>(camera.projection);
+            ImGui::Combo("Projection", &current, "Perspective\0Orthographic");
+            camera.projection = static_cast<Camera::Projection>(current);
+        }
+
+        switch (camera.projection) {
+        case Camera::Projection::Perspective:
+            ImGui::DragFloat("Fov Angle", &camera.fov_angle);
+            break;
+        case Camera::Projection::Orthographic:
+            ImGui::DragFloat("Ortho Width", &camera.ortho_width);
+        default: break;
+        }
+
     }
 
     void OnGUIDirectionalLight(nodec_rendering::components::DirectionalLight &light) {

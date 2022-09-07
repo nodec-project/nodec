@@ -82,9 +82,9 @@
 "ptr_wrapper": {
 "id": 2147483655,
 "data": {
-"farClipPlane": 100.0,
-"nearClipPlane": 0.009999999776482582,
-"fovAngle": 45.0
+"far_clip_plane": 100.0,
+"near_clip_plane": 0.009999999776482582,
+"fov_angle": 45.0
 }
 }
 },

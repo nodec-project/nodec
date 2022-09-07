@@ -5,9 +5,21 @@ namespace nodec_rendering {
 namespace components {
 
 struct Camera {
-    float farClipPlane{100.0f};
-    float nearClipPlane{0.01f};
-    float fovAngle{45.0f};
+    enum class Projection {
+        //! Camera will render objects with perspective intact.
+        Perspective,
+
+        //! Camera will render objects uniformly, with no sense of perspective.
+        Orthographic
+    };
+
+    float far_clip_plane{100.0f};
+    float near_clip_plane{0.01f};
+
+    Projection projection{Projection::Perspective};
+
+    float fov_angle{45.0f};
+    float ortho_width{10.0f};
 };
 
 } // namespace components

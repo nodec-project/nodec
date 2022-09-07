@@ -123,17 +123,21 @@ public:
         register_component<Camera, SerializableCamera>(
             [](const Camera &camera) {
                 auto serializable_camera = std::make_shared<SerializableCamera>();
-                serializable_camera->farClipPlane = camera.farClipPlane;
-                serializable_camera->nearClipPlane = camera.nearClipPlane;
-                serializable_camera->fovAngle = camera.fovAngle;
+                serializable_camera->far_clip_plane = camera.far_clip_plane;
+                serializable_camera->near_clip_plane = camera.near_clip_plane;
+                serializable_camera->fov_angle = camera.fov_angle;
+                serializable_camera->projection = camera.projection;
+                serializable_camera->ortho_width = camera.ortho_width;
                 return serializable_camera;
             },
             [](const SerializableCamera &serializable_camera, SceneEntity entity, SceneRegistry &registry) {
                 registry.emplace_component<Camera>(entity);
                 auto &camera = registry.get_component<Camera>(entity);
-                camera.farClipPlane = serializable_camera.farClipPlane;
-                camera.nearClipPlane = serializable_camera.nearClipPlane;
-                camera.fovAngle = serializable_camera.fovAngle;
+                camera.far_clip_plane = serializable_camera.far_clip_plane;
+                camera.near_clip_plane = serializable_camera.near_clip_plane;
+                camera.fov_angle = serializable_camera.fov_angle;
+                camera.projection = serializable_camera.projection;
+                camera.ortho_width = serializable_camera.ortho_width;
             });
 
         register_component<DirectionalLight, SerializableDirectionalLight>(
