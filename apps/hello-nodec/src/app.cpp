@@ -150,15 +150,6 @@ private:
         }
 
         //{
-        //    auto entt = scene.create_entity("Camera");
-        //    scene.registry().emplace_component<Camera>(entt);
-        //    scene.registry().emplace_component<Light>(entt);
-
-        //    auto &trfm = scene.registry().get_component<Transform>(entt);
-        //    trfm.local_position.z = -3;
-        //}
-
-        //{
         //    target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
 
         //    auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
@@ -194,6 +185,7 @@ private:
     NodecEngine &engine;
     std::shared_ptr<CameraControllerSystem> camera_controller_system_;
     std::shared_ptr<LightParticle> light_particle;
+
     // std::shared_ptr<Material> target_material;
     // SceneEntity audioEntity;
 };
@@ -229,56 +221,3 @@ void nodec_engine::on_boot(NodecEngine &engine) {
 
     engine.add_module(std::make_shared<HelloWorld>(engine));
 }
-
-// void game_engine::on_boot(GameEngine& engine)
-//{
-//    nodec::logging::info("booting... in application layer", __FILE__, __LINE__);
-//    nodec::logging::info("HELLO WORLD!", __FILE__, __LINE__);
-//
-//    engine.screen().set_size({ 1280, 720 });
-//    engine.screen().set_resolution({ 1920, 1080 });
-//    engine.screen().set_title("[ void ]");
-//
-//
-//    auto player = NodecObject::instanciate<nodec_scene::SceneObject>("Player");
-//    player->add_component<Player>();
-//    App::main_camera = player->add_component<Camera>();
-//    engine.root_scene_object().append_child(player);
-//
-//
-//    auto test_object_1 = NodecObject::instanciate<nodec::nodec_scene::SceneObject>("test_1");
-//    test_object_1->add_component<TestCube>();
-//    test_object_1->transform().local_position.y = 1.6;
-//    test_object_1->transform().local_position.z = 2;
-//    //player->append_child(test_object_1);
-//    engine.root_scene_object().append_child(test_object_1);
-//
-//
-//}
-
-//
-// void game_engine::on_boot(game_engine::GameEngine& engine) {
-//    logging::info("booting... in application layer", __FILE__, __LINE__);
-//    logging::info("HELLO WORLD!", __FILE__, __LINE__);
-//
-//
-//
-//    //engine.screen().set_size({ 1920, 1080 });
-//    engine.screen().set_size({ 1280, 720 });
-//    engine.screen().set_resolution({ 1280, 720 });
-//    engine.screen().set_title("[ void ]");
-//
-//    auto root = engine.scene_registry().create_entity();
-//    auto child1 = engine.scene_registry().create_entity();
-//    auto child1_1 = engine.scene_registry().create_entity();
-//    auto child2 = engine.scene_registry().create_entity();
-//
-//    nodec_scene::systems::append_child(engine.scene_registry(), root, child1);
-//    nodec_scene::systems::append_child(engine.scene_registry(), root, child2);
-//    nodec_scene::systems::append_child(engine.scene_registry(), child1, child1_1);
-//
-//    engine.scene_registry().emplace_component<nodec_scene::components::Name>(root);
-//    engine.scene_registry().get_component<nodec_scene::components::Name>(root).name = "root";
-//
-//
-//}

@@ -1,5 +1,5 @@
-#ifndef NODEC_ENGINE__GAME_ENGINE_HPP_
-#define NODEC_ENGINE__GAME_ENGINE_HPP_
+#ifndef NODEC_ENGINE__NODEC_ENGINE_HPP_
+#define NODEC_ENGINE__NODEC_ENGINE_HPP_
 
 #include <nodec/formatter.hpp>
 #include <nodec/logging.hpp>
@@ -7,6 +7,7 @@
 #include <nodec/stopwatch.hpp>
 #include <nodec/type_info.hpp>
 
+#include <cassert>
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -14,22 +15,6 @@
 namespace nodec_engine {
 
 class NodecEngine {
-    class BaseModuleContainer {
-    public:
-        virtual ~BaseModuleContainer(){};
-    };
-
-    template<typename T>
-    class ModuleContainer : public BaseModuleContainer {
-    public:
-        ~ModuleContainer() {}
-        std::shared_ptr<T> data;
-    };
-
-    struct ModuleContainerData {
-        std::unique_ptr<BaseModuleContainer> container;
-    };
-
 public:
     NodecEngine() = default;
 
@@ -37,38 +22,24 @@ public:
     template<typename Module>
     decltype(auto) get_module() const {
         const auto index = nodec::type_seq_index<Module>::value();
-        if (index < modules.size() && modules[index].container) {
-            return *static_cast<ModuleContainer<Module> *>(modules[index].container.get())->data;
-        }
-
-        throw std::runtime_error(
-            nodec::Formatter() << "ModuleNotFoundError: No module named '"
-                               << typeid(Module).name() << "'");
+        return *std::static_pointer_cast<Module>(modules.at(index));
     }
 
     template<typename Module>
     decltype(auto) add_module(std::shared_ptr<Module> module) {
+        assert(static_cast<bool>(module) && "Null module cannot be assigned.");
+
         const auto index = nodec::type_seq_index<Module>::value();
 
-        if (!(index < modules.size())) {
-            modules.resize(index + 1u);
-        }
-
-        auto &&cdata = modules[index];
-        if (!cdata.container) {
-            auto container = new ModuleContainer<Module>();
-            container->data = module;
-
-            cdata.container.reset(container);
-        }
-
-        return *static_cast<ModuleContainer<Module> *>(cdata.container.get())->data;
+        if (!(index < modules.size())) modules.resize(index + 1u);
+        modules[index] = module;
+        return *std::static_pointer_cast<Module>(module);
     }
 
     virtual float engine_time() const noexcept = 0;
 
 private:
-    std::vector<ModuleContainerData> modules;
+    std::vector<std::shared_ptr<void>> modules;
 
 private:
     NODEC_DISABLE_COPY(NodecEngine);
