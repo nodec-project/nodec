@@ -27,7 +27,8 @@ CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializable
 class CameraControllerSystem {
 public:
     CameraControllerSystem(nodec_world::World &world,
-                           nodec_input::Input &input,
+                           std::shared_ptr<nodec_input::keyboard::Keyboard> keyboard,
+                           std::shared_ptr<nodec_input::mouse::Mouse> mouse,
                            nodec_scene_serialization::SceneSerialization &serialization) {
         using namespace nodec;
         using namespace nodec_scene;
@@ -35,7 +36,7 @@ public:
         using namespace nodec_input::mouse;
 
         world.stepped().connect([&](nodec_world::World &world) { on_stepped(world); });
-        input.keyboard().key_event().connect([&](const nodec_input::keyboard::KeyEvent &event) {
+        keyboard->key_event().connect([&](const nodec_input::keyboard::KeyEvent &event) {
             // logging::InfoStream(__FILE__, __LINE__) << event;
             if (event.key == Key::W) {
                 w_pressed = (event.type == KeyEvent::Type::Press);
@@ -52,7 +53,7 @@ public:
             // logging::InfoStream(__FILE__, __LINE__) << w_pressed << s_pressed << a_pressed << d_pressed;
         });
 
-        input.mouse().mouse_event().connect([&](const nodec_input::mouse::MouseEvent &event) {
+        mouse->mouse_event().connect([&](const nodec_input::mouse::MouseEvent &event) {
             // logging::InfoStream(__FILE__, __LINE__) << event;
             static Vector2i prev_pos;
 

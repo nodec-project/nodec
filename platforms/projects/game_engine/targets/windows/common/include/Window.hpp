@@ -2,7 +2,8 @@
 
 #include "Graphics/Graphics.hpp"
 
-#include <nodec_input/impl/input_module.hpp>
+#include <nodec_input/keyboard/impl/keyboard_device.hpp>
+#include <nodec_input/mouse/impl/mouse_device.hpp>
 
 #include <nodec/formatter.hpp>
 #include <nodec/macros.hpp>
@@ -60,7 +61,8 @@ public:
     Window(int width, int height,
            int gfxWidth, int gfxHeight,
            const wchar_t *name,
-           nodec_input::impl::InputModule *pInputModule);
+           nodec_input::keyboard::impl::KeyboardDevice *pKeyboard,
+           nodec_input::mouse::impl::MouseDevice *pMouse);
 
     ~Window();
 
@@ -92,7 +94,8 @@ private:
     int mHeight;
     HWND hWnd;
     std::unique_ptr<Graphics> mpGraphics;
-    nodec_input::impl::InputModule *mpInputModule;
+    nodec_input::keyboard::impl::KeyboardDevice *mpKeyboard;
+    nodec_input::mouse::impl::MouseDevice *mpMouse;
 
 private:
     NODEC_DISABLE_COPY(Window);

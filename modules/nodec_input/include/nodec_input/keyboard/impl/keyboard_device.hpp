@@ -3,17 +3,14 @@
 
 #include "../keyboard.hpp"
 
-#include <bitset>
-#include <queue>
-
 namespace nodec_input {
 namespace keyboard {
 
 namespace impl {
 
-class KeyboardImpl : public Keyboard {
+class KeyboardDevice : public Keyboard {
 public:
-    KeyboardImpl() = default;
+    KeyboardDevice() = default;
 
 public:
     KeyEventSignal::SignalInterface key_event() {

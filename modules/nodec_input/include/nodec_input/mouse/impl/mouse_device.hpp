@@ -1,5 +1,5 @@
-#ifndef NODEC_INPUT__MOUSE__IMPL__MOUSE_IMPL_HPP_
-#define NODEC_INPUT__MOUSE__IMPL__MOUSE_IMPL_HPP_
+#ifndef NODEC_INPUT__MOUSE__IMPL__MOUSE_MODULE_HPP_
+#define NODEC_INPUT__MOUSE__IMPL__MOUSE_MODULE_HPP_
 
 #include "../mouse.hpp"
 
@@ -7,9 +7,9 @@ namespace nodec_input {
 namespace mouse {
 namespace impl {
 
-class MouseImpl : public Mouse {
+class MouseDevice : public Mouse {
 public:
-    MouseImpl() = default;
+    MouseDevice() = default;
 
 public:
     MouseEventSignal::SignalInterface mouse_event() override {

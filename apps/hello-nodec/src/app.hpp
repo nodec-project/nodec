@@ -6,7 +6,9 @@
 #define EDITOR_MODE
 
 #include <nodec_engine/nodec_engine.hpp>
-#include <nodec_input/input.hpp>
+#include <nodec_input/input_devices.hpp>
+#include <nodec_input/keyboard/keyboard.hpp>
+#include <nodec_input/mouse/mouse.hpp>
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>

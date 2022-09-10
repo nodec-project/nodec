@@ -15,6 +15,8 @@ using namespace nodec_scene_serialization;
 using namespace nodec_scene_audio::resources;
 using namespace nodec_scene_audio::components;
 using namespace nodec_world;
+using namespace nodec_input::keyboard;
+using namespace nodec_input::mouse;
 
 class HelloWorld {
 public:
@@ -43,9 +45,13 @@ public:
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::HelloWorld] >>> Hello :)";
 
         auto &world = engine.get_module<World>();
-        auto &input = engine.get_module<Input>();
+        auto &input_devices = engine.get_module<InputDevices>();
         auto &serialization = engine.get_module<SceneSerialization>();
         auto &resources = engine.get_module<Resources>();
+
+        auto keyboard = input_devices.get_available_devices<Keyboard>().front();
+        auto mouse = input_devices.get_available_devices<Mouse>().front();
+
 
 #ifdef EDITOR_MODE
         using namespace nodec_scene_editor;
@@ -76,7 +82,7 @@ public:
         }
 
         {
-            camera_controller_system_ = std::make_shared<CameraControllerSystem>(world, input, serialization);
+            camera_controller_system_ = std::make_shared<CameraControllerSystem>(world, keyboard, mouse, serialization);
 #ifdef EDITOR_MODE
             CameraControllerSystem::setup_editor(editor);
 #endif

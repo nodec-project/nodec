@@ -2,6 +2,8 @@
 
 #include "Audio/AudioPlatform.hpp"
 #include "ImguiManager.hpp"
+#include "Input/KeyboardDeviceSystem.hpp"
+#include "Input/MouseDeviceSystem.hpp"
 #include "Rendering/SceneRenderer.hpp"
 #include "Resources/ResourceLoader.hpp"
 #include "Resources/ResourcesModuleBackend.hpp"
@@ -11,13 +13,15 @@
 #include "Window.hpp"
 
 #include <nodec_engine/impl/nodec_engine_module.hpp>
-#include <nodec_input/impl/input_module.hpp>
+#include <nodec_input/input_devices.hpp>
+#include <nodec_input/keyboard/impl/keyboard_device.hpp>
+#include <nodec_input/mouse/impl/mouse_device.hpp>
 #include <nodec_resources/impl/resources_module.hpp>
-#include <nodec_world/impl/world_module.hpp>
 #include <nodec_scene/impl/scene_module.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_screen/impl/screen_module.hpp>
+#include <nodec_world/impl/world_module.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/unicode.hpp>
@@ -55,8 +59,11 @@ public:
         add_module<World>(world_module_);
 
         // --- input ---
-        input_module_.reset(new nodec_input::impl::InputModule());
-        add_module<nodec_input::Input>(input_module_);
+        input_devices_.reset(new nodec_input::InputDevices());
+        add_module<nodec_input::InputDevices>(input_devices_);
+
+        keyboard_device_system_ = &input_devices_->emplace_device_system<KeyboardDeviceSystem>();
+        mouse_device_system_ = &input_devices_->emplace_device_system<MouseDeviceSystem>();
 
         // --- resources ---
         resources_module_.reset(new ResourcesModuleBackend());
@@ -85,7 +92,7 @@ public:
             screen_module_->internal_size.x, screen_module_->internal_size.y,
             screen_module_->internal_resolution.x, screen_module_->internal_resolution.y,
             unicode::utf8to16<std::wstring>(screen_module_->internal_title).c_str(),
-            input_module_.get()));
+            &keyboard_device_system_->device(), &mouse_device_system_->device()));
 
         screen_handler_->Setup(window_.get());
 
@@ -123,7 +130,7 @@ public:
         return world_module_->scene_module();
     }
 
-    nodec_world::impl::WorldModule& world_module() {
+    nodec_world::impl::WorldModule &world_module() {
         return *world_module_;
     }
 
@@ -146,8 +153,10 @@ private:
     std::shared_ptr<ScreenModule> screen_module_;
     std::unique_ptr<ScreenHandler> screen_handler_;
 
-    std::shared_ptr<nodec_input::impl::InputModule> input_module_;
-
+    std::shared_ptr<nodec_input::InputDevices> input_devices_;
+    KeyboardDeviceSystem *keyboard_device_system_;
+    MouseDeviceSystem *mouse_device_system_;
+    
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
     std::shared_ptr<SceneSerializationModuleBackend> scene_serialization_module_;

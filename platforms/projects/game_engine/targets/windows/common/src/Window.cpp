@@ -48,9 +48,10 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept {
 Window::Window(int width, int height,
                int gfxWidth, int gfxHeight,
                const wchar_t *name,
-               nodec_input::impl::InputModule *pInputModule)
-    : mWidth(width), mHeight(height), mpInputModule(pInputModule) {
-
+               nodec_input::keyboard::impl::KeyboardDevice *pKeyboard,
+               nodec_input::mouse::impl::MouseDevice *pMouse)
+    : mWidth(width), mHeight(height),
+      mpKeyboard(pKeyboard), mpMouse(pMouse) {
     RECT wr;
     wr.left = 100;
     wr.right = width + wr.left;
@@ -177,7 +178,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         // if (!(lParam & 0x40000000)) {
 
         using namespace nodec_input::keyboard;
-        mpInputModule->keyboard_impl().handle_key_event(
+        mpKeyboard->handle_key_event(
             KeyEvent::Type::Press,
             static_cast<Key>(wParam));
 
@@ -188,7 +189,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         if (imio.WantCaptureKeyboard) break;
 
         using namespace nodec_input::keyboard;
-        mpInputModule->keyboard_impl().handle_key_event(
+        mpKeyboard->handle_key_event(
             KeyEvent::Type::Release,
             static_cast<Key>(wParam));
 
@@ -215,7 +216,7 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         if (wParam & MK_RBUTTON) buttons |= MouseButton::Right;
         if (wParam & MK_MBUTTON) buttons |= MouseButton::Middle;
 
-        mpInputModule->mouse_impl().handle_mouse_move_event(buttons, {pt.x, pt.y});
+        mpMouse->handle_mouse_move_event(buttons, {pt.x, pt.y});
 
     } break;
 
@@ -258,12 +259,12 @@ LRESULT Window::HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noe
         case WM_LBUTTONDOWN:
         case WM_RBUTTONDOWN:
         case WM_MBUTTONDOWN:
-            mpInputModule->mouse_impl().handle_mouse_press_event(button, buttons, position);
+            mpMouse->handle_mouse_press_event(button, buttons, position);
             break;
         case WM_LBUTTONUP:
         case WM_RBUTTONUP:
         case WM_MBUTTONUP:
-            mpInputModule->mouse_impl().handle_mouse_release_event(button, buttons, position);
+            mpMouse->handle_mouse_release_event(button, buttons, position);
             break;
         default: break;
         }
