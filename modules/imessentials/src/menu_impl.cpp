@@ -1,28 +1,26 @@
-#include <imelements/impl/menu_impl.hpp>
+#include <imessentials/impl/menu_impl.hpp>
 
 #include <imgui.h>
 
-#include <nodec/macros.hpp>
 #include <nodec/logging.hpp>
+#include <nodec/macros.hpp>
 
-#include <string>
 #include <functional>
 #include <map>
+#include <string>
 
-
-namespace imelements {
+namespace imessentials {
 namespace impl {
-
 
 class MenuItem {
 public:
     NODEC_SMART_PTR_DEFINITIONS(MenuItem);
 
 public:
-    MenuItem(const std::string& name, std::function<void()> func, int order) :
-        name(name),
-        func(func),
-        order(order) {
+    MenuItem(const std::string &name, std::function<void()> func, int order)
+        : name(name),
+          func(func),
+          order(order) {
     }
 
     std::string name;
@@ -42,9 +40,9 @@ void init() {
     }
 }
 
-void show_menu_items(const MenuItem& item) {
-    for (auto& pair : item.items) {
-        auto& item = *(pair.second);
+void show_menu_items(const MenuItem &item) {
+    for (auto &pair : item.items) {
+        auto &item = *(pair.second);
         if (item.items.empty()) {
             if (ImGui::MenuItem(item.name.c_str())) {
                 item.func();
@@ -60,7 +58,7 @@ void show_menu_items(const MenuItem& item) {
     }
 }
 
-}
+} // namespace
 
 void show_main_menu() {
     init();
@@ -71,13 +69,13 @@ void show_main_menu() {
     }
 }
 
-//void set_menu_item_order(int order) {
+// void set_menu_item_order(int order) {
 //
-//}
+// }
 
-}
+} // namespace impl
 
-bool register_menu_item(const std::string& item_name, std::function<void()> func, int order) {
+bool register_menu_item(const std::string &item_name, std::function<void()> func, int order) {
     impl::init();
 
     auto current_item = impl::root_menu_item.get();
@@ -90,7 +88,7 @@ bool register_menu_item(const std::string& item_name, std::function<void()> func
         auto name = item_name.substr(offset, pos - offset);
 
         auto next_item = current_item;
-        for (auto& pair : current_item->items) {
+        for (auto &pair : current_item->items) {
             if (pair.second->name == name && !pair.second->items.empty()) {
                 next_item = pair.second.get();
             }
@@ -110,5 +108,4 @@ bool register_menu_item(const std::string& item_name, std::function<void()> func
     return true;
 }
 
-
-}
+} // namespace imessentials

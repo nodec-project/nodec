@@ -38,6 +38,7 @@
 #include <cereal/archives/xml.hpp>
 
 #ifdef EDITOR_MODE
+#    include <imessentials/text_buffer.hpp>
 #    include <imgui.h>
 #    include <nodec_scene_editor/scene_editor.hpp>
 #endif

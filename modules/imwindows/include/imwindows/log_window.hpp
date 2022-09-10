@@ -1,7 +1,7 @@
 #ifndef IMWINDOWS__IMPL__LOG_WINDOW_HPP_
 #define IMWINDOWS__IMPL__LOG_WINDOW_HPP_
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/vector2.hpp>
@@ -12,11 +12,11 @@
 
 namespace imwindows {
 
-class LogWindow : public imelements::BaseWindow {
+class LogWindow : public imessentials::BaseWindow {
     const int MAX_RECORDS = 100;
 
 public:
-    static void init(imelements::WindowManager &manager) {
+    static void init(imessentials::WindowManager &manager) {
         auto &window = manager.get_window<LogWindow>();
 
         ImGui::SetWindowFocus(window.name());

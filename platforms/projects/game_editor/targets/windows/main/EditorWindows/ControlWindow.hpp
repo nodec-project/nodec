@@ -2,14 +2,14 @@
 
 #include "../Editor.hpp"
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 #include <imgui.h>
 
 
-class ControlWindow : public imelements::BaseWindow {
+class ControlWindow : public imessentials::BaseWindow {
 
 public:
-    static void init(imelements::WindowManager& manager, Editor* editor) {
+    static void init(imessentials::WindowManager& manager, Editor* editor) {
         auto& window = manager.get_window<ControlWindow>();
         window.editor_ = editor;
         ImGui::SetWindowFocus(window.name());

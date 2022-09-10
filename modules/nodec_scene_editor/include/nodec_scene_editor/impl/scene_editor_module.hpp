@@ -2,8 +2,8 @@
 #define NODEC_SCENE_EDITOR__IMPL__SCENE_EDITOR_MODULE_HPP_
 
 #include <nodec_scene_editor/scene_editor.hpp>
-#include <imelements/impl/window_impl.hpp>
-#include <imelements/impl/menu_impl.hpp>
+#include <imessentials/impl/window_impl.hpp>
+#include <imessentials/impl/menu_impl.hpp>
 
 
 namespace nodec_scene_editor {
@@ -18,11 +18,11 @@ public:
 
 public:
 
-    imelements::WindowManager& window_manager() {
+    imessentials::WindowManager& window_manager() {
         return window_manager_impl_;
     }
 
-    imelements::impl::WindowManagerImpl& window_manager_impl() {
+    imessentials::impl::WindowManagerImpl& window_manager_impl() {
         return window_manager_impl_;
     }
 
@@ -39,7 +39,7 @@ public:
     }
 
 private:
-    imelements::impl::WindowManagerImpl window_manager_impl_;
+    imessentials::impl::WindowManagerImpl window_manager_impl_;
     Selection selection_;
     EntityInspectorWindow::ComponentRegistry inspector_component_registry_;
     

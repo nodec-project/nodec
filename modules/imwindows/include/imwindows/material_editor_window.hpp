@@ -1,7 +1,7 @@
 #ifndef IMWINDOWS__MATERIAL_EDITOR_WINDOW_HPP_
 #define IMWINDOWS__MATERIAL_EDITOR_WINDOW_HPP_
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 
 #include <nodec_rendering/resources/material.hpp>
 
@@ -11,7 +11,7 @@
 
 namespace imwindows {
 
-class MaterialEditorWindow : public imelements::BaseWindow {
+class MaterialEditorWindow : public imessentials::BaseWindow {
     using Material = nodec_rendering::resources::Material;
 
     enum class ControlType {
@@ -21,7 +21,7 @@ class MaterialEditorWindow : public imelements::BaseWindow {
 
 public:
     static decltype(auto) init(
-        imelements::WindowManager &manager, nodec::resource_management::ResourceRegistry *registry) {
+        imessentials::WindowManager &manager, nodec::resource_management::ResourceRegistry *registry) {
         auto &window = manager.get_window<MaterialEditorWindow>();
         window.registry_ = registry;
         ImGui::SetWindowFocus(window.name());

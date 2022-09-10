@@ -1,7 +1,7 @@
 #ifndef IMWINDOWS__INSPECTOR_WINDOW_HPP_
 #define IMWINDOWS__INSPECTOR_WINDOW_HPP_
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 #include <nodec/entities/registry.hpp>
 #include <nodec/vector2.hpp>
 #include <nodec/type_info.hpp>
@@ -15,7 +15,7 @@
 namespace imwindows {
 
 
-class EntityInspectorWindow : public imelements::BaseWindow {
+class EntityInspectorWindow : public imessentials::BaseWindow {
 
     using EntityRegistry = nodec::entities::Registry;
     using Entity = nodec::entities::Entity;
@@ -128,7 +128,7 @@ public:
 
 
 public:
-    static decltype(auto) init(imelements::WindowManager& manager,
+    static decltype(auto) init(imessentials::WindowManager& manager,
                                EntityRegistry* entity_registry,
                                ComponentRegistry* component_registry,
                                Entity init_target_entity,

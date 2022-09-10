@@ -2,7 +2,7 @@
 
 #include "../ResourceExporter.hpp"
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 #include <imgui.h>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -14,12 +14,12 @@
 #include <cassert>
 
 
-class AssetImportWindow : public imelements::BaseWindow {
+class AssetImportWindow : public imessentials::BaseWindow {
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
 
 public:
     static void init(
-        imelements::WindowManager& manager, 
+        imessentials::WindowManager& manager, 
         const std::string& resource_path,
         nodec_scene::Scene* dest_scene,
         ResourceRegistry* resource_registry) 

@@ -111,9 +111,9 @@ private:
             if (a_pressed) move_vec.x -= 1;
             if (d_pressed) move_vec.x += 1;
             if (math::norm(move_vec) > 0.001f) {
-                logging::InfoStream(__FILE__, __LINE__) << move_vec;
+                //logging::InfoStream(__FILE__, __LINE__) << move_vec;
                 move_vec = math::normalize(move_vec);
-                logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
+                //logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
 
                 trfm.local_position += move_vec.y * forward * ctrl.speed * delta_time;
                 trfm.local_position += move_vec.x * right * ctrl.speed * delta_time;

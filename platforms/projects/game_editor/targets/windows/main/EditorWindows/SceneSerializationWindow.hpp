@@ -3,13 +3,13 @@
 #include "../ResourceExporter.hpp"
 #include "../ResourceImporter.hpp"
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 
 #include <imgui.h>
 
 
-class SceneSerializationWindow : public imelements::BaseWindow {
+class SceneSerializationWindow : public imessentials::BaseWindow {
     using SceneEntity = nodec_scene::SceneEntity;
     using SelectedEntityChangedSignal = nodec::signals::Signal<void(SceneEntity)>;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
@@ -19,7 +19,7 @@ class SceneSerializationWindow : public imelements::BaseWindow {
 public:
 
     static void init(
-        imelements::WindowManager& manager,
+        imessentials::WindowManager& manager,
         nodec_scene::Scene* scene,
         SceneSerialization* scene_serialization,
         const std::string& resource_path,

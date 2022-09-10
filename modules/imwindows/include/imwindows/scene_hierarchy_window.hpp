@@ -1,19 +1,19 @@
 #ifndef IMWINDOWS__SCENE_HIERARCHY_WINDOW_HPP_
 #define IMWINDOWS__SCENE_HIERARCHY_WINDOW_HPP_
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 #include <nodec_scene/scene.hpp>
 
 #include <imgui.h>
 
 namespace imwindows {
 
-class SceneHierarchyWindow : public imelements::BaseWindow {
+class SceneHierarchyWindow : public imessentials::BaseWindow {
     using Scene = nodec_scene::Scene;
     using SceneEntity = nodec_scene::SceneEntity;
 
 public:
-    static decltype(auto) init(imelements::WindowManager& manager, Scene* scene) {
+    static decltype(auto) init(imessentials::WindowManager& manager, Scene* scene) {
         auto& window = manager.get_window<SceneHierarchyWindow>();
         window.scene_ = scene;
         ImGui::SetWindowFocus(window.name());

@@ -1,6 +1,7 @@
 #include "app.hpp"
 #include "camera_controller.hpp"
 #include "light_particle.hpp"
+#include "object_spawn_system.hpp"
 
 using namespace nodec;
 using namespace nodec_engine;
@@ -52,7 +53,6 @@ public:
         auto keyboard = input_devices.get_available_devices<Keyboard>().front();
         auto mouse = input_devices.get_available_devices<Mouse>().front();
 
-
 #ifdef EDITOR_MODE
         using namespace nodec_scene_editor;
         auto &editor = engine.get_module<SceneEditor>();
@@ -89,6 +89,13 @@ public:
         }
         {
             light_particle = std::make_shared<LightParticle>(world, resources.registry(), serialization);
+        }
+
+        {
+            object_spawn_system_ = std::make_shared<ObjectSpawnSystem>(keyboard, world, serialization, resources.registry());
+#ifdef EDITOR_MODE
+            ObjectSpawnSystem::setup_editor(editor);
+#endif
         }
         //{
         //    auto &scene_serialization = engine.get_module<SceneSerialization>();
@@ -127,11 +134,6 @@ public:
         //            source.is_playing = false;
         //        }
         //    });
-
-        //    input.mouse().mouse_event().connect([](const mouse::MouseEvent &event) {
-        //        // logging::InfoStream(__FILE__, __LINE__) << event;
-        //    });
-        //}
     }
 
     ~HelloWorld() {
@@ -191,6 +193,7 @@ private:
     NodecEngine &engine;
     std::shared_ptr<CameraControllerSystem> camera_controller_system_;
     std::shared_ptr<LightParticle> light_particle;
+    std::shared_ptr<ObjectSpawnSystem> object_spawn_system_;
 
     // std::shared_ptr<Material> target_material;
     // SceneEntity audioEntity;

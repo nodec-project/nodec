@@ -1,14 +1,14 @@
-#ifndef IMELEMENTS__IMPL__WINDOW_IMPL_HPP_
-#define IMELEMENTS__IMPL__WINDOW_IMPL_HPP_
+#ifndef IMESSENTIALS__IMPL__WINDOW_IMPL_HPP_
+#define IMESSENTIALS__IMPL__WINDOW_IMPL_HPP_
 
-#include <imelements/window.hpp>
+#include <imessentials/window.hpp>
 
 #include <imgui.h>
 
 #include <nodec/logging.hpp>
 
 
-namespace imelements {
+namespace imessentials {
 namespace impl {
 
 
