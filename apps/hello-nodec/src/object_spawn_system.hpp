@@ -100,6 +100,7 @@ public:
     void on_stepped(nodec_world::World &world) {
         using namespace nodec;
         using namespace nodec_scene::components;
+        using namespace nodec_scene_serialization;
 
         bool need_update{false};
         if (f_key_state == KeyState::PressDown) {
@@ -129,8 +130,10 @@ public:
             case SpawnState::Spawned:
                 logging::InfoStream(__FILE__, __LINE__) << "Object now spawned";
 
-                world.scene().registry().view<ObjectSpawner>().each([](auto entt, ObjectSpawner &spawner){
+                world.scene().registry().view<ObjectSpawner>().each([&](auto entt, ObjectSpawner &spawner) {
+                    auto graph = resource_registry_.get_resource<SerializableSceneGraph>(spawner.scene_name).get();
 
+                    SceneEntityEmplacer{graph, world.scene(), entt, serialization_}.emplace_all();
                 });
 
                 next_spawn_state = SpawnState::Disappeared;

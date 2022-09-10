@@ -21,23 +21,6 @@ using namespace nodec_input::mouse;
 
 class HelloWorld {
 public:
-    // struct HelloComponent {
-    //     int my_field;
-    // };
-
-    // class SerializableHelloComponent : public nodec_scene_serialization::BaseSerializableComponent {
-    // public:
-    //     SerializableHelloComponent()
-    //         : BaseSerializableComponent(this) {
-    //     }
-
-    //    int my_field;
-
-    //    template<class Archive>
-    //    void serialize(Archive &archive) {
-    //        archive(cereal::make_nvp("my_field", my_field));
-    //    }
-    //};
 
     HelloWorld(NodecEngine &engine)
         : engine{engine} {
@@ -57,24 +40,6 @@ public:
         using namespace nodec_scene_editor;
         auto &editor = engine.get_module<SceneEditor>();
 
-        // editor.inspector_component_registry().register_component<HelloComponent>(
-        //     "Hello Component", [=](HelloComponent &comp) {
-        //         /*ImGui::Text("My Field"); ImGui::SameLine();*/
-        //         // ImGui::SliderInt("My Field", &comp.my_field, 0, 100);
-
-        //        if (target_material) {
-        //            float metallic, roughness;
-
-        //            metallic = target_material->get_float_property("metallic");
-        //            roughness = target_material->get_float_property("roughness");
-
-        //            ImGui::DragFloat("metallic", &metallic, 0.01f, 0.0f, 1.0f);
-        //            ImGui::DragFloat("roughness", &roughness, 0.01f, 0.0f, 1.0f);
-
-        //            target_material->set_float_property("metallic", metallic);
-        //            target_material->set_float_property("roughness", roughness);
-        //        }
-        //    });
 #endif
         {
             world.initialized().connect([&](World &world) { on_initialized(world); });
@@ -97,21 +62,7 @@ public:
             ObjectSpawnSystem::setup_editor(editor);
 #endif
         }
-        //{
-        //    auto &scene_serialization = engine.get_module<SceneSerialization>();
 
-        //    scene_serialization.register_component<HelloComponent, SerializableHelloComponent>(
-        //        [](const auto &comp) {
-        //            auto serializable = std::make_shared<SerializableHelloComponent>();
-        //            serializable->my_field = comp.my_field;
-        //            return serializable;
-        //        },
-        //        [](const auto &serializable, auto entity, SceneRegistry &registry) {
-        //            registry.emplace_component<HelloComponent>(entity);
-        //            auto &comp = registry.get_component<HelloComponent>(entity);
-        //            comp.my_field = serializable.my_field;
-        //        });
-        //}
 
         //{
         //    auto &input = engine.get_module<Input>();
@@ -170,19 +121,6 @@ private:
         //    // source.clip = miku_clip;
         //    // source.loop = true;
         //    source.is_playing = true;
-        //}
-
-        //{
-        //    auto texture = resources.registry().get_resource<Texture>("textures/test.jpg ").get();
-        //    auto entt = scene.create_entity("image");
-        //    scene.registry().emplace_component<ImageRenderer>(entt);
-        //    auto &renderer = scene.registry().get_component<ImageRenderer>(entt);
-
-        //    renderer.image = texture;
-        //    renderer.material = resources.registry().get_resource<Material>("org.nodec-rendering.essentials/materials/image-default.material").get();
-        //    if (texture) {
-        //        logging::InfoStream(__FILE__, __LINE__) << texture->width() << ", " << texture->height();
-        //    }
         //}
     }
 
