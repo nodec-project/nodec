@@ -18,3 +18,6 @@
 [submodule "modules/imguizmo/ImGuizmo"]
 	path = modules/imguizmo/ImGuizmo
 	url = https://github.com/CedricGuillemet/ImGuizmo.git
+[submodule "platforms/sdks/freetype-windows-binaries"]
+	path = platforms/sdks/freetype-windows-binaries
+	url = https://github.com/ubawurinna/freetype-windows-binaries.git
