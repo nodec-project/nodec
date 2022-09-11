@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Audio/AudioPlatform.hpp"
+#include "Font/FontLibrary.hpp"
 #include "ImguiManager.hpp"
 #include "Input/KeyboardDeviceSystem.hpp"
 #include "Input/MouseDeviceSystem.hpp"
@@ -46,6 +47,8 @@ public:
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Created!";
 
         imgui_manager_.reset(new ImguiManager);
+
+        font_library_.reset(new FontLibrary);
 
         // --- screen ---
         screen_module_.reset(new ScreenModule());
@@ -148,6 +151,9 @@ private:
     // imgui must be destroyed after window.
     std::unique_ptr<ImguiManager> imgui_manager_;
     std::unique_ptr<Window> window_;
+
+    std::unique_ptr<FontLibrary> font_library_;
+
     std::unique_ptr<AudioPlatform> audio_platform_;
 
     std::shared_ptr<ScreenModule> screen_module_;
@@ -156,7 +162,7 @@ private:
     std::shared_ptr<nodec_input::InputDevices> input_devices_;
     KeyboardDeviceSystem *keyboard_device_system_;
     MouseDeviceSystem *mouse_device_system_;
-    
+
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 
     std::shared_ptr<SceneSerializationModuleBackend> scene_serialization_module_;

@@ -6,6 +6,8 @@
 #include <x3daudio.h>
 #include <xaudio2.h>
 
+#include <nodec/logging.hpp>
+
 #pragma comment(lib, "xaudio2.lib")
 
 // XAudio2 Sample codes:
