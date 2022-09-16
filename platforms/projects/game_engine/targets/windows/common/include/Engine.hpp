@@ -99,7 +99,7 @@ public:
 
         screen_handler_->Setup(window_.get());
 
-        resources_module_->setup_on_runtime(&window_->GetGraphics());
+        resources_module_->setup_on_runtime(&window_->GetGraphics(), font_library_.get());
 
         scene_renderer_.reset(new SceneRenderer(&window_->GetGraphics(), resources_module_->registry()));
 

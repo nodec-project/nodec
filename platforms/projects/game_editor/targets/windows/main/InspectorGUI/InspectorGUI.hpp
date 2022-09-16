@@ -7,6 +7,7 @@
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
+#include <nodec_rendering/components/text_renderer.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 
@@ -232,6 +233,9 @@ public:
         renderer.image = ResourceNameEdit("Image", renderer.image);
         renderer.material = ResourceNameEdit("Material", renderer.material);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixelsPerUnit);
+    }
+
+    void OnGuiTextRenderer(nodec_rendering::components::TextRenderer &renderer) {
     }
 
 private:

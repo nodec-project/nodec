@@ -20,6 +20,10 @@ public:
         FT_Done_FreeType(mLibrary);
     }
 
+    FT_Library& GetLibrary() {
+        return mLibrary;
+    }
+
 private:
     FT_Library mLibrary;
 };

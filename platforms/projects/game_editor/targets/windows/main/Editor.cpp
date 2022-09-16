@@ -133,4 +133,10 @@ Editor::Editor(Engine *engine)
         [=](auto &process) {
             inspector_gui_->OnGUIPostProcessing(process);
         });
+
+    inspector_component_registry_impl().register_component<TextRenderer>(
+        "Text Renderer",
+        [=](auto &renderer) {
+            inspector_gui_->OnGuiTextRenderer(renderer);
+        });
 }

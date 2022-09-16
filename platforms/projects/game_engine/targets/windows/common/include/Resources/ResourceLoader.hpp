@@ -8,10 +8,13 @@
 
 #include <SceneAudio/AudioClipBackend.hpp>
 
+#include <Font/FontBackend.hpp>
+#include <Font/FontLibrary.hpp>
+
+#include <nodec_scene_serialization/serializable_scene_graph.hpp>
 #include <nodec_serialization/nodec_rendering/resources/material.hpp>
 #include <nodec_serialization/nodec_rendering/resources/mesh.hpp>
 #include <nodec_serialization/nodec_rendering/resources/shader.hpp>
-#include <nodec_scene_serialization/serializable_scene_graph.hpp>
 
 #include <nodec/concurrent/thread_pool_executor.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
@@ -53,8 +56,8 @@ class ResourceLoader {
     }
 
 public:
-    ResourceLoader(Graphics *pGraphics, ResourceRegistry *pRegistry)
-        : mpGraphics{pGraphics}, mpRegistry{pRegistry} {
+    ResourceLoader(Graphics *pGraphics, ResourceRegistry *pRegistry, FontLibrary *pFontLibrary)
+        : mpGraphics{pGraphics}, mpRegistry{pRegistry}, mpFontLibrary{pFontLibrary} {
     }
 
     // For resource registry
@@ -153,7 +156,7 @@ public:
         }
 
         std::vector<SubShaderMetaInfo> subShaderMetaInfos;
-        for (const auto& subShaderName : metaInfo.pass) {
+        for (const auto &subShaderName : metaInfo.pass) {
             std::ifstream file(Formatter() << path << "/" << subShaderName << ".meta");
             if (!file) return {};
             cereal::JSONInputArchive archive(file);
@@ -161,13 +164,11 @@ public:
             try {
                 archive(info);
                 subShaderMetaInfos.push_back(std::move(info));
-            }
-            catch (...) {
+            } catch (...) {
                 HandleException(Formatter() << "Shader::" << path);
                 return {};
             }
         }
-
 
         std::shared_ptr<ShaderBackend> shader;
         try {
@@ -297,8 +298,24 @@ public:
         return clip;
     }
 
+    template<>
+    std::shared_ptr<FontBackend> LoadBackend(const std::string &path) const noexcept {
+        using namespace nodec;
+
+        std::shared_ptr<FontBackend> font;
+        try {
+            font = std::make_shared<FontBackend>(*mpFontLibrary, path);
+        } catch (...) {
+            HandleException(Formatter() << "Font::" << path);
+            return {};
+        }
+
+        return font;
+    }
+
 private:
     nodec::concurrent::ThreadPoolExecutor mExecutor;
     Graphics *mpGraphics;
     ResourceRegistry *mpRegistry;
+    FontLibrary *mpFontLibrary;
 };

@@ -13,7 +13,7 @@ public:
             });
     }
 
-    void setup_on_runtime(Graphics *graphics) {
+    void setup_on_runtime(Graphics *graphics, FontLibrary *font_library) {
         using namespace nodec;
         using namespace nodec_rendering::resources;
         using namespace nodec_scene_serialization;
@@ -21,7 +21,7 @@ public:
 
         resource_path_changed_connection_.disconnect();
 
-        resource_loader_.reset(new ResourceLoader(graphics, &registry()));
+        resource_loader_.reset(new ResourceLoader(graphics, &registry(), font_library));
 
         registry().register_resource_loader<Mesh>(
             [=](auto &name) {
@@ -69,6 +69,14 @@ public:
             },
             [=](auto &name, auto notifyer) {
                 return resource_loader_->LoadAsync<AudioClip, AudioClipBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
+            });
+
+        registry().register_resource_loader<Font>(
+            [=](auto &name) {
+                return resource_loader_->LoadDirect<Font, FontBackend>(Formatter() << resource_path() << "/" << name);
+            },
+            [=](auto &name, auto notifyer) {
+                return resource_loader_->LoadAsync<Font, FontBackend>(name, Formatter() << resource_path() << "/" << name, notifyer);
             });
     }
 
