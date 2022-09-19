@@ -33,14 +33,12 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("effects", effects));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializablePostProcessing);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializablePostProcessing);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializablePostProcessing)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializablePostProcessing)
 
 #endif

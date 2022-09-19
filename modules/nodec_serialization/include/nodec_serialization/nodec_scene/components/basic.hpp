@@ -1,10 +1,10 @@
 #ifndef NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__BASIC_HPP_
 #define NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__BASIC_HPP_
 
+#include <nodec_scene_serialization/serializable_component.hpp>
+
 #include <nodec_serialization/nodec/quaternion.hpp>
 #include <nodec_serialization/nodec/vector3.hpp>
-
-#include <cereal/types/polymorphic.hpp>
 
 namespace nodec_scene {
 namespace components {
@@ -21,8 +21,6 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("name", name));
     }
-private:
-    void rtti() {}
 };
 
 class SerializableTransform : public nodec_scene_serialization::BaseSerializableComponent {
@@ -41,22 +39,15 @@ public:
         archive(cereal::make_nvp("local_scale", local_scale));
         archive(cereal::make_nvp("local_rotation", local_rotation));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_scene
 
-#include <cereal/archives/binary.hpp>
-#include <cereal/archives/json.hpp>
-#include <cereal/archives/portable_binary.hpp>
-#include <cereal/archives/xml.hpp>
+CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableName)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableName)
 
-CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableName);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableName);
-
-CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableTransform);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableTransform);
+CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableTransform)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableTransform)
 
 #endif

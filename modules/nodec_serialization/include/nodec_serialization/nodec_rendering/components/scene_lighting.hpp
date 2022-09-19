@@ -19,14 +19,12 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("ambient_color", ambient_color));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableSceneLighting);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableSceneLighting);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableSceneLighting)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableSceneLighting)
 
 #endif

@@ -31,14 +31,12 @@ public:
         archive(cereal::make_nvp("fov_angle", fov_angle));
         archive(cereal::make_nvp("ortho_width", ortho_width));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableCamera);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableCamera);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableCamera)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableCamera)
 
 #endif

@@ -19,13 +19,10 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("speed", speed));
     }
-
-private:
-    void rtti() {}
 };
 
-CEREAL_REGISTER_TYPE(SerializableCameraController);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, SerializableCameraController);
+CEREAL_REGISTER_TYPE(SerializableCameraController)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, SerializableCameraController)
 
 class CameraControllerSystem {
 public:

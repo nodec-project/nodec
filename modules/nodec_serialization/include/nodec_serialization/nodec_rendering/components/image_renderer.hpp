@@ -14,10 +14,7 @@ public:
     SerializableImageRenderer()
         : BaseSerializableComponent(this) {}
 
-    // std::string image;
     std::shared_ptr<resources::Texture> image;
-
-    // std::string material;
     std::shared_ptr<resources::Material> material;
 
     int pixelsPerUnit{100};
@@ -48,14 +45,12 @@ public:
         }
         archive(cereal::make_nvp("pixelsPerUnit", pixelsPerUnit));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableImageRenderer);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableImageRenderer);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableImageRenderer)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableImageRenderer)
 
 #endif

@@ -26,14 +26,12 @@ public:
         archive(cereal::make_nvp("intensity", intensity));
         archive(cereal::make_nvp("range", range));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializablePointLight);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializablePointLight);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializablePointLight)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializablePointLight)
 
 #endif

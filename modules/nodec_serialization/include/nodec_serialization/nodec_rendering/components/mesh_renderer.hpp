@@ -23,14 +23,12 @@ public:
         archive(cereal::make_nvp("meshes", meshes));
         archive(cereal::make_nvp("materials", materials));
     }
-private:
-    void rtti() {}
 };
 
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableMeshRenderer);
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableMeshRenderer);
+CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableMeshRenderer)
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableMeshRenderer)
 
 #endif
