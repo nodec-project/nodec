@@ -24,6 +24,8 @@ public:
         archive(cereal::make_nvp("color", color));
         archive(cereal::make_nvp("intensity", intensity));
     }
+private:
+    void rtti() {}
 };
 
 } // namespace components

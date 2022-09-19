@@ -19,6 +19,8 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("ambient_color", ambient_color));
     }
+private:
+    void rtti() {}
 };
 
 } // namespace components

@@ -33,6 +33,8 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("effects", effects));
     }
+private:
+    void rtti() {}
 };
 
 } // namespace components

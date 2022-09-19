@@ -54,6 +54,11 @@ public:
      *   @code{.cpp}
      *   std::shared_ptr<SerializableComponent>(const Component&);
      *   @endcode
+     * 
+     * @param preloader
+     *  @code{.cpp}
+     *   
+     *  @endcode  
      *
      * @param emplacer
      *   @code{.cpp}

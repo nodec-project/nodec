@@ -1,5 +1,5 @@
-#ifndef NODEC_SCENE_SERIALIZATION__SCENE_ENTITIY_EMPLACER_HPP_
-#define NODEC_SCENE_SERIALIZATION__SCENE_ENTITIY_EMPLACER_HPP_
+#ifndef NODEC_SCENE_SERIALIZATION__SCENE_ENTITY_EMPLACER_HPP_
+#define NODEC_SCENE_SERIALIZATION__SCENE_ENTITY_EMPLACER_HPP_
 
 #include "scene_serialization.hpp"
 #include "serializable_scene_graph.hpp"
@@ -26,7 +26,9 @@ class SceneEntityEmplacer {
     };
 
 public:
-    SceneEntityEmplacer(std::shared_ptr<const SerializableSceneGraph> graph, nodec_scene::Scene &scene, nodec_scene::SceneEntity parent,
+    SceneEntityEmplacer(std::shared_ptr<const SerializableSceneGraph> graph,
+                        nodec_scene::Scene &scene,
+                        nodec_scene::SceneEntity parent,
                         const SceneSerialization &serialization)
         : graph_{graph},
           scene_{&scene},

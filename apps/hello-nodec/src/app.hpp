@@ -24,6 +24,7 @@
 #include <nodec_scene_serialization/scene_entity_emplacer.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_scene_serialization/serializable_scene_graph.hpp>
+#include <nodec_scene_serialization/scene_loader.hpp>
 #include <nodec_screen/screen.hpp>
 #include <nodec_world/world.hpp>
 

@@ -60,16 +60,16 @@ public:
         register_component<ImageRenderer, SerializableImageRenderer>(
             [=](const ImageRenderer &renderer) {
                 auto serializable = std::make_shared<SerializableImageRenderer>();
-                serializable->image = mpResourceRegistry->lookup_name<Texture>(renderer.image).first;
-                serializable->material = mpResourceRegistry->lookup_name<Material>(renderer.material).first;
+                serializable->image = renderer.image;
+                serializable->material = renderer.material;
                 serializable->pixelsPerUnit = renderer.pixelsPerUnit;
                 return serializable;
             },
             [=](const SerializableImageRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
                 registry.emplace_component<ImageRenderer>(entity);
                 auto &renderer = registry.get_component<ImageRenderer>(entity);
-                renderer.image = mpResourceRegistry->get_resource<Texture>(serializable.image).get();
-                renderer.material = mpResourceRegistry->get_resource<Material>(serializable.material).get();
+                renderer.image = serializable.image;
+                renderer.material = serializable.material;
                 renderer.pixelsPerUnit = serializable.pixelsPerUnit;
             });
 

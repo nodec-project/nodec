@@ -31,6 +31,8 @@ public:
         archive(cereal::make_nvp("fov_angle", fov_angle));
         archive(cereal::make_nvp("ortho_width", ortho_width));
     }
+private:
+    void rtti() {}
 };
 
 } // namespace components

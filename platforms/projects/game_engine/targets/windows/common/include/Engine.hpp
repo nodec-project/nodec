@@ -20,6 +20,7 @@
 #include <nodec_resources/impl/resources_module.hpp>
 #include <nodec_scene/impl/scene_module.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
+#include <nodec_scene_serialization/scene_loader.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_screen/impl/screen_module.hpp>
 #include <nodec_world/impl/world_module.hpp>
@@ -77,6 +78,9 @@ public:
         // --- scene serialization ---
         scene_serialization_module_.reset(new SceneSerializationModuleBackend(&resources_module_->registry()));
         add_module<SceneSerialization>(scene_serialization_module_);
+
+        scene_loader_.reset(new nodec_scene_serialization::SceneLoader(*scene_serialization_module_, world_module_->scene(), resources_module_->registry()));
+        add_module<nodec_scene_serialization::SceneLoader>(scene_loader_);
     }
 
     ~Engine() {
@@ -162,6 +166,8 @@ private:
     std::shared_ptr<nodec_input::InputDevices> input_devices_;
     KeyboardDeviceSystem *keyboard_device_system_;
     MouseDeviceSystem *mouse_device_system_;
+
+    std::shared_ptr<nodec_scene_serialization::SceneLoader> scene_loader_;
 
     std::shared_ptr<ResourcesModuleBackend> resources_module_;
 

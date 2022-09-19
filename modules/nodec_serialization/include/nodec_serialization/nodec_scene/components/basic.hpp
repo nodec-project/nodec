@@ -21,6 +21,8 @@ public:
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("name", name));
     }
+private:
+    void rtti() {}
 };
 
 class SerializableTransform : public nodec_scene_serialization::BaseSerializableComponent {
@@ -39,6 +41,8 @@ public:
         archive(cereal::make_nvp("local_scale", local_scale));
         archive(cereal::make_nvp("local_rotation", local_rotation));
     }
+private:
+    void rtti() {}
 };
 
 } // namespace components

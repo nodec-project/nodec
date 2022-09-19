@@ -32,6 +32,7 @@ public:
         auto &input_devices = engine.get_module<InputDevices>();
         auto &serialization = engine.get_module<SceneSerialization>();
         auto &resources = engine.get_module<Resources>();
+        auto &scene_loader = engine.get_module<SceneLoader>();
 
         auto keyboard = input_devices.get_available_devices<Keyboard>().front();
         auto mouse = input_devices.get_available_devices<Mouse>().front();
@@ -57,7 +58,7 @@ public:
         }
 
         {
-            object_spawn_system_ = std::make_shared<ObjectSpawnSystem>(keyboard, world, serialization, resources.registry());
+            object_spawn_system_ = std::make_shared<ObjectSpawnSystem>(keyboard, world, serialization, scene_loader);
 #ifdef EDITOR_MODE
             ObjectSpawnSystem::setup_editor(editor);
 #endif

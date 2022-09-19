@@ -23,6 +23,8 @@ public:
         archive(cereal::make_nvp("meshes", meshes));
         archive(cereal::make_nvp("materials", materials));
     }
+private:
+    void rtti() {}
 };
 
 } // namespace components
