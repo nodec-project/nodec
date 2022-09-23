@@ -5,9 +5,9 @@
 
 struct ObjectSpawner {
     std::string scene_name;
-    //nodec_scene_serialization::SceneLoader::AsyncOperation operation;
-     std::unique_ptr<nodec_scene_serialization::SceneLoader::AsyncOperation> operation;
+    nodec::optional<nodec_scene_serialization::SceneLoader::AsyncOperation> operation;
 };
+
 
 class SerializableObjectSpawner : public nodec_scene_serialization::BaseSerializableComponent {
 public:
@@ -118,7 +118,6 @@ public:
                 spawner.operation.reset();
             }
         });
-        
 
         if (!need_update) return;
 
@@ -143,8 +142,7 @@ public:
 
             world.scene().registry().view<ObjectSpawner>().each([&](auto entt, ObjectSpawner &spawner) {
                 if (!spawner.operation) {
-                    // TODO: Use optional
-                    spawner.operation.reset(new SceneLoader::AsyncOperation(scene_loader_.load_async(spawner.scene_name, entt)));
+                    spawner.operation = SceneLoader::AsyncOperation(scene_loader_.load_async(spawner.scene_name, entt));
                 }
             });
 

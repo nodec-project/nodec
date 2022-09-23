@@ -17,7 +17,6 @@ using void_t = void;
         * https://github.com/skypjack/entt/blob/master/src/entt/core/type_traits.hpp
 */
 
-
 /**
  * @brief A class to use to push around lists of types, nothing more.
  * @tparam Types Types provided by the type list.
@@ -157,6 +156,17 @@ struct can_stream_out : std::false_type {};
 template<class OSTREAM, class T>
 struct can_stream_out<OSTREAM, T, void_t<decltype(std::declval<OSTREAM &>() << std::declval<const T &>())>> : std::true_type {
 };
+
+// std::conjunction from C++17
+template<class...>
+struct conjunction : std::true_type {};
+
+template<class B>
+struct conjunction<B> : B {};
+
+template<class B, class... Bs>
+struct conjunction<B, Bs...>
+    : std::conditional<bool(B::value), conjunction<Bs...>, B>::type {};
 
 } // namespace nodec
 

@@ -21,9 +21,9 @@ template<class T>
 void as_const(const T &&) = delete;
 
 /**
- * @brief 
+ * @brief
  * Waiting for C++17.
- * @tparam T 
+ * @tparam T
  */
 template<class T>
 struct in_place_type_t {
@@ -32,6 +32,12 @@ struct in_place_type_t {
 
 template<class T>
 constexpr in_place_type_t<T> in_place_type{};
+
+struct in_place_t {
+    explicit in_place_t() = default;
+};
+
+constexpr in_place_t in_place{};
 
 } // namespace nodec
 
