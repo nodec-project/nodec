@@ -11,6 +11,7 @@
 #include <nodec_serialization/nodec_rendering/components/post_processing.hpp>
 #include <nodec_serialization/nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
+#include <nodec_serialization/nodec_rendering/components/text_renderer.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -72,6 +73,14 @@ public:
                 renderer.material = serializable.material;
                 renderer.pixelsPerUnit = serializable.pixelsPerUnit;
             });
+
+        register_component<TextRenderer, SerializableTextRenderer>(
+            [=](const TextRenderer &renderer) {
+
+            },
+            [=](const SerializableTextRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
+            }
+        );
 
         register_component<PostProcessing, SerializablePostProcessing>(
             [=](const PostProcessing &processing) {

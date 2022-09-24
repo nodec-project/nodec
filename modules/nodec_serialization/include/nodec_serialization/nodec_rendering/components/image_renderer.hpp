@@ -22,7 +22,7 @@ public:
     template<class Archive>
     void save(Archive &archive) const {
         using namespace nodec_scene_serialization;
-        ArchiveContext &context = cereal::get_user_data<nodec_scene_serialization::ArchiveContext>(archive);
+        ArchiveContext &context = cereal::get_user_data<ArchiveContext>(archive);
 
         archive(cereal::make_nvp("image", context.resource_registry().lookup_name<resources::Texture>(image).first));
         archive(cereal::make_nvp("material", context.resource_registry().lookup_name<resources::Material>(material).first));

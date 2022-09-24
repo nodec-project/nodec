@@ -89,16 +89,20 @@ public:
         : Base{packed, sparse_table} {}
 
     template<typename... Args>
-    bool emplace(BasicRegistry<Entity> &owner, const Entity entity, Args &&...args) {
-        if (sparse_table.contains(entity)) return false;
+    std::pair<Value &, bool> emplace(BasicRegistry<Entity> &owner, const Entity entity, Args &&...args) {
+        {
+            auto *pos = sparse_table.try_get(entity);
+            if (pos != nullptr) return {instances[*pos], false};
+        }
 
-        sparse_table[entity] = instances.size();
+        auto pos = instances.size();
+        sparse_table[entity] = pos;
         instances.push_back({args...});
         packed.emplace_back(entity);
 
         element_constructed_(owner, entity);
 
-        return true;
+        return {instances[pos], true};
     }
 
     const Value *try_get(const Entity entity) const {

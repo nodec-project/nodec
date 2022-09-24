@@ -11,6 +11,8 @@
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 
+#include <imessentials/text_buffer.hpp>
+
 #include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
@@ -236,6 +238,11 @@ public:
     }
 
     void OnGuiTextRenderer(nodec_rendering::components::TextRenderer &renderer) {
+        auto buffer = imessentials::get_text_buffer(1024, renderer.text);
+        ImGui::InputText("Text", buffer.data(), buffer.size());
+        renderer.font = ResourceNameEdit("Font", renderer.font);
+        renderer.material = ResourceNameEdit("Material", renderer.material);
+        ImGui::DragInt("Pixel Size", &renderer.pixelSize);
     }
 
 private:
