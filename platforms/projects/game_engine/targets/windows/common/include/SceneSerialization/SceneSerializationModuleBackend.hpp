@@ -67,8 +67,7 @@ public:
                 return serializable;
             },
             [=](const SerializableImageRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<ImageRenderer>(entity);
-                auto &renderer = registry.get_component<ImageRenderer>(entity);
+                auto& renderer = registry.emplace_component<ImageRenderer>(entity).first;
                 renderer.image = serializable.image;
                 renderer.material = serializable.material;
                 renderer.pixelsPerUnit = serializable.pixelsPerUnit;
@@ -76,11 +75,20 @@ public:
 
         register_component<TextRenderer, SerializableTextRenderer>(
             [=](const TextRenderer &renderer) {
-
+                auto serializable = std::make_shared<SerializableTextRenderer>();
+                serializable->font = renderer.font;
+                serializable->material = renderer.material;
+                serializable->text = renderer.text;
+                serializable->pixel_size = renderer.pixel_size;
+                return serializable;
             },
             [=](const SerializableTextRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
-            }
-        );
+                auto &renderer = registry.emplace_component<TextRenderer>(entity).first;
+                renderer.font = serializable.font;
+                renderer.material = serializable.material;
+                renderer.text = serializable.text;
+                renderer.pixel_size = serializable.pixel_size;
+            });
 
         register_component<PostProcessing, SerializablePostProcessing>(
             [=](const PostProcessing &processing) {

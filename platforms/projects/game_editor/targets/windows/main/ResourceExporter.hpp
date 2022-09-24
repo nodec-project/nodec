@@ -3,14 +3,14 @@
 #include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_rendering/resources/material.hpp>
 #include <nodec_rendering/resources/mesh.hpp>
+#include <nodec_scene/scene.hpp>
+#include <nodec_scene/scene_registry.hpp>
+#include <nodec_scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/serializable_scene_graph.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/resources/material.hpp>
 #include <nodec_serialization/nodec_rendering/resources/mesh.hpp>
 #include <nodec_serialization/nodec_scene/components/basic.hpp>
-#include <nodec_scene_serialization/scene_serialization.hpp>
-#include <nodec_scene_serialization/serializable_scene_graph.hpp>
-#include <nodec_scene/scene.hpp>
-#include <nodec_scene/scene_registry.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -204,19 +204,20 @@ inline bool ExportSceneGraph(
     const std::vector<nodec_scene::SceneEntity> &roots,
     const nodec_scene::SceneRegistry &sceneRegistry,
     const nodec_scene_serialization::SceneSerialization &sceneSerialization,
+    nodec::resource_management::ResourceRegistry &resourceRegistry,
     const std::string &destPath) {
     using namespace nodec;
     using namespace nodec_scene_serialization;
 
     std::ofstream out(destPath, std::ios::binary);
 
-    if (!out) {
-        return false;
-    }
-    using Options = cereal::JSONOutputArchive::Options;
-    // Options options(324, Options::IndentChar::space, 2U);
+    if (!out) return false;
 
-    cereal::JSONOutputArchive archive(out, Options::NoIndent());
+    ArchiveContext context{resourceRegistry};
+
+    // Options options(324, Options::IndentChar::space, 2U);
+    using Options = cereal::JSONOutputArchive::Options;
+    cereal::UserDataAdapter<ArchiveContext, cereal::JSONOutputArchive> archive(context, out, Options::NoIndent());
 
     SerializableSceneGraph sceneGraph;
 

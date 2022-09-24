@@ -26,7 +26,7 @@ public:
         hierarchy_system_.remove_child(parent, child);
     }
 
-    const std::vector<SceneEntity> &root_entites() const noexcept override {
+    const std::vector<SceneEntity> &root_entities() const noexcept override {
         return hierarchy_system_.root_entities();
     }
 

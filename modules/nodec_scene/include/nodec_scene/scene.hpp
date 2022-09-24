@@ -19,7 +19,7 @@ public:
     virtual void append_child(const SceneEntity parent, const SceneEntity child) = 0;
     virtual void remove_child(const SceneEntity parent, const SceneEntity child) = 0;
 
-    virtual const std::vector<SceneEntity> &root_entites() const noexcept = 0;
+    virtual const std::vector<SceneEntity> &root_entities() const noexcept = 0;
 
     virtual SceneEntity create_entity(const std::string &name) = 0;
 

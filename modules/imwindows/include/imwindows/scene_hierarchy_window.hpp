@@ -40,7 +40,7 @@ public:
 
         // Make the copy of the roots.
         // Iterator may be invalidated by adding or deleting elements while iterating.
-        auto roots = scene_->root_entites();
+        auto roots = scene_->root_entities();
 
         for (auto& root : roots) {
             show_entity_node(root);

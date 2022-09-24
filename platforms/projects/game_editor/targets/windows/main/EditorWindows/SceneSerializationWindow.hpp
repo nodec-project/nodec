@@ -124,7 +124,7 @@ public:
                     switch (export_target) {
                     case 0: // Root
                     {
-                        success = ResourceExporter::ExportSceneGraph(scene->root_entites(), scene->registry(), *scene_serialization, dest_path);
+                        success = ResourceExporter::ExportSceneGraph(scene->root_entities(), scene->registry(), *scene_serialization, *resource_registry, dest_path);
                         break;
                     }
 
@@ -132,7 +132,7 @@ public:
                     {
                         if (scene->registry().is_valid(selected_entity)) {
                             std::vector<SceneEntity> roots{ selected_entity };
-                            success = ResourceExporter::ExportSceneGraph(roots, scene->registry(), *scene_serialization, dest_path);
+                            success = ResourceExporter::ExportSceneGraph(roots, scene->registry(), *scene_serialization, *resource_registry, dest_path);
                         }
                         break;
                     }
