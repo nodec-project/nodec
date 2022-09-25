@@ -15,7 +15,7 @@ struct ImageRenderer {
     TexturePtr image;
     MaterialPtr material;
 
-    int pixelsPerUnit{100};
+    int pixels_per_unit{100};
 };
 
 } // namespace components

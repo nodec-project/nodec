@@ -31,7 +31,7 @@ struct FontCharacter {
     //! from the origin to the origin of the next glyph.
     std::uint16_t advance;
 
-    std::unique_ptr<FontTexture> pFontTexture;
+    std::shared_ptr<FontTexture> pFontTexture;
 };
 
 class FontCharacterDatabase {

@@ -54,16 +54,19 @@ public:
         dirty_ = true;
     }
 
-    TextureEntry get_texture_entry(const std::string &name) const override {
+    nodec::optional<TextureEntry> get_texture_entry(const std::string &name) const noexcept override {
         auto *shader_backend = shader_backend_assured();
         auto slot = shader_backend->get_texture_slot(name);
-        return texture_entries_[slot];
+        if (!slot) return nodec::nullopt;
+        return texture_entries_[slot.value()];
     }
 
-    void set_texture_entry(const std::string &name, const TextureEntry &value) override {
+    bool set_texture_entry(const std::string &name, const TextureEntry &value) noexcept override {
         auto *shader_backend = shader_backend_assured();
         auto slot = shader_backend->get_texture_slot(name);
-        texture_entries_[slot] = value;
+        if (!slot) return false;
+        texture_entries_[slot.value()] = value;
+        return true;
     }
 
 public:

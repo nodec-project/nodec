@@ -49,7 +49,7 @@
 "data": {
 "image": "org.nodec.hello-nodec/private/serena01.png",
 "material": "org.nodec-rendering.essentials/materials/image-default.material",
-"pixelsPerUnit": 100
+"pixels_per_unit": 100
 }
 }
 }

@@ -85,8 +85,8 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
             mTextureConfigCB.Update(mpGfx, &mTextureConfig);
 
             XMMATRIX matrixM{trfm.local2world.m};
-            const auto width = imageBackend->width() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
-            const auto height = imageBackend->height() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
+            const auto width = imageBackend->width() / (renderer.pixels_per_unit + std::numeric_limits<float>::epsilon());
+            const auto height = imageBackend->height() / (renderer.pixels_per_unit + std::numeric_limits<float>::epsilon());
             matrixM = XMMatrixScaling(width, height, 1.0f) * matrixM;
 
             // matrixM
@@ -107,24 +107,64 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
         });
     }
 
+    mBSAlphaBlend.Bind(mpGfx);
     scene.registry().view<const Transform, const TextRenderer>().each([&](auto entt, const Transform &trfm, const TextRenderer &renderer) {
-        const auto fontBackend = std::static_pointer_cast<FontBackend>(renderer.font);
+        auto fontBackend = std::static_pointer_cast<FontBackend>(renderer.font);
         if (!fontBackend) return;
 
-        const auto materialBackend = std::static_pointer_cast<MaterialBackend>(renderer.material);
+        auto materialBackend = std::static_pointer_cast<MaterialBackend>(renderer.material);
         if (!materialBackend) return;
 
-        const auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
+        auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
         if (shaderBackend.get() != activeShader) return;
         
         const auto u32Text = nodec::unicode::utf8to32<std::u32string>(renderer.text);
+        const float pixelsPerUnit = renderer.pixels_per_unit;
 
         float offsetX = 0.0f;
         float offsetY = 0.0f;
         for (const auto& chCode : u32Text) {
             const auto& character = mFontCharacterDatabase.Get(fontBackend->GetFace(), renderer.pixel_size, chCode);
 
-            // materialBackend->set_texture_entry("albedo", {character.})
+            float posX = offsetX + character.bearing.x / pixelsPerUnit;
+            float posY = offsetY - (character.size.y - character.bearing.y) / pixelsPerUnit;
+            float w = character.size.x / pixelsPerUnit;
+            float h = character.size.y / pixelsPerUnit;
+
+            offsetX += (character.advance >> 6) / pixelsPerUnit;
+
+            if (!character.pFontTexture) {
+                continue;
+            }
+
+            materialBackend->set_texture_entry("mask", {character.pFontTexture, Sampler::Bilinear});
+
+            materialBackend->bind_constant_buffer(mpGfx, 3);
+            SetCullMode(materialBackend->cull_mode());
+
+            mTextureConfig.texHasFlag = 0x00;
+            BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+            mTextureConfigCB.Update(mpGfx, &mTextureConfig);
+
+            XMMATRIX matrixM{trfm.local2world.m};
+            matrixM = XMMatrixScaling(w/2, h/2, 1.0f) * XMMatrixTranslation(posX + w/2, posY + h/2, 0.0f) * matrixM;
+
+            // matrixM
+            auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
+
+            // DirectX Math using row-major representation
+            // HLSL using column-major representation
+            auto matrixMVP = matrixM * matrixV * matrixP;
+
+            XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
+            XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
+            XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
+
+            mModelPropertiesCB.Update(mpGfx, &mModelProperties);
+            mScreenQuadMesh->bind(mpGfx);
+            mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
         }
     });
+
+    mBSDefault.Bind(mpGfx);
 }

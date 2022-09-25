@@ -5,6 +5,9 @@
         "texture_entries": [
             {
                 "name": "albedo"
+            },
+            {
+                "name": "mask"
             }
         ],    
         "pass": [],

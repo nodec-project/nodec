@@ -19,6 +19,7 @@ public:
     std::shared_ptr<resources::Material> material;
 
     int pixel_size{10};
+    int pixels_per_unit{10};
 
     template<class Archive>
     void save(Archive &archive) const {
@@ -29,6 +30,7 @@ public:
         archive(cereal::make_nvp("font", context.resource_registry().lookup_name<resources::Font>(font).first));
         archive(cereal::make_nvp("material", context.resource_registry().lookup_name<resources::Material>(material).first));
         archive(cereal::make_nvp("pixel_size", pixel_size));
+        archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
     }
 
     template<class Archive>
@@ -51,6 +53,7 @@ public:
         }
 
         archive(cereal::make_nvp("pixel_size", pixel_size));
+        archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
     }
 };
 } // namespace components

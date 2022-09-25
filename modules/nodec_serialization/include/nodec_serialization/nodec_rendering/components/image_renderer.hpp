@@ -17,7 +17,7 @@ public:
     std::shared_ptr<resources::Texture> image;
     std::shared_ptr<resources::Material> material;
 
-    int pixelsPerUnit{100};
+    int pixels_per_unit{100};
 
     template<class Archive>
     void save(Archive &archive) const {
@@ -26,7 +26,7 @@ public:
 
         archive(cereal::make_nvp("image", context.resource_registry().lookup_name<resources::Texture>(image).first));
         archive(cereal::make_nvp("material", context.resource_registry().lookup_name<resources::Material>(material).first));
-        archive(cereal::make_nvp("pixelsPerUnit", pixelsPerUnit));
+        archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
     }
 
     template<class Archive>
@@ -43,7 +43,7 @@ public:
             archive(cereal::make_nvp("material", name));
             material = context.resource_registry().get_resource<resources::Material>(name, nodec::resource_management::LoadPolicy::Direct).get();
         }
-        archive(cereal::make_nvp("pixelsPerUnit", pixelsPerUnit));
+        archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
     }
 };
 

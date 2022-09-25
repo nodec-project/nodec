@@ -7,6 +7,7 @@
 #include "texture.hpp"
 
 #include <nodec/vector4.hpp>
+#include <nodec/optional.hpp>
 
 #include <map>
 #include <memory>
@@ -63,8 +64,8 @@ public:
     virtual nodec::Vector4f get_vector4_property(const std::string &name) const = 0;
     virtual void set_vector4_property(const std::string &name, const nodec::Vector4f &value) = 0;
 
-    virtual TextureEntry get_texture_entry(const std::string &name) const = 0;
-    virtual void set_texture_entry(const std::string &name, const TextureEntry &value) = 0;
+    virtual nodec::optional<TextureEntry> get_texture_entry(const std::string &name) const noexcept = 0;
+    virtual bool set_texture_entry(const std::string &name, const TextureEntry &value) noexcept = 0;
 
 protected:
     virtual void on_shader_changed() = 0;

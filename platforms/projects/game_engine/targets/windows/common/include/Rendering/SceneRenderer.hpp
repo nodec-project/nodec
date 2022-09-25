@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Font/FontCharacterDatabase.hpp>
+#include <Graphics/BlendState.hpp>
 #include <Graphics/ConstantBuffer.hpp>
 #include <Graphics/GeometryBuffer.hpp>
 #include <Graphics/Graphics.hpp>
@@ -93,6 +94,8 @@ public:
           mSamplerAnisotropic(pGfx, SamplerState::Type::Anisotropic),
           mSamplerBilinear(pGfx, SamplerState::Type::Bilinear),
           mSamplerPoint(pGfx, SamplerState::Type::Point),
+          mBSDefault(BlendState::CreateDefaultBlend(pGfx)),
+          mBSAlphaBlend(BlendState::CreateAlphaBlend(pGfx)),
           mRSCullBack{pGfx, D3D11_CULL_BACK},
           mRSCullNone{pGfx, D3D11_CULL_NONE},
           mFontCharacterDatabase{pGfx} {
@@ -210,6 +213,13 @@ public:
                 auto *shader = static_cast<ShaderBackend *>(material->shader().get());
                 if (!shader) return;
                 shaders.emplace(shader);
+            });
+
+            scene.registry().view<const TextRenderer, const Transform>().each([&](auto entt, const TextRenderer &renderer, const Transform &transform) {
+                if (!renderer.material) return;
+                auto *shader = renderer.material->shader().get();
+                if (shader == nullptr) return;
+                shaders.emplace(static_cast<ShaderBackend *>(shader));
             });
 
             // now let's sort by priority.
@@ -564,6 +574,9 @@ private:
 
     RasterizerState mRSCullNone;
     RasterizerState mRSCullBack;
+
+    BlendState mBSDefault;
+    BlendState mBSAlphaBlend;
 
     Graphics *mpGfx;
 

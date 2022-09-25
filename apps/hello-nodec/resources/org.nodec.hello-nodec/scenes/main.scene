@@ -50,7 +50,8 @@
 "text": "HelloWorld!",
 "font": "org.nodec.hello-nodec/fonts/Noto_Sans_JP/NotoSansJP-Regular.otf",
 "material": "org.nodec-rendering.essentials/materials/image-default.material",
-"pixel_size": 10
+"pixel_size": 10,
+"pixels_per_unit": 10
 }
 }
 }

@@ -8,5 +8,7 @@ struct V2P {
 };
 
 Texture2D texAlbedo : register(t0);
+Texture2D texMask : register(t1);
 
 SamplerState sampler_texAlbedo : register(s0);
+SamplerState sampler_texMask : register(s1);

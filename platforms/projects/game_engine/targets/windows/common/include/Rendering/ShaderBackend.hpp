@@ -7,6 +7,7 @@
 #include <nodec_rendering/resources/shader.hpp>
 
 #include <nodec/vector4.hpp>
+#include <nodec/optional.hpp>
 
 #include <cassert>
 #include <string>
@@ -147,8 +148,10 @@ public:
         *v = value;
     }
 
-    int get_texture_slot(const std::string &name) const {
-        return texture_entry_slots_.at(name);
+    nodec::optional<int> get_texture_slot(const std::string &name) const noexcept {
+        auto iter = texture_entry_slots_.find(name);
+        if (iter == texture_entry_slots_.end()) return nodec::nullopt;
+        return iter->second;
     }
 
     int pass_count() const noexcept {

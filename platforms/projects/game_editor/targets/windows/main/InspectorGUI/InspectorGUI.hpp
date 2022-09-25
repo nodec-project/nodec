@@ -234,7 +234,7 @@ public:
     void OnGuiImageRenderer(ImageRenderer &renderer) {
         renderer.image = ResourceNameEdit("Image", renderer.image);
         renderer.material = ResourceNameEdit("Material", renderer.material);
-        ImGui::DragInt("Pixels Per Unit", &renderer.pixelsPerUnit);
+        ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
     }
 
     void OnGuiTextRenderer(nodec_rendering::components::TextRenderer &renderer) {
@@ -244,6 +244,7 @@ public:
         renderer.font = ResourceNameEdit("Font", renderer.font);
         renderer.material = ResourceNameEdit("Material", renderer.material);
         ImGui::DragInt("Pixel Size", &renderer.pixel_size);
+        ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
     }
 
 private:

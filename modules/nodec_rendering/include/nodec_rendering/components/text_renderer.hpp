@@ -18,6 +18,7 @@ struct TextRenderer {
     std::shared_ptr<resources::Material> material;
 
     int pixel_size{10};
+    int pixels_per_unit{10};
 };
 }
 } // namespace nodec_rendering

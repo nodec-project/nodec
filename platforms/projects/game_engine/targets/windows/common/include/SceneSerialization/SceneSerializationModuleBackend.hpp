@@ -63,14 +63,14 @@ public:
                 auto serializable = std::make_shared<SerializableImageRenderer>();
                 serializable->image = renderer.image;
                 serializable->material = renderer.material;
-                serializable->pixelsPerUnit = renderer.pixelsPerUnit;
+                serializable->pixels_per_unit = renderer.pixels_per_unit;
                 return serializable;
             },
             [=](const SerializableImageRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
                 auto& renderer = registry.emplace_component<ImageRenderer>(entity).first;
                 renderer.image = serializable.image;
                 renderer.material = serializable.material;
-                renderer.pixelsPerUnit = serializable.pixelsPerUnit;
+                renderer.pixels_per_unit = serializable.pixels_per_unit;
             });
 
         register_component<TextRenderer, SerializableTextRenderer>(

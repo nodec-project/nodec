@@ -130,7 +130,7 @@ public:
                 ImGui::PushID(i);
 
                 auto &name = shader->get_texture_entry_name(i);
-                auto current = target_material_->get_texture_entry(name);
+                auto current = target_material_->get_texture_entry(name).value();
 
                 ImGui::Text(name.c_str());
                 {
