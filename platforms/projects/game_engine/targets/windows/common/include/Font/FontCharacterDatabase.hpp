@@ -3,8 +3,6 @@
 #include "FontFace.hpp"
 #include "FontTexture.hpp"
 
-// #include "../Graphics/TextureView.hpp"
-
 #include <nodec/containers/sparse_table.hpp>
 #include <nodec/vector2.hpp>
 
@@ -62,7 +60,11 @@ public:
         character.advance = face->glyph->advance.x;
         character.size.set(face->glyph->bitmap.width, face->glyph->bitmap.rows);
         character.bearing.set(face->glyph->bitmap_left, face->glyph->bitmap_top);
-        character.pFontTexture.reset(new FontTexture(mpGfx, face));
+
+        // The buffer will be null when the character is void character like space.
+        if (face->glyph->bitmap.buffer != nullptr) {
+            character.pFontTexture.reset(new FontTexture(mpGfx, face));
+        }
 
         character.initialized = true;
 

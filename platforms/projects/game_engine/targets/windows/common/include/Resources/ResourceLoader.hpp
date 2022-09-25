@@ -5,6 +5,7 @@
 #include <Rendering/MeshBackend.hpp>
 #include <Rendering/ShaderBackend.hpp>
 #include <Rendering/TextureBackend.hpp>
+#include <Rendering/ImageTexture.hpp>
 
 #include <SceneAudio/AudioClipBackend.hpp>
 
@@ -246,7 +247,7 @@ public:
         using namespace nodec;
 
         try {
-            auto texture = std::make_shared<TextureBackend>(mpGraphics, path);
+            auto texture = std::make_shared<ImageTexture>(mpGraphics, path);
             return texture;
         } catch (...) {
             HandleException(Formatter() << "Texture::" << path);

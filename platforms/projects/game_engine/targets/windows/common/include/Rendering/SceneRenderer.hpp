@@ -1,5 +1,6 @@
 #pragma once
 
+#include <Font/FontCharacterDatabase.hpp>
 #include <Graphics/ConstantBuffer.hpp>
 #include <Graphics/GeometryBuffer.hpp>
 #include <Graphics/Graphics.hpp>
@@ -9,7 +10,6 @@
 #include <Rendering/MeshBackend.hpp>
 #include <Rendering/ShaderBackend.hpp>
 #include <Rendering/TextureBackend.hpp>
-#include <Font/FontCharacterDatabase.hpp>
 
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
@@ -515,10 +515,10 @@ private:
             }
 
             auto *textureBackend = static_cast<TextureBackend *>(entry.texture.get());
-
-            if (textureBackend->texture_view()) {
-                textureBackend->texture_view()->BindVS(mpGfx, slot);
-                textureBackend->texture_view()->BindPS(mpGfx, slot);
+            {
+                auto *view = &textureBackend->shader_resource_view();
+                mpGfx->GetContext().VSSetShaderResources(slot, 1u, &view);
+                mpGfx->GetContext().PSSetShaderResources(slot, 1u, &view);
             }
 
             switch (entry.sampler) {

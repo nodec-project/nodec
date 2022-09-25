@@ -110,11 +110,21 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
     scene.registry().view<const Transform, const TextRenderer>().each([&](auto entt, const Transform &trfm, const TextRenderer &renderer) {
         const auto fontBackend = std::static_pointer_cast<FontBackend>(renderer.font);
         if (!fontBackend) return;
+
+        const auto materialBackend = std::static_pointer_cast<MaterialBackend>(renderer.material);
+        if (!materialBackend) return;
+
+        const auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
+        if (shaderBackend.get() != activeShader) return;
         
         const auto u32Text = nodec::unicode::utf8to32<std::u32string>(renderer.text);
 
+        float offsetX = 0.0f;
+        float offsetY = 0.0f;
         for (const auto& chCode : u32Text) {
             const auto& character = mFontCharacterDatabase.Get(fontBackend->GetFace(), renderer.pixel_size, chCode);
+
+            // materialBackend->set_texture_entry("albedo", {character.})
         }
     });
 }
