@@ -155,7 +155,7 @@ public:
         return sub_shaders_.size();
     }
 
-    const std::vector<std::string> &render_targerts(int pass_num) const {
+    const std::vector<std::string> &render_targets(int pass_num) const {
         return sub_shaders_.at(pass_num).render_targets;
     }
     const std::vector<std::string> &texture_resources(int pass_num) const {

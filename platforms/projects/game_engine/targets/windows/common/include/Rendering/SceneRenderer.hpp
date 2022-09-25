@@ -9,6 +9,7 @@
 #include <Rendering/MeshBackend.hpp>
 #include <Rendering/ShaderBackend.hpp>
 #include <Rendering/TextureBackend.hpp>
+#include <Font/FontCharacterDatabase.hpp>
 
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
@@ -17,6 +18,7 @@
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
+#include <nodec_rendering/components/text_renderer.hpp>
 #include <nodec_scene/components/basic.hpp>
 #include <nodec_scene/scene.hpp>
 
@@ -92,7 +94,8 @@ public:
           mSamplerBilinear(pGfx, SamplerState::Type::Bilinear),
           mSamplerPoint(pGfx, SamplerState::Type::Point),
           mRSCullBack{pGfx, D3D11_CULL_BACK},
-          mRSCullNone{pGfx, D3D11_CULL_NONE} {
+          mRSCullNone{pGfx, D3D11_CULL_NONE},
+          mFontCharacterDatabase{pGfx} {
         using namespace nodec_rendering::resources;
         using namespace nodec::resource_management;
         using namespace nodec;
@@ -237,7 +240,7 @@ public:
                     }
                 }
 
-                // If some effects, the off-screen buffer is neeeded.
+                // If some effects, the off-screen buffer is needed.
                 if (activePostProcessEffects.size() > 0) {
                     auto &buffer = mGeometryBuffers["screen"];
                     if (!buffer) {
@@ -279,13 +282,13 @@ public:
             XMStoreFloat4x4(&mSceneProperties.matrixP, matrixP);
             XMStoreFloat4x4(&mSceneProperties.matrixPInverse, matrixPInverse);
 
-            XMMATRIX cameraLocal2Wrold{cameraTrfm.local2world.m};
+            XMMATRIX cameraLocal2World{cameraTrfm.local2world.m};
             XMVECTOR scale, rotQuat, trans;
-            XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2Wrold);
+            XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2World);
 
-            auto matrixV = XMMatrixInverse(nullptr, cameraLocal2Wrold);
+            auto matrixV = XMMatrixInverse(nullptr, cameraLocal2World);
             XMStoreFloat4x4(&mSceneProperties.matrixV, matrixV);
-            XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2Wrold);
+            XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2World);
 
             mSceneProperties.cameraPos.set(
                 XMVectorGetByIndex(trans, 0),
@@ -335,19 +338,19 @@ public:
                     const auto passCount = activeShader->pass_count();
                     // first pass
                     {
-                        const auto &targets = activeShader->render_targerts(0);
-                        std::vector<ID3D11RenderTargetView *> renderTargerts(targets.size());
+                        const auto &targets = activeShader->render_targets(0);
+                        std::vector<ID3D11RenderTargetView *> renderTargets(targets.size());
                         for (size_t i = 0; i < targets.size(); ++i) {
                             const auto &name = targets[i];
                             auto &buffer = mGeometryBuffers[name];
                             if (!buffer) {
                                 buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
                             }
-                            renderTargerts[i] = &buffer->GetRenderTargetView();
-                            mpGfx->GetContext().ClearRenderTargetView(renderTargerts[i], Vector4f::zero.v);
+                            renderTargets[i] = &buffer->GetRenderTargetView();
+                            mpGfx->GetContext().ClearRenderTargetView(renderTargets[i], Vector4f::zero.v);
                         }
 
-                        mpGfx->GetContext().OMSetRenderTargets(renderTargerts.size(), renderTargerts.data(), mpDepthStencilView.Get());
+                        mpGfx->GetContext().OMSetRenderTargets(renderTargets.size(), renderTargets.data(), mpDepthStencilView.Get());
                         mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
                         mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -410,7 +413,7 @@ public:
                     }
 
                     // It is assured that material and shader are exists.
-                    // It is checked at the begining of rendering pass of camera.
+                    // It is checked at the beginning of rendering pass of camera.
                     auto materialBackend = std::static_pointer_cast<MaterialBackend>(activePostProcessEffects[i]->material);
                     auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
 
@@ -432,19 +435,19 @@ public:
                             // If halfway pass.
                             // Support the multiple render targets.
 
-                            const auto &targets = shaderBackend->render_targerts(passNum);
-                            std::vector<ID3D11RenderTargetView *> renderTargerts(targets.size());
+                            const auto &targets = shaderBackend->render_targets(passNum);
+                            std::vector<ID3D11RenderTargetView *> renderTargets(targets.size());
                             for (size_t i = 0; i < targets.size(); ++i) {
                                 const auto &name = targets[i];
                                 auto &buffer = mGeometryBuffers[name];
                                 if (!buffer) {
                                     buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
                                 }
-                                renderTargerts[i] = &buffer->GetRenderTargetView();
-                                mpGfx->GetContext().ClearRenderTargetView(renderTargerts[i], Vector4f::zero.v);
+                                renderTargets[i] = &buffer->GetRenderTargetView();
+                                mpGfx->GetContext().ClearRenderTargetView(renderTargets[i], Vector4f::zero.v);
                             }
 
-                            mpGfx->GetContext().OMSetRenderTargets(renderTargerts.size(), renderTargerts.data(), nullptr);
+                            mpGfx->GetContext().OMSetRenderTargets(renderTargets.size(), renderTargets.data(), nullptr);
                         }
 
                         // --- Bind texture resources.
@@ -472,109 +475,7 @@ public:
 
 private:
     void RenderModel(nodec_scene::Scene &scene, ShaderBackend *activeShader,
-                     const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixP) {
-        if (activeShader == nullptr) return;
-
-        using namespace nodec;
-        using namespace nodec_scene::components;
-        using namespace nodec_rendering::components;
-        using namespace nodec_rendering::resources;
-        using namespace DirectX;
-
-        mModelPropertiesCB.BindVS(mpGfx, 2);
-        mModelPropertiesCB.BindPS(mpGfx, 2);
-
-        scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
-            if (meshRenderer.meshes.size() == 0) return;
-            if (meshRenderer.meshes.size() != meshRenderer.materials.size()) return;
-
-            // DirectX Math using row-major representation, row-major memory order.
-            // nodec using column-major representation, column-major memory order.
-            // HLSL using column-major representation, row-major memory order.
-            //
-            // nodec -> DirectX Math
-            //  Mathematically, when a matrix is converted from column-major representation to row-major representation,
-            //  it needs to be transposed.
-            //  However, memory ordering of nodec and DirectX Math is different.
-            //  Therefore, the matrix is automatically transposed when it is assigned to each other.
-            XMMATRIX matrixM{trfm.local2world.m};
-            auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
-
-            auto matrixMVP = matrixM * matrixV * matrixP;
-
-            XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
-            XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
-            XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
-
-            mModelPropertiesCB.Update(mpGfx, &mModelProperties);
-
-            for (int i = 0; i < meshRenderer.meshes.size(); ++i) {
-                auto &mesh = meshRenderer.meshes[i];
-                auto &material = meshRenderer.materials[i];
-                if (!mesh || !material) continue;
-
-                auto *meshBackend = static_cast<MeshBackend *>(mesh.get());
-                auto *materialBackend = static_cast<MaterialBackend *>(material.get());
-                auto *shaderBackend = static_cast<ShaderBackend *>(material->shader().get());
-
-                if (shaderBackend != activeShader) continue;
-
-                materialBackend->bind_constant_buffer(mpGfx, 3);
-                SetCullMode(materialBackend->cull_mode());
-
-                mTextureConfig.texHasFlag = 0x00;
-                BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
-                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
-
-                meshBackend->bind(mpGfx);
-                mpGfx->DrawIndexed(meshBackend->triangles.size());
-            } // End foreach mesh
-        });   // End foreach mesh renderer
-
-        if (mQuadMesh) {
-            scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
-                auto &image = renderer.image;
-                auto &material = renderer.material;
-                if (!image || !material) return;
-
-                auto *imageBackend = static_cast<TextureBackend *>(image.get());
-                auto *materialBackend = static_cast<MaterialBackend *>(material.get());
-                auto *shaderBackend = static_cast<ShaderBackend *>(material->shader().get());
-
-                if (shaderBackend != activeShader) return;
-
-                materialBackend->set_texture_entry("albedo", {image, Sampler::Bilinear});
-
-                materialBackend->bind_constant_buffer(mpGfx, 3);
-                SetCullMode(materialBackend->cull_mode());
-
-                mTextureConfig.texHasFlag = 0x00;
-                BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
-                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
-
-                XMMATRIX matrixM{trfm.local2world.m};
-                const auto width = imageBackend->width() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
-                const auto height = imageBackend->height() / (renderer.pixelsPerUnit + std::numeric_limits<float>::epsilon());
-                matrixM = XMMatrixScaling(width, height, 1.0f) * matrixM;
-
-                // matrixM
-                auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
-
-                // DirectX Math using row-major representation
-                // HLSL using column-major representation
-                auto matrixMVP = matrixM * matrixV * matrixP;
-
-                XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
-                XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
-                XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
-
-                mModelPropertiesCB.Update(mpGfx, &mModelProperties);
-
-                mQuadMesh->bind(mpGfx);
-                mpGfx->DrawIndexed(mQuadMesh->triangles.size());
-            });
-        }
-    }
+                     const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixP);
 
     void SetCullMode(const nodec_rendering::CullMode &mode) {
         using namespace nodec_rendering;
@@ -671,4 +572,6 @@ private:
     std::unordered_map<std::string, std::unique_ptr<GeometryBuffer>> mGeometryBuffers;
 
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mpDepthStencilView;
+
+    FontCharacterDatabase mFontCharacterDatabase;
 };

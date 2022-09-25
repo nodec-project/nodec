@@ -7,12 +7,9 @@
 #include <string>
 
 class FontBackend : public nodec_rendering::resources::Font {
-
 public:
-    FontBackend(FontLibrary &library, const std::string& path)
+    FontBackend(FontLibrary &library, const std::string &path)
         : mFace{library.GetLibrary(), path} {
-        
-
     }
 
     FT_Face GetFace() {
@@ -22,4 +19,3 @@ public:
 private:
     FontFace mFace;
 };
-
