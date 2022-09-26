@@ -9,14 +9,20 @@
                 "key": "noise",
                 "value": {
                     "texture": "org.nodec-rendering.essentials/textures/ssao-noise.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 0,
+                        "wrap_mode": 0
+                    } 
                 }
             },
                         {
                 "key": "samples",
                 "value": {
                     "texture": "org.nodec-rendering.essentials/textures/ssao-samples.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 0,
+                        "wrap_mode": 0
+                    } 
                 }
             }
         ]

@@ -9,35 +9,55 @@
                 "key": "albedo",
                 "value": {
                     "texture": "models/retrotv/retrotv0319_Screen_BaseColor.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 1,
+                        "wrap_mode": 0
+                    }
+
                 }
             },
             {
                 "key": "normal",
                 "value": {
                     "texture": "models/retrotv/retrotv0319_Screen_NormalDX.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 1,
+                        "wrap_mode": 0
+                    }
+
                 }
             },
             {
                 "key": "roughness",
                 "value": {
                     "texture": "models/retrotv/retrotv0319_Screen_Roughness.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 1,
+                        "wrap_mode": 0
+                    }
+
                 }
             },
             {
                 "key": "metallic",
                 "value": {
                     "texture": "models/retrotv/retrotv0319_Screen_Metallic.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 1,
+                        "wrap_mode": 0
+                    }
+
                 }
             },
             {
                 "key": "ambient_occlusion",
                 "value": {
                     "texture": "models/retrotv/retrotv0319_Screen_AO.png",
-                    "sampler": 1
+                    "sampler": {
+                        "filter_mode": 1,
+                        "wrap_mode": 0
+                    }
+
                 }
             }
         ]

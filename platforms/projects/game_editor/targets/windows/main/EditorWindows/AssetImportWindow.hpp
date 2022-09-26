@@ -167,7 +167,7 @@ private:
             resource_name_map_.emplace(Formatter() << "mesh-" << i, entry);
         }
 
-        for (int i = 0; i < scene->mNumMaterials; ++i) {
+        for (unsigned int i = 0; i < scene->mNumMaterials; ++i) {
             auto mat = scene->mMaterials[i];
 
             ResourceNameEntry entry;

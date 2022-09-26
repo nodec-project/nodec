@@ -1,10 +1,10 @@
-#ifndef NODEC_RENDERING__RENDERING_HPP_
-#define NODEC_RENDERING__RENDERING_HPP_
+#ifndef NODEC_RENDERING__CULL_MODE_HPP_
+#define NODEC_RENDERING__CULL_MODE_HPP_
 
 namespace nodec_rendering {
 
 /**
-* @brief Backface culling mode
+* @brief Back face culling mode
 */
 enum class CullMode {
     //! Disable culling.

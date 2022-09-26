@@ -1,6 +1,8 @@
 #ifndef NODEC_SERIALIZATION__NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 #define NODEC_SERIALIZATION__NODEC_RENDERING__RESOURCES__MATERIAL_HPP_
 
+#include "../sampler.hpp"
+
 #include <cereal/cereal.hpp>
 #include <cereal/types/unordered_map.hpp>
 

@@ -134,9 +134,13 @@ public:
 
                 ImGui::Text(name.c_str());
                 {
-                    int sampler = static_cast<int>(current.sampler);
-                    ImGui::Combo("Sampler", &sampler, "Point\0Bilinear\0Anisotropic");
-                    current.sampler = static_cast<Sampler>(sampler);
+                    int filter_mode = static_cast<int>(current.sampler.filter_mode);
+                    ImGui::Combo("Filter Mode", &filter_mode, "Point\0Bilinear\0Anisotropic");
+                    current.sampler.filter_mode = static_cast<Sampler::FilterMode>(filter_mode);
+
+                    int wrap_mode = static_cast<int>(current.sampler.wrap_mode);
+                    ImGui::Combo("Wrap Mode", &wrap_mode, "Wrap\0Clamp");
+                    current.sampler.wrap_mode = static_cast<Sampler::WrapMode>(wrap_mode);
                 }
 
                 {
@@ -152,9 +156,9 @@ public:
                         if (new_name.empty()) {
                             current.texture.reset();
                         } else {
-                            auto textture_to_set = registry_->get_resource<Texture>(temp_str_buffer).get();
+                            auto texture_to_set = registry_->get_resource<Texture>(temp_str_buffer).get();
 
-                            if (textture_to_set) current.texture = textture_to_set;
+                            if (texture_to_set) current.texture = texture_to_set;
                         }
                     }
                 }
