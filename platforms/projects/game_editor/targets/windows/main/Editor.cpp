@@ -5,6 +5,7 @@
 #define NOMINMAX
 
 #include "Editor.hpp"
+#include "EditorConfig.hpp"
 
 #include "EditorWindows/AssetImportWindow.hpp"
 #include "EditorWindows/ControlWindow.hpp"
@@ -17,6 +18,7 @@
 
 Editor::Editor(Engine *engine)
     : engine_{engine} {
+    using namespace nodec;
     using namespace imwindows;
     using namespace imessentials;
     using namespace nodec_scene::components;
@@ -47,9 +49,8 @@ Editor::Editor(Engine *engine)
 
     register_menu_item("Window/Material Editor",
                        [=]() { MaterialEditorWindow::init(
-                        window_manager(),
-                        &engine->resources_module().registry()
-                        ); });
+                                   window_manager(),
+                                   &engine->resources_module().registry()); });
 
     register_menu_item("Window/Asset Importer",
                        [=]() {
@@ -109,7 +110,7 @@ Editor::Editor(Engine *engine)
         [=](auto &light) {
             inspector_gui_->OnGUIDirectionalLight(light);
         });
-        
+
     inspector_component_registry_impl().register_component<PointLight>(
         "Point Light",
         [=](auto &light) {
@@ -127,7 +128,7 @@ Editor::Editor(Engine *engine)
         [=](auto &renderer) {
             inspector_gui_->OnGuiImageRenderer(renderer);
         });
-        
+
     inspector_component_registry_impl().register_component<PostProcessing>(
         "Post Processing",
         [=](auto &process) {
@@ -139,4 +140,26 @@ Editor::Editor(Engine *engine)
         [=](auto &renderer) {
             inspector_gui_->OnGuiTextRenderer(renderer);
         });
+
+    [=]() {
+        std::ifstream file("editor-config.json", std::ios::binary);
+        if (!file) return;
+
+        EditorConfig config;
+
+        try {
+            cereal::JSONInputArchive archive(file);
+            archive(config);
+        } catch (std::exception &e) {
+            logging::WarnStream(__FILE__, __LINE__)
+                << "Failed to load editor configuration.\n"
+                << "details: \n"
+                << e.what();
+            return;
+        }
+
+        if (!config.resource_path.empty()) {
+            engine->resources_module().set_resource_path(config.resource_path);
+        }
+    }();
 }
