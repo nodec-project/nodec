@@ -8,7 +8,7 @@
             {
                 "key": "albedo",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Main_BaseColor.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Main_BaseColor.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -18,7 +18,7 @@
             {
                 "key": "normal",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Main_NormalDX.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Main_NormalDX.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -28,7 +28,7 @@
             {
                 "key": "roughness",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Main_Roughness.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Main_Roughness.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -38,7 +38,7 @@
             {
                 "key": "metallic",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Main_Metallic.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Main_Metallic.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -48,7 +48,7 @@
             {
                 "key": "ambient_occlusion",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Main_AO.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Main_AO.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0

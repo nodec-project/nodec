@@ -222,7 +222,7 @@
 "org.nodec-rendering.essentials/meshes/sphere.mesh"
 ],
 "materials": [
-""
+"org.nodec.hello-nodec/materials/pbr-defer-rustediron2.material"
 ]
 }
 }
@@ -431,12 +431,12 @@
 "id": 2147483679,
 "data": {
 "meshes": [
-"models/retrotv/Cube.001##mesh-0.mesh",
-"models/retrotv/Cube.001##mesh-1.mesh"
+"org.nodec.hello-nodec/models/retrotv/Cube.001##mesh-0.mesh",
+"org.nodec.hello-nodec/models/retrotv/Cube.001##mesh-1.mesh"
 ],
 "materials": [
-"models/retrotv/Main.material",
-"models/retrotv/Screen.material"
+"org.nodec.hello-nodec/models/retrotv/Main.material",
+"org.nodec.hello-nodec/models/retrotv/Screen.material"
 ]
 }
 }
@@ -487,10 +487,10 @@
 "id": 2147483683,
 "data": {
 "meshes": [
-"models/retrotv/Cube.002##mesh-3.mesh"
+"org.nodec.hello-nodec/models/retrotv/Cube.002##mesh-3.mesh"
 ],
 "materials": [
-"models/retrotv/Main.material"
+"org.nodec.hello-nodec/models/retrotv/Main.material"
 ]
 }
 }
@@ -544,10 +544,10 @@
 "id": 2147483687,
 "data": {
 "meshes": [
-"models/retrotv/Circle.001##mesh-2.mesh"
+"org.nodec.hello-nodec/models/retrotv/Circle.001##mesh-2.mesh"
 ],
 "materials": [
-"models/retrotv/Main.material"
+"org.nodec.hello-nodec/models/retrotv/Main.material"
 ]
 }
 }

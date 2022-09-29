@@ -8,7 +8,7 @@
             {
                 "key": "albedo",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Screen_BaseColor.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Screen_BaseColor.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -19,7 +19,7 @@
             {
                 "key": "normal",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Screen_NormalDX.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Screen_NormalDX.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -30,7 +30,7 @@
             {
                 "key": "roughness",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Screen_Roughness.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Screen_Roughness.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -41,7 +41,7 @@
             {
                 "key": "metallic",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Screen_Metallic.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Screen_Metallic.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
@@ -52,7 +52,7 @@
             {
                 "key": "ambient_occlusion",
                 "value": {
-                    "texture": "models/retrotv/retrotv0319_Screen_AO.png",
+                    "texture": "org.nodec.hello-nodec/models/retrotv/retrotv0319_Screen_AO.png",
                     "sampler": {
                         "filter_mode": 1,
                         "wrap_mode": 0
