@@ -239,10 +239,13 @@ public:
 
     void OnGuiTextRenderer(nodec_rendering::components::TextRenderer &renderer) {
         auto buffer = imessentials::get_text_buffer(1024, renderer.text);
-        ImGui::InputText("Text", buffer.data(), buffer.size());
+        ImGui::InputTextMultiline("Text", buffer.data(), buffer.size());
         renderer.text = buffer.data();
         renderer.font = ResourceNameEdit("Font", renderer.font);
         renderer.material = ResourceNameEdit("Material", renderer.material);
+
+        ImGui::ColorEdit4("Color", renderer.color.v, ImGuiColorEditFlags_Float);
+        
         ImGui::DragInt("Pixel Size", &renderer.pixel_size);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
     }

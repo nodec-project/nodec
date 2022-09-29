@@ -80,6 +80,7 @@ public:
                 serializable->material = renderer.material;
                 serializable->text = renderer.text;
                 serializable->pixel_size = renderer.pixel_size;
+                serializable->pixels_per_unit = renderer.pixels_per_unit;
                 return serializable;
             },
             [=](const SerializableTextRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
@@ -88,6 +89,7 @@ public:
                 renderer.material = serializable.material;
                 renderer.text = serializable.text;
                 renderer.pixel_size = serializable.pixel_size;
+                renderer.pixels_per_unit = serializable.pixels_per_unit;
             });
 
         register_component<PostProcessing, SerializablePostProcessing>(

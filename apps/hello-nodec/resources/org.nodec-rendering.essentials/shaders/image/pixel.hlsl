@@ -2,7 +2,7 @@
 
 float4 PSMain(V2P input) : SV_Target {
     // default is bright pink.
-    float3 color = float3(1, 0, 0.5);
+    float4 color = materialProperties.albedo;
 
     if (textureConfig.texHasFlag & 0x01) {
         color = texAlbedo.Sample(sampler_texAlbedo, input.texcoord);
@@ -13,5 +13,5 @@ float4 PSMain(V2P input) : SV_Target {
         mask = texMask.Sample(sampler_texMask, input.texcoord);
     }
 
-    return float4(color, mask);
+    return float4(color.xyz, mask * color.a);
 }

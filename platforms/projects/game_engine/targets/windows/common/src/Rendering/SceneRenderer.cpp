@@ -461,6 +461,7 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
             }
 
             materialBackend->set_texture_entry("mask", {character.pFontTexture, {Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}});
+            materialBackend->set_vector4_property("albedo", renderer.color);
 
             materialBackend->bind_constant_buffer(mpGfx, 3);
             SetCullMode(materialBackend->cull_mode());

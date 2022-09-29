@@ -4,6 +4,8 @@
 #include "../resources/font.hpp"
 #include "../resources/material.hpp"
 
+#include <nodec/vector4.hpp>
+
 #include <string>
 #include <memory>
 
@@ -19,6 +21,8 @@ struct TextRenderer {
 
     int pixel_size{10};
     int pixels_per_unit{10};
+
+    nodec::Vector4f color{1.0f, 1.0f, 1.0f, 1.0f};
 };
 }
 } // namespace nodec_rendering

@@ -135,17 +135,21 @@ public:
         *v = value;
     }
 
-    nodec::Vector4f get_vector4_property(const std::vector<uint8_t> &property_memory, const std::string &name) const {
+    nodec::optional<nodec::Vector4f> get_vector4_property(const std::vector<uint8_t> &property_memory, const std::string &name) const {
         using namespace nodec;
-        auto offset = vector4_property_offsets_.at(name);
-        return *get_property_ptr<Vector4f>(property_memory, offset);
+        auto iter = vector4_property_offsets_.find(name);
+        if (iter == vector4_property_offsets_.end()) return nodec::nullopt;
+        return *get_property_ptr<Vector4f>(property_memory, iter->second);
     }
 
-    void set_vector4_property(std::vector<uint8_t> &property_memory, const std::string &name, const nodec::Vector4f &value) const {
+    bool set_vector4_property(std::vector<uint8_t> &property_memory, const std::string &name, const nodec::Vector4f &value) const {
         using namespace nodec;
-        auto offset = vector4_property_offsets_.at(name);
-        auto *v = get_property_ptr<Vector4f>(property_memory, offset);
+        auto iter = vector4_property_offsets_.find(name);
+        if (iter == vector4_property_offsets_.end()) return false;
+
+        auto *v = get_property_ptr<Vector4f>(property_memory, iter->second);
         *v = value;
+        return true;
     }
 
     nodec::optional<int> get_texture_slot(const std::string &name) const noexcept {

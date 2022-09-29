@@ -44,14 +44,19 @@ public:
         dirty_ = true;
     }
 
-    nodec::Vector4f get_vector4_property(const std::string &name) const override {
+    nodec::optional<nodec::Vector4f> get_vector4_property(const std::string &name) const noexcept override {
         auto *shader_backend = shader_backend_assured();
         return shader_backend->get_vector4_property(property_memory_, name);
     }
-    void set_vector4_property(const std::string &name, const nodec::Vector4f &value) override {
+
+    bool set_vector4_property(const std::string &name, const nodec::Vector4f &value) noexcept override {
         auto *shader_backend = shader_backend_assured();
-        shader_backend->set_vector4_property(property_memory_, name, value);
+        if (!shader_backend->set_vector4_property(property_memory_, name, value)) {
+            return false;
+        }
+
         dirty_ = true;
+        return true;
     }
 
     nodec::optional<TextureEntry> get_texture_entry(const std::string &name) const noexcept override {

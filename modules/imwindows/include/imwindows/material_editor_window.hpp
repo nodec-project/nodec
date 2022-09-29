@@ -107,7 +107,7 @@ public:
             for (int i = 0; i < shader->vector4_property_count(); ++i) {
                 ImGui::PushID(i);
                 auto &name = shader->get_vector4_property_name(i);
-                auto current = target_material_->get_vector4_property(name);
+                auto current = target_material_->get_vector4_property(name).value();
                 switch (control_type) {
                 case ControlType::DragFloat:
                     ImGui::DragFloat4(name.c_str(), current.v, 0.01f);

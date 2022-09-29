@@ -161,5 +161,10 @@ Editor::Editor(Engine *engine)
         if (!config.resource_path.empty()) {
             engine->resources_module().set_resource_path(config.resource_path);
         }
+
+        if (!config.font.path.empty()) {
+            auto &io = ImGui::GetIO();
+            io.Fonts->AddFontFromFileTTF(config.font.path.c_str(), config.font.pixel_size, NULL, io.Fonts->GetGlyphRangesJapanese());
+        }
     }();
 }

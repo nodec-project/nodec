@@ -58,8 +58,8 @@ public:
     virtual float get_float_property(const std::string &name) const = 0;
     virtual void set_float_property(const std::string &name, const float &value) = 0;
 
-    virtual nodec::Vector4f get_vector4_property(const std::string &name) const = 0;
-    virtual void set_vector4_property(const std::string &name, const nodec::Vector4f &value) = 0;
+    virtual nodec::optional<nodec::Vector4f> get_vector4_property(const std::string &name) const noexcept = 0;
+    virtual bool set_vector4_property(const std::string &name, const nodec::Vector4f &value) noexcept = 0;
 
     virtual nodec::optional<TextureEntry> get_texture_entry(const std::string &name) const noexcept = 0;
     virtual bool set_texture_entry(const std::string &name, const TextureEntry &value) noexcept = 0;

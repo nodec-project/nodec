@@ -7,6 +7,15 @@ struct V2P {
     float2 texcoord : TEXCOORD0;
 };
 
+struct MaterialProperties {
+    float4 albedo;
+};
+
+cbuffer cbMaterialProperties : register(b3)
+{
+    MaterialProperties materialProperties;
+};
+
 Texture2D texAlbedo : register(t0);
 Texture2D texMask : register(t1);
 
