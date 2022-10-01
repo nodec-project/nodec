@@ -26,7 +26,7 @@ CEREAL_REGISTER_TYPE(SerializableObjectSpawner)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, SerializableObjectSpawner)
 
 /**
- * @brief F キーのトグルで, ObjectSpawner Component が持つシーンの読み込みと破棄を行う.
+ * @brief Load or destroy the scene of ObjectSpawner Component by toggling of F key.
  *
  */
 class ObjectSpawnSystem {
@@ -77,8 +77,7 @@ public:
                 return serializable;
             },
             [&](const SerializableObjectSpawner &serializable, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<ObjectSpawner>(entity);
-                auto &spawner = registry.get_component<ObjectSpawner>(entity);
+                auto &spawner = registry.emplace_component<ObjectSpawner>(entity).first;
                 spawner.scene_name = serializable.scene_name;
             });
     }

@@ -2,6 +2,7 @@
 #include "camera_controller.hpp"
 #include "light_particle.hpp"
 #include "object_spawn_system.hpp"
+#include "scene_transition_system.hpp"
 
 using namespace nodec;
 using namespace nodec_engine;
@@ -21,7 +22,6 @@ using namespace nodec_input::mouse;
 
 class HelloWorld {
 public:
-
     HelloWorld(NodecEngine &engine)
         : engine{engine} {
         // engine.stepped().connect([=](NodecEngine &engine) { on_stepped(engine); });
@@ -64,6 +64,12 @@ public:
 #endif
         }
 
+        {
+            scene_transition_system_ = std::make_shared<SceneTransitionSystem>(world, serialization, scene_loader);
+#ifdef EDITOR_MODE
+            SceneTransitionSystem::setup_editor(editor);
+#endif
+        }
 
         //{
         //    auto &input = engine.get_module<Input>();
@@ -95,10 +101,6 @@ public:
 private:
     void on_initialized(World &world) {
         logging::InfoStream(__FILE__, __LINE__) << "[HelloWorld::on_initialized] engine time: " << engine.engine_time();
-
-        // auto entity = scene.create_entity("Hello World!!");
-        // scene.registry().emplace_component<MeshRenderer>(entity);
-        // auto& renderer = scene.registry().get_component<MeshRenderer>(entity);
 
         auto &resources = engine.get_module<Resources>();
 
@@ -133,13 +135,8 @@ private:
     std::shared_ptr<CameraControllerSystem> camera_controller_system_;
     std::shared_ptr<LightParticle> light_particle;
     std::shared_ptr<ObjectSpawnSystem> object_spawn_system_;
-
-    // std::shared_ptr<Material> target_material;
-    // SceneEntity audioEntity;
+    std::shared_ptr<SceneTransitionSystem> scene_transition_system_;
 };
-//
-// CEREAL_REGISTER_TYPE(HelloWorld::SerializableHelloComponent);
-// CEREAL_REGISTER_POLYMORPHIC_RELATION(BaseSerializableComponent, HelloWorld::SerializableHelloComponent);
 
 void nodec_engine::on_boot(NodecEngine &engine) {
     logging::InfoStream(__FILE__, __LINE__) << "[App] >>> booting...";

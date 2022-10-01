@@ -6,6 +6,8 @@
 #include <nodec_rendering/resources/font.hpp>
 #include <nodec_rendering/resources/material.hpp>
 
+#include <nodec_serialization/nodec/vector4.hpp>
+
 namespace nodec_rendering {
 namespace components {
 
@@ -21,6 +23,8 @@ public:
     int pixel_size{10};
     int pixels_per_unit{10};
 
+    nodec::Vector4f color{1.0f, 1.0f, 1.0f, 1.0f};
+
     template<class Archive>
     void save(Archive &archive) const {
         using namespace nodec_scene_serialization;
@@ -31,6 +35,7 @@ public:
         archive(cereal::make_nvp("material", context.resource_registry().lookup_name<resources::Material>(material).first));
         archive(cereal::make_nvp("pixel_size", pixel_size));
         archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
+        archive(cereal::make_nvp("color", color));
     }
 
     template<class Archive>
@@ -54,6 +59,7 @@ public:
 
         archive(cereal::make_nvp("pixel_size", pixel_size));
         archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
+        archive(cereal::make_nvp("color", color));
     }
 };
 } // namespace components

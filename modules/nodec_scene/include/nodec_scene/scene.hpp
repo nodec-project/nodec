@@ -23,15 +23,6 @@ public:
 
     virtual SceneEntity create_entity(const std::string &name) = 0;
 
-public:
-    // // About scene (world) lifecycle.
-    // //  * https://docs.unity3d.com/Packages/com.unity.entities@0.17/manual/world.html
-    // //  * https://www.gymlibrary.ml/content/environment_creation/
-    // using SceneSignal = nodec::signals::Signal<void(Scene &)>;
-
-    // virtual SceneSignal::SignalInterface initialized() = 0;
-    // virtual SceneSignal::SignalInterface stepped() = 0;
-
 private:
     NODEC_DISABLE_COPY(Scene);
 };

@@ -33,6 +33,7 @@
 #include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
 #include <nodec/optional.hpp>
+#include <nodec/algorithm.hpp>
 
 #include <cereal/types/polymorphic.hpp>
 
@@ -42,6 +43,7 @@
 #include <cereal/archives/xml.hpp>
 
 #ifdef EDITOR_MODE
+#    include <imessentials/list.hpp>
 #    include <imessentials/text_buffer.hpp>
 #    include <imgui.h>
 #    include <nodec_scene_editor/scene_editor.hpp>

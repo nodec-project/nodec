@@ -81,6 +81,7 @@ public:
                 serializable->text = renderer.text;
                 serializable->pixel_size = renderer.pixel_size;
                 serializable->pixels_per_unit = renderer.pixels_per_unit;
+                serializable->color = renderer.color;
                 return serializable;
             },
             [=](const SerializableTextRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
@@ -90,6 +91,7 @@ public:
                 renderer.text = serializable.text;
                 renderer.pixel_size = serializable.pixel_size;
                 renderer.pixels_per_unit = serializable.pixels_per_unit;
+                renderer.color = serializable.color;
             });
 
         register_component<PostProcessing, SerializablePostProcessing>(
