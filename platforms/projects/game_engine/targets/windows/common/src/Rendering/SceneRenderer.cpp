@@ -447,6 +447,12 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
         float offsetX = 0.0f;
         float offsetY = 0.0f;
         for (const auto &chCode : u32Text) {
+            if (chCode == '\n') {
+                offsetY -= renderer.pixel_size / pixelsPerUnit;
+                offsetX = 0.0f;
+                continue;
+            }
+
             const auto &character = mFontCharacterDatabase.Get(fontBackend->GetFace(), renderer.pixel_size, chCode);
 
             float posX = offsetX + character.bearing.x / pixelsPerUnit;
