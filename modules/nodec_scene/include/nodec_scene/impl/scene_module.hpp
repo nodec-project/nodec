@@ -1,7 +1,7 @@
 #ifndef NODEC_SCENE__IMPL__SCENE_HPP_
 #define NODEC_SCENE__IMPL__SCENE_HPP_
 
-#include "../components/basic.hpp"
+#include "../components/name.hpp"
 #include "../scene.hpp"
 #include "../systems/hierarchy_system.hpp"
 
@@ -42,33 +42,14 @@ public:
         return entity;
     }
 
-    // SceneSignal::SignalInterface initialized() override {
-    //     return initialized_.signal_interface();
-    // }
-
-    // SceneSignal::SignalInterface stepped() override {
-    //     return stepped_.signal_interface();
-    // }
-
 public:
     systems::HierarchySystem &hierarchy_system() noexcept {
         return hierarchy_system_;
     }
 
-    // void step() {
-    //     stepped_(*this);
-    // }
-
-    // void reset() {
-    //     registry_.clear();
-    //     initialized_(*this);
-    // }
-
 private:
     SceneRegistry registry_;
     systems::HierarchySystem hierarchy_system_;
-    // SceneSignal stepped_;
-    // SceneSignal initialized_;
 };
 
 } // namespace impl

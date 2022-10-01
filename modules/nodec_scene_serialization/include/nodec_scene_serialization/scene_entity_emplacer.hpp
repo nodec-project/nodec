@@ -4,7 +4,7 @@
 #include "scene_serialization.hpp"
 #include "serializable_scene_graph.hpp"
 
-#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/components/hierarchy.hpp>
 #include <nodec_scene/scene.hpp>
 
 #include <cassert>

@@ -1,5 +1,5 @@
-#ifndef NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__BASIC_HPP_
-#define NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__BASIC_HPP_
+#ifndef NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__TRANSFORM_HPP_
+#define NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__TRANSFORM_HPP_
 
 #include <nodec_scene_serialization/serializable_component.hpp>
 
@@ -8,20 +8,6 @@
 
 namespace nodec_scene {
 namespace components {
-
-class SerializableName : public nodec_scene_serialization::BaseSerializableComponent {
-public:
-    SerializableName()
-        : BaseSerializableComponent(this) {
-    }
-
-    std::string name;
-
-    template<class Archive>
-    void serialize(Archive &archive) {
-        archive(cereal::make_nvp("name", name));
-    }
-};
 
 class SerializableTransform : public nodec_scene_serialization::BaseSerializableComponent {
 public:
@@ -40,12 +26,8 @@ public:
         archive(cereal::make_nvp("local_rotation", local_rotation));
     }
 };
-
 } // namespace components
 } // namespace nodec_scene
-
-CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableName)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableName)
 
 CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableTransform)
 CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableTransform)

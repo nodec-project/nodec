@@ -10,23 +10,23 @@ namespace nodec {
 
 /**
  * Column-major representation.
- * Column-major ordar
+ * Column-major order
  *
  * cf)
  *   OpenGL:
  *       Column-major representation
- *       Column-major ordar
+ *       Column-major order
  *
  *       <https://stackoverflow.com/questions/17717600/confusion-between-c-and-opengl-matrix-order-row-major-vs-column-major>
  *
  *   DirectX-Math:
  *       Row-major representation
- *       Row-major ordar
+ *       Row-major order
  *       <https://docs.microsoft.com/en-us/windows/win32/api/directxmath/ns-directxmath-xmmatrix>
  *
  *   DirectX-HLSL:
  *       Column-major representation
- *       Column-major ordar?
+ *       Column-major order?
  *          * Maybe Row-major
  *              * https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math
  * 

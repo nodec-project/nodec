@@ -73,7 +73,7 @@ inline Vector3f euler_angles_xyz(const Quaternionf &rotation) {
 /**
  * Rx * Ry * Rz = R
  */
-inline void set_eulaer_angles_xyz(Quaternionf &rotation, const Vector3f &euler) {
+inline Quaternionf euler_angles_xyz(const Vector3f &euler) {
     float cx = std::cos(euler.x * 0.5f * deg2rad<float>);
     float sy = std::sin(euler.y * 0.5f * deg2rad<float>);
     float sz = std::sin(euler.z * 0.5f * deg2rad<float>);
@@ -81,10 +81,11 @@ inline void set_eulaer_angles_xyz(Quaternionf &rotation, const Vector3f &euler) 
     float cy = std::cos(euler.y * 0.5f * deg2rad<float>);
     float cz = std::cos(euler.z * 0.5f * deg2rad<float>);
 
-    rotation.x = cx * sy * sz + sx * cy * cz;
-    rotation.y = cx * sy * cz - sx * cy * sz;
-    rotation.z = cx * cy * sz + sx * sy * cz;
-    rotation.w = cx * cy * cz - sx * sy * sz;
+    return {
+        cx * sy * sz + sx * cy * cz,
+        cx * sy * cz - sx * cy * sz,
+        cx * cy * sz + sx * sy * cz,
+        cx * cy * cz - sx * sy * sz};
 }
 
 } // namespace gfx

@@ -1,7 +1,8 @@
 #ifndef NODEC_SCENE__SYSTEMS__HIERARCHY_SYSTEM_HPP_
 #define NODEC_SCENE__SYSTEMS__HIERARCHY_SYSTEM_HPP_
 
-#include "../components/basic.hpp"
+#include "../components/hierarchy.hpp"
+#include "../components/transform.hpp"
 
 #include <cassert>
 
@@ -14,7 +15,6 @@ class HierarchySystem {
 public:
     HierarchySystem(SceneRegistry *registry)
         : registry_{registry} {
-
         hierarchy_created_connection_ = registry_->component_constructed<components::Hierarchy>()
                                             .connect(
                                                 [&](SceneRegistry &registry, const SceneEntity entity) {

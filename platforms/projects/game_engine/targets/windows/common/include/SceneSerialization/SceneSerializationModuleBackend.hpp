@@ -1,7 +1,6 @@
 #pragma once
 
 #include <nodec_rendering/components/mesh_renderer.hpp>
-#include <nodec_scene/components/basic.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
@@ -10,8 +9,9 @@
 #include <nodec_serialization/nodec_rendering/components/point_light.hpp>
 #include <nodec_serialization/nodec_rendering/components/post_processing.hpp>
 #include <nodec_serialization/nodec_rendering/components/scene_lighting.hpp>
-#include <nodec_serialization/nodec_scene/components/basic.hpp>
 #include <nodec_serialization/nodec_rendering/components/text_renderer.hpp>
+#include <nodec_serialization/nodec_scene/components/name.hpp>
+#include <nodec_serialization/nodec_scene/components/transform.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 

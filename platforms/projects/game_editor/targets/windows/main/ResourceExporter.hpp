@@ -10,7 +10,6 @@
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/resources/material.hpp>
 #include <nodec_serialization/nodec_rendering/resources/mesh.hpp>
-#include <nodec_serialization/nodec_scene/components/basic.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -183,15 +182,15 @@ namespace internal {
 inline std::shared_ptr<nodec_scene_serialization::SerializableEntityNode> ProcessSceneEntityNode(
     nodec_scene::SceneEntity entity,
     const nodec_scene::SceneRegistry &sceneRegistry,
-    const nodec_scene_serialization::SceneSerialization &sceneSerializaton) {
+    const nodec_scene_serialization::SceneSerialization &sceneSerialization) {
     using namespace nodec_scene::components;
 
-    auto node = sceneSerializaton.make_serializable_node(entity, sceneRegistry);
+    auto node = sceneSerialization.make_serializable_node(entity, sceneRegistry);
 
     auto &hier = sceneRegistry.get_component<Hierarchy>(entity);
 
     for (auto childEntity : hier.children) {
-        auto child = ProcessSceneEntityNode(childEntity, sceneRegistry, sceneSerializaton);
+        auto child = ProcessSceneEntityNode(childEntity, sceneRegistry, sceneSerialization);
         node->children.push_back(child);
     }
 

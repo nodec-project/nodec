@@ -8,7 +8,8 @@
 #include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_rendering/components/text_renderer.hpp>
-#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/components/transform.hpp>
+#include <nodec_scene/components/name.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 
 #include <imessentials/text_buffer.hpp>
@@ -70,7 +71,7 @@ public:
             ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
 
             if (ImGui::DragFloat3("##Rotation", eulerAngles.v, 0.1f, -FLT_MAX, +FLT_MAX, "%.3f")) {
-                math::gfx::set_eulaer_angles_xyz(trfm.local_rotation, eulerAngles);
+                trfm.local_rotation = math::gfx::euler_angles_xyz(eulerAngles);
                 trfm.dirty = true;
             }
 
@@ -117,7 +118,7 @@ public:
             ImGui::PushID("materials");
 
             ImGui::Text("Materials");
-            
+
             // FIXME: Should iterate in forward order.
             for (auto i = renderer.materials.size(); i-- != 0;) {
                 ImGui::PushID(i);
@@ -142,7 +143,7 @@ public:
     void OnGUICamera(Camera &camera) {
         ImGui::DragFloat("Near Clip Plane", &camera.near_clip_plane);
         ImGui::DragFloat("Far Clip Plane", &camera.far_clip_plane);
-        
+
         {
             int current = static_cast<int>(camera.projection);
             ImGui::Combo("Projection", &current, "Perspective\0Orthographic");
@@ -157,7 +158,6 @@ public:
             ImGui::DragFloat("Ortho Width", &camera.ortho_width);
         default: break;
         }
-
     }
 
     void OnGUIDirectionalLight(nodec_rendering::components::DirectionalLight &light) {
@@ -245,7 +245,7 @@ public:
         renderer.material = ResourceNameEdit("Material", renderer.material);
 
         ImGui::ColorEdit4("Color", renderer.color.v, ImGuiColorEditFlags_Float);
-        
+
         ImGui::DragInt("Pixel Size", &renderer.pixel_size);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
     }

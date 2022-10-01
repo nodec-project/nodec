@@ -1,8 +1,9 @@
 #ifndef NODEC_SCENE__SYSTEMS__TRANSFORM_SYSTEM_HPP_
 #define NODEC_SCENE__SYSTEMS__TRANSFORM_SYSTEM_HPP_
 
-#include <nodec_scene/components/basic.hpp>
-#include <nodec_scene/scene_registry.hpp>
+#include "../components/hierarchy.hpp"
+#include "../components/transform.hpp"
+#include "../scene_registry.hpp"
 
 #include <nodec/math/gfx.hpp>
 #include <nodec/matrix4x4.hpp>

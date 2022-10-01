@@ -3,7 +3,7 @@
 #include "AudioSourceActivity.hpp"
 
 #include <nodec_scene_audio/components/audio_source.hpp>
-#include <nodec_scene/components/basic.hpp>
+#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene/scene_registry.hpp>
 
 class SceneAudioSystem {
