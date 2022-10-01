@@ -12,7 +12,7 @@ nodec プロジェクトは, プラットフォームのためのプラットフ
 ┌────────────┐
 │ apps       │
 │  ↓         │ 
-│ extentions │ 
+│ extensions │ 
 │  ↓         │ → nodec
 │ modules    │
 │  ↓         │
@@ -27,7 +27,7 @@ A → B : A is using B
 ### apps
 プラットフォームとモジュールの上にある, アプリケーション層.
 
-### extentions
+### extensions
 アプリケーション層の拡張ライブラリ
 
 ### modules

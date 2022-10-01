@@ -30,12 +30,12 @@ struct type_list {
     static constexpr auto size = sizeof...(Types);
 };
 
-//! @brief Primay template isn't define on purpose.
+//! @brief Primary template isn't define on purpose.
 template<std::size_t, typename>
 struct type_list_element;
 
 /**
- * @brief Privides compile-time indexed access to the types of a type list.
+ * @brief Provides compile-time indexed access to the types of a type list.
  * @tparam Index Index of the type to return.
  * @tparam First First type provided by the type list.
  * @tparam Other Other types provided by the type list.
@@ -77,7 +77,7 @@ template<typename Type, typename First, typename... Other>
 struct type_list_index<Type, type_list<First, Other...>> {
     /**
      * @brief Unsigned integer type.
-     * @note applyed stl like naming rule.
+     * @note Applied stl like naming rule.
      */
     using value_type = std::size_t;
 
