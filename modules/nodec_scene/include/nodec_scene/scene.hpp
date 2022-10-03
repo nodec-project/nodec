@@ -2,26 +2,50 @@
 #define NODEC_SCENE__SCENE_HPP_
 
 #include "scene_registry.hpp"
+#include "components/name.hpp"
+#include "components/hierarchy.hpp"
+#include "components/transform.hpp"
+#include "systems/hierarchy_system.hpp"
 
 #include <nodec/entities/registry.hpp>
 #include <nodec/macros.hpp>
-#include <nodec/signals.hpp>
 
 namespace nodec_scene {
 
 class Scene {
 public:
-    Scene() {}
+    Scene()
+        : hierarchy_system_{&registry_} {}
+
     virtual ~Scene() {}
 
-    virtual SceneRegistry &registry() noexcept = 0;
+    SceneRegistry &registry() noexcept {
+        return registry_;
+    }
 
-    virtual void append_child(const SceneEntity parent, const SceneEntity child) = 0;
-    virtual void remove_child(const SceneEntity parent, const SceneEntity child) = 0;
+    systems::HierarchySystem &hierarchy_system() noexcept {
+        return hierarchy_system_;
+    }
 
-    virtual const std::vector<SceneEntity> &root_entities() const noexcept = 0;
+    const systems::HierarchySystem &hierarchy_system() const noexcept {
+        return hierarchy_system_;
+    }
 
-    virtual SceneEntity create_entity(const std::string &name) = 0;
+    SceneEntity create_entity(const std::string &name) {
+        using namespace nodec_scene::components;
+
+        auto entity = registry_.create_entity();
+
+        registry_.emplace_component<Name>(entity, name);
+        registry_.emplace_component<Hierarchy>(entity);
+        registry_.emplace_component<Transform>(entity);
+
+        return entity;
+    }
+
+private:
+    SceneRegistry registry_;
+    systems::HierarchySystem hierarchy_system_;
 
 private:
     NODEC_DISABLE_COPY(Scene);
