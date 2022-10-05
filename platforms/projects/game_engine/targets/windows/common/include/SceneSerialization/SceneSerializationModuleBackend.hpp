@@ -12,6 +12,7 @@
 #include <nodec_serialization/nodec_rendering/components/text_renderer.hpp>
 #include <nodec_serialization/nodec_scene/components/name.hpp>
 #include <nodec_serialization/nodec_scene/components/transform.hpp>
+#include <nodec_serialization/nodec_scene_audio/components/audio_source.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -67,7 +68,7 @@ public:
                 return serializable;
             },
             [=](const SerializableImageRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
-                auto& renderer = registry.emplace_component<ImageRenderer>(entity).first;
+                auto &renderer = registry.emplace_component<ImageRenderer>(entity).first;
                 renderer.image = serializable.image;
                 renderer.material = serializable.material;
                 renderer.pixels_per_unit = serializable.pixels_per_unit;
@@ -98,7 +99,7 @@ public:
             [=](const PostProcessing &processing) {
                 auto serializable = std::make_shared<SerializablePostProcessing>();
 
-                for (const auto& effect : processing.effects) {
+                for (const auto &effect : processing.effects) {
                     const auto name = mpResourceRegistry->lookup_name<Material>(effect.material).first;
                     serializable->effects.push_back({effect.enabled, name});
                 }
@@ -107,7 +108,7 @@ public:
             [=](const SerializablePostProcessing &serializable, SceneEntity entity, SceneRegistry &registry) {
                 registry.emplace_component<PostProcessing>(entity);
                 auto &processing = registry.get_component<PostProcessing>(entity);
-                for (const auto& effect : serializable.effects) {
+                for (const auto &effect : serializable.effects) {
                     processing.effects.push_back({effect.enabled, mpResourceRegistry->get_resource<Material>(effect.material).get()});
                 }
             });
