@@ -94,22 +94,15 @@ public:
 private:
     void on_stepped(nodec_world::World &world) {
         using namespace nodec;
+        using namespace nodec::entities;
+        using namespace nodec_scene::components;
 
-        world.scene().registry().view<SceneTransition>().each([&](auto entt, SceneTransition &transition) {
+        world.scene().registry().view<SceneTransition, Hierarchy>().each([&](auto entt, SceneTransition &transition, Hierarchy &) {
             if (transition.dirty) {
                 if (0 <= transition.current_scene_index && transition.current_scene_index < transition.scenes.size()) {
                     transition.operation = scene_loader_.load_async(transition.scenes[transition.current_scene_index], entt);
 
-                    const Hierarchy *hierarchy = world.scene().registry().try_get_component<Hierarchy>(entt);
-
-                    // FIXME: Fix if nests.
-
-                    if (hierarchy) {
-                        for (auto &child : hierarchy->children) {
-                            world.scene().registry().destroy_entity(child);
-                        }
-                    }
-
+                    world.scene().hierarchy_system().remove_all_children(entt);
                 } else {
                     logging::ErrorStream(__FILE__, __LINE__) << "scene index is out of range.";
                 }

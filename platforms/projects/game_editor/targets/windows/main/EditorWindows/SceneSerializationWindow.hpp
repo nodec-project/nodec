@@ -54,6 +54,7 @@ public:
     void on_gui() override {
         using namespace nodec;
         using namespace nodec::entities;
+        using namespace nodec_scene::components;
 
         //auto import_header_opened = ImGui::CollapsingHeader("Import");
 
@@ -124,7 +125,15 @@ public:
                     switch (export_target) {
                     case 0: // Root
                     {
-                        success = ResourceExporter::ExportSceneGraph(scene->root_entities(), scene->registry(), *scene_serialization, *resource_registry, dest_path);
+                        std::vector<SceneEntity> roots;
+
+                        auto root = scene->hierarchy_system().root_hierarchy().first;
+                        while (root != null_entity) {
+                            roots.emplace_back(root);
+                            root = scene->registry().get_component<Hierarchy>(root).next;
+                        }
+
+                        success = ResourceExporter::ExportSceneGraph(roots, scene->registry(), *scene_serialization, *resource_registry, dest_path);
                         break;
                     }
 

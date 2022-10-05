@@ -8,7 +8,7 @@
 #include <nodec_scene/scene.hpp>
 
 #include <cassert>
-#include <stack>
+#include <queue>
 
 namespace nodec_scene_serialization {
 
@@ -35,7 +35,7 @@ public:
           serialization_{&serialization} {
         if (graph) {
             for (auto node : graph->roots) {
-                stack_.push({node, parent});
+                queue_.push({node, parent});
             }
         }
     }
@@ -43,9 +43,9 @@ public:
     bool emplace_one() {
         using namespace nodec::entities;
 
-        if (stack_.empty()) return false;
-        auto emplacement = std::move(stack_.top());
-        stack_.pop();
+        if (queue_.empty()) return false;
+        auto emplacement = std::move(queue_.front());
+        queue_.pop();
 
         auto entity = serialization_->make_entity(emplacement.node, scene_->registry());
 
@@ -55,11 +55,11 @@ public:
             // if no parent, just attach the Hierarchy component as root entity.
             scene_->registry().emplace_component<nodec_scene::components::Hierarchy>(entity);
         } else {
-            scene_->append_child(emplacement.parent, entity);
+            scene_->hierarchy_system().append_child(emplacement.parent, entity);
         }
 
         for (auto child : emplacement.node->children) {
-            stack_.push({child, entity});
+            queue_.push({child, entity});
         }
         return true;
     }
@@ -72,7 +72,7 @@ private:
     const SceneSerialization *serialization_;
     std::shared_ptr<const SerializableSceneGraph> graph_;
     nodec_scene::Scene *scene_;
-    std::stack<EmplacementData> stack_;
+    std::queue<EmplacementData> queue_;
 };
 } // namespace nodec_scene_serialization
 

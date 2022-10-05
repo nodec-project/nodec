@@ -2,7 +2,6 @@
 #define NODEC_SCENE__SYSTEMS__HIERARCHY_SYSTEM_HPP_
 
 #include "../components/hierarchy.hpp"
-#include "../components/transform.hpp"
 
 #include <cassert>
 
@@ -15,14 +14,16 @@ class HierarchySystem {
 public:
     HierarchySystem(SceneRegistry *registry)
         : registry_{registry} {
-        hierarchy_created_connection_ = registry_->component_constructed<components::Hierarchy>()
+        using namespace nodec_scene::components;
+
+        hierarchy_created_connection_ = registry_->component_constructed<Hierarchy>()
                                             .connect(
                                                 [&](SceneRegistry &registry, const SceneEntity entity) {
                                                     on_hierarchy_created(registry, entity);
                                                 })
                                             .assign();
 
-        hierarchy_destroyed_connection_ = registry_->component_destroyed<components::Hierarchy>()
+        hierarchy_destroyed_connection_ = registry_->component_destroyed<Hierarchy>()
                                               .connect(
                                                   [&](SceneRegistry &registry, const SceneEntity entity) {
                                                       on_hierarchy_destroyed(registry, entity);
@@ -30,24 +31,25 @@ public:
                                               .assign();
     }
 
-    const std::vector<SceneEntity> &root_entities() const {
-        return root_entities_;
-    }
-
     void append_child(const SceneEntity parent, const SceneEntity child) {
         using namespace nodec::entities;
         using namespace nodec;
+        using namespace components;
 
-        registry_->emplace_component<components::Hierarchy>(parent);
-        registry_->emplace_component<components::Hierarchy>(child);
+        registry_->emplace_component<Hierarchy>(parent);
+        registry_->emplace_component<Hierarchy>(child);
 
-        auto &parent_hier = registry_->get_component<components::Hierarchy>(parent);
-        auto &child_hier = registry_->get_component<components::Hierarchy>(child);
+        auto &parent_hierarchy = registry_->get_component<Hierarchy>(parent);
+        auto &child_hierarchy = registry_->get_component<Hierarchy>(child);
 
-        if (child_hier.parent != null_entity) {
-            remove_child(child_hier.parent, child);
+        // If the child is belong to a parent, we need to remove the child from the parent.
+        if (child_hierarchy.parent != null_entity) {
+            remove_from(registry_->get_component<Hierarchy>(child_hierarchy.parent), child, child_hierarchy);
+        } else {
+            remove_from(root_hierarchy_, child, child_hierarchy);
         }
 
+        // Check the circular reference.
         auto grand = parent;
         while (grand != null_entity) {
             if (grand == child) {
@@ -55,104 +57,144 @@ public:
                                          << "The entity cannot set itself as a parent. (parent: " << parent
                                          << "; child: " << child << ")");
             }
-            auto &hier = registry_->get_component<components::Hierarchy>(grand);
-            grand = hier.parent;
+            auto &hierarchy = registry_->get_component<components::Hierarchy>(grand);
+            grand = hierarchy.parent;
         }
 
-        auto pos = std::lower_bound(parent_hier.children.begin(),
-                                    parent_hier.children.end(),
-                                    child);
+        append_last(parent, parent_hierarchy, child, child_hierarchy);
 
-        if (pos != parent_hier.children.end() && *pos == child) {
-            // already exists
-            return;
-        }
-
-        parent_hier.children.insert(pos, child);
-        child_hier.parent = parent;
-        remove_root(child);
-
-        auto *trfm = registry_->try_get_component<components::Transform>(child);
-        if (trfm) {
-            trfm->dirty = true;
-        }
+        hierarchy_changed_(parent, child);
     }
 
     void remove_child(const SceneEntity parent, const SceneEntity child) {
         using namespace nodec::entities;
         using namespace nodec;
+        using namespace components;
 
-        auto &parent_hier = registry_->get_component<components::Hierarchy>(parent);
-        auto &child_hier = registry_->get_component<components::Hierarchy>(child);
+        auto &parent_hierarchy = registry_->get_component<Hierarchy>(parent);
+        auto &child_hierarchy = registry_->get_component<Hierarchy>(child);
 
-        auto pos = std::lower_bound(parent_hier.children.begin(),
-                                    parent_hier.children.end(),
-                                    child);
-        if (pos == parent_hier.children.end() || *pos != child) {
+        if (child_hierarchy.parent != parent) {
             throw std::runtime_error(ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
                                      << "The child (entity: " << child << ") is not a child of the given parent (entity: " << parent << ").");
         }
 
-        parent_hier.children.erase(pos);
-        child_hier.parent = null_entity;
-        append_root(child);
+        remove_from(parent_hierarchy, child, child_hierarchy);
 
-        auto *trfm = registry_->try_get_component<components::Transform>(child);
-        if (trfm) {
-            trfm->dirty = true;
+        append_last(null_entity, root_hierarchy_, child, child_hierarchy);
+
+        hierarchy_changed_(parent, child);
+    }
+
+    const components::Hierarchy &root_hierarchy() const noexcept {
+        return root_hierarchy_;
+    }
+
+    decltype(auto) hierarchy_changed() {
+        return hierarchy_changed_.signal_interface();
+    }
+
+    void remove_all_children(const SceneEntity parent) {
+        using namespace nodec_scene::components;
+        using namespace nodec::entities;
+
+        auto &hierarchy = registry_->get_component<Hierarchy>(parent);
+        auto child = hierarchy.first;
+        while (child != null_entity) {
+            auto next = registry_->get_component<Hierarchy>(child).next;
+            registry_->destroy_entity(child);
+            child = next;
         }
     }
 
 private:
-    void append_root(const SceneEntity entity) {
-        auto pos = std::lower_bound(root_entities_.begin(), root_entities_.end(), entity);
-        if (pos != root_entities_.end() && *pos == entity) {
-            // already exists
-            return;
+    void append_last(const SceneEntity parent, components::Hierarchy &parent_hierarchy,
+                     const SceneEntity child, components::Hierarchy &child_hierarchy) {
+        using namespace nodec_scene::components;
+        using namespace nodec::entities;
+
+        ++parent_hierarchy.child_count;
+        child_hierarchy.parent = parent;
+        child_hierarchy.next = null_entity;
+
+        if (parent_hierarchy.first == null_entity) {
+            parent_hierarchy.first = child;
         }
-        root_entities_.insert(pos, entity);
+        if (parent_hierarchy.last == null_entity) {
+            parent_hierarchy.last = child;
+            child_hierarchy.prev = null_entity;
+        } else {
+            auto &last_hierarchy = registry_->get_component<Hierarchy>(parent_hierarchy.last);
+            last_hierarchy.next = child;
+            child_hierarchy.prev = parent_hierarchy.last;
+            parent_hierarchy.last = child;
+        }
     }
 
-    void remove_root(const SceneEntity entity) {
-        auto pos = std::lower_bound(root_entities_.begin(), root_entities_.end(), entity);
-        if (pos != root_entities_.end() && *pos == entity) {
-            root_entities_.erase(pos);
-            return;
+    void remove_from(components::Hierarchy &parent_hierarchy, const SceneEntity child, components::Hierarchy &child_hierarchy) {
+        using namespace nodec_scene::components;
+        using namespace nodec::entities;
+
+        if (child_hierarchy.next != null_entity) {
+            auto &next_hierarchy = registry_->get_component<Hierarchy>(child_hierarchy.next);
+            next_hierarchy.prev = child_hierarchy.prev;
+        }
+        if (child_hierarchy.prev != null_entity) {
+            auto &prev_hierarchy = registry_->get_component<Hierarchy>(child_hierarchy.prev);
+            prev_hierarchy.next = child_hierarchy.next;
+        }
+
+        --parent_hierarchy.child_count;
+        if (parent_hierarchy.first == child) {
+            parent_hierarchy.first = child_hierarchy.next;
+        }
+        if (parent_hierarchy.last == child) {
+            parent_hierarchy.last = child_hierarchy.prev;
         }
     }
 
     void on_hierarchy_created(SceneRegistry &registry, const SceneEntity entity) {
         assert(&registry == registry_);
 
-        append_root(entity);
+        using namespace nodec::entities;
+        using namespace nodec_scene::components;
+
+        append_last(null_entity, root_hierarchy_, entity, registry_->get_component<Hierarchy>(entity));
     }
 
     void on_hierarchy_destroyed(SceneRegistry &registry, const SceneEntity entity) {
         assert(&registry == registry_);
 
-        auto &hier = registry.get_component<components::Hierarchy>(entity);
+        using namespace nodec;
+        using namespace nodec::entities;
+        using namespace components;
 
-        if (hier.parent != nodec::entities::null_entity) {
-            auto &parent_hier = registry.get_component<components::Hierarchy>(hier.parent);
-            remove_child(hier.parent, entity);
+        auto &hierarchy = registry.get_component<Hierarchy>(entity);
+
+        if (hierarchy.parent != null_entity) {
+            remove_from(registry_->get_component<Hierarchy>(hierarchy.parent), entity, hierarchy);
+        } else {
+            remove_from(root_hierarchy_, entity, hierarchy);
         }
 
         std::vector<SceneEntity> to_deletes = {entity};
         auto opened_offset = 0;
         while (opened_offset < to_deletes.size()) {
-            auto &hier = registry.get_component<components::Hierarchy>(to_deletes[opened_offset]);
-            std::copy(hier.children.begin(), hier.children.end(), std::back_inserter(to_deletes));
+            auto curr = registry.get_component<Hierarchy>(to_deletes[opened_offset]).first;
+            while (curr != null_entity) {
+                to_deletes.emplace_back(curr);
+                curr = registry.get_component<Hierarchy>(curr).next;
+            }
             ++opened_offset;
         }
 
         {
             nodec::signals::ScopedBlock<RegistryConnection> block(hierarchy_destroyed_connection_);
             auto iter = to_deletes.begin();
-            remove_root(*iter);
+            // The first element is already deleted.
             ++iter;
             for (; iter != to_deletes.end(); ++iter) {
                 registry.destroy_entity(*iter);
-                remove_root(*iter);
             }
         }
     }
@@ -160,10 +202,12 @@ private:
 private:
     SceneRegistry *registry_;
 
-    std::vector<SceneEntity> root_entities_;
+    components::Hierarchy root_hierarchy_;
 
     RegistryConnection hierarchy_destroyed_connection_;
     RegistryConnection hierarchy_created_connection_;
+
+    nodec::signals::Signal<void(SceneEntity, SceneEntity)> hierarchy_changed_;
 };
 
 } // namespace systems

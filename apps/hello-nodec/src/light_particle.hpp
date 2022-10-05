@@ -25,7 +25,7 @@ public:
             for (int i = 0; i < COUNT; ++i) {
                 auto entt = world.scene().create_entity("light");
                 SceneEntityEmplacer{proto_light, world.scene(), entt, serialization}.emplace_all();
-                world.scene().append_child(center_entt, entt);
+                world.scene().hierarchy_system().append_child(center_entt, entt);
                 auto &trfm = world.scene().registry().get_component<Transform>(entt);
                 Vector3f vec{
                     random_float(generator) * 2.0f - 1.0f,
