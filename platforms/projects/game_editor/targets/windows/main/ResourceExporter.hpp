@@ -63,7 +63,7 @@ inline void ProcessNode(
     }
 
     if (parentEntity != null_entity) {
-        destScene.append_child(parentEntity, myEntity);
+        destScene.hierarchy_system().append_child(parentEntity, myEntity);
     }
 
     // auto& name = destScene.registry().get_component<Name>(myEntity);
@@ -183,15 +183,18 @@ inline std::shared_ptr<nodec_scene_serialization::SerializableEntityNode> Proces
     nodec_scene::SceneEntity entity,
     const nodec_scene::SceneRegistry &sceneRegistry,
     const nodec_scene_serialization::SceneSerialization &sceneSerialization) {
+    using namespace nodec::entities;
     using namespace nodec_scene::components;
 
     auto node = sceneSerialization.make_serializable_node(entity, sceneRegistry);
 
-    auto &hier = sceneRegistry.get_component<Hierarchy>(entity);
+    auto &hierarchy = sceneRegistry.get_component<Hierarchy>(entity);
 
-    for (auto childEntity : hier.children) {
+    auto childEntity = hierarchy.first;
+    while (childEntity != null_entity) {
         auto child = ProcessSceneEntityNode(childEntity, sceneRegistry, sceneSerialization);
         node->children.push_back(child);
+        childEntity = sceneRegistry.get_component<Hierarchy>(childEntity).next;
     }
 
     return node;

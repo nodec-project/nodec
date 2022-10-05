@@ -55,7 +55,7 @@ public:
             // if no parent, just attach the Hierarchy component as root entity.
             scene_->registry().emplace_component<nodec_scene::components::Hierarchy>(entity);
         } else {
-            scene_->append_child(emplacement.parent, entity);
+            scene_->hierarchy_system().append_child(emplacement.parent, entity);
         }
 
         for (auto child : emplacement.node->children) {

@@ -18,7 +18,7 @@
 #include <nodec_input/keyboard/impl/keyboard_device.hpp>
 #include <nodec_input/mouse/impl/mouse_device.hpp>
 #include <nodec_resources/impl/resources_module.hpp>
-#include <nodec_scene/impl/scene_module.hpp>
+#include <nodec_scene/scene.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
 #include <nodec_scene_serialization/scene_loader.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
@@ -32,7 +32,6 @@ class Engine : public nodec_engine::impl::NodecEngineModule {
     using Screen = nodec_screen::Screen;
     using ScreenModule = nodec_screen::impl::ScreenModule;
 
-    using SceneModule = nodec_scene::impl::SceneModule;
     using Scene = nodec_scene::Scene;
 
     using ResourcesModule = nodec_resources::impl::ResourcesModule;
@@ -121,8 +120,15 @@ public:
     }
 
     void frame_end() {
-        for (auto &root : world_module_->scene_module().hierarchy_system().root_entities()) {
-            nodec_scene::systems::update_transform(world_module_->scene().registry(), root);
+        using namespace nodec::entities;
+        using namespace nodec_scene::components;
+
+        {
+            auto root = world_module_->scene().hierarchy_system().root_hierarchy().first;
+            while (root != null_entity) {
+                nodec_scene::systems::update_transform(world_module_->scene().registry(), root);
+                root = world_module_->scene().registry().get_component<Hierarchy>(root).next;
+            }
         }
 
         scene_renderer_->Render(world_module_->scene());
@@ -132,9 +138,6 @@ public:
 
     ScreenModule &screen_module() {
         return *screen_module_;
-    }
-    SceneModule &scene_module() {
-        return world_module_->scene_module();
     }
 
     nodec_world::impl::WorldModule &world_module() {

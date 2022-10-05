@@ -1,10 +1,10 @@
 #ifndef NODEC_SCENE__SCENE_HPP_
 #define NODEC_SCENE__SCENE_HPP_
 
-#include "scene_registry.hpp"
-#include "components/name.hpp"
 #include "components/hierarchy.hpp"
+#include "components/name.hpp"
 #include "components/transform.hpp"
+#include "scene_registry.hpp"
 #include "systems/hierarchy_system.hpp"
 
 #include <nodec/entities/registry.hpp>
@@ -15,7 +15,15 @@ namespace nodec_scene {
 class Scene {
 public:
     Scene()
-        : hierarchy_system_{&registry_} {}
+        : hierarchy_system_{&registry_} {
+        using namespace components;
+
+        hierarchy_system_.hierarchy_changed().connect([&](auto parent, auto child) {
+            auto *trfm = registry_.try_get_component<Transform>(child);
+            if (trfm == nullptr) return;
+            trfm->dirty = true;
+        });
+    }
 
     virtual ~Scene() {}
 

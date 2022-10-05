@@ -81,10 +81,60 @@ TEST_CASE("testing append_child") {
         CHECK_THROWS_AS(scene.hierarchy_system().append_child(child_1, root), std::runtime_error);
 
         scene.hierarchy_system().append_child(child_1, child_2);
-
     }
 }
 
+TEST_CASE("testing remove_child") {
+    using namespace nodec_scene;
+    using namespace nodec::entities;
+    using namespace nodec_scene::components;
+
+    {
+        Scene scene;
+
+        auto root = scene.create_entity("root");
+        auto child_1 = scene.create_entity("child 1");
+        auto child_2 = scene.create_entity("child 2");
+
+        scene.hierarchy_system().append_child(root, child_1);
+        scene.hierarchy_system().append_child(root, child_2);
+
+        REQUIRE(scene.hierarchy_system().root_hierarchy().child_count == 1);
+
+        auto& root_hierarchy = scene.registry().get_component<Hierarchy>(root);
+
+        CHECK(root_hierarchy.first == child_1);
+        CHECK(root_hierarchy.last == child_2);
+
+        CHECK_THROWS_AS(scene.hierarchy_system().remove_child(child_1, child_2), std::runtime_error);
+        scene.hierarchy_system().remove_child(root, child_1);
+
+        CHECK(scene.hierarchy_system().root_hierarchy().child_count == 2);
+    }
+}
+
+TEST_CASE("testing transform dirty") {
+    using namespace nodec_scene;
+    using namespace nodec::entities;
+    using namespace nodec_scene::components;
+
+    {
+        Scene scene;
+
+        auto root = scene.create_entity("root");
+        auto child_1 = scene.create_entity("child 1");
+        auto child_2 = scene.create_entity("child 2");
+
+        scene.registry().get_component<Transform>(root).dirty = false;
+        scene.registry().get_component<Transform>(child_1).dirty = false;
+        scene.registry().get_component<Transform>(child_2).dirty = false;
+
+        scene.hierarchy_system().append_child(root, child_1);
+        CHECK(scene.registry().get_component<Transform>(child_1).dirty);
+        CHECK(!scene.registry().get_component<Transform>(root).dirty);
+        CHECK(!scene.registry().get_component<Transform>(child_2).dirty);
+    }
+}
 // #include <nodec_scene/impl/scene_module.hpp>
 // #include <nodec_scene/components/standard.hpp>
 // #include <nodec_scene/systems/hierarchy_system.hpp>

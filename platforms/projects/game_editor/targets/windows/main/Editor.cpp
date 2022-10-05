@@ -30,7 +30,7 @@ Editor::Editor(Engine *engine)
 
     register_menu_item("Window/Scene Hierarchy",
                        [=]() {
-                           auto &window = SceneHierarchyWindow::init(window_manager(), &engine->scene_module());
+                           auto &window = SceneHierarchyWindow::init(window_manager(), &engine->world_module().scene());
                            window.selected_entity_changed().connect([=](auto entity) { selection().select(entity); });
                        });
 
@@ -38,7 +38,7 @@ Editor::Editor(Engine *engine)
                        [=]() {
                            EntityInspectorWindow::init(
                                window_manager(),
-                               &engine->scene_module().registry(),
+                               &engine->world_module().scene().registry(),
                                &inspector_component_registry_impl(),
                                selection().active_scene_entity(),
                                selection().active_scene_entity_changed());
@@ -57,7 +57,7 @@ Editor::Editor(Engine *engine)
                            AssetImportWindow::init(
                                window_manager(),
                                engine->resources_module().resource_path(),
-                               &engine->scene_module(),
+                               &engine->world_module().scene(),
                                &engine->resources_module().registry());
                        });
 
@@ -65,7 +65,7 @@ Editor::Editor(Engine *engine)
                        [=]() {
                            SceneSerializationWindow::init(
                                window_manager(),
-                               &engine->scene_module(),
+                               &engine->world_module().scene(),
                                &engine->scene_serialization(),
                                engine->resources_module().resource_path(),
                                &engine->resources_module().registry(),

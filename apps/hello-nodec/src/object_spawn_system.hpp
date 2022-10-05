@@ -99,6 +99,7 @@ public:
 
     void on_stepped(nodec_world::World &world) {
         using namespace nodec;
+        using namespace nodec::entities;
         using namespace nodec_scene::components;
         using namespace nodec_scene_serialization;
 
@@ -124,13 +125,8 @@ public:
         case SpawnState::Disappeared:
             logging::InfoStream(__FILE__, __LINE__) << "Object now disappeared";
 
-            world.scene().registry().view<ObjectSpawner>().each([&](auto entt, ObjectSpawner &spawner) {
-                const Hierarchy *hier = world.scene().registry().try_get_component<Hierarchy>(entt);
-                if (hier == nullptr) return;
-
-                for (auto &child : hier->children) {
-                    world.scene().registry().destroy_entity(child);
-                }
+            world.scene().registry().view<ObjectSpawner, Hierarchy>().each([&](auto entt, ObjectSpawner &spawner, Hierarchy&) {
+                world.scene().hierarchy_system().remove_all_children(entt);
             });
 
             next_spawn_state = SpawnState::Spawned;

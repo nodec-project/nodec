@@ -62,6 +62,8 @@ public:
         }
 
         append_last(parent, parent_hierarchy, child, child_hierarchy);
+
+        hierarchy_changed_(parent, child);
     }
 
     void remove_child(const SceneEntity parent, const SceneEntity child) {
@@ -69,8 +71,8 @@ public:
         using namespace nodec;
         using namespace components;
 
-        auto &parent_hierarchy = registry_->get_component<components::Hierarchy>(parent);
-        auto &child_hierarchy = registry_->get_component<components::Hierarchy>(child);
+        auto &parent_hierarchy = registry_->get_component<Hierarchy>(parent);
+        auto &child_hierarchy = registry_->get_component<Hierarchy>(child);
 
         if (child_hierarchy.parent != parent) {
             throw std::runtime_error(ErrorFormatter<std::runtime_error>(__FILE__, __LINE__)
@@ -80,10 +82,29 @@ public:
         remove_from(parent_hierarchy, child, child_hierarchy);
 
         append_last(null_entity, root_hierarchy_, child, child_hierarchy);
+
+        hierarchy_changed_(parent, child);
     }
 
     const components::Hierarchy &root_hierarchy() const noexcept {
         return root_hierarchy_;
+    }
+
+    decltype(auto) hierarchy_changed() {
+        return hierarchy_changed_.signal_interface();
+    }
+
+    void remove_all_children(const SceneEntity parent) {
+        using namespace nodec_scene::components;
+        using namespace nodec::entities;
+
+        auto &hierarchy = registry_->get_component<Hierarchy>(parent);
+        auto child = hierarchy.first;
+        while (child != null_entity) {
+            auto next = registry_->get_component<Hierarchy>(child).next;
+            registry_->destroy_entity(child);
+            child = next;
+        }
     }
 
 private:
@@ -185,6 +206,8 @@ private:
 
     RegistryConnection hierarchy_destroyed_connection_;
     RegistryConnection hierarchy_created_connection_;
+
+    nodec::signals::Signal<void(SceneEntity, SceneEntity)> hierarchy_changed_;
 };
 
 } // namespace systems

@@ -16,9 +16,10 @@ namespace internal {
 inline void update_transform(SceneRegistry &registry,
                              const nodec::Matrix4x4f &model_mat,
                              components::Transform &trfm,
-                             components::Hierarchy &hier,
+                             components::Hierarchy &hierarchy,
                              bool dirty) {
     using namespace nodec;
+    using namespace nodec::entities;
     using namespace nodec_scene::components;
 
     // logging::InfoStream info(__FILE__, __LINE__);
@@ -30,7 +31,8 @@ inline void update_transform(SceneRegistry &registry,
         trfm.dirty = false;
     }
 
-    for (auto &child : hier.children) {
+    auto child = hierarchy.first;
+    while (child != null_entity) {
         auto comps = registry.try_get_components<Transform, Hierarchy>(child);
         if (!(std::get<0>(comps) && std::get<1>(comps))) {
             // required both transform and hierarchy to compute transform. if not, skip the child.
@@ -38,6 +40,7 @@ inline void update_transform(SceneRegistry &registry,
         }
 
         update_transform(registry, trfm.local2world, *std::get<0>(comps), *std::get<1>(comps), dirty);
+        child = std::get<1>(comps)->next;
     }
 }
 
