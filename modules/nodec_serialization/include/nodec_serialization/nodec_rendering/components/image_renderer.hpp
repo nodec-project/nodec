@@ -31,17 +31,20 @@ public:
 
     template<class Archive>
     void load(Archive &archive) {
-        auto &context = cereal::get_user_data<nodec_scene_serialization::ArchiveContext>(archive);
+        using namespace nodec_scene_serialization;
+        using namespace nodec::resource_management;
+
+        auto &context = cereal::get_user_data<ArchiveContext>(archive);
 
         {
             std::string name;
             archive(cereal::make_nvp("image", name));
-            image = context.resource_registry().get_resource<resources::Texture>(name, nodec::resource_management::LoadPolicy::Direct).get();
+            image = context.resource_registry().get_resource<resources::Texture>(name, LoadPolicy::Direct).get();
         }
         {
             std::string name;
             archive(cereal::make_nvp("material", name));
-            material = context.resource_registry().get_resource<resources::Material>(name, nodec::resource_management::LoadPolicy::Direct).get();
+            material = context.resource_registry().get_resource<resources::Material>(name, LoadPolicy::Direct).get();
         }
         archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
     }

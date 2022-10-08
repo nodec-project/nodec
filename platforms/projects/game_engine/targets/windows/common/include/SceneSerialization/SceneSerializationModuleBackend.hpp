@@ -12,6 +12,7 @@
 #include <nodec_serialization/nodec_rendering/components/text_renderer.hpp>
 #include <nodec_serialization/nodec_scene/components/name.hpp>
 #include <nodec_serialization/nodec_scene/components/transform.hpp>
+#include <nodec_serialization/nodec_scene_audio/components/audio_source.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
 
@@ -26,6 +27,7 @@ public:
         using namespace nodec_rendering::components;
         using namespace nodec_rendering::resources;
         using namespace nodec_scene::components;
+        using namespace nodec_scene_audio::components;
 
         register_component<MeshRenderer, SerializableMeshRenderer>(
             [=](const MeshRenderer &component) {
@@ -44,8 +46,7 @@ public:
                 return serializable;
             },
             [=](const SerializableMeshRenderer serializable, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<MeshRenderer>(entity);
-                auto &component = registry.get_component<MeshRenderer>(entity);
+                auto &component = registry.emplace_component<MeshRenderer>(entity).first;
 
                 for (auto &name : serializable.meshes) {
                     auto mesh = mpResourceRegistry->get_resource<Mesh>(name).get();
@@ -67,7 +68,7 @@ public:
                 return serializable;
             },
             [=](const SerializableImageRenderer &serializable, SceneEntity entity, SceneRegistry &registry) {
-                auto& renderer = registry.emplace_component<ImageRenderer>(entity).first;
+                auto &renderer = registry.emplace_component<ImageRenderer>(entity).first;
                 renderer.image = serializable.image;
                 renderer.material = serializable.material;
                 renderer.pixels_per_unit = serializable.pixels_per_unit;
@@ -98,16 +99,15 @@ public:
             [=](const PostProcessing &processing) {
                 auto serializable = std::make_shared<SerializablePostProcessing>();
 
-                for (const auto& effect : processing.effects) {
+                for (const auto &effect : processing.effects) {
                     const auto name = mpResourceRegistry->lookup_name<Material>(effect.material).first;
                     serializable->effects.push_back({effect.enabled, name});
                 }
                 return serializable;
             },
             [=](const SerializablePostProcessing &serializable, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<PostProcessing>(entity);
-                auto &processing = registry.get_component<PostProcessing>(entity);
-                for (const auto& effect : serializable.effects) {
+                auto &processing = registry.emplace_component<PostProcessing>(entity).first;
+                for (const auto &effect : serializable.effects) {
                     processing.effects.push_back({effect.enabled, mpResourceRegistry->get_resource<Material>(effect.material).get()});
                 }
             });
@@ -119,8 +119,7 @@ public:
                 return serializable_name;
             },
             [](const SerializableName &serializable_name, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<Name>(entity);
-                auto &name = registry.get_component<Name>(entity);
+                auto &name = registry.emplace_component<Name>(entity).first;
                 name.name = serializable_name.name;
             });
 
@@ -133,8 +132,7 @@ public:
                 return serializable_trfm;
             },
             [](const SerializableTransform &serializable_trfm, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<Transform>(entity);
-                auto &trfm = registry.get_component<Transform>(entity);
+                auto &trfm = registry.emplace_component<Transform>(entity).first;
                 trfm.local_position = serializable_trfm.local_position;
                 trfm.local_rotation = serializable_trfm.local_rotation;
                 trfm.local_scale = serializable_trfm.local_scale;
@@ -152,8 +150,7 @@ public:
                 return serializable_camera;
             },
             [](const SerializableCamera &serializable_camera, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<Camera>(entity);
-                auto &camera = registry.get_component<Camera>(entity);
+                auto &camera = registry.emplace_component<Camera>(entity).first;
                 camera.far_clip_plane = serializable_camera.far_clip_plane;
                 camera.near_clip_plane = serializable_camera.near_clip_plane;
                 camera.fov_angle = serializable_camera.fov_angle;
@@ -169,8 +166,7 @@ public:
                 return serializable_light;
             },
             [](const SerializableDirectionalLight &serializable_light, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<DirectionalLight>(entity);
-                auto &light = registry.get_component<DirectionalLight>(entity);
+                auto &light = registry.emplace_component<DirectionalLight>(entity).first;
                 light.color = serializable_light.color;
                 light.intensity = serializable_light.intensity;
             });
@@ -184,8 +180,7 @@ public:
                 return serializable;
             },
             [](const SerializablePointLight &serializable, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<PointLight>(entity);
-                auto &light = registry.get_component<PointLight>(entity);
+                auto &light = registry.emplace_component<PointLight>(entity).first;
                 light.color = serializable.color;
                 light.intensity = serializable.intensity;
                 light.range = serializable.range;
@@ -198,9 +193,27 @@ public:
                 return serializable;
             },
             [](const SerializableSceneLighting &serializable, SceneEntity entity, SceneRegistry &registry) {
-                registry.emplace_component<SceneLighting>(entity);
-                auto &lighting = registry.get_component<SceneLighting>(entity);
+                auto &lighting = registry.emplace_component<SceneLighting>(entity).first;
                 lighting.ambient_color = serializable.ambient_color;
+            });
+
+        register_component<AudioSource, SerializableAudioSource>(
+            [](const AudioSource &source) {
+                auto serializable = std::make_shared<SerializableAudioSource>();
+                serializable->clip = source.clip;
+                serializable->is_playing = source.is_playing;
+                serializable->loop = source.loop;
+                serializable->position = source.position;
+                serializable->volume = source.volume;
+                return serializable;
+            },
+            [](const SerializableAudioSource &serializable, SceneEntity entity, SceneRegistry &registry) {
+                auto &source = registry.emplace_component<AudioSource>(entity).first;
+                source.clip = serializable.clip;
+                source.is_playing = serializable.is_playing;
+                source.loop = serializable.loop;
+                source.position = serializable.position;
+                source.volume = serializable.volume;
             });
     }
 
