@@ -16,19 +16,39 @@ public:
     bool is_playing{false};
     bool loop{false};
     float volume{1.0f};
-
     std::chrono::milliseconds position{0};
 
     template<class Archive>
     void save(Archive &archive) const {
+        using namespace nodec_scene_serialization;
+        auto &context = cereal::get_user_data<ArchiveContext>(archive);
+
+        archive(cereal::make_nvp("clip", context.resource_registry().lookup_name<resources::AudioClip>(clip).first));
+        archive(cereal::make_nvp("is_playing", is_playing));
+        archive(cereal::make_nvp("loop", loop));
     }
 
     template<class Archive>
     void load(Archive &archive) {
+        using namespace nodec_scene_serialization;
+        using namespace nodec::resource_management;
+        auto &context = cereal::get_user_data<ArchiveContext>(archive);
+
+        {
+            std::string name;
+            archive(cereal::make_nvp("clip", name));
+            clip = context.resource_registry().get_resource<resources::AudioClip>(name, LoadPolicy::Direct).get();
+        }
+        archive(cereal::make_nvp("is_playing", is_playing));
+        archive(cereal::make_nvp("loop", loop));
     }
 };
 
 } // namespace components
 } // namespace nodec_scene_audio
+
+CEREAL_REGISTER_TYPE(nodec_scene_audio::components::SerializableAudioSource)
+
+CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene_audio::components::SerializableAudioSource)
 
 #endif

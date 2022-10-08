@@ -2295,6 +2295,61 @@
 "children": []
 }
 }
+},
+{
+"ptr_wrapper": {
+"id": 2147483808,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483661,
+"polymorphic_name": "nodec_scene_audio::components::SerializableAudioSource",
+"ptr_wrapper": {
+"id": 2147483809,
+"data": {
+"clip": "org.nodec.hello-nodec/audios/dodon.wav",
+"is_playing": true,
+"loop": false
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"id": 2147483810,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"id": 2147483811,
+"data": {
+"name": "Audio"
+}
+}
+}
+],
+"children": []
+}
+}
 }
 ]
 }

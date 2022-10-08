@@ -51,7 +51,7 @@ protected:
         }
 
         nodec::logging::InfoStream(__FILE__, __LINE__)
-            << "[Main] >>> Application Sucessfully Ending. See you." << std::flush;
+            << "[Main] >>> Application Successfully Ending. See you." << std::flush;
 
         return exitCode;
     }
@@ -64,7 +64,7 @@ protected:
             nodec::logging::fatal(e.what(), __FILE__, __LINE__);
         }
         catch (...) {
-            nodec::logging::fatal("Unknown Error Exception Ocuurs.", __FILE__, __LINE__);
+            nodec::logging::fatal("Unknown Error Exception Occurs.", __FILE__, __LINE__);
         }
 
         MessageBox(nullptr,

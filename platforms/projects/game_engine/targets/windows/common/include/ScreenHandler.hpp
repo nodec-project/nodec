@@ -59,12 +59,12 @@ public:
                 }
                 catch (const std::exception& e) {
                     nodec::logging::ErrorStream(__FILE__, __LINE__)
-                        << "[ScreenHandlers] >>> Exception has been occured while Window::SetTitle().\n"
+                        << "[ScreenHandlers] >>> Exception has been occurred while Window::SetTitle().\n"
                         << "detail: " << e.what() << std::flush;
                 }
                 catch (...) {
                     nodec::logging::ErrorStream(__FILE__, __LINE__)
-                        << "[ScreenHandlers] >>> Unknown Exception has been occured while Window::SetTitle().\n"
+                        << "[ScreenHandlers] >>> Unknown Exception has been occurred while Window::SetTitle().\n"
                         << "detail: Unavailable." << std::flush;
                 }
             });
