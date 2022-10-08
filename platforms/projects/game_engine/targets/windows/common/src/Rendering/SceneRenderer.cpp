@@ -336,8 +336,8 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
     using namespace nodec_rendering::resources;
     using namespace DirectX;
 
-    mModelPropertiesCB.BindVS(mpGfx, 2);
-    mModelPropertiesCB.BindPS(mpGfx, 2);
+    mModelPropertiesCB.BindVS(mpGfx, MODEL_PROPERTIES_CB_SLOT);
+    mModelPropertiesCB.BindPS(mpGfx, MODEL_PROPERTIES_CB_SLOT);
 
     scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
         if (meshRenderer.meshes.size() == 0) return;
@@ -374,7 +374,7 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
 
             if (shaderBackend != activeShader) continue;
 
-            materialBackend->bind_constant_buffer(mpGfx, 3);
+            materialBackend->bind_constant_buffer(mpGfx, MATERIAL_PROPERTIES_CB_SLOT);
             SetCullMode(materialBackend->cull_mode());
 
             mTextureConfig.texHasFlag = 0x00;
@@ -386,7 +386,11 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
         } // End foreach mesh
     });   // End foreach mesh renderer
 
-    if (mQuadMesh) {
+    [&]() {
+        if (!mQuadMesh) return;
+
+        mBSAlphaBlend.Bind(mpGfx);
+
         scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
             auto &image = renderer.image;
             auto &material = renderer.material;
@@ -398,9 +402,10 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
 
             if (shaderBackend != activeShader) return;
 
+            auto savedAlbedo = materialBackend->get_texture_entry("albedo");
             materialBackend->set_texture_entry("albedo", {image, {Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}});
 
-            materialBackend->bind_constant_buffer(mpGfx, 3);
+            materialBackend->bind_constant_buffer(mpGfx, MATERIAL_PROPERTIES_CB_SLOT);
             SetCullMode(materialBackend->cull_mode());
 
             mTextureConfig.texHasFlag = 0x00;
@@ -427,74 +432,93 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
 
             mQuadMesh->bind(mpGfx);
             mpGfx->DrawIndexed(mQuadMesh->triangles.size());
+
+            if (savedAlbedo) {
+                materialBackend->set_texture_entry("albedo", *savedAlbedo);
+            }
         });
-    }
 
-    mBSAlphaBlend.Bind(mpGfx);
-    scene.registry().view<const Transform, const TextRenderer>().each([&](auto entt, const Transform &trfm, const TextRenderer &renderer) {
-        auto fontBackend = std::static_pointer_cast<FontBackend>(renderer.font);
-        if (!fontBackend) return;
+        mBSDefault.Bind(mpGfx);
+    }();
 
-        auto materialBackend = std::static_pointer_cast<MaterialBackend>(renderer.material);
-        if (!materialBackend) return;
+    [&]() {
+        mBSAlphaBlend.Bind(mpGfx);
+        scene.registry().view<const Transform, const TextRenderer>().each([&](auto entt, const Transform &trfm, const TextRenderer &renderer) {
+            auto fontBackend = std::static_pointer_cast<FontBackend>(renderer.font);
+            if (!fontBackend) return;
 
-        auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
-        if (shaderBackend.get() != activeShader) return;
+            auto materialBackend = std::static_pointer_cast<MaterialBackend>(renderer.material);
+            if (!materialBackend) return;
 
-        const auto u32Text = nodec::unicode::utf8to32<std::u32string>(renderer.text);
-        const float pixelsPerUnit = renderer.pixels_per_unit;
+            auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
+            if (shaderBackend.get() != activeShader) return;
 
-        float offsetX = 0.0f;
-        float offsetY = 0.0f;
-        for (const auto &chCode : u32Text) {
-            if (chCode == '\n') {
-                offsetY -= renderer.pixel_size / pixelsPerUnit;
-                offsetX = 0.0f;
-                continue;
+            auto savedMask = materialBackend->get_texture_entry("mask");
+            auto savedAlbedo = materialBackend->get_vector4_property("albedo");
+
+            const auto u32Text = nodec::unicode::utf8to32<std::u32string>(renderer.text);
+            const float pixelsPerUnit = renderer.pixels_per_unit;
+
+            float offsetX = 0.0f;
+            float offsetY = 0.0f;
+            for (const auto &chCode : u32Text) {
+                if (chCode == '\n') {
+                    offsetY -= renderer.pixel_size / pixelsPerUnit;
+                    offsetX = 0.0f;
+                    continue;
+                }
+
+                const auto &character = mFontCharacterDatabase.Get(fontBackend->GetFace(), renderer.pixel_size, chCode);
+
+                float posX = offsetX + character.bearing.x / pixelsPerUnit;
+                float posY = offsetY - (character.size.y - character.bearing.y) / pixelsPerUnit;
+                float w = character.size.x / pixelsPerUnit;
+                float h = character.size.y / pixelsPerUnit;
+
+                offsetX += (character.advance >> 6) / pixelsPerUnit;
+
+                if (!character.pFontTexture) {
+                    continue;
+                }
+
+                materialBackend->set_texture_entry("mask", {character.pFontTexture, {Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}});
+                materialBackend->set_vector4_property("albedo", renderer.color);
+
+                materialBackend->bind_constant_buffer(mpGfx, 3);
+                SetCullMode(materialBackend->cull_mode());
+
+                mTextureConfig.texHasFlag = 0x00;
+                BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
+
+                XMMATRIX matrixM{trfm.local2world.m};
+                matrixM = XMMatrixScaling(w / 2, h / 2, 1.0f) * XMMatrixTranslation(posX + w / 2, posY + h / 2, 0.0f) * matrixM;
+
+                // matrixM
+                auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
+
+                // DirectX Math using row-major representation
+                // HLSL using column-major representation
+                auto matrixMVP = matrixM * matrixV * matrixP;
+
+                XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
+                XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
+                XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
+
+                mModelPropertiesCB.Update(mpGfx, &mModelProperties);
+                mScreenQuadMesh->bind(mpGfx);
+                mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
             }
 
-            const auto &character = mFontCharacterDatabase.Get(fontBackend->GetFace(), renderer.pixel_size, chCode);
-
-            float posX = offsetX + character.bearing.x / pixelsPerUnit;
-            float posY = offsetY - (character.size.y - character.bearing.y) / pixelsPerUnit;
-            float w = character.size.x / pixelsPerUnit;
-            float h = character.size.y / pixelsPerUnit;
-
-            offsetX += (character.advance >> 6) / pixelsPerUnit;
-
-            if (!character.pFontTexture) {
-                continue;
+            if (savedMask) {
+                materialBackend->set_texture_entry("mask", *savedMask);
             }
 
-            materialBackend->set_texture_entry("mask", {character.pFontTexture, {Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}});
-            materialBackend->set_vector4_property("albedo", renderer.color);
+            if (savedAlbedo) {
+                materialBackend->set_vector4_property("albedo", *savedAlbedo);
+            }
+        });
 
-            materialBackend->bind_constant_buffer(mpGfx, 3);
-            SetCullMode(materialBackend->cull_mode());
-
-            mTextureConfig.texHasFlag = 0x00;
-            BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
-            mTextureConfigCB.Update(mpGfx, &mTextureConfig);
-
-            XMMATRIX matrixM{trfm.local2world.m};
-            matrixM = XMMatrixScaling(w / 2, h / 2, 1.0f) * XMMatrixTranslation(posX + w / 2, posY + h / 2, 0.0f) * matrixM;
-
-            // matrixM
-            auto matrixMInverse = XMMatrixInverse(nullptr, matrixM);
-
-            // DirectX Math using row-major representation
-            // HLSL using column-major representation
-            auto matrixMVP = matrixM * matrixV * matrixP;
-
-            XMStoreFloat4x4(&mModelProperties.matrixM, matrixM);
-            XMStoreFloat4x4(&mModelProperties.matrixMInverse, matrixMInverse);
-            XMStoreFloat4x4(&mModelProperties.matrixMVP, matrixMVP);
-
-            mModelPropertiesCB.Update(mpGfx, &mModelProperties);
-            mScreenQuadMesh->bind(mpGfx);
-            mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
-        }
-    });
-
-    mBSDefault.Bind(mpGfx);
+        mBSDefault.Bind(mpGfx);
+    }();
 }

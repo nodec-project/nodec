@@ -1,7 +1,6 @@
 #include "interface.hlsl"
 
 float4 PSMain(V2P input) : SV_Target {
-    // default is bright pink.
     float4 color = materialProperties.albedo;
 
     if (textureConfig.texHasFlag & 0x01) {

@@ -19,7 +19,10 @@ public:
         rtBlendDesc.RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
         D3D11_BLEND_DESC desc = {};
-        desc.RenderTarget[0] = rtBlendDesc;
+
+        for (UINT i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i) {
+            desc.RenderTarget[i] = rtBlendDesc;
+        }
         return {pGfx, desc};
     }
 
