@@ -10,3 +10,4 @@ endfunction(add_basic_test)
 
 add_basic_test("optional_basic" optional/basic.cpp)
 add_basic_test("entitites_registry" entities/registry.cpp)
+add_basic_test("math" math/math.cpp)
