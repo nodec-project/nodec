@@ -5,6 +5,7 @@
 #include <nodec_rendering/resources/mesh.hpp>
 #include <nodec_scene/scene.hpp>
 #include <nodec_scene/scene_registry.hpp>
+#include <nodec_scene_serialization/components/non_serialized.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_scene_serialization/serializable_scene_graph.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
@@ -185,14 +186,19 @@ inline std::shared_ptr<nodec_scene_serialization::SerializableEntityNode> Proces
     const nodec_scene_serialization::SceneSerialization &sceneSerialization) {
     using namespace nodec::entities;
     using namespace nodec_scene::components;
+    using namespace nodec_scene_serialization::components;
 
     auto node = sceneSerialization.make_serializable_node(entity, sceneRegistry);
+
+    auto *nonSerialized = sceneRegistry.try_get_component<NonSerialized>(entity);
+    if (nonSerialized) return {};
 
     auto &hierarchy = sceneRegistry.get_component<Hierarchy>(entity);
 
     auto childEntity = hierarchy.first;
     while (childEntity != null_entity) {
         auto child = ProcessSceneEntityNode(childEntity, sceneRegistry, sceneSerialization);
+        if (!child) continue;
         node->children.push_back(child);
         childEntity = sceneRegistry.get_component<Hierarchy>(childEntity).next;
     }
@@ -225,6 +231,7 @@ inline bool ExportSceneGraph(
 
     for (auto &root : roots) {
         auto node = internal::ProcessSceneEntityNode(root, sceneRegistry, sceneSerialization);
+        if (!node) continue;
         sceneGraph.roots.push_back(node);
     }
 

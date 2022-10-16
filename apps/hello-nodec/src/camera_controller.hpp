@@ -98,7 +98,7 @@ private:
 
         // logging::InfoStream(__FILE__, __LINE__) << world.clock().current_time() << ", " << world.clock().delta_time();
 
-        world.scene().registry().view<Camera, Transform, CameraController>().each([&](const SceneEntity &entity, Camera &camera, Transform &trfm, CameraController &ctrl) {
+        world.scene().registry().view<Transform, CameraController>().each([&](const SceneEntity &entity, Transform &trfm, CameraController &ctrl) {
             const float delta_time = world.clock().delta_time();
 
             auto forward = math::gfx::transform(Vector3f(0, 0, 1), trfm.local_rotation);

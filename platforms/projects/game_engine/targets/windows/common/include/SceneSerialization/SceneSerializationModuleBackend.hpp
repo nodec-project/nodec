@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_scene_serialization/components/non_serialized.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
@@ -215,6 +216,7 @@ public:
                 source.position = serializable.position;
                 source.volume = serializable.volume;
             });
+        
     }
 
 private:

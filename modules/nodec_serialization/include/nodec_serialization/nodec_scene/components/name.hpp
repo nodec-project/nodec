@@ -1,7 +1,7 @@
 #ifndef NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__NAME_HPP_
 #define NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__NAME_HPP_
 
-#include <nodec_scene_serialization/serializable_component.hpp>
+#include <nodec_scene_serialization/base_serializable_component.hpp>
 
 namespace nodec_scene {
 namespace components {

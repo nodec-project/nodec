@@ -13,9 +13,17 @@ public:
         using namespace nodec_rendering::components;
         using namespace nodec_scene::components;
         using namespace nodec_scene_serialization;
+        using namespace nodec_scene_serialization::components;
+        using namespace nodec_animations;
+
+        curve.add_keyframe(Keyframe{0, 0.0f});
+        curve.add_keyframe(Keyframe{30 * 1000, 360.0f});
+        curve.set_wrap_mode(WrapMode::Loop);
 
         world.initialized().connect([&](nodec_world::World &world) {
             center_entt = world.scene().create_entity("Particles");
+
+            world.scene().registry().emplace_component<NonSerialized>(center_entt);
             std::uniform_real_distribution<float> random_float(0.0, 1.0); // random floats between [0.0, 1.0]
             std::default_random_engine generator;
 
@@ -39,16 +47,17 @@ public:
         });
 
         world.stepped().connect([&](nodec_world::World &world) {
-            if (center_entt == nodec::entities::null_entity) return;
+            if (!world.scene().registry().is_valid(center_entt)) return;
 
             auto &trfm = world.scene().registry().get_component<Transform>(center_entt);
-            trfm.local_rotation *= math::gfx::angle_axis(10 * world.clock().delta_time(), Vector3f{0.0f, 1.0f, 0.0f});
+            trfm.local_rotation = math::gfx::angle_axis(curve.evaluate(world.clock().current_time() * 1000).second, Vector3f{0.0f, 1.0f, 0.0f});
             trfm.dirty = true;
         });
     }
 
 private:
     nodec_scene::SceneEntity center_entt{nodec::entities::null_entity};
+    nodec_animations::AnimationCurve curve;
 };
 
 #endif
