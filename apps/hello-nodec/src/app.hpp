@@ -5,6 +5,7 @@
 
 #define EDITOR_MODE
 
+#include <nodec_animations/animation_curve.hpp>
 #include <nodec_engine/nodec_engine.hpp>
 #include <nodec_input/input_devices.hpp>
 #include <nodec_input/keyboard/keyboard.hpp>
@@ -23,6 +24,7 @@
 #include <nodec_scene_audio/components/audio_listener.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 #include <nodec_scene_audio/resources/audio_clip.hpp>
+#include <nodec_scene_serialization/components/non_serialized.hpp>
 #include <nodec_scene_serialization/scene_entity_emplacer.hpp>
 #include <nodec_scene_serialization/scene_loader.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
@@ -30,10 +32,10 @@
 #include <nodec_screen/screen.hpp>
 #include <nodec_world/world.hpp>
 
+#include <nodec/algorithm.hpp>
 #include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
 #include <nodec/optional.hpp>
-#include <nodec/algorithm.hpp>
 
 #include <cereal/types/polymorphic.hpp>
 
