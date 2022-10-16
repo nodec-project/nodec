@@ -1,7 +1,7 @@
 #ifndef NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__TEXT_RENDERER_HPP_
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__TEXT_RENDERER_HPP_
 
-#include <nodec_scene_serialization/serializable_component.hpp>
+#include <nodec_scene_serialization/base_serializable_component.hpp>
 
 #include <nodec_rendering/resources/font.hpp>
 #include <nodec_rendering/resources/material.hpp>

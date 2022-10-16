@@ -1,7 +1,7 @@
 #ifndef NODEC_SCENE_SERIALIZATION__SCENE_SERIALIZATION_HPP_
 #define NODEC_SCENE_SERIALIZATION__SCENE_SERIALIZATION_HPP_
 
-#include "serializable_component.hpp"
+#include "base_serializable_component.hpp"
 #include "serializable_entity_node.hpp"
 
 #include <nodec_scene/scene_registry.hpp>

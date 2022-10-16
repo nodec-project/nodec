@@ -3,7 +3,7 @@
 
 #include <nodec_rendering/components/scene_lighting.hpp>
 
-#include <nodec_scene_serialization/serializable_component.hpp>
+#include <nodec_scene_serialization/base_serializable_component.hpp>
 
 namespace nodec_rendering {
 namespace components {

@@ -3,103 +3,91 @@
 
 #include <imessentials/window.hpp>
 #include <nodec/entities/registry.hpp>
-#include <nodec/vector2.hpp>
 #include <nodec/type_info.hpp>
+#include <nodec/vector2.hpp>
 
 #include <imgui.h>
 
-#include <vector>
 #include <unordered_map>
-
+#include <vector>
 
 namespace imwindows {
 
-
 class EntityInspectorWindow : public imessentials::BaseWindow {
-
     using EntityRegistry = nodec::entities::Registry;
     using Entity = nodec::entities::Entity;
     using ChangeTargetSignal = nodec::signals::Signal<void(Entity)>;
 
 public:
-
-
     class ComponentRegistry {
-
         class BaseComponentHandler {
         public:
-            virtual ~BaseComponentHandler() {};
+            virtual ~BaseComponentHandler(){};
 
-            virtual const std::string& component_name() const = 0;
-            virtual void on_gui(void* comp) = 0;
-            virtual void remove(EntityRegistry& entity_registry, Entity entity) = 0;
-            virtual void add(EntityRegistry& entity_registry, Entity entity) = 0;
+            virtual const std::string &component_name() const = 0;
+            virtual void on_gui(void *comp) = 0;
+            virtual void remove(EntityRegistry &entity_registry, Entity entity) = 0;
+            virtual void add(EntityRegistry &entity_registry, Entity entity) = 0;
         };
 
         template<typename Component>
         class ComponentHandler : public BaseComponentHandler {
         public:
-            template <typename Func>
-            ComponentHandler(const std::string& component_name, Func&& on_gui_callback)
-                : component_name_{ component_name }
-                , on_gui_callback_{ on_gui_callback }{
-
+            template<typename Func>
+            ComponentHandler(const std::string &component_name, Func &&on_gui_callback)
+                : component_name_{component_name}, on_gui_callback_{on_gui_callback} {
             }
 
-            void on_gui(void* comp) override {
-                on_gui_callback_(*static_cast<Component*>(comp));
+            void on_gui(void *comp) override {
+                on_gui_callback_(*static_cast<Component *>(comp));
             }
 
-            void remove(EntityRegistry& entity_registry, Entity entity) override {
+            void remove(EntityRegistry &entity_registry, Entity entity) override {
                 entity_registry.remove_components<Component>(entity);
-
             }
-            void add(EntityRegistry& entity_registry, Entity entity) override {
+            void add(EntityRegistry &entity_registry, Entity entity) override {
                 entity_registry.emplace_component<Component>(entity);
             }
 
-            const std::string& component_name() const override {
+            const std::string &component_name() const override {
                 return component_name_;
             }
 
         private:
-            std::function<void(Component&)> on_gui_callback_;
+            std::function<void(Component &)> on_gui_callback_;
             const std::string component_name_;
         };
 
-
     public:
-
         class RegistryInterface {
         public:
-            RegistryInterface(ComponentRegistry* registry)
-                : registry_{ registry } {
+            RegistryInterface(ComponentRegistry *registry)
+                : registry_{registry} {
             }
 
             template<typename Component, typename Callback>
-            decltype(auto) register_component(const std::string& name, const Callback&& on_gui_callback) {
-                registry_->register_component<Component>(name, std::forward<const Callback&&>(on_gui_callback));
+            decltype(auto) register_component(const std::string &name, const Callback &&on_gui_callback) {
+                registry_->register_component<Component>(name, std::forward<const Callback &&>(on_gui_callback));
             }
 
         private:
-            ComponentRegistry* registry_{ nullptr };
+            ComponentRegistry *registry_{nullptr};
         };
 
         template<typename Component, typename Callback>
-        decltype(auto) register_component(const std::string& name, const Callback&& on_gui_callback) {
+        decltype(auto) register_component(const std::string &name, const Callback &&on_gui_callback) {
             using namespace nodec;
 
             const auto index = type_seq_index<Component>::value();
 
             auto iter = handlers.find(index);
             if (iter == handlers.end()) {
-                auto pair = handlers.emplace(index, new ComponentHandler<Component>{ name , on_gui_callback });
+                auto pair = handlers.emplace(index, new ComponentHandler<Component>{name, on_gui_callback});
                 iter = pair.first;
-
             }
         }
 
-        BaseComponentHandler* get_handler(nodec::type_seq_index_type type_seq_index) {
+        BaseComponentHandler *get_handler(nodec::type_seq_index_type type_seq_index) {
             using namespace nodec;
 
             auto iter = handlers.find(type_seq_index);
@@ -118,33 +106,35 @@ public:
             return handlers.end();
         }
 
+        decltype(auto) size() const noexcept {
+            return handlers.size();
+        }
+
         decltype(auto) registry_interface() {
-            return RegistryInterface{ this };
+            return RegistryInterface{this};
         }
 
     private:
         std::unordered_map<nodec::type_seq_index_type, std::unique_ptr<BaseComponentHandler>> handlers;
     };
 
-
 public:
-    static decltype(auto) init(imessentials::WindowManager& manager,
-                               EntityRegistry* entity_registry,
-                               ComponentRegistry* component_registry,
+    static decltype(auto) init(imessentials::WindowManager &manager,
+                               EntityRegistry *entity_registry,
+                               ComponentRegistry *component_registry,
                                Entity init_target_entity,
                                ChangeTargetSignal::SignalInterface change_target_signal) {
-        auto& window = manager.get_window<EntityInspectorWindow>();
+        auto &window = manager.get_window<EntityInspectorWindow>();
         window.entity_registry_ = entity_registry;
         window.component_registry_ = component_registry;
         window.target_entity_ = init_target_entity;
-        window.change_target_signal_connection_ = change_target_signal.connect([&](auto entity) {window.inspect(entity); });
+        window.change_target_signal_connection_ = change_target_signal.connect([&](auto entity) { window.inspect(entity); });
         ImGui::SetWindowFocus(window.name());
     }
 
 public:
     EntityInspectorWindow()
         : BaseWindow("Entity Inspector", nodec::Vector2f(300, 500)) {
-
     }
 
     ~EntityInspectorWindow() {
@@ -159,8 +149,7 @@ public:
         }
 
         logging::InfoStream info(__FILE__, __LINE__);
-        entity_registry_->visit(target_entity_, [&](const nodec::type_info& type_info, void* component) {
-
+        entity_registry_->visit(target_entity_, [&](const nodec::type_info &type_info, void *component) {
             auto *handler = component_registry_->get_handler(type_info.seq_index());
             if (!handler) {
                 return;
@@ -179,8 +168,7 @@ public:
             if (opened) {
                 handler->on_gui(component);
             }
-
-                                });
+        });
 
         ImGui::Separator();
 
@@ -189,16 +177,21 @@ public:
         }
 
         if (ImGui::BeginPopup("add-component-popup")) {
+            filter.Draw("Filter");
             if (ImGui::BeginListBox("##component-list")) {
-                for (auto& pair : *component_registry_) {
-                    auto& handler = pair.second;
+                for (auto &pair : *component_registry_) {
+                    auto &handler = pair.second;
 
-                    if (ImGui::Selectable(handler->component_name().c_str())) {
+                    const char *component_name = handler->component_name().c_str();
+
+                    if (filter.IsActive() && !filter.PassFilter(component_name)) continue;
+
+                    if (ImGui::Selectable(component_name)) {
                         handler->add(*entity_registry_, target_entity_);
                         ImGui::CloseCurrentPopup();
                     }
                 }
-
+                
                 ImGui::EndListBox();
             }
             ImGui::EndPopup();
@@ -211,15 +204,13 @@ private:
     }
 
 private:
-    EntityRegistry* entity_registry_{ nullptr };
-    ComponentRegistry* component_registry_{ nullptr };
-    Entity target_entity_{ nodec::entities::null_entity };
+    EntityRegistry *entity_registry_{nullptr};
+    ComponentRegistry *component_registry_{nullptr};
+    Entity target_entity_{nodec::entities::null_entity};
     ChangeTargetSignal::Connection change_target_signal_connection_;
-
+    ImGuiTextFilter filter;
 };
 
-
-}
-
+} // namespace imwindows
 
 #endif

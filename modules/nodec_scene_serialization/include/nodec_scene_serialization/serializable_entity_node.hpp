@@ -1,7 +1,7 @@
 #ifndef NODEC_SCENE_SERIALIZATION__SERIALIZABLE_ENTITY_NODE_HPP_
 #define NODEC_SCENE_SERIALIZATION__SERIALIZABLE_ENTITY_NODE_HPP_
 
-#include "serializable_component.hpp"
+#include "base_serializable_component.hpp"
 
 #include <cereal/cereal.hpp>
 #include <cereal/types/memory.hpp>

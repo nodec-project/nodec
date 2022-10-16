@@ -24,6 +24,7 @@ Editor::Editor(Engine *engine)
     using namespace nodec_scene::components;
     using namespace nodec_rendering::components;
     using namespace nodec_scene_audio::components;
+    using namespace nodec_scene_serialization::components;
 
     register_menu_item("Window/Control",
                        [=]() { ControlWindow::init(window_manager(), this); });
@@ -140,6 +141,10 @@ Editor::Editor(Engine *engine)
         [=](auto &renderer) {
             inspector_gui_->OnGuiTextRenderer(renderer);
         });
+
+    inspector_component_registry_impl().register_component<NonSerialized>(
+        "Non Serialized",
+        [=](auto &comp) {});
 
     [=]() {
         std::ifstream file("editor-config.json", std::ios::binary);
