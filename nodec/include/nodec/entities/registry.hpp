@@ -198,6 +198,16 @@ public:
 
         return pool_assured<Component>()->emplace(*this, entity, std::forward<Args>(args)...);
     }
+    
+    template<typename Component>
+    bool remove_component(const Entity entity) {
+        if (!is_valid(entity)) {
+            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+        }
+
+        auto *cpool = pool_if_exists<Component>();
+        return cpool != nullptr && cpool->erase(*this, entity);
+    }
 
     template<typename... Components>
     decltype(auto) remove_components(const Entity entity) {

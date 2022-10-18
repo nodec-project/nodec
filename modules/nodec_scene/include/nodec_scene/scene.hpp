@@ -51,6 +51,16 @@ public:
         return entity;
     }
 
+    SceneEntity create_entity() {
+        using namespace nodec_scene::components;
+
+        auto entity = registry_.create_entity();
+        registry_.emplace_component<Hierarchy>(entity);
+        registry_.emplace_component<Transform>(entity);
+
+        return entity;
+    }
+
 private:
     SceneRegistry registry_;
     systems::HierarchySystem hierarchy_system_;

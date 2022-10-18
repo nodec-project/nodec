@@ -159,7 +159,7 @@ public:
             return false;
         }
 
-        element_destroyed_(owner, entity); // cause structual changes.
+        element_destroyed_(owner, entity); // cause structural changes.
 
         auto *pos = sparse_table.try_get(entity);
         assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
