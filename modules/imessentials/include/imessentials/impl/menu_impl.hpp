@@ -9,8 +9,6 @@ namespace impl {
 void show_main_menu();
 
 }
-}
-
-
+} // namespace imessentials
 
 #endif

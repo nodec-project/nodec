@@ -1,12 +1,12 @@
 #ifndef IMESSENTIALS__TEXT_BUFFER_HPP_
 #define IMESSENTIALS__TEXT_BUFFER_HPP_
 
-#include <vector>
 #include <string>
+#include <vector>
 
 namespace imessentials {
 
-inline std::vector<char>& get_text_buffer(std::size_t buffer_size, const std::string &initial_text) {
+inline std::vector<char> &get_text_buffer(std::size_t buffer_size, const std::string &initial_text) {
     static std::vector<char> buffer;
     buffer.resize(buffer_size);
 
@@ -16,8 +16,6 @@ inline std::vector<char>& get_text_buffer(std::size_t buffer_size, const std::st
     return buffer;
 }
 
-
-}
-
+} // namespace imessentials
 
 #endif
