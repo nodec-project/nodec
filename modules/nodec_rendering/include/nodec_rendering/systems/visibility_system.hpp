@@ -64,7 +64,10 @@ public:
                     while (child != null_entity) {
                         auto *non_visible = registry.try_get_component<NonVisible>(child);
 
-                        if (non_visible && non_visible->self) continue;
+                        if (non_visible && non_visible->self) {
+                            child = registry.get_component<Hierarchy>(child).next;
+                            continue;
+                        }
 
                         registry.remove_component<NonVisible>(child);
 

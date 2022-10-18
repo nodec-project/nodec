@@ -216,7 +216,6 @@ public:
                 source.position = serializable.position;
                 source.volume = serializable.volume;
             });
-        
     }
 
 private:

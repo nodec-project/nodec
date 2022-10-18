@@ -4,7 +4,7 @@
 #include <nodec_rendering/systems/visibility_system.hpp>
 #include <nodec_scene/scene.hpp>
 
-TEST_CASE("Testing basic.") {
+TEST_CASE("Testing the addition and removal of NonVisible components.") {
     using namespace nodec_scene;
     using namespace nodec_rendering::systems;
     using namespace nodec_rendering::components;
@@ -23,18 +23,37 @@ TEST_CASE("Testing basic.") {
     scene.hierarchy_system().append_child(child_1, child_1_2);
     scene.hierarchy_system().append_child(root, child_2);
 
-    {
-        auto& non_visible = scene.registry().emplace_component<NonVisible>(child_1, true).first;
-        CHECK(non_visible.self);
+    SUBCASE("Testing simple case.") {
+        {
+            auto &non_visible = scene.registry().emplace_component<NonVisible>(child_1, true).first;
+            CHECK(non_visible.self);
+        }
+
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1) != nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_1) != nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_2) != nullptr);
+
+        scene.registry().remove_component<NonVisible>(child_1);
+
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1) == nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_1) == nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_2) == nullptr);
     }
 
-    CHECK(scene.registry().try_get_component<NonVisible>(child_1) != nullptr);
-    CHECK(scene.registry().try_get_component<NonVisible>(child_1_1) != nullptr);
-    CHECK(scene.registry().try_get_component<NonVisible>(child_1_2) != nullptr);
+    SUBCASE("Testing removal of component with child having self flag.") {
+        scene.registry().emplace_component<NonVisible>(root, true);
+        scene.registry().get_component<NonVisible>(child_1).self = true;
 
-    scene.registry().remove_component<NonVisible>(child_1);
+        CHECK(scene.registry().remove_component<NonVisible>(root));
 
-    CHECK(scene.registry().try_get_component<NonVisible>(child_1) == nullptr);
-    CHECK(scene.registry().try_get_component<NonVisible>(child_1_1) == nullptr);
-    CHECK(scene.registry().try_get_component<NonVisible>(child_1_2) == nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1) != nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_1) != nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_2) != nullptr);
+
+        CHECK(scene.registry().remove_component<NonVisible>(child_1));
+
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1) == nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_1) == nullptr);
+        CHECK(scene.registry().try_get_component<NonVisible>(child_1_2) == nullptr);
+    }
 }

@@ -4,20 +4,17 @@
 
 #include "Editor.hpp"
 
-#include <WinDesktopApplication.hpp>
 #include <Engine.hpp>
+#include <WinDesktopApplication.hpp>
 #include <Window.hpp>
 
 #include <nodec_scene_editor/impl/scene_editor_module.hpp>
 
-
 class Application : public WinDesktopApplication {
-
 public:
-    Application() {};
+    Application(){};
 
 protected:
-
     void setup() {
         using namespace nodec;
         using namespace nodec_scene_editor::impl;
@@ -32,7 +29,7 @@ protected:
 
         // ImGui does not work if the resolution and window size are not the same.
         engine->screen_module().internal_size = engine->screen_module().internal_resolution;
-        
+
         engine->setup();
 
         // Do first step (initialize).
@@ -50,6 +47,4 @@ protected:
 private:
     std::unique_ptr<Engine> engine;
     std::shared_ptr<Editor> editor;
-
-
 };

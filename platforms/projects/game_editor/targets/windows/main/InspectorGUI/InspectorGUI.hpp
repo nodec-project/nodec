@@ -4,12 +4,13 @@
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/non_visible.hpp>
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_rendering/components/text_renderer.hpp>
-#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene/components/name.hpp>
+#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 
 #include <imessentials/text_buffer.hpp>
@@ -248,6 +249,10 @@ public:
 
         ImGui::DragInt("Pixel Size", &renderer.pixel_size);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
+    }
+
+    void OnGuiNonVisible(nodec_rendering::components::NonVisible& nonVisible) {
+        ImGui::Checkbox("Self", &nonVisible.self);
     }
 
 private:
