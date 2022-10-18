@@ -211,7 +211,7 @@ public:
         auto material = std::make_shared<MaterialBackend>(mpGraphics);
 
         try {
-            auto shader = mpRegistry->get_resource<Shader>(source.shader, LoadPolicy::Direct).get();
+            auto shader = mpRegistry->get_resource_direct<Shader>(source.shader);
             material->set_shader(shader);
 
             for (auto &&property : source.float_properties) {
@@ -227,7 +227,7 @@ public:
                 Material::TextureEntry entry;
                 entry.sampler = sourceEntry.sampler;
 
-                auto texture = mpRegistry->get_resource<Texture>(sourceEntry.texture, LoadPolicy::Direct).get();
+                auto texture = mpRegistry->get_resource_direct<Texture>(sourceEntry.texture);
                 entry.texture = texture;
 
                 material->set_texture_entry(property.first, entry);

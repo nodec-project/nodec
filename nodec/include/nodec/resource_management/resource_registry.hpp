@@ -52,9 +52,6 @@ inline void throw_resource_already_exists_exception(const std::string &resource_
 
 class ResourceRegistry {
     template<typename Type>
-    using ResourcePtr = std::shared_ptr<Type>;
-
-    template<typename Type>
     using ResourceSharedFuture = std::shared_future<std::shared_ptr<Type>>;
 
     template<typename Type>
@@ -73,7 +70,7 @@ public:
             : block_{block} {
         }
 
-        void on_loaded(const std::string &name, ResourcePtr<Type> resource) const {
+        void on_loaded(const std::string &name, std::shared_ptr<Type> resource) const {
             {
                 std::lock_guard<std::mutex> lock(block_->dict_mutex);
                 block_->dict[name] = resource;
@@ -97,7 +94,7 @@ private:
 
     template<typename Type>
     struct ResourceBlock : public BaseResourceBlock {
-        using DirectLoader = std::function<ResourcePtr<Type>(const std::string &)>;
+        using DirectLoader = std::function<std::shared_ptr<Type>(const std::string &)>;
         using AsyncLoader = std::function<ResourceFuture<Type>(const std::string &, LoadNotifyer<Type>)>;
 
         ~ResourceBlock() {}
@@ -168,7 +165,7 @@ public:
     ResourceSharedFuture<Type> get_resource(const std::string &name, LoadPolicy policy = LoadPolicy::Async) {
         auto *block = resource_block_assured<Type>();
 
-        ResourcePtr<Type> resource;
+        std::shared_ptr<Type> resource;
 
         {
             std::lock_guard<std::mutex> lock(block->dict_mutex);
@@ -176,13 +173,13 @@ public:
         }
 
         if (resource) {
-            std::promise<ResourcePtr<Type>> promise;
+            std::promise<std::shared_ptr<Type>> promise;
             promise.set_value(resource);
 
             return promise.get_future().share();
         }
 
-        std::promise<ResourcePtr<Type>> promise;
+        std::promise<std::shared_ptr<Type>> promise;
         ResourceSharedFuture<Type> future;
 
         {
@@ -222,7 +219,17 @@ public:
     }
 
     template<typename Type>
-    std::pair<std::string, bool> lookup_name(ResourcePtr<Type> resource) noexcept {
+    std::shared_ptr<Type> get_resource_direct(const std::string &name) {
+        return get_resource<Type>(name, LoadPolicy::Direct).get();
+    }
+
+    template<typename Type>
+    ResourceSharedFuture<Type> get_resource_async(const std::string &name) {
+        return get_resource<Type>(name, LoadPolicy::Async);
+    }
+
+    template<typename Type>
+    std::pair<std::string, bool> lookup_name(std::shared_ptr<Type> resource) noexcept {
         auto *block = resource_block_assured<Type>();
 
         std::string name;
