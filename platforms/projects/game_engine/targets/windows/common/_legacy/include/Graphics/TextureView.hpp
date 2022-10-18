@@ -88,5 +88,5 @@ private:
     Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> mpTextureView;
 
 private:
-    NODEC_DISABLE_COPY(TextureView);
+    NODEC_DISABLE_COPY(TextureView)
 };

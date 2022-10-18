@@ -66,7 +66,7 @@ private:
     systems::HierarchySystem hierarchy_system_;
 
 private:
-    NODEC_DISABLE_COPY(Scene);
+    NODEC_DISABLE_COPY(Scene)
 };
 
 } // namespace nodec_scene

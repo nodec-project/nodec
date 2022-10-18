@@ -66,6 +66,6 @@ private:
     UINT mSizeBytes;
 
 private:
-    NODEC_DISABLE_COPY(ConstantBuffer);
+    NODEC_DISABLE_COPY(ConstantBuffer)
 };
 

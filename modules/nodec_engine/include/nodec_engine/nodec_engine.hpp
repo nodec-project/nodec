@@ -42,7 +42,7 @@ private:
     std::vector<std::shared_ptr<void>> modules;
 
 private:
-    NODEC_DISABLE_COPY(NodecEngine);
+    NODEC_DISABLE_COPY(NodecEngine)
 };
 
 void on_boot(NodecEngine &engine);

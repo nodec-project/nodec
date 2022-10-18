@@ -31,5 +31,5 @@ private:
     unsigned long long mNext = 0;
 
 private:
-    NODEC_DISABLE_COPY(DxgiInfoLogger);
+    NODEC_DISABLE_COPY(DxgiInfoLogger)
 };

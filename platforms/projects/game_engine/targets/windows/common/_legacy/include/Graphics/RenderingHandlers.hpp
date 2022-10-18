@@ -39,6 +39,6 @@ private:
 
 
 private:
-    NODEC_DISABLE_COPY(RenderingHandlers);
+    NODEC_DISABLE_COPY(RenderingHandlers)
 };
 

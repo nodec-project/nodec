@@ -39,7 +39,7 @@ public:
 private:
     std::ostringstream stream_;
 
-    NODEC_DISABLE_COPY(Formatter);
+    NODEC_DISABLE_COPY(Formatter)
 };
 
 template<typename T>
@@ -70,7 +70,7 @@ private:
     const char *file_;
     const size_t line_;
 
-    NODEC_DISABLE_COPY(ErrorFormatter);
+    NODEC_DISABLE_COPY(ErrorFormatter)
 };
 
 } // namespace nodec

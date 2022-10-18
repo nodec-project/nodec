@@ -37,5 +37,5 @@ private:
     Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
 
 private:
-    NODEC_DISABLE_COPY(IndexBuffer);
+    NODEC_DISABLE_COPY(IndexBuffer)
 };

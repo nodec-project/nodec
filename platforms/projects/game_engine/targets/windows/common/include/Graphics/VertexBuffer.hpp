@@ -43,5 +43,5 @@ private:
     UINT mStrideBytes;
 
 private:
-    NODEC_DISABLE_COPY(VertexBuffer);
+    NODEC_DISABLE_COPY(VertexBuffer)
 };

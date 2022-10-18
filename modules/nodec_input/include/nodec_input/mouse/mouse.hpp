@@ -70,7 +70,7 @@ public:
     virtual MouseEventSignal::SignalInterface mouse_event() = 0;
 
 private:
-    NODEC_DISABLE_COPY(Mouse);
+    NODEC_DISABLE_COPY(Mouse)
 };
 
 } // namespace mouse

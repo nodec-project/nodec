@@ -50,7 +50,7 @@ private:
     ID id_;
 
 private:
-    NODEC_DISABLE_COPY(NodecObject);
+    NODEC_DISABLE_COPY(NodecObject)
 
 public:
     template<typename T, typename... Args>

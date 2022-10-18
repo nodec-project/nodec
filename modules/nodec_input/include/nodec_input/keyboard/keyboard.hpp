@@ -48,7 +48,7 @@ public:
     virtual KeyEventSignal::SignalInterface key_event() = 0;
 
 private:
-    NODEC_DISABLE_COPY(Keyboard);
+    NODEC_DISABLE_COPY(Keyboard)
 };
 
 } // namespace keyboard

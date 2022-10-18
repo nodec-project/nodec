@@ -85,5 +85,5 @@ private:
         mTitleChangedConnection;
 
 private:
-    NODEC_DISABLE_COPY(ScreenHandler);
+    NODEC_DISABLE_COPY(ScreenHandler)
 };
