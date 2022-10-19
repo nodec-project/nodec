@@ -7,6 +7,7 @@
 #include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
 #include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_serialization/nodec_rendering/components/non_visible.hpp>
 #include <nodec_serialization/nodec_rendering/components/point_light.hpp>
 #include <nodec_serialization/nodec_rendering/components/post_processing.hpp>
 #include <nodec_serialization/nodec_rendering/components/scene_lighting.hpp>
@@ -216,7 +217,17 @@ public:
                 source.position = serializable.position;
                 source.volume = serializable.volume;
             });
-        
+
+        register_component<NonVisible, SerializableNonVisible>(
+            [](const NonVisible &non_visible) {
+                auto serializable = std::make_shared<SerializableNonVisible>();
+                serializable->self = non_visible.self;
+                return serializable;
+            },
+            [](const SerializableNonVisible &serializable, SceneEntity entity, SceneRegistry &registry) {
+                auto &non_visible = registry.emplace_component<NonVisible>(entity).first;
+                non_visible.self = serializable.self;
+            });
     }
 
 private:

@@ -49,12 +49,12 @@ public:
         {
             std::string name;
             archive(cereal::make_nvp("font", name));
-            font = context.resource_registry().get_resource<resources::Font>(name, LoadPolicy::Direct).get();
+            font = context.resource_registry().get_resource_direct<resources::Font>(name);
         }
         {
             std::string name;
             archive(cereal::make_nvp("material", name));
-            material = context.resource_registry().get_resource<resources::Material>(name, LoadPolicy::Direct).get();
+            material = context.resource_registry().get_resource_direct<resources::Material>(name);
         }
 
         archive(cereal::make_nvp("pixel_size", pixel_size));

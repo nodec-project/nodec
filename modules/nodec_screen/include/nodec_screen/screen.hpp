@@ -21,7 +21,7 @@ public:
     virtual void set_title(const std::string& title) = 0;
 
 private:
-    NODEC_DISABLE_COPY(Screen);
+    NODEC_DISABLE_COPY(Screen)
 };
 
 

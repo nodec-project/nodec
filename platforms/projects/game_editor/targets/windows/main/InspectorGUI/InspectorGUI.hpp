@@ -4,14 +4,16 @@
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/non_visible.hpp>
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
 #include <nodec_rendering/components/text_renderer.hpp>
-#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene/components/name.hpp>
+#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 
+#include <imessentials/list.hpp>
 #include <imessentials/text_buffer.hpp>
 
 #include <nodec/logging.hpp>
@@ -92,51 +94,28 @@ public:
         using namespace nodec_rendering::resources;
         using namespace nodec_rendering;
         {
-            ImGui::PushID("meshes");
-            ImGui::Text("Meshes");
-
-            // FIXME: Should iterate in forward order.
-            for (auto i = renderer.meshes.size(); i-- != 0;) {
-                ImGui::PushID(i);
-                auto &mesh = renderer.meshes[i];
-                mesh = ResourceNameEdit("", mesh);
-                ImGui::SameLine();
-                if (ImGui::Button("-")) {
-                    renderer.meshes.erase(renderer.meshes.begin() + i);
-                }
-                ImGui::PopID();
-            }
-
-            if (ImGui::Button("+")) {
-                auto empty = mpResourceRegistry->get_resource<Mesh>("").get();
-                renderer.meshes.emplace_back(empty);
-            }
-
-            ImGui::PopID();
+            imessentials::list_edit(
+                "Meshes", renderer.meshes,
+                [&](int index, auto &mesh) {
+                    mesh = ResourceNameEdit("", mesh);
+                },
+                [&]() {
+                    auto empty = mpResourceRegistry->get_resource_direct<Mesh>("");
+                    renderer.meshes.emplace_back(empty);
+                },
+                [&](int index, auto &mesh) {});
         }
         {
-            ImGui::PushID("materials");
-
-            ImGui::Text("Materials");
-
-            // FIXME: Should iterate in forward order.
-            for (auto i = renderer.materials.size(); i-- != 0;) {
-                ImGui::PushID(i);
-                auto &material = renderer.materials[i];
-                material = ResourceNameEdit("", material);
-                ImGui::SameLine();
-                if (ImGui::Button("-")) {
-                    renderer.materials.erase(renderer.materials.begin() + i);
-                }
-                ImGui::PopID();
-            }
-
-            if (ImGui::Button("+")) {
-                auto empty = mpResourceRegistry->get_resource<Material>("").get();
-                renderer.materials.emplace_back(empty);
-            }
-
-            ImGui::PopID();
+            imessentials::list_edit(
+                "Materials", renderer.materials,
+                [&](int index, auto &material) {
+                    material = ResourceNameEdit("", material);
+                },
+                [&]() {
+                    auto empty = mpResourceRegistry->get_resource_direct<Material>("");
+                    renderer.materials.emplace_back(empty);
+                },
+                [&](int index, auto &material) {});
         }
     }
 
@@ -248,6 +227,10 @@ public:
 
         ImGui::DragInt("Pixel Size", &renderer.pixel_size);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
+    }
+
+    void OnGuiNonVisible(nodec_rendering::components::NonVisible &nonVisible) {
+        ImGui::Checkbox("Self", &nonVisible.self);
     }
 
 private:

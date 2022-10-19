@@ -1,11 +1,11 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-
 #include <nodec/entities/registry.hpp>
 
+#include <algorithm>
 
-TEST_CASE("testing emplace") {
+TEST_CASE("Testing emplace_component.") {
     {
         nodec::entities::Registry registry;
         auto e0 = registry.create_entity();
@@ -19,7 +19,31 @@ TEST_CASE("testing emplace") {
     }
 }
 
-TEST_CASE("testing component_constructed signal") {
+TEST_CASE("Testing remove_component.") {
+    using namespace nodec::entities;
+
+    Registry registry;
+
+    
+    std::array<Entity, 3> entities;
+
+    std::generate(entities.begin(), entities.end(), [&]() { return registry.create_entity(); });
+
+    registry.emplace_component<int>(entities[0]);
+    registry.emplace_component<char>(entities[0]);
+    registry.emplace_component<double>(entities[0]);
+    
+    registry.emplace_component<int>(entities[1]);
+    registry.emplace_component<char>(entities[1]);
+    
+    registry.emplace_component<int>(entities[2]);
+
+    REQUIRE(registry.try_get_component<int>(entities[2]) != nullptr);
+    CHECK(registry.remove_component<int>(entities[2]));
+    CHECK(registry.try_get_component<int>(entities[2]) == nullptr);
+}
+
+TEST_CASE("Testing component_constructed signal.") {
     {
         nodec::entities::Registry registry;
         auto e0 = registry.create_entity();

@@ -83,7 +83,7 @@ public:
 
         append_last(null_entity, root_hierarchy_, child, child_hierarchy);
 
-        hierarchy_changed_(parent, child);
+        hierarchy_changed_(null_entity, child);
     }
 
     const components::Hierarchy &root_hierarchy() const noexcept {

@@ -7,10 +7,8 @@
 
 #include <nodec/logging.hpp>
 
-
 namespace imessentials {
 namespace impl {
-
 
 class WindowManagerImpl : public WindowManager {
 public:
@@ -19,7 +17,7 @@ public:
 public:
     void update_windows() {
         for (auto iter = active_windows.begin(); iter != active_windows.end();) {
-            auto& window = iter->second;
+            auto &window = iter->second;
 
             if (window->is_closed()) {
                 iter = active_windows.erase(iter);
@@ -31,8 +29,7 @@ public:
             if (ImGui::Begin(window->name(), &is_shown)) {
                 try {
                     window->on_gui();
-                }
-                catch (...) {
+                } catch (...) {
                     handle_exception(window->name());
                 }
             }
@@ -46,25 +43,22 @@ public:
     }
 
 private:
-    static void handle_exception(const char* name) {
+    static void handle_exception(const char *name) {
         try {
             throw;
-        }
-        catch (std::exception& e) {
+        } catch (std::exception &e) {
             nodec::logging::ErrorStream(__FILE__, __LINE__)
                 << "An exception was thrown in '" << name << "'\n"
                 << "details: \n"
                 << e.what();
-        }
-        catch (...) {
+        } catch (...) {
             nodec::logging::ErrorStream(__FILE__, __LINE__)
                 << "An unknown exception was thrown in '" << name;
         }
     }
 };
 
-}
-}
-
+} // namespace impl
+} // namespace imessentials
 
 #endif

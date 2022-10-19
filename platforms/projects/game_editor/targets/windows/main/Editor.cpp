@@ -146,6 +146,12 @@ Editor::Editor(Engine *engine)
         "Non Serialized",
         [=](auto &comp) {});
 
+    inspector_component_registry_impl().register_component<NonVisible>(
+        "Non Visible",
+        [=](auto &non_visible) {
+            inspector_gui_->OnGuiNonVisible(non_visible);
+        });
+
     [=]() {
         std::ifstream file("editor-config.json", std::ios::binary);
         if (!file) return;

@@ -68,6 +68,6 @@ private:
     Sampler samplerBilinear;
 
 private:
-    NODEC_DISABLE_COPY(GraphicsRenderer);
+    NODEC_DISABLE_COPY(GraphicsRenderer)
 
 };

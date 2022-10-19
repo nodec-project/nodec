@@ -32,7 +32,7 @@ private:
 
 
 private:
-    NODEC_DISABLE_COPY(WavFileSoundIBuffer);
+    NODEC_DISABLE_COPY(WavFileSoundIBuffer)
 };
 
 }

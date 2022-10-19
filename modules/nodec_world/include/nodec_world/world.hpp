@@ -57,7 +57,7 @@ private:
     WorldSignal::SignalInterface stepped_;
     WorldClock::WorldClockInterface clock_;
 
-    NODEC_DISABLE_COPY(World);
+    NODEC_DISABLE_COPY(World)
 };
 } // namespace nodec_world
 

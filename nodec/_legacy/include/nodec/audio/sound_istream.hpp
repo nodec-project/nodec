@@ -19,7 +19,7 @@ public:
     SoundStream(BasicSoundBuffer<FloatT>::SharedPtr buffer);
 
 private:
-    NODEC_DISABLE_COPY(SoundStream);
+    NODEC_DISABLE_COPY(SoundStream)
 };
 
 }

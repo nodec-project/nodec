@@ -103,7 +103,7 @@ public:
 
         // Get quad mesh from resource registry.
         {
-            auto quadMesh = resourceRegistry.get_resource<Mesh>("org.nodec-rendering.essentials/meshes/quad.mesh", LoadPolicy::Direct).get();
+            auto quadMesh = resourceRegistry.get_resource_direct<Mesh>("org.nodec-rendering.essentials/meshes/quad.mesh");
 
             if (!quadMesh) {
                 logging::WarnStream(__FILE__, __LINE__) << "[SceneRenderer] >>> Cannot load the essential resource 'quad.mesh'.\n"

@@ -17,6 +17,7 @@
 #include <nodec_input/input_devices.hpp>
 #include <nodec_input/keyboard/impl/keyboard_device.hpp>
 #include <nodec_input/mouse/impl/mouse_device.hpp>
+#include <nodec_rendering/systems/visibility_system.hpp>
 #include <nodec_resources/impl/resources_module.hpp>
 #include <nodec_scene/scene.hpp>
 #include <nodec_scene/systems/transform_system.hpp>
@@ -80,6 +81,10 @@ public:
 
         scene_loader_.reset(new nodec_scene_serialization::SceneLoader(*scene_serialization_module_, world_module_->scene(), resources_module_->registry()));
         add_module<nodec_scene_serialization::SceneLoader>(scene_loader_);
+
+        // ---
+        visibility_system_.reset(new nodec_rendering::systems::VisibilitySystem(world_module_->scene()));
+
     }
 
     ~Engine() {
@@ -181,4 +186,6 @@ private:
     std::unique_ptr<SceneRenderer> scene_renderer_;
 
     std::unique_ptr<SceneAudioSystem> scene_audio_system_;
+
+    std::unique_ptr<nodec_rendering::systems::VisibilitySystem> visibility_system_;
 };

@@ -116,7 +116,7 @@ private:
         this->func = std::function<void(A...)>(std::bind(func, placeholder_template<Is>()...));
     }
 
-    NODEC_DISABLE_COPY(Callback);
+    NODEC_DISABLE_COPY(Callback)
 
 };
 
@@ -318,7 +318,7 @@ private:
 
 
 private:
-    NODEC_DISABLE_COPY(Event);
+    NODEC_DISABLE_COPY(Event)
 };
 }
 }

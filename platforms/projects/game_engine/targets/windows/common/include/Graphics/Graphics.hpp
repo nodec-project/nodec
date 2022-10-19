@@ -56,7 +56,7 @@ private:
     Microsoft::WRL::ComPtr<ID3D11DepthStencilView> mpDSV;
 
 private:
-    NODEC_DISABLE_COPY(Graphics);
+    NODEC_DISABLE_COPY(Graphics)
 };
 
 inline void ThrowIfFailedGfx(const std::string &type, HRESULT hr, Graphics *pGfx, const char *file, size_t line) {

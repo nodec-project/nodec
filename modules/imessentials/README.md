@@ -1,0 +1,6 @@
+# imessentials
+
+## Dependencies
+
+* imgui
+* nodec

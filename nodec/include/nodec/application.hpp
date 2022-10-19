@@ -23,7 +23,7 @@ protected:
     virtual int on_error_exit() = 0;
 
 private:
-    NODEC_DISABLE_COPY(Application);
+    NODEC_DISABLE_COPY(Application)
 };
 
 } // namespace nodec

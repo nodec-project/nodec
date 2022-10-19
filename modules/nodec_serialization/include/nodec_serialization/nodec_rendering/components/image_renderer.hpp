@@ -39,12 +39,12 @@ public:
         {
             std::string name;
             archive(cereal::make_nvp("image", name));
-            image = context.resource_registry().get_resource<resources::Texture>(name, LoadPolicy::Direct).get();
+            image = context.resource_registry().get_resource_direct<resources::Texture>(name);
         }
         {
             std::string name;
             archive(cereal::make_nvp("material", name));
-            material = context.resource_registry().get_resource<resources::Material>(name, LoadPolicy::Direct).get();
+            material = context.resource_registry().get_resource_direct<resources::Material>(name);
         }
         archive(cereal::make_nvp("pixels_per_unit", pixels_per_unit));
     }

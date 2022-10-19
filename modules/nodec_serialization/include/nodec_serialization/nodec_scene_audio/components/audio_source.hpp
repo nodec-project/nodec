@@ -37,7 +37,7 @@ public:
         {
             std::string name;
             archive(cereal::make_nvp("clip", name));
-            clip = context.resource_registry().get_resource<resources::AudioClip>(name, LoadPolicy::Direct).get();
+            clip = context.resource_registry().get_resource_direct<resources::AudioClip>(name);
         }
         archive(cereal::make_nvp("is_playing", is_playing));
         archive(cereal::make_nvp("loop", loop));

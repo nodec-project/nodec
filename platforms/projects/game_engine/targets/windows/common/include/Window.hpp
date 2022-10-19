@@ -54,7 +54,7 @@ private:
         HINSTANCE hInst;
 
     private:
-        NODEC_DISABLE_COPY(WindowClass);
+        NODEC_DISABLE_COPY(WindowClass)
     };
 
 public:
@@ -98,5 +98,5 @@ private:
     nodec_input::mouse::impl::MouseDevice *mpMouse;
 
 private:
-    NODEC_DISABLE_COPY(Window);
+    NODEC_DISABLE_COPY(Window)
 };

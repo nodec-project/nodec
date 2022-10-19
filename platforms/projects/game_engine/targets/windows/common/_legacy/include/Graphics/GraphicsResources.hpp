@@ -31,5 +31,5 @@ public:
     GraphicsResources();
 
 private:
-    NODEC_DISABLE_COPY(GraphicsResources);
+    NODEC_DISABLE_COPY(GraphicsResources)
 };

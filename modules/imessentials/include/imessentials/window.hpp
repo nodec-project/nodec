@@ -65,7 +65,7 @@ protected:
     std::unordered_map<std::type_index, std::unique_ptr<BaseWindow>> active_windows;
 
 private:
-    NODEC_DISABLE_COPY(WindowManager);
+    NODEC_DISABLE_COPY(WindowManager)
 };
 
 } // namespace imessentials

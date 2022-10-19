@@ -23,7 +23,7 @@ public:
     using Unique = std::unique_ptr<T>;
 
 private:
-    NODEC_DISABLE_COPY(Object);
+    NODEC_DISABLE_COPY(Object)
 
 public:
     template<typename T, typename ... Args>

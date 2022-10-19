@@ -1,6 +1,8 @@
 #include <Font/FontBackend.hpp>
 #include <Rendering/SceneRenderer.hpp>
 
+#include <nodec_rendering/components/non_visible.hpp>
+
 #include <nodec/unicode.hpp>
 
 void SceneRenderer::Render(nodec_scene::Scene &scene) {
@@ -38,7 +40,7 @@ void SceneRenderer::Render(nodec_scene::Scene &scene) {
     std::vector<ShaderBackend *> activeShaders;
     {
         std::unordered_set<ShaderBackend *> shaders;
-        scene.registry().view<const MeshRenderer, const Transform>().each([&](auto entt, const MeshRenderer &renderer, const Transform &trfm) {
+        scene.registry().view<const MeshRenderer, const Transform>(type_list<NonVisible>{}).each([&](auto entt, const MeshRenderer &renderer, const Transform &trfm) {
             for (auto &material : renderer.materials) {
                 if (!material) continue;
                 auto *backend = static_cast<const MaterialBackend *>(material.get());
@@ -48,7 +50,7 @@ void SceneRenderer::Render(nodec_scene::Scene &scene) {
             }
         });
 
-        scene.registry().view<const ImageRenderer, const Transform>().each([&](auto entt, const ImageRenderer &renderer, const Transform &trfm) {
+        scene.registry().view<const ImageRenderer, const Transform>(type_list<NonVisible>{}).each([&](auto entt, const ImageRenderer &renderer, const Transform &trfm) {
             auto *material = static_cast<const MaterialBackend *>(renderer.material.get());
             if (!material) return;
             auto *shader = static_cast<ShaderBackend *>(material->shader().get());
@@ -56,7 +58,7 @@ void SceneRenderer::Render(nodec_scene::Scene &scene) {
             shaders.emplace(shader);
         });
 
-        scene.registry().view<const TextRenderer, const Transform>().each([&](auto entt, const TextRenderer &renderer, const Transform &transform) {
+        scene.registry().view<const TextRenderer, const Transform>(type_list<NonVisible>{}).each([&](auto entt, const TextRenderer &renderer, const Transform &transform) {
             if (!renderer.material) return;
             auto *shader = renderer.material->shader().get();
             if (shader == nullptr) return;
@@ -339,7 +341,7 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
     mModelPropertiesCB.BindVS(mpGfx, MODEL_PROPERTIES_CB_SLOT);
     mModelPropertiesCB.BindPS(mpGfx, MODEL_PROPERTIES_CB_SLOT);
 
-    scene.registry().view<const Transform, const MeshRenderer>().each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
+    scene.registry().view<const Transform, const MeshRenderer>(type_list<NonVisible>{}).each([&](auto entt, const Transform &trfm, const MeshRenderer &meshRenderer) {
         if (meshRenderer.meshes.size() == 0) return;
         if (meshRenderer.meshes.size() != meshRenderer.materials.size()) return;
 
@@ -391,7 +393,7 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
 
         mBSAlphaBlend.Bind(mpGfx);
 
-        scene.registry().view<const Transform, const ImageRenderer>().each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
+        scene.registry().view<const Transform, const ImageRenderer>(type_list<NonVisible>{}).each([&](auto entt, const Transform &trfm, const ImageRenderer &renderer) {
             auto &image = renderer.image;
             auto &material = renderer.material;
             if (!image || !material) return;
@@ -443,7 +445,7 @@ void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *active
 
     [&]() {
         mBSAlphaBlend.Bind(mpGfx);
-        scene.registry().view<const Transform, const TextRenderer>().each([&](auto entt, const Transform &trfm, const TextRenderer &renderer) {
+        scene.registry().view<const Transform, const TextRenderer>(type_list<NonVisible>{}).each([&](auto entt, const Transform &trfm, const TextRenderer &renderer) {
             auto fontBackend = std::static_pointer_cast<FontBackend>(renderer.font);
             if (!fontBackend) return;
 
