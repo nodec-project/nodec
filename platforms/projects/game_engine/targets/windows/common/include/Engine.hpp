@@ -83,7 +83,7 @@ public:
         add_module<nodec_scene_serialization::SceneLoader>(scene_loader_);
 
         // ---
-        visibility_system_.reset(new nodec_rendering::systems::VisibilitySystem(&world_module_->scene().registry()));
+        visibility_system_.reset(new nodec_rendering::systems::VisibilitySystem(world_module_->scene()));
 
     }
 
