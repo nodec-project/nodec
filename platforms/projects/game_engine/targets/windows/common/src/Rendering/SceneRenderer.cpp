@@ -1,11 +1,11 @@
 #include <Font/FontBackend.hpp>
 #include <Rendering/SceneRenderer.hpp>
 
-#include <nodec_rendering/components/non_visible.hpp>
-
 #include <nodec/unicode.hpp>
 
-void SceneRenderer::Render(nodec_scene::Scene &scene) {
+void SceneRenderer::Render(nodec_scene::Scene &scene, ID3D11RenderTargetView *pTarget, UINT width, UINT height) {
+    assert(pTarget != nullptr);
+
     using namespace nodec;
     using namespace nodec_scene::components;
     using namespace nodec_rendering;
@@ -19,22 +19,179 @@ void SceneRenderer::Render(nodec_scene::Scene &scene) {
     mTextureConfigCB.BindVS(mpGfx, TEXTURE_CONFIG_CB_SLOT);
     mTextureConfigCB.BindPS(mpGfx, TEXTURE_CONFIG_CB_SLOT);
 
-    // --- lights ---
-    {
-        mSceneProperties.lights.directional.enabled = 0x00;
-        scene.registry().view<const nodec_rendering::components::DirectionalLight, const Transform>().each([&](auto entt, const nodec_rendering::components::DirectionalLight &light, const Transform &trfm) {
-            auto &directional = mSceneProperties.lights.directional;
-            directional.enabled = 0x01;
-            directional.color = light.color;
-            directional.intensity = light.intensity;
+    SetupSceneLighting(scene);
 
-            auto direction = trfm.local2world * Vector4f{0.0f, 0.0f, 1.0f, 0.0f};
-            directional.direction.set(direction.x, direction.y, direction.z);
-        });
-        scene.registry().view<const nodec_rendering::components::SceneLighting>().each([&](auto entt, const nodec_rendering::components::SceneLighting &lighting) {
-            mSceneProperties.lights.ambientColor = lighting.ambient_color;
-        });
-    }
+    // Render the scene per each camera.
+    scene.registry().view<const Camera, const Transform>().each([&](auto cameraEntt, const Camera &camera, const Transform &cameraTrfm) {
+        ID3D11RenderTargetView *pCameraRenderTargetView = pTarget;
+
+        // --- Get active post process effects. ---
+        std::vector<const PostProcessing::Effect *> activePostProcessEffects;
+        {
+            const PostProcessing *postProcessing = scene.registry().try_get_component<const PostProcessing>(cameraEntt);
+
+            if (postProcessing) {
+                for (const auto &effect : postProcessing->effects) {
+                    if (effect.enabled && effect.material && effect.material->shader()) {
+                        activePostProcessEffects.push_back(&effect);
+                    }
+                }
+            }
+
+            // If some effects, the off-screen buffer is needed.
+            if (activePostProcessEffects.size() > 0) {
+                auto &buffer = mGeometryBuffers["screen"];
+                if (!buffer) {
+                    buffer.reset(new GeometryBuffer(mpGfx, width, height));
+                }
+
+                // Set the render target.
+                pCameraRenderTargetView = &buffer->GetRenderTargetView();
+            }
+        }
+
+        auto matrixP = XMMatrixIdentity();
+
+        const auto aspect = static_cast<float>(width) / height;
+        switch (camera.projection) {
+        case Camera::Projection::Perspective:
+            matrixP = XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(camera.fov_angle),
+                aspect,
+                camera.near_clip_plane, camera.far_clip_plane);
+            break;
+        case Camera::Projection::Orthographic:
+            matrixP = XMMatrixOrthographicLH(
+                camera.ortho_width, camera.ortho_width / aspect,
+                camera.near_clip_plane, camera.far_clip_plane);
+            break;
+        default:
+            break;
+        }
+        const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
+
+        XMMATRIX matrixVInverse{cameraTrfm.local2world.m};
+
+        auto matrixV = XMMatrixInverse(nullptr, matrixVInverse);
+
+        Render(scene, matrixV, matrixVInverse, matrixP, matrixPInverse,
+               pCameraRenderTargetView, width, height);
+
+        // --- Post Processing ---
+        if (activePostProcessEffects.size() > 0) {
+            mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+            if (activePostProcessEffects.size() > 1) {
+                // if multiple effects, needs the back buffer.
+                auto &backBuffer = mGeometryBuffers["screen_back"];
+                if (!backBuffer) {
+                    backBuffer.reset(new GeometryBuffer(mpGfx, width, height));
+                }
+            }
+
+            for (std::size_t i = 0; i < activePostProcessEffects.size(); ++i) {
+                if (i != activePostProcessEffects.size() - 1) {
+                    pCameraRenderTargetView = &mGeometryBuffers["screen_back"]->GetRenderTargetView();
+                } else {
+                    // if last, render target is frame buffer.
+                    pCameraRenderTargetView = pTarget;
+                }
+
+                // It is assured that material and shader are exists.
+                // It is checked at the beginning of rendering pass of camera.
+                auto materialBackend = std::static_pointer_cast<MaterialBackend>(activePostProcessEffects[i]->material);
+                auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
+
+                SetCullMode(materialBackend->cull_mode());
+                materialBackend->bind_constant_buffer(mpGfx, MATERIAL_PROPERTIES_CB_SLOT);
+
+                mTextureConfig.texHasFlag = 0x00;
+                const auto slotOffset = BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
+                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
+
+                for (int passNum = 0; passNum < shaderBackend->pass_count(); ++passNum) {
+                    if (passNum == shaderBackend->pass_count() - 1) {
+                        // If last pass.
+                        // The render target must be one final target.
+
+                        mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
+
+                    } else {
+                        // If halfway pass.
+                        // Support the multiple render targets.
+
+                        const auto &targets = shaderBackend->render_targets(passNum);
+                        std::vector<ID3D11RenderTargetView *> renderTargets(targets.size());
+                        for (size_t i = 0; i < targets.size(); ++i) {
+                            const auto &name = targets[i];
+                            auto &buffer = mGeometryBuffers[name];
+                            if (!buffer) {
+                                buffer.reset(new GeometryBuffer(mpGfx, width, height));
+                            }
+                            renderTargets[i] = &buffer->GetRenderTargetView();
+                            mpGfx->GetContext().ClearRenderTargetView(renderTargets[i], Vector4f::zero.v);
+                        }
+
+                        mpGfx->GetContext().OMSetRenderTargets(renderTargets.size(), renderTargets.data(), nullptr);
+                    }
+
+                    // --- Bind texture resources.
+                    // Bind sampler for textures.
+
+                    GetSamplerState({Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}).BindPS(mpGfx, slotOffset);
+                    const auto &textureResources = shaderBackend->texture_resources(passNum);
+                    for (std::size_t i = 0; i < textureResources.size(); ++i) {
+                        const auto &name = textureResources[i];
+                        auto &buffer = mGeometryBuffers[name];
+                        if (!buffer) continue;
+                        auto *view = &buffer->GetShaderResourceView();
+                        mpGfx->GetContext().PSSetShaderResources(slotOffset + i, 1u, &view);
+                    }
+                    shaderBackend->bind(mpGfx, passNum);
+
+                    mScreenQuadMesh->bind(mpGfx);
+                    mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+                } // End foreach pass.
+
+                std::swap(mGeometryBuffers["screen"], mGeometryBuffers["screen_back"]);
+            } // End foreach effect.
+        }
+    }); // End foreach camera
+}
+
+void SceneRenderer::Render(nodec_scene::Scene &scene, nodec::Matrix4x4f &view, nodec::Matrix4x4f &projection, ID3D11RenderTargetView *pTarget, UINT width, UINT height) {
+    assert(pTarget != nullptr);
+
+    using namespace DirectX;
+    using namespace nodec;
+
+    mScenePropertiesCB.BindVS(mpGfx, SCENE_PROPERTIES_CB_SLOT);
+    mScenePropertiesCB.BindPS(mpGfx, SCENE_PROPERTIES_CB_SLOT);
+
+    mTextureConfigCB.BindVS(mpGfx, TEXTURE_CONFIG_CB_SLOT);
+    mTextureConfigCB.BindPS(mpGfx, TEXTURE_CONFIG_CB_SLOT);
+
+    SetupSceneLighting(scene);
+
+    XMMATRIX matrixV{view.m};
+    auto matrixVInverse = XMMatrixInverse(nullptr, matrixV);
+
+    XMMATRIX matrixP{projection.m};
+    auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
+
+    Render(scene, matrixV, matrixVInverse, matrixP, matrixPInverse,
+           pTarget, width, height);
+}
+
+void SceneRenderer::Render(nodec_scene::Scene &scene, const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixVInverse, const DirectX::XMMATRIX &matrixP, const DirectX::XMMATRIX &matrixPInverse, ID3D11RenderTargetView *pTarget, UINT width, UINT height) {
+    assert(pTarget != nullptr);
+    using namespace nodec;
+    using namespace nodec_scene::components;
+    using namespace nodec_rendering::components;
+    using namespace nodec_rendering;
+    using namespace DirectX;
+
+    // TODO: Culling.
 
     // At first, we get the active shaders to render for each shader.
     std::vector<ShaderBackend *> activeShaders;
@@ -74,257 +231,123 @@ void SceneRenderer::Render(nodec_scene::Scene &scene) {
 
     if (activeShaders.size() == 0) return;
 
-    const auto aspect = static_cast<float>(mpGfx->GetWidth()) / mpGfx->GetHeight();
+    // Clear render target view with solid color.
+    // TODO: Consider skybox.
+    {
+        const float color[] = {0.1f, 0.1f, 0.1f, 1.0f};
+        mpGfx->GetContext().ClearRenderTargetView(pTarget, color);
+    }
 
-    // Render the scene per each camera.
-    scene.registry().view<const Camera, const Transform>().each([&](auto cameraEntt, const Camera &camera, const Transform &cameraTrfm) {
-        ID3D11RenderTargetView *pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
+    XMStoreFloat4x4(&mSceneProperties.matrixP, matrixP);
+    XMStoreFloat4x4(&mSceneProperties.matrixPInverse, matrixPInverse);
 
-        // --- Get active post process effects. ---
-        std::vector<const PostProcessing::Effect *> activePostProcessEffects;
-        {
-            const PostProcessing *postProcessing = scene.registry().try_get_component<const PostProcessing>(cameraEntt);
+    XMStoreFloat4x4(&mSceneProperties.matrixV, matrixV);
+    XMStoreFloat4x4(&mSceneProperties.matrixVInverse, matrixVInverse);
 
-            if (postProcessing) {
-                for (const auto &effect : postProcessing->effects) {
-                    if (effect.enabled && effect.material && effect.material->shader()) {
-                        activePostProcessEffects.push_back(&effect);
-                    }
-                }
-            }
+    XMVECTOR scale, rotQuat, trans;
+    XMMatrixDecompose(&scale, &rotQuat, &trans, matrixVInverse);
 
-            // If some effects, the off-screen buffer is needed.
-            if (activePostProcessEffects.size() > 0) {
-                auto &buffer = mGeometryBuffers["screen"];
-                if (!buffer) {
-                    buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
-                }
+    mSceneProperties.cameraPos.set(
+        XMVectorGetByIndex(trans, 0),
+        XMVectorGetByIndex(trans, 1),
+        XMVectorGetByIndex(trans, 2),
+        XMVectorGetByIndex(trans, 3));
 
-                // Set the render target.
-                pCameraRenderTargetView = &buffer->GetRenderTargetView();
-            }
+    // Update active point lights.
+    {
+        mSceneProperties.lights.numOfPointLights = 0;
+        auto view = scene.registry().view<const Transform, const nodec_rendering::components::PointLight>();
+        for (const auto &entt : view) {
+            // TODO: Light culling.
+            const auto index = mSceneProperties.lights.numOfPointLights;
+            if (index >= MAX_NUM_OF_POINT_LIGHTS) break;
+
+            const auto &trfm = view.get<const Transform>(entt);
+            const auto &light = view.get<const nodec_rendering::components::PointLight>(entt);
+            const auto worldPosition = trfm.local2world * Vector4f(0, 0, 0, 1.0f);
+
+            mSceneProperties.lights.pointLights[index].position.set(worldPosition.x, worldPosition.y, worldPosition.z);
+            mSceneProperties.lights.pointLights[index].color.set(light.color.x, light.color.y, light.color.z);
+            mSceneProperties.lights.pointLights[index].intensity = light.intensity;
+            mSceneProperties.lights.pointLights[index].range = light.range;
+
+            ++mSceneProperties.lights.numOfPointLights;
         }
+    }
 
-        // Clear render target view with solid color.
-        // TODO: Consider skybox.
-        {
-            const float color[] = {0.1f, 0.1f, 0.1f, 1.0f};
-            mpGfx->GetContext().ClearRenderTargetView(pCameraRenderTargetView, color);
-        }
+    mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
 
-        auto matrixP = XMMatrixIdentity();
+    // Reset depth buffer.
+    mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-        switch (camera.projection) {
-        case Camera::Projection::Perspective:
-            matrixP = XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(camera.fov_angle),
-                aspect,
-                camera.near_clip_plane, camera.far_clip_plane);
-            break;
-        case Camera::Projection::Orthographic:
-            matrixP = XMMatrixOrthographicLH(
-                camera.ortho_width, camera.ortho_width / aspect,
-                camera.near_clip_plane, camera.far_clip_plane);
-            break;
-        default:
-            break;
-        }
-
-        const auto matrixPInverse = XMMatrixInverse(nullptr, matrixP);
-
-        XMStoreFloat4x4(&mSceneProperties.matrixP, matrixP);
-        XMStoreFloat4x4(&mSceneProperties.matrixPInverse, matrixPInverse);
-
-        XMMATRIX cameraLocal2World{cameraTrfm.local2world.m};
-        XMVECTOR scale, rotQuat, trans;
-        XMMatrixDecompose(&scale, &rotQuat, &trans, cameraLocal2World);
-
-        auto matrixV = XMMatrixInverse(nullptr, cameraLocal2World);
-        XMStoreFloat4x4(&mSceneProperties.matrixV, matrixV);
-        XMStoreFloat4x4(&mSceneProperties.matrixVInverse, cameraLocal2World);
-
-        mSceneProperties.cameraPos.set(
-            XMVectorGetByIndex(trans, 0),
-            XMVectorGetByIndex(trans, 1),
-            XMVectorGetByIndex(trans, 2),
-            XMVectorGetByIndex(trans, 3));
-
-        // Update active point lights.
-        {
-            mSceneProperties.lights.numOfPointLights = 0;
-            auto view = scene.registry().view<const Transform, const nodec_rendering::components::PointLight>();
-            for (const auto &entt : view) {
-                // TODO: Light culling.
-                const auto index = mSceneProperties.lights.numOfPointLights;
-                if (index >= MAX_NUM_OF_POINT_LIGHTS) break;
-
-                const auto &trfm = view.get<const Transform>(entt);
-                const auto &light = view.get<const nodec_rendering::components::PointLight>(entt);
-                const auto worldPosition = trfm.local2world * Vector4f(0, 0, 0, 1.0f);
-
-                mSceneProperties.lights.pointLights[index].position.set(worldPosition.x, worldPosition.y, worldPosition.z);
-                mSceneProperties.lights.pointLights[index].color.set(light.color.x, light.color.y, light.color.z);
-                mSceneProperties.lights.pointLights[index].intensity = light.intensity;
-                mSceneProperties.lights.pointLights[index].range = light.range;
-
-                ++mSceneProperties.lights.numOfPointLights;
-            }
-        }
-
-        mScenePropertiesCB.Update(mpGfx, &mSceneProperties);
-
-        // Reset depth buffer.
-        mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-        // Executes the shader programs.
-        for (auto *activeShader : activeShaders) {
-            if (activeShader->pass_count() == 1) {
-                // One pass shader.
-                mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, mpDepthStencilView.Get());
-                mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-                activeShader->bind(mpGfx);
-
-                // now lets draw the mesh.
-                RenderModel(scene, activeShader, matrixV, matrixP);
-            } else {
-                // Multi pass shader.
-                const auto passCount = activeShader->pass_count();
-                // first pass
-                {
-                    const auto &targets = activeShader->render_targets(0);
-                    std::vector<ID3D11RenderTargetView *> renderTargets(targets.size());
-                    for (size_t i = 0; i < targets.size(); ++i) {
-                        const auto &name = targets[i];
-                        auto &buffer = mGeometryBuffers[name];
-                        if (!buffer) {
-                            buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
-                        }
-                        renderTargets[i] = &buffer->GetRenderTargetView();
-                        mpGfx->GetContext().ClearRenderTargetView(renderTargets[i], Vector4f::zero.v);
-                    }
-
-                    mpGfx->GetContext().OMSetRenderTargets(renderTargets.size(), renderTargets.data(), mpDepthStencilView.Get());
-                    mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-                    mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-                    activeShader->bind(mpGfx, 0);
-
-                    RenderModel(scene, activeShader, matrixV, matrixP);
-                }
-
-                // medium pass
-                // NOTE: This pass maybe not necessary.
-                //  Alternatively, we can use the another shader pass.
-                {
-
-                }
-
-                // final pass
-                {
-                    const auto passNum = passCount - 1;
-
-                    mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
-                    mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-                    const auto &textureResources = activeShader->texture_resources(passNum);
-                    for (size_t i = 0; i < textureResources.size(); ++i) {
-                        const auto &name = textureResources[i];
-                        auto &buffer = mGeometryBuffers[name];
-                        if (!buffer) continue;
-                        auto *view = &buffer->GetShaderResourceView();
-                        mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
-                    }
-
-                    activeShader->bind(mpGfx, passNum);
-
-                    GetSamplerState({Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}).BindPS(mpGfx, 0);
-
-                    mScreenQuadMesh->bind(mpGfx);
-                    mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
-                }
-            }
-        }
-
-        // --- Post Processing ---
-        if (activePostProcessEffects.size() > 0) {
+    // Executes the shader programs.
+    for (auto *activeShader : activeShaders) {
+        if (activeShader->pass_count() == 1) {
+            // One pass shader.
+            mpGfx->GetContext().OMSetRenderTargets(1, &pTarget, mpDepthStencilView.Get());
             mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            activeShader->bind(mpGfx);
 
-            if (activePostProcessEffects.size() > 1) {
-                // if multiple effects, needs the back buffer.
-                auto &backBuffer = mGeometryBuffers["screen_back"];
-                if (!backBuffer) {
-                    backBuffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
+            // now lets draw the mesh.
+            RenderModel(scene, activeShader, matrixV, matrixP);
+        } else {
+            // Multi pass shader.
+            const auto passCount = activeShader->pass_count();
+            // first pass
+            {
+                const auto &targets = activeShader->render_targets(0);
+                std::vector<ID3D11RenderTargetView *> renderTargets(targets.size());
+                for (size_t i = 0; i < targets.size(); ++i) {
+                    const auto &name = targets[i];
+                    auto &buffer = mGeometryBuffers[name];
+                    if (!buffer) {
+                        buffer.reset(new GeometryBuffer(mpGfx, width, height));
+                    }
+                    renderTargets[i] = &buffer->GetRenderTargetView();
+                    mpGfx->GetContext().ClearRenderTargetView(renderTargets[i], Vector4f::zero.v);
                 }
+
+                mpGfx->GetContext().OMSetRenderTargets(renderTargets.size(), renderTargets.data(), mpDepthStencilView.Get());
+                mpGfx->GetContext().ClearDepthStencilView(mpDepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+                mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                activeShader->bind(mpGfx, 0);
+
+                RenderModel(scene, activeShader, matrixV, matrixP);
             }
 
-            for (std::size_t i = 0; i < activePostProcessEffects.size(); ++i) {
-                if (i != activePostProcessEffects.size() - 1) {
-                    pCameraRenderTargetView = &mGeometryBuffers["screen_back"]->GetRenderTargetView();
-                } else {
-                    // if last, render target is frame buffer.
-                    pCameraRenderTargetView = &mpGfx->GetRenderTargetView();
+            // medium pass
+            // NOTE: This pass maybe not necessary.
+            //  Alternatively, we can use the another shader pass.
+            {
+
+            }
+
+            // final pass
+            {
+                const auto passNum = passCount - 1;
+
+                mpGfx->GetContext().OMSetRenderTargets(1, &pTarget, nullptr);
+                mpGfx->GetContext().IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+                const auto &textureResources = activeShader->texture_resources(passNum);
+                for (size_t i = 0; i < textureResources.size(); ++i) {
+                    const auto &name = textureResources[i];
+                    auto &buffer = mGeometryBuffers[name];
+                    if (!buffer) continue;
+                    auto *view = &buffer->GetShaderResourceView();
+                    mpGfx->GetContext().PSSetShaderResources(i, 1u, &view);
                 }
 
-                // It is assured that material and shader are exists.
-                // It is checked at the beginning of rendering pass of camera.
-                auto materialBackend = std::static_pointer_cast<MaterialBackend>(activePostProcessEffects[i]->material);
-                auto shaderBackend = std::static_pointer_cast<ShaderBackend>(materialBackend->shader());
+                activeShader->bind(mpGfx, passNum);
 
-                SetCullMode(materialBackend->cull_mode());
-                materialBackend->bind_constant_buffer(mpGfx, MATERIAL_PROPERTIES_CB_SLOT);
+                GetSamplerState({Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}).BindPS(mpGfx, 0);
 
-                mTextureConfig.texHasFlag = 0x00;
-                const auto slotOffset = BindTextureEntries(materialBackend->texture_entries(), mTextureConfig.texHasFlag);
-                mTextureConfigCB.Update(mpGfx, &mTextureConfig);
-
-                for (int passNum = 0; passNum < shaderBackend->pass_count(); ++passNum) {
-                    if (passNum == shaderBackend->pass_count() - 1) {
-                        // If last pass.
-                        // The render target must be one final target.
-
-                        mpGfx->GetContext().OMSetRenderTargets(1, &pCameraRenderTargetView, nullptr);
-
-                    } else {
-                        // If halfway pass.
-                        // Support the multiple render targets.
-
-                        const auto &targets = shaderBackend->render_targets(passNum);
-                        std::vector<ID3D11RenderTargetView *> renderTargets(targets.size());
-                        for (size_t i = 0; i < targets.size(); ++i) {
-                            const auto &name = targets[i];
-                            auto &buffer = mGeometryBuffers[name];
-                            if (!buffer) {
-                                buffer.reset(new GeometryBuffer(mpGfx, mpGfx->GetWidth(), mpGfx->GetHeight()));
-                            }
-                            renderTargets[i] = &buffer->GetRenderTargetView();
-                            mpGfx->GetContext().ClearRenderTargetView(renderTargets[i], Vector4f::zero.v);
-                        }
-
-                        mpGfx->GetContext().OMSetRenderTargets(renderTargets.size(), renderTargets.data(), nullptr);
-                    }
-
-                    // --- Bind texture resources.
-                    // Bind sampler for textures.
-
-                    GetSamplerState({Sampler::FilterMode::Bilinear, Sampler::WrapMode::Clamp}).BindPS(mpGfx, slotOffset);
-                    const auto &textureResources = shaderBackend->texture_resources(passNum);
-                    for (std::size_t i = 0; i < textureResources.size(); ++i) {
-                        const auto &name = textureResources[i];
-                        auto &buffer = mGeometryBuffers[name];
-                        if (!buffer) continue;
-                        auto *view = &buffer->GetShaderResourceView();
-                        mpGfx->GetContext().PSSetShaderResources(slotOffset + i, 1u, &view);
-                    }
-                    shaderBackend->bind(mpGfx, passNum);
-
-                    mScreenQuadMesh->bind(mpGfx);
-                    mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
-                } // End foreach pass.
-
-                std::swap(mGeometryBuffers["screen"], mGeometryBuffers["screen_back"]);
-            } // End foreach effect.
+                mScreenQuadMesh->bind(mpGfx);
+                mpGfx->DrawIndexed(mScreenQuadMesh->triangles.size());
+            }
         }
-    }); // End foreach camera
+    }
 }
 
 void SceneRenderer::RenderModel(nodec_scene::Scene &scene, ShaderBackend *activeShader,

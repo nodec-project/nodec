@@ -141,9 +141,6 @@ void Graphics::BeginFrame() noexcept {
 }
 
 void Graphics::EndFrame() {
-    // auto& io = ImGui::GetIO();
-    // nodec::logging::InfoStream(__FILE__, __LINE__) << io.DisplayFramebufferScale.x << ", " << io.DisplayFramebufferScale.y;
-
     ImGui::Render();
 
     mpContext->OMSetRenderTargets(1u, mpTarget.GetAddressOf(), mpDSV.Get());

@@ -10,6 +10,7 @@
 #include "EditorWindows/AssetImportWindow.hpp"
 #include "EditorWindows/ControlWindow.hpp"
 #include "EditorWindows/SceneSerializationWindow.hpp"
+#include "EditorWindows/SceneViewWindow.hpp"
 
 #include <imwindows/entity_inspector_window.hpp>
 #include <imwindows/log_window.hpp>
@@ -28,6 +29,11 @@ Editor::Editor(Engine *engine)
 
     register_menu_item("Window/Control",
                        [=]() { ControlWindow::init(window_manager(), this); });
+
+    register_menu_item("Window/Scene View",
+                       [=]() { SceneViewWindow::init(window_manager(),
+                                                     engine->window().GetGraphics(),
+                                                     engine->world_module().scene(), engine->scene_renderer()); });
 
     register_menu_item("Window/Scene Hierarchy",
                        [=]() {

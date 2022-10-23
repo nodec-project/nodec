@@ -84,7 +84,6 @@ public:
 
         // ---
         visibility_system_.reset(new nodec_rendering::systems::VisibilitySystem(world_module_->scene()));
-
     }
 
     ~Engine() {
@@ -136,7 +135,9 @@ public:
             }
         }
 
-        scene_renderer_->Render(world_module_->scene());
+        scene_renderer_->Render(world_module_->scene(),
+                                &window_->GetGraphics().GetRenderTargetView(),
+                                window_->GetGraphics().GetWidth(), window_->GetGraphics().GetHeight());
 
         window_->GetGraphics().EndFrame();
     }
@@ -157,6 +158,14 @@ public:
     }
     AudioPlatform &audio_platform() {
         return *audio_platform_;
+    }
+
+    Window &window() {
+        return *window_;
+    }
+
+    SceneRenderer &scene_renderer() {
+        return *scene_renderer_;
     }
 
 private:
