@@ -50,8 +50,8 @@ public:
         stream_ << type_ << ": ";
     }
 
-    template<typename T>
-    ErrorFormatter &operator<<(const T &value) noexcept {
+    template<typename U>
+    ErrorFormatter &operator<<(const U &value) noexcept {
         stream_ << value;
         return *this;
     }
