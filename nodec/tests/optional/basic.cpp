@@ -16,7 +16,7 @@ TEST_CASE("testing optional constructor") {
 
     {
         using int_optional = nodec::optional<int>;
-        static_assert(std::is_move_constructible_v<int_optional>, "fail");
+        static_assert(std::is_move_constructible<int_optional>::value, "fail");
     }
     {
         class Test {

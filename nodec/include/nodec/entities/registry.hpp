@@ -52,7 +52,7 @@ class BasicRegistry {
 
     template<typename Component>
     Storage<Component> *pool_assured() const {
-        static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
+        static_assert(std::is_same<Component, std::decay_t<Component>>::value, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_id<Component>().seq_index();
 
         if (!(index < pools.size())) {
@@ -70,7 +70,7 @@ class BasicRegistry {
 
     template<typename Component>
     const Storage<Component> *pool_if_exists() const {
-        static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
+        static_assert(std::is_same<Component, std::decay_t<Component>>::value, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_id<Component>().seq_index();
         return (index < pools.size() && pools[index].pool)
                    ? static_cast<const Storage<Component> *>(pools[index].pool.get())
@@ -79,7 +79,7 @@ class BasicRegistry {
 
     template<typename Component>
     Storage<Component> *pool_if_exists() {
-        static_assert(std::is_same_v<Component, std::decay_t<Component>>, "Non-decayed types (s.t. array) not allowed");
+        static_assert(std::is_same<Component, std::decay_t<Component>>::value, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_id<Component>().seq_index();
         return (index < pools.size() && pools[index].pool)
                    ? static_cast<Storage<Component> *>(pools[index].pool.get())
@@ -257,7 +257,7 @@ public:
 
     template<typename Component>
     decltype(auto) get_component(const Entity entity) {
-        return const_cast<Component &>(nodec::as_const(*this).get_component<Component>(entity));
+        return const_cast<Component &>(nodec::as_const(*this).template get_component<Component>(entity));
     }
 
     template<typename... Components>
@@ -281,7 +281,7 @@ public:
 
     template<typename Component>
     Component *try_get_component(const Entity entity) {
-        return const_cast<Component *>(as_const(*this).try_get_component<Component>(entity));
+        return const_cast<Component *>(nodec::as_const(*this).template try_get_component<Component>(entity));
     }
 
     template<typename... Components>

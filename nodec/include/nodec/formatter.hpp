@@ -42,11 +42,11 @@ private:
     NODEC_DISABLE_COPY(Formatter)
 };
 
-template<typename T>
+template<typename ErrorT>
 class ErrorFormatter {
 public:
     ErrorFormatter(const char *file, const size_t line) noexcept
-        : type_{typeid(T).name()}, file_{file}, line_{line} {
+        : type_{typeid(ErrorT).name()}, file_{file}, line_{line} {
         stream_ << type_ << ": ";
     }
 

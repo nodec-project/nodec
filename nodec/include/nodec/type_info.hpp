@@ -83,14 +83,14 @@ constexpr bool operator>=(const type_info &lhs, const type_info &rhs) noexcept {
  * @return const type_info&
  */
 template<typename Type>
-std::enable_if_t<std::is_same_v<Type, std::remove_cv_t<std::remove_reference_t<Type>>>, const type_info &>
+std::enable_if_t<std::is_same<Type, std::remove_cv_t<std::remove_reference_t<Type>>>::value, const type_info &>
 type_id() noexcept {
     static type_info instance{in_place_type<Type>};
     return instance;
 }
 
 template<typename Type>
-std::enable_if_t<!std::is_same_v<Type, std::remove_cv_t<std::remove_reference_t<Type>>>, const type_info &>
+std::enable_if_t<!std::is_same<Type, std::remove_cv_t<std::remove_reference_t<Type>>>::value, const type_info &>
 type_id() noexcept {
     return type_id<std::remove_cv_t<std::remove_reference_t<Type>>>();
 }
