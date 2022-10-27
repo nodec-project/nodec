@@ -14,7 +14,7 @@ struct entity_traits;
 
 /**
  * @brief Entity traits for a 32 bits entity identifier.
- *   A 32 bits entity identifier gurantees:
+ *   A 32 bits entity identifier guarantees:
  *
  *   * 20 bits for entity number (suitable for almost all the games).
  *   * 12 bits for the version (reset in [0-4095]).

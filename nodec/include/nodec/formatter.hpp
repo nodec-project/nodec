@@ -42,16 +42,16 @@ private:
     NODEC_DISABLE_COPY(Formatter)
 };
 
-template<typename T>
+template<typename ErrorT>
 class ErrorFormatter {
 public:
     ErrorFormatter(const char *file, const size_t line) noexcept
-        : type_{typeid(T).name()}, file_{file}, line_{line} {
+        : type_{typeid(ErrorT).name()}, file_{file}, line_{line} {
         stream_ << type_ << ": ";
     }
 
-    template<typename U>
-    ErrorFormatter &operator<<(const U &value) noexcept {
+    template<typename T>
+    ErrorFormatter &operator<<(const T &value) noexcept {
         stream_ << value;
         return *this;
     }
