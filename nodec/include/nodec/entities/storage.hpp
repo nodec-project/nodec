@@ -65,7 +65,7 @@ private:
 
 template<typename Value, typename Entity>
 class BasicStorage : public BaseStorage<Entity> {
-    static_assert(std::is_move_constructible_v<Value> && std::is_move_assignable_v<Value>,
+    static_assert(std::is_move_constructible<Value>::value && std::is_move_assignable<Value>::value,
                   "The managed value must be at least move constructible and move assignable.");
 
     using StorageSignal = signals::Signal<void(BasicRegistry<Entity> &, const Entity)>;
