@@ -257,7 +257,7 @@ public:
 
     template<typename Component>
     decltype(auto) get_component(const Entity entity) {
-        return const_cast<Component &>(nodec::as_const(*this).get_component<Component>(entity));
+        return const_cast<Component &>(nodec::as_const(*this).template get_component<Component>(entity));
     }
 
     template<typename... Components>
@@ -281,7 +281,7 @@ public:
 
     template<typename Component>
     Component *try_get_component(const Entity entity) {
-        return const_cast<Component *>(nodec::as_const(*this).try_get_component<Component>(entity));
+        return const_cast<Component *>(nodec::as_const(*this).template try_get_component<Component>(entity));
     }
 
     template<typename... Components>
