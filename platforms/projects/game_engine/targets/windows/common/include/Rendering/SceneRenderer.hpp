@@ -16,6 +16,7 @@
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/components/mesh_renderer.hpp>
+#include <nodec_rendering/components/non_visible.hpp>
 #include <nodec_rendering/components/point_light.hpp>
 #include <nodec_rendering/components/post_processing.hpp>
 #include <nodec_rendering/components/scene_lighting.hpp>
@@ -161,9 +162,39 @@ public:
         }
     }
 
-    void Render(nodec_scene::Scene &scene);
+    void Render(nodec_scene::Scene &scene, ID3D11RenderTargetView *pTarget, UINT width, UINT height);
+
+    void Render(nodec_scene::Scene &scene, nodec::Matrix4x4f &view, nodec::Matrix4x4f &projection,
+                ID3D11RenderTargetView *pTarget, UINT width, UINT height);
 
 private:
+    void SetupSceneLighting(nodec_scene::Scene &scene) {
+        using namespace nodec_rendering::components;
+        using namespace nodec_scene::components;
+        using namespace nodec;
+
+        mSceneProperties.lights.directional.enabled = 0x00;
+        scene.registry().view<const nodec_rendering::components::DirectionalLight, const Transform>().each(
+            [&](auto entt, const nodec_rendering::components::DirectionalLight &light, const Transform &trfm) {
+                auto &directional = mSceneProperties.lights.directional;
+                directional.enabled = 0x01;
+                directional.color = light.color;
+                directional.intensity = light.intensity;
+
+                auto direction = trfm.local2world * Vector4f{0.0f, 0.0f, 1.0f, 0.0f};
+                directional.direction.set(direction.x, direction.y, direction.z);
+            });
+
+        scene.registry().view<const nodec_rendering::components::SceneLighting>().each([&](auto entt, const nodec_rendering::components::SceneLighting &lighting) {
+            mSceneProperties.lights.ambientColor = lighting.ambient_color;
+        });
+    }
+
+    void Render(nodec_scene::Scene &scene,
+                const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixVInverse,
+                const DirectX::XMMATRIX &matrixP, const DirectX::XMMATRIX &matrixPInverse,
+                ID3D11RenderTargetView *pTarget, UINT width, UINT height);
+
     void RenderModel(nodec_scene::Scene &scene, ShaderBackend *activeShader,
                      const DirectX::XMMATRIX &matrixV, const DirectX::XMMATRIX &matrixP);
 
@@ -197,7 +228,7 @@ private:
                 // texture not setted.
                 // skip bind texture,
                 // but bind sampler because the The Pixel Shader unit expects a Sampler to be set at Slot 0.
-                auto &defaultSamplerState = GetSamplerState({}); 
+                auto &defaultSamplerState = GetSamplerState({});
                 defaultSamplerState.BindPS(mpGfx, slot);
                 defaultSamplerState.BindVS(mpGfx, slot);
 
@@ -223,7 +254,7 @@ private:
         return slot;
     }
 
-    SamplerState& GetSamplerState(const nodec_rendering::Sampler& sampler) {
+    SamplerState &GetSamplerState(const nodec_rendering::Sampler &sampler) {
         auto &state = mSamplerStates[sampler];
         if (state) return *state;
 

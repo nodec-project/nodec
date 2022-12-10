@@ -8,6 +8,8 @@
 #include <imessentials/impl/window_impl.hpp>
 #include <nodec_scene_editor/impl/scene_editor_module.hpp>
 
+#include <ImGuizmo.h>
+
 class Editor : public nodec_scene_editor::impl::SceneEditorModule {
 public:
     enum class Mode {
@@ -66,6 +68,8 @@ public:
         }
 
         imessentials::impl::show_main_menu();
+
+        ImGuizmo::BeginFrame();
 
         window_manager_impl().update_windows();
 

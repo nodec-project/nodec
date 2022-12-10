@@ -130,7 +130,7 @@ TEST_CASE("testing approx_equal") {
         CHECK(approx_equal(10 * MIN_VALUE, 10 * -MIN_VALUE));
         CHECK(!approx_equal(10000 * MIN_VALUE, 10000 * -MIN_VALUE, default_rel_tol<float>, 0.0f));
     }
-    
+
     SUBCASE("The really tricky part - comparisons of numbers very close to zero.") {
         CHECK(approx_equal(MIN_VALUE, MIN_VALUE));
         CHECK(approx_equal(MIN_VALUE, -MIN_VALUE));
@@ -144,5 +144,38 @@ TEST_CASE("testing approx_equal") {
         CHECK(!approx_equal(0.000000001f, MIN_VALUE));
         CHECK(!approx_equal(MIN_VALUE, 0.000000001f));
         CHECK(!approx_equal(-MIN_VALUE, 0.000000001f));
+    }
+}
+
+TEST_CASE("testing matrix inv.") {
+    using namespace nodec;
+
+    {
+        Matrix4x4f mat{
+            5, -2, 2, 7,
+            1, 0, 0, 3,
+            -3, 1, 5, 0,
+            3, -1, -9, 4};
+
+        float determinant;
+
+        auto inv = math::inv(mat, &determinant);
+
+        CHECK(math::approx_equal(mat * inv, Matrix4x4f::identity));
+        CHECK(math::approx_equal(determinant, 88.f));
+    }
+
+    {
+        Matrix4x4f mat{
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+            12, 13, 14, 15};
+
+        float determinant;
+
+        auto inv = math::inv(mat, &determinant);
+
+        CHECK(math::approx_equal(determinant, 0.f));
     }
 }

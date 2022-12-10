@@ -28,8 +28,6 @@ class InspectorGUI {
     using MeshRenderer = nodec_rendering::components::MeshRenderer;
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
     using Name = nodec_scene::components::Name;
-    using Transform = nodec_scene::components::Transform;
-    using Camera = nodec_rendering::components::Camera;
     using AudioSource = nodec_scene_audio::components::AudioSource;
     using AudioClip = nodec_scene_audio::resources::AudioClip;
     using ImageRenderer = nodec_rendering::components::ImageRenderer;
@@ -50,44 +48,7 @@ public:
         name.name = mTempStrBuffer;
     }
 
-    void onGUITransform(Transform &trfm) {
-        using namespace nodec;
-        {
-            ImGui::Text("Position");
-            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            if (ImGui::DragFloat3("##Position", trfm.local_position.v, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f")) {
-                trfm.dirty = true;
-            }
-        }
-
-        {
-            static Vector3f eulerAngles;
-            static bool isActive = false;
-
-            if (!isActive) {
-                eulerAngles = math::gfx::euler_angles_xyz(trfm.local_rotation);
-            }
-
-            ImGui::Text("Rotation (XYZ Euler)");
-
-            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-
-            if (ImGui::DragFloat3("##Rotation", eulerAngles.v, 0.1f, -FLT_MAX, +FLT_MAX, "%.3f")) {
-                trfm.local_rotation = math::gfx::euler_angles_xyz(eulerAngles);
-                trfm.dirty = true;
-            }
-
-            isActive = ImGui::IsItemActive();
-        }
-
-        {
-            ImGui::Text("Scale");
-            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-            if (ImGui::DragFloat3("##Scale", trfm.local_scale.v, 0.005f, -FLT_MAX, +FLT_MAX, "%.3f")) {
-                trfm.dirty = true;
-            }
-        }
-    }
+    void onGUITransform(nodec_scene::components::Transform &trfm);
 
     void OnGUIMeshRenderer(MeshRenderer &renderer) {
         using namespace nodec;
@@ -119,25 +80,7 @@ public:
         }
     }
 
-    void OnGUICamera(Camera &camera) {
-        ImGui::DragFloat("Near Clip Plane", &camera.near_clip_plane);
-        ImGui::DragFloat("Far Clip Plane", &camera.far_clip_plane);
-
-        {
-            int current = static_cast<int>(camera.projection);
-            ImGui::Combo("Projection", &current, "Perspective\0Orthographic");
-            camera.projection = static_cast<Camera::Projection>(current);
-        }
-
-        switch (camera.projection) {
-        case Camera::Projection::Perspective:
-            ImGui::DragFloat("Fov Angle", &camera.fov_angle);
-            break;
-        case Camera::Projection::Orthographic:
-            ImGui::DragFloat("Ortho Width", &camera.ortho_width);
-        default: break;
-        }
-    }
+    void OnGUICamera(nodec_rendering::components::Camera & camera);
 
     void OnGUIDirectionalLight(nodec_rendering::components::DirectionalLight &light) {
         using namespace nodec_rendering::components;

@@ -1,6 +1,8 @@
 #ifndef NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
 #define NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
 
+#include <nodec/matrix4x4.hpp>
+
 namespace nodec_rendering {
 namespace components {
 
@@ -20,6 +22,9 @@ struct Camera {
 
     float fov_angle{45.0f};
     float ortho_width{10.0f};
+
+    nodec::Matrix4x4f world2camera_matrix;
+    nodec::Matrix4x4f projection_matrix;
 };
 
 } // namespace components
