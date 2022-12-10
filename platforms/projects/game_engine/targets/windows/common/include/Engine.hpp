@@ -5,6 +5,7 @@
 #include "ImguiManager.hpp"
 #include "Input/KeyboardDeviceSystem.hpp"
 #include "Input/MouseDeviceSystem.hpp"
+#include "Physics/Physics.hpp"
 #include "Rendering/SceneRenderer.hpp"
 #include "Resources/ResourceLoader.hpp"
 #include "Resources/ResourcesModuleBackend.hpp"
@@ -46,6 +47,8 @@ public:
         using namespace nodec_world::impl;
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Created!";
+
+        physics_.reset(new Physics);
 
         imgui_manager_.reset(new ImguiManager);
 
@@ -169,6 +172,8 @@ public:
     }
 
 private:
+    std::unique_ptr<Physics> physics_;
+
     // imgui must be destroyed after window.
     std::unique_ptr<ImguiManager> imgui_manager_;
     std::unique_ptr<Window> window_;
