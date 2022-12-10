@@ -125,6 +125,163 @@ bool approx_equal(T a, T b,
     return std::abs(a - b) <= std::max(rel_tol * norm, abs_tol);
 }
 
+template<typename T,
+         std::enable_if_t<std::is_floating_point<T>::value> * = nullptr>
+bool approx_equal(const Matrix4x4<T> &a, const Matrix4x4<T> &b,
+                  T rel_tol = default_rel_tol<T>,
+                  T abs_tol = default_abs_tol<T>) {
+    return approx_equal(a.m[0], b.m[0], rel_tol, abs_tol)
+           || approx_equal(a.m[1], b.m[1], rel_tol, abs_tol)
+           || approx_equal(a.m[2], b.m[2], rel_tol, abs_tol)
+           || approx_equal(a.m[3], b.m[3], rel_tol, abs_tol)
+           || approx_equal(a.m[4], b.m[4], rel_tol, abs_tol)
+           || approx_equal(a.m[5], b.m[5], rel_tol, abs_tol)
+           || approx_equal(a.m[6], b.m[6], rel_tol, abs_tol)
+           || approx_equal(a.m[7], b.m[7], rel_tol, abs_tol)
+           || approx_equal(a.m[8], b.m[8], rel_tol, abs_tol)
+           || approx_equal(a.m[9], b.m[9], rel_tol, abs_tol)
+           || approx_equal(a.m[10], b.m[10], rel_tol, abs_tol)
+           || approx_equal(a.m[11], b.m[11], rel_tol, abs_tol)
+           || approx_equal(a.m[12], b.m[12], rel_tol, abs_tol)
+           || approx_equal(a.m[13], b.m[13], rel_tol, abs_tol)
+           || approx_equal(a.m[14], b.m[14], rel_tol, abs_tol)
+           || approx_equal(a.m[15], b.m[15], rel_tol, abs_tol);
+}
+
+template<typename T>
+Matrix4x4<T> inv(const Matrix4x4<T> &mat, T *determinant = nullptr) {
+    // implementation notes:
+    //  * https://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
+
+    Matrix4x4<T> inverted;
+    auto &m = mat.m;
+
+    inverted.m[0] = m[5] * m[10] * m[15]
+                    - m[5] * m[11] * m[14]
+                    - m[9] * m[6] * m[15]
+                    + m[9] * m[7] * m[14]
+                    + m[13] * m[6] * m[11]
+                    - m[13] * m[7] * m[10];
+
+    inverted.m[4] = -m[4] * m[10] * m[15]
+                    + m[4] * m[11] * m[14]
+                    + m[8] * m[6] * m[15]
+                    - m[8] * m[7] * m[14]
+                    - m[12] * m[6] * m[11]
+                    + m[12] * m[7] * m[10];
+
+    inverted.m[8] = m[4] * m[9] * m[15]
+                    - m[4] * m[11] * m[13]
+                    - m[8] * m[5] * m[15]
+                    + m[8] * m[7] * m[13]
+                    + m[12] * m[5] * m[11]
+                    - m[12] * m[7] * m[9];
+
+    inverted.m[12] = -m[4] * m[9] * m[14]
+                     + m[4] * m[10] * m[13]
+                     + m[8] * m[5] * m[14]
+                     - m[8] * m[6] * m[13]
+                     - m[12] * m[5] * m[10]
+                     + m[12] * m[6] * m[9];
+
+    inverted.m[1] = -m[1] * m[10] * m[15]
+                    + m[1] * m[11] * m[14]
+                    + m[9] * m[2] * m[15]
+                    - m[9] * m[3] * m[14]
+                    - m[13] * m[2] * m[11]
+                    + m[13] * m[3] * m[10];
+
+    inverted.m[5] = m[0] * m[10] * m[15]
+                    - m[0] * m[11] * m[14]
+                    - m[8] * m[2] * m[15]
+                    + m[8] * m[3] * m[14]
+                    + m[12] * m[2] * m[11]
+                    - m[12] * m[3] * m[10];
+
+    inverted.m[9] = -m[0] * m[9] * m[15]
+                    + m[0] * m[11] * m[13]
+                    + m[8] * m[1] * m[15]
+                    - m[8] * m[3] * m[13]
+                    - m[12] * m[1] * m[11]
+                    + m[12] * m[3] * m[9];
+
+    inverted.m[13] = m[0] * m[9] * m[14]
+                     - m[0] * m[10] * m[13]
+                     - m[8] * m[1] * m[14]
+                     + m[8] * m[2] * m[13]
+                     + m[12] * m[1] * m[10]
+                     - m[12] * m[2] * m[9];
+
+    inverted.m[2] = m[1] * m[6] * m[15]
+                    - m[1] * m[7] * m[14]
+                    - m[5] * m[2] * m[15]
+                    + m[5] * m[3] * m[14]
+                    + m[13] * m[2] * m[7]
+                    - m[13] * m[3] * m[6];
+
+    inverted.m[6] = -m[0] * m[6] * m[15]
+                    + m[0] * m[7] * m[14]
+                    + m[4] * m[2] * m[15]
+                    - m[4] * m[3] * m[14]
+                    - m[12] * m[2] * m[7]
+                    + m[12] * m[3] * m[6];
+
+    inverted.m[10] = m[0] * m[5] * m[15]
+                     - m[0] * m[7] * m[13]
+                     - m[4] * m[1] * m[15]
+                     + m[4] * m[3] * m[13]
+                     + m[12] * m[1] * m[7]
+                     - m[12] * m[3] * m[5];
+
+    inverted.m[14] = -m[0] * m[5] * m[14]
+                     + m[0] * m[6] * m[13]
+                     + m[4] * m[1] * m[14]
+                     - m[4] * m[2] * m[13]
+                     - m[12] * m[1] * m[6]
+                     + m[12] * m[2] * m[5];
+
+    inverted.m[3] = -m[1] * m[6] * m[11]
+                    + m[1] * m[7] * m[10]
+                    + m[5] * m[2] * m[11]
+                    - m[5] * m[3] * m[10]
+                    - m[9] * m[2] * m[7]
+                    + m[9] * m[3] * m[6];
+
+    inverted.m[7] = m[0] * m[6] * m[11]
+                    - m[0] * m[7] * m[10]
+                    - m[4] * m[2] * m[11]
+                    + m[4] * m[3] * m[10]
+                    + m[8] * m[2] * m[7]
+                    - m[8] * m[3] * m[6];
+
+    inverted.m[11] = -m[0] * m[5] * m[11]
+                     + m[0] * m[7] * m[9]
+                     + m[4] * m[1] * m[11]
+                     - m[4] * m[3] * m[9]
+                     - m[8] * m[1] * m[7]
+                     + m[8] * m[3] * m[5];
+
+    inverted.m[15] = m[0] * m[5] * m[10]
+                     - m[0] * m[6] * m[9]
+                     - m[4] * m[1] * m[10]
+                     + m[4] * m[2] * m[9]
+                     + m[8] * m[1] * m[6]
+                     - m[8] * m[2] * m[5];
+
+    const auto det = m[0] * inverted.m[0]
+                     + m[1] * inverted.m[4]
+                     + m[2] * inverted.m[8]
+                     + m[3] * inverted.m[12];
+
+    if (determinant != nullptr) {
+        *determinant = det;
+    }
+
+    inverted *= 1 / det;
+
+    return inverted;
+}
+
 } // namespace math
 } // namespace nodec
 

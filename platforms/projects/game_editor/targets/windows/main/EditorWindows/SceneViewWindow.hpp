@@ -8,6 +8,7 @@
 #include <nodec_scene/scene.hpp>
 
 #include <nodec/matrix4x4.hpp>
+#include <nodec/math/gfx.hpp>
 
 #include <ImGuizmo.h>
 #include <imgui.h>
@@ -84,6 +85,17 @@ public:
 
         const float view_manipulate_right = ImGui::GetWindowPos().x + window_width;
         const float view_manipulate_top = ImGui::GetWindowPos().y;
+
+        auto &io = ImGui::GetIO();
+
+        {
+            auto forward = math::inv(view_) * Vector4f(0.0f, 0.0f, 1.0f, 1.0f);
+            forward = math::normalize(forward);
+            forward *= io.MouseWheel;
+            view_.c[3] += forward;
+        }
+
+        //logging::InfoStream(__FILE__, __LINE__) << io.MouseWheel;
 
         ImGuizmo::SetDrawlist();
 
