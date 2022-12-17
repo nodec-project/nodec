@@ -5,7 +5,7 @@
 #include "ImguiManager.hpp"
 #include "Input/KeyboardDeviceSystem.hpp"
 #include "Input/MouseDeviceSystem.hpp"
-#include "Physics/Physics.hpp"
+#include "Physics/PhysicsSystemBackend.hpp"
 #include "Rendering/SceneRenderer.hpp"
 #include "Resources/ResourceLoader.hpp"
 #include "Resources/ResourcesModuleBackend.hpp"
@@ -48,8 +48,6 @@ public:
 
         nodec::logging::InfoStream(__FILE__, __LINE__) << "[Engine] >>> Created!";
 
-        physics_.reset(new Physics);
-
         imgui_manager_.reset(new ImguiManager);
 
         font_library_.reset(new FontLibrary);
@@ -61,7 +59,7 @@ public:
         screen_handler_.reset(new ScreenHandler(screen_module_.get()));
         screen_handler_->BindHandlersOnBoot();
 
-        // --- scene ---
+        // --- world ---
         world_module_.reset(new WorldModule());
         add_module<World>(world_module_);
 
@@ -86,6 +84,9 @@ public:
         add_module<nodec_scene_serialization::SceneLoader>(scene_loader_);
 
         // ---
+        
+        physics_system_.reset(new PhysicsSystemBackend(*world_module_));
+
         visibility_system_.reset(new nodec_rendering::systems::VisibilitySystem(world_module_->scene()));
     }
 
@@ -172,7 +173,6 @@ public:
     }
 
 private:
-    std::unique_ptr<Physics> physics_;
 
     // imgui must be destroyed after window.
     std::unique_ptr<ImguiManager> imgui_manager_;
@@ -199,7 +199,10 @@ private:
 
     std::unique_ptr<SceneRenderer> scene_renderer_;
 
+    std::unique_ptr<nodec_rendering::systems::VisibilitySystem> visibility_system_;
+
     std::unique_ptr<SceneAudioSystem> scene_audio_system_;
 
-    std::unique_ptr<nodec_rendering::systems::VisibilitySystem> visibility_system_;
+    std::unique_ptr<PhysicsSystemBackend> physics_system_;
+
 };
