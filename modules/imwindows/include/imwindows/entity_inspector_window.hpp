@@ -132,14 +132,23 @@ public:
         ImGui::SetWindowFocus(window.name());
     }
 
+    static void help_marker(const char *desc) {
+        ImGui::TextDisabled("(?)");
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(desc);
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
+
 public:
     EntityInspectorWindow()
         : BaseWindow("Entity Inspector", nodec::Vector2f(300, 500)) {
     }
 
-    ~EntityInspectorWindow() {
-        nodec::logging::InfoStream(__FILE__, __LINE__) << "Destroyed";
-    }
+    ~EntityInspectorWindow() {}
 
     void on_gui() override {
         using namespace nodec;
@@ -148,12 +157,20 @@ public:
             return;
         }
 
-        logging::InfoStream info(__FILE__, __LINE__);
+        struct InspectionInfo {
+            int num_of_total_components{0};
+            int num_of_visted_components{0};
+        };
+
+        InspectionInfo inspection_info;
+
         entity_registry_->visit(target_entity_, [&](const nodec::type_info &type_info, void *component) {
+            ++inspection_info.num_of_total_components;
+
             auto *handler = component_registry_->get_handler(type_info.seq_index());
-            if (!handler) {
-                return;
-            }
+            if (!handler) return;
+
+            ++inspection_info.num_of_visted_components;
 
             auto opened = ImGui::CollapsingHeader(handler->component_name().c_str());
 
@@ -191,10 +208,20 @@ public:
                         ImGui::CloseCurrentPopup();
                     }
                 }
-                
+
                 ImGui::EndListBox();
             }
             ImGui::EndPopup();
+        }
+
+        ImGui::Separator();
+
+        ImGui::Text(static_cast<std::string>(Formatter() << "Visited " << inspection_info.num_of_visted_components << " / "
+                                                         << inspection_info.num_of_total_components << " components.")
+                        .c_str());
+        if (inspection_info.num_of_visted_components < inspection_info.num_of_total_components) {
+            ImGui::SameLine();
+            help_marker(static_cast<std::string>(Formatter() << "To inspect a component, it must be registered through EntityInspectorWindow::ComponentRegistry.").c_str());
         }
     }
 
