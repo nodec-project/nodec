@@ -1,9 +1,9 @@
 #pragma once
 
+#include "RigidBodyBackend.hpp"
 
-#include <btBulletDynamicsCommon.h>
+struct RigidBodyActivity {
 
-class RigidBodyActivity {
-public:
+    std::unique_ptr<RigidBodyBackend> rigid_body_backend;
 
 };

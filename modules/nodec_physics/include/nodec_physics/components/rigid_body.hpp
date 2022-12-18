@@ -9,7 +9,8 @@ namespace components {
 struct RigidBody {
 
     // motion_type: static, dynamic
-    
+
+    float mass{0.0f};
 };
 
 }

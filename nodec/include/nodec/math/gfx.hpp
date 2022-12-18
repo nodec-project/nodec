@@ -17,6 +17,50 @@ inline Vector3f transform(const Vector3f &vec, const Quaternionf &q) {
     return Vector3f(vb.x, vb.y, vb.z);
 }
 
+inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f matrix) {
+    float sqrt;
+    float half;
+    float scale = matrix.m11 + matrix.m22 + matrix.m33;
+
+    Quaternionf result;
+
+    if (scale > 0.0f) {
+        sqrt = std::sqrtf(scale + 1.0f);
+        result.w = sqrt * 0.5f;
+        sqrt = 0.5f / sqrt;
+
+        result.x = (matrix.m32 - matrix.m23) * sqrt;
+        result.y = (matrix.m13 - matrix.m31) * sqrt;
+        result.z = (matrix.m21 - matrix.m12) * sqrt;
+    } else if ((matrix.m11 >= matrix.m22) && (matrix.m11 >= matrix.m33)) {
+        sqrt = std::sqrtf(1.0f + matrix.m11 - matrix.m22 - matrix.m33);
+        half = 0.5f / sqrt;
+
+        result.x = 0.5f * sqrt;
+        result.y = (matrix.m21 + matrix.m12) * half;
+        result.z = (matrix.m31 + matrix.m13) * half;
+        result.w = (matrix.m32 - matrix.m23) * half;
+    } else if (matrix.m22 > matrix.m33) {
+        sqrt = std::sqrtf(1.0f + matrix.m22 - matrix.m11 - matrix.m33);
+        half = 0.5f / sqrt;
+
+        result.x = (matrix.m12 + matrix.m21) * half;
+        result.y = 0.5f * sqrt;
+        result.z = (matrix.m23 + matrix.m32) * half;
+        result.w = (matrix.m13 - matrix.m31) * half;
+    } else {
+        sqrt = std::sqrtf(1.0f + matrix.m33 - matrix.m11 - matrix.m22);
+        half = 0.5f / sqrt;
+
+        result.x = (matrix.m13 + matrix.m31) * half;
+        result.y = (matrix.m23 + matrix.m32) * half;
+        result.z = 0.5f * sqrt;
+        result.w = (matrix.m21 - matrix.m12) * half;
+    }
+
+    return result;
+}
+
 inline Matrix4x4f trs(const Vector3f &t, const Quaternionf &r, const Vector3f &s) {
     float xx2 = 2.0f * r.x * r.x;
     float yy2 = 2.0f * r.y * r.y;
@@ -33,6 +77,40 @@ inline Matrix4x4f trs(const Vector3f &t, const Quaternionf &r, const Vector3f &s
         (xy2 + wz2) * s.x, (1.0f - xx2 - zz2) * s.y, (yz2 - wx2) * s.z, t.y,
         (xz2 - wy2) * s.x, (yz2 + wx2) * s.y, (1.0f - xx2 - yy2) * s.z, t.z,
         0.0f, 0.0f, 0.0f, 1.0f};
+}
+
+/**
+ * @brief Decompose trs matrix to translation, rotation and scale elements.
+ *  Returns true if matrix can be decomposed; false otherwise.
+ */
+inline bool decompose_trs(const Matrix4x4f &trs, Vector3f &translation, Quaternionf &rotation, Vector3f &scale) {
+    translation.x = trs.m14;
+    translation.y = trs.m24;
+    translation.z = trs.m34;
+
+    float xs = (trs.m11 * trs.m21 * trs.m31 * trs.m41) < 0.f ? -1.f : 1.f;
+    float ys = (trs.m12 * trs.m22 * trs.m32 * trs.m42) < 0.f ? -1.f : 1.f;
+    float zs = (trs.m13 * trs.m23 * trs.m33 * trs.m43) < 0.f ? -1.f : 1.f;
+
+    scale.x = xs * std::sqrtf(trs.m11 * trs.m11 + trs.m21 * trs.m21 + trs.m31 * trs.m31);
+    scale.y = ys * std::sqrtf(trs.m12 * trs.m12 + trs.m22 * trs.m22 + trs.m32 * trs.m32);
+    scale.z = zs * std::sqrtf(trs.m13 * trs.m13 + trs.m23 * trs.m23 + trs.m33 * trs.m33);
+
+    if (scale.x == 0.f || scale.y == 0.f || scale.z == 0.f) {
+        rotation = Quaternionf::identity;
+        return false;
+    }
+
+    rotation = quaternion_from_rotation_matrix(
+        {
+            trs.m11 / scale.x, trs.m12 / scale.y, trs.m13 / scale.z, 0.f,
+            trs.m21 / scale.x, trs.m22 / scale.y, trs.m23 / scale.z, 0.f,
+            trs.m31 / scale.x, trs.m32 / scale.y, trs.m33 / scale.z, 0.f,
+            0.f, 0.f, 0.f, 1.f
+        }
+    );
+
+    return true;
 }
 
 inline Quaternionf angle_axis(const float &angle_deg, const Vector3f &axis) {
