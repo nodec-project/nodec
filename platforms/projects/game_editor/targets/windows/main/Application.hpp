@@ -1,7 +1,5 @@
 #pragma once
 
-#define CEREAL_THREAD_SAFE 1
-
 #include "Editor.hpp"
 
 #include <Engine.hpp>

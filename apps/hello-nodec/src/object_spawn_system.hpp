@@ -72,7 +72,7 @@ public:
 
         serialization.register_component<ObjectSpawner, SerializableObjectSpawner>(
             [&](const ObjectSpawner &spawner) {
-                auto serializable = std::make_shared<SerializableObjectSpawner>();
+                auto serializable = std::make_unique<SerializableObjectSpawner>();
                 serializable->scene_name = spawner.scene_name;
                 return serializable;
             },

@@ -12,8 +12,8 @@ namespace nodec_scene_serialization {
 
 class SerializableEntityNode {
 public:
-    std::vector<std::shared_ptr<SerializableEntityNode>> children;
-    std::vector<std::shared_ptr<BaseSerializableComponent>> components;
+    std::vector<std::unique_ptr<SerializableEntityNode>> children;
+    std::vector<std::unique_ptr<BaseSerializableComponent>> components;
 };
 
 template<class Archive>

@@ -1,0 +1,216 @@
+{
+"scene_graph": {
+"roots": [
+{
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483649,
+"polymorphic_name": "nodec_scene::components::SerializableTransform",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"components": [
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2147483650,
+"polymorphic_name": "nodec_scene::components::SerializableName",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"name": "New Entity"
+}
+}
+},
+{
+"polymorphic_id": 2147483651,
+"polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/sphere.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483652,
+"polymorphic_name": "nodec_rendering::components::SerializableCamera",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"far_clip_plane": 100.0,
+"near_clip_plane": 0.009999999776482582,
+"projection": 0,
+"fov_angle": 45.0,
+"ortho_width": 10.0
+}
+}
+},
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": -2.194999933242798
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"name": "New Entity"
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"components": [
+{
+"polymorphic_id": 2147483653,
+"polymorphic_name": "nodec_rendering::components::SerializableDirectionalLight",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"color": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0,
+"w": 1.0
+},
+"intensity": 1.0
+}
+}
+},
+{
+"polymorphic_id": 1,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"local_position": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.0,
+"y": 0.0,
+"z": 0.0,
+"w": 1.0
+}
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"name": "New Entity"
+}
+}
+}
+],
+"children": []
+}
+}
+}
+]
+}
+}

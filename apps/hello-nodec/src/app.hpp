@@ -1,8 +1,6 @@
 #ifndef APP_HPP_
 #define APP_HPP_
 
-#define CEREAL_THREAD_SAFE 1
-
 #define EDITOR_MODE
 
 #include <nodec_animations/animation_curve.hpp>

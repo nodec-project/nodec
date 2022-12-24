@@ -1,6 +1,7 @@
 #ifndef NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
 
+#include <nodec_rendering/components/camera.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 
 #include <cereal/types/polymorphic.hpp>
@@ -19,7 +20,7 @@ public:
     float near_clip_plane{0.01f};
 
     Camera::Projection projection{Camera::Projection::Perspective};
-    
+
     float fov_angle{45.0f};
     float ortho_width{10.0f};
 

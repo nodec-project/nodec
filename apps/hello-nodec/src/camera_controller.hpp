@@ -68,7 +68,7 @@ public:
 
         serialization.register_component<CameraController, SerializableCameraController>(
             [&](const CameraController &controller) {
-                auto serializable = std::make_shared<SerializableCameraController>();
+                auto serializable = std::make_unique<SerializableCameraController>();
                 serializable->speed = controller.speed;
                 return serializable;
             },

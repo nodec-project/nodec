@@ -2,7 +2,7 @@
 
 namespace {
 
-inline std::shared_ptr<nodec_scene_serialization::SerializableEntityNode> ProcessSceneEntityNode(
+std::unique_ptr<nodec_scene_serialization::SerializableEntityNode> ProcessSceneEntityNode(
     nodec_scene::SceneEntity entity,
     const nodec_scene::SceneRegistry &sceneRegistry,
     const nodec_scene_serialization::SceneSerialization &sceneSerialization) {
@@ -21,7 +21,7 @@ inline std::shared_ptr<nodec_scene_serialization::SerializableEntityNode> Proces
     while (childEntity != null_entity) {
         auto child = ProcessSceneEntityNode(childEntity, sceneRegistry, sceneSerialization);
         if (!child) continue;
-        node->children.push_back(child);
+        node->children.push_back(std::move(child));
         childEntity = sceneRegistry.get_component<Hierarchy>(childEntity).next;
     }
 
@@ -50,7 +50,7 @@ bool ResourceExporter::ExportSceneGraph(const std::vector<nodec_scene::SceneEnti
     for (auto &root : roots) {
         auto node = ProcessSceneEntityNode(root, sceneRegistry, sceneSerialization);
         if (!node) continue;
-        sceneGraph.roots.push_back(node);
+        sceneGraph.roots.push_back(std::move(node));
     }
 
     archive(cereal::make_nvp("scene_graph", sceneGraph));

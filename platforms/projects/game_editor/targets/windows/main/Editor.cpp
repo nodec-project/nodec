@@ -1,6 +1,3 @@
-
-#define CEREAL_THREAD_SAFE 1
-
 // Thank you, Microsoft, for file WinDef.h with min/max redefinition.
 #define NOMINMAX
 
