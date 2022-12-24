@@ -14,6 +14,10 @@ public:
 
     // bool raycast(rayStart, rayEnd, RaycastHit)
 
+    // void set_gravity(const nodec::Vectro3f &gravity);
+
+    // nodec::Vector3f gravity();
+
 
 private:
     NODEC_DISABLE_COPY(PhysicsSystem)

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <nodec_physics/components/physics_shape.hpp>
+#include <nodec_physics/components/rigid_body.hpp>
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>
@@ -25,32 +27,25 @@
 #include <algorithm>
 
 class InspectorGUI {
-    using MeshRenderer = nodec_rendering::components::MeshRenderer;
-    using ResourceRegistry = nodec::resource_management::ResourceRegistry;
-    using Name = nodec_scene::components::Name;
-    using AudioSource = nodec_scene_audio::components::AudioSource;
-    using AudioClip = nodec_scene_audio::resources::AudioClip;
-    using ImageRenderer = nodec_rendering::components::ImageRenderer;
-
 public:
-    InspectorGUI(ResourceRegistry *pResourceRegistry)
-        : mpResourceRegistry{pResourceRegistry} {
+    InspectorGUI(nodec::resource_management::ResourceRegistry *resource_registry)
+        : resource_registry_{resource_registry} {
     }
 
-    void OnGUIName(Name &name) {
-        SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), name.name);
+    void on_gui_name(nodec_scene::components::Name &name) {
+        auto &buffer = imessentials::get_text_buffer(1024, name.name);
 
         ImGuiInputTextFlags input_text_flags = ImGuiInputTextFlags_EnterReturnsTrue;
         ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-        if (ImGui::InputText("##name", mTempStrBuffer, sizeof(mTempStrBuffer), input_text_flags)) {
+        if (ImGui::InputText("##name", buffer.data(), buffer.size(), input_text_flags)) {
             // on type enter
         }
-        name.name = mTempStrBuffer;
+        name.name = buffer.data();
     }
 
-    void onGUITransform(nodec_scene::components::Transform &trfm);
+    void on_gui_transform(nodec_scene::components::Transform &trfm);
 
-    void OnGUIMeshRenderer(MeshRenderer &renderer) {
+    void on_gui_mesh_renderer(nodec_rendering::components::MeshRenderer &renderer) {
         using namespace nodec;
         using namespace nodec_rendering::resources;
         using namespace nodec_rendering;
@@ -58,10 +53,10 @@ public:
             imessentials::list_edit(
                 "Meshes", renderer.meshes,
                 [&](int index, auto &mesh) {
-                    mesh = ResourceNameEdit("", mesh);
+                    mesh = resource_name_edit("", mesh);
                 },
                 [&]() {
-                    auto empty = mpResourceRegistry->get_resource_direct<Mesh>("");
+                    auto empty = resource_registry_->get_resource_direct<Mesh>("");
                     renderer.meshes.emplace_back(empty);
                 },
                 [&](int index, auto &mesh) {});
@@ -70,19 +65,35 @@ public:
             imessentials::list_edit(
                 "Materials", renderer.materials,
                 [&](int index, auto &material) {
-                    material = ResourceNameEdit("", material);
+                    material = resource_name_edit("", material);
                 },
                 [&]() {
-                    auto empty = mpResourceRegistry->get_resource_direct<Material>("");
+                    auto empty = resource_registry_->get_resource_direct<Material>("");
                     renderer.materials.emplace_back(empty);
                 },
                 [&](int index, auto &material) {});
         }
     }
 
-    void OnGUICamera(nodec_rendering::components::Camera & camera);
+    void on_gui_camera(nodec_rendering::components::Camera &camera);
 
-    void OnGUIDirectionalLight(nodec_rendering::components::DirectionalLight &light) {
+    void on_gui_rigid_body(nodec_physics::components::RigidBody &rigid_body) {
+        ImGui::DragFloat("Mass", &rigid_body.mass);
+    }
+
+    void on_gui_physics_shape(nodec_physics::components::PhysicsShape &shape) {
+        using namespace nodec_physics::components;
+
+        switch (shape.shape_type) {
+        case PhysicsShape::ShapeType::Box:
+            break;
+        default:
+            ImGui::Text("Unsupported shape.");
+            break;
+        }
+    }
+
+    void on_gui_directional_light(nodec_rendering::components::DirectionalLight &light) {
         using namespace nodec_rendering::components;
 
         ImGui::ColorEdit4("Color", light.color.v, ImGuiColorEditFlags_Float);
@@ -90,7 +101,7 @@ public:
         ImGui::DragFloat("Intensity", &light.intensity, 0.005f, 0.0f, 1.0f);
     }
 
-    void OnGUIPointLight(nodec_rendering::components::PointLight &light) {
+    void on_gui_point_light(nodec_rendering::components::PointLight &light) {
         using namespace nodec_rendering::components;
 
         ImGui::ColorEdit4("Color", light.color.v, ImGuiColorEditFlags_Float);
@@ -100,25 +111,25 @@ public:
         ImGui::DragFloat("Range", &light.range, 0.005f);
     }
 
-    void OnGUIPostProcessing(nodec_rendering::components::PostProcessing &postProcessing) {
+    void on_gui_post_processing(nodec_rendering::components::PostProcessing &processing) {
         using namespace nodec_rendering::components;
         using namespace nodec_rendering::resources;
 
         {
             ImGui::PushID("effects");
             ImGui::Text("Effects");
-            for (auto iter = postProcessing.effects.begin(); iter != postProcessing.effects.end();) {
+            for (auto iter = processing.effects.begin(); iter != processing.effects.end();) {
                 ImGui::PushID(&*iter);
 
                 ImGui::Checkbox("##enabled", &(iter->enabled));
                 ImGui::SameLine();
 
                 auto &material = iter->material;
-                material = ResourceNameEdit("##material", material);
+                material = resource_name_edit("##material", material);
 
                 ImGui::SameLine();
                 if (ImGui::Button("-")) {
-                    iter = postProcessing.effects.erase(iter);
+                    iter = processing.effects.erase(iter);
                     ImGui::PopID();
                     continue;
                 }
@@ -127,20 +138,20 @@ public:
             }
 
             if (ImGui::Button("+")) {
-                auto material = mpResourceRegistry->get_resource<Material>("").get();
-                postProcessing.effects.push_back({false, material});
+                auto material = resource_registry_->get_resource<Material>("").get();
+                processing.effects.push_back({false, material});
             }
 
             ImGui::PopID();
         }
     }
 
-    void OnGuiSceneLighting(nodec_rendering::components::SceneLighting &lighting) {
+    void on_gui_scene_lighting(nodec_rendering::components::SceneLighting &lighting) {
         ImGui::ColorEdit4("Ambient Color", lighting.ambient_color.v, ImGuiColorEditFlags_Float);
     }
 
-    void OnGuiAudioSource(AudioSource &source) {
-        source.clip = ResourceNameEdit("Clip", source.clip);
+    void on_gui_audio_source(nodec_scene_audio::components::AudioSource &source) {
+        source.clip = resource_name_edit("Clip", source.clip);
 
         ImGui::Checkbox("Is Playing", &source.is_playing);
 
@@ -153,18 +164,18 @@ public:
         ImGui::Checkbox("Loop", &source.loop);
     }
 
-    void OnGuiImageRenderer(ImageRenderer &renderer) {
-        renderer.image = ResourceNameEdit("Image", renderer.image);
-        renderer.material = ResourceNameEdit("Material", renderer.material);
+    void on_gui_image_renderer(nodec_rendering::components::ImageRenderer &renderer) {
+        renderer.image = resource_name_edit("Image", renderer.image);
+        renderer.material = resource_name_edit("Material", renderer.material);
         ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
     }
 
-    void OnGuiTextRenderer(nodec_rendering::components::TextRenderer &renderer) {
+    void on_gui_text_renderer(nodec_rendering::components::TextRenderer &renderer) {
         auto buffer = imessentials::get_text_buffer(1024, renderer.text);
         ImGui::InputTextMultiline("Text", buffer.data(), buffer.size());
         renderer.text = buffer.data();
-        renderer.font = ResourceNameEdit("Font", renderer.font);
-        renderer.material = ResourceNameEdit("Material", renderer.material);
+        renderer.font = resource_name_edit("Font", renderer.font);
+        renderer.material = resource_name_edit("Material", renderer.material);
 
         ImGui::ColorEdit4("Color", renderer.color.v, ImGuiColorEditFlags_Float);
 
@@ -172,40 +183,32 @@ public:
         ImGui::DragInt("Pixels Per Unit", &renderer.pixels_per_unit);
     }
 
-    void OnGuiNonVisible(nodec_rendering::components::NonVisible &nonVisible) {
+    void on_gui_non_visible(nodec_rendering::components::NonVisible &nonVisible) {
         ImGui::Checkbox("Self", &nonVisible.self);
     }
 
 private:
     template<typename T>
-    std::shared_ptr<T> ResourceNameEdit(const char *label, std::shared_ptr<T> resource) {
-        std::string origName;
+    std::shared_ptr<T> resource_name_edit(const char *label, std::shared_ptr<T> resource) {
+        std::string orig_name;
         bool found;
-        std::tie(origName, found) = mpResourceRegistry->lookup_name(resource);
+        std::tie(orig_name, found) = resource_registry_->lookup_name(resource);
 
-        SetStrBuffer(mTempStrBuffer, sizeof(mTempStrBuffer), origName);
+        auto &buffer = imessentials::get_text_buffer(1024, orig_name);
 
-        if (ImGui::InputText(label, mTempStrBuffer, sizeof(mTempStrBuffer), ImGuiInputTextFlags_EnterReturnsTrue)) {
-            std::string newName = mTempStrBuffer;
-            if (newName.empty()) {
+        if (ImGui::InputText(label, buffer.data(), buffer.size(), ImGuiInputTextFlags_EnterReturnsTrue)) {
+            std::string new_name = buffer.data();
+            if (new_name.empty()) {
                 // if empty, set resource to null.
                 resource.reset();
             } else {
-                auto newResource = mpResourceRegistry->get_resource<T>(newName).get();
-                resource = newResource ? newResource : resource;
+                auto new_resource = resource_registry_->get_resource<T>(new_name).get();
+                resource = new_resource ? new_resource : resource;
             }
         }
         return resource;
     }
 
-    void SetStrBuffer(char *pBuffer, const size_t bufferSize, const std::string &source) {
-        source.copy(pBuffer, bufferSize - 1);
-
-        auto null_pos = std::min(source.size(), bufferSize - 1);
-        pBuffer[null_pos] = '\0';
-    }
-
 private:
-    ResourceRegistry *mpResourceRegistry;
-    char mTempStrBuffer[1024]{0x00};
+    nodec::resource_management::ResourceRegistry *resource_registry_;
 };

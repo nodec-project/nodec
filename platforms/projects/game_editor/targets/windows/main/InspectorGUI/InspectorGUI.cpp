@@ -5,7 +5,7 @@ using namespace nodec_scene::components;
 using namespace nodec_rendering::components;
 using namespace nodec;
 
-void InspectorGUI::onGUITransform(Transform &trfm) {
+void InspectorGUI::on_gui_transform(Transform &trfm) {
     //static ImGuizmo::OPERATION currentGizmoOperation = ImGuizmo::TRANSLATE;
     //static ImGuizmo::MODE currentGizmoMode = ImGuizmo::LOCAL;
 
@@ -60,7 +60,7 @@ void InspectorGUI::onGUITransform(Transform &trfm) {
     ////ImGuizmo::Manipulate()
 }
 
-void InspectorGUI::OnGUICamera(Camera &camera) {
+void InspectorGUI::on_gui_camera(Camera &camera) {
     ImGui::DragFloat("Near Clip Plane", &camera.near_clip_plane);
     ImGui::DragFloat("Far Clip Plane", &camera.far_clip_plane);
 

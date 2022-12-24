@@ -203,6 +203,6 @@ private:
 
     std::unique_ptr<SceneAudioSystem> scene_audio_system_;
 
-    std::unique_ptr<PhysicsSystemBackend> physics_system_;
+    std::shared_ptr<PhysicsSystemBackend> physics_system_;
 
 };

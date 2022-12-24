@@ -26,14 +26,15 @@ Editor::Editor(Engine *engine)
     using namespace nodec_rendering::components;
     using namespace nodec_scene_audio::components;
     using namespace nodec_scene_serialization::components;
+    using namespace nodec_physics::components;
 
     register_menu_item("Window/Control",
                        [=]() { ControlWindow::init(window_manager(), this); });
 
-    register_menu_item("Window/Scene View",
-                       [=]() { SceneViewWindow::init(window_manager(),
-                                                     engine->window().GetGraphics(),
-                                                     engine->world_module().scene(), engine->scene_renderer()); });
+    // register_menu_item("Window/Scene View",
+    //                    [=]() { SceneViewWindow::init(window_manager(),
+    //                                                  engine->window().GetGraphics(),
+    //                                                  engine->world_module().scene(), engine->scene_renderer()); });
 
     register_menu_item("Window/Scene Hierarchy",
                        [=]() {
@@ -85,67 +86,77 @@ Editor::Editor(Engine *engine)
     inspector_component_registry_impl().register_component<Name>(
         "Name",
         [=](auto &name) {
-            inspector_gui_->OnGUIName(name);
+            inspector_gui_->on_gui_name(name);
+        });
+
+    inspector_component_registry_impl().register_component<RigidBody>(
+        "Rigid Body", [=](auto &rigid_body) {
+            inspector_gui_->on_gui_rigid_body(rigid_body);
+        });
+
+    inspector_component_registry_impl().register_component<PhysicsShape>(
+        "Physics Shape", [=](auto &shape) {
+            inspector_gui_->on_gui_physics_shape(shape);
         });
 
     inspector_component_registry_impl().register_component<Transform>(
         "Transform",
         [=](auto &trfm) {
-            inspector_gui_->onGUITransform(trfm);
+            inspector_gui_->on_gui_transform(trfm);
         });
 
     inspector_component_registry_impl().register_component<MeshRenderer>(
         "Mesh Renderer",
         [=](auto &renderer) {
-            inspector_gui_->OnGUIMeshRenderer(renderer);
+            inspector_gui_->on_gui_mesh_renderer(renderer);
         });
 
     inspector_component_registry_impl().register_component<Camera>(
         "Camera",
         [=](auto &camera) {
-            inspector_gui_->OnGUICamera(camera);
+            inspector_gui_->on_gui_camera(camera);
         });
 
     inspector_component_registry_impl().register_component<SceneLighting>(
         "Scene Lighting",
         [=](auto &lighting) {
-            inspector_gui_->OnGuiSceneLighting(lighting);
+            inspector_gui_->on_gui_scene_lighting(lighting);
         });
 
     inspector_component_registry_impl().register_component<DirectionalLight>(
         "Directional Light",
         [=](auto &light) {
-            inspector_gui_->OnGUIDirectionalLight(light);
+            inspector_gui_->on_gui_directional_light(light);
         });
 
     inspector_component_registry_impl().register_component<PointLight>(
         "Point Light",
         [=](auto &light) {
-            inspector_gui_->OnGUIPointLight(light);
+            inspector_gui_->on_gui_point_light(light);
         });
 
     inspector_component_registry_impl().register_component<AudioSource>(
         "Audio Source",
         [=](auto &source) {
-            inspector_gui_->OnGuiAudioSource(source);
+            inspector_gui_->on_gui_audio_source(source);
         });
 
     inspector_component_registry_impl().register_component<ImageRenderer>(
         "Image Renderer",
         [=](auto &renderer) {
-            inspector_gui_->OnGuiImageRenderer(renderer);
+            inspector_gui_->on_gui_image_renderer(renderer);
         });
 
     inspector_component_registry_impl().register_component<PostProcessing>(
         "Post Processing",
         [=](auto &process) {
-            inspector_gui_->OnGUIPostProcessing(process);
+            inspector_gui_->on_gui_post_processing(process);
         });
 
     inspector_component_registry_impl().register_component<TextRenderer>(
         "Text Renderer",
         [=](auto &renderer) {
-            inspector_gui_->OnGuiTextRenderer(renderer);
+            inspector_gui_->on_gui_text_renderer(renderer);
         });
 
     inspector_component_registry_impl().register_component<NonSerialized>(
@@ -155,7 +166,7 @@ Editor::Editor(Engine *engine)
     inspector_component_registry_impl().register_component<NonVisible>(
         "Non Visible",
         [=](auto &non_visible) {
-            inspector_gui_->OnGuiNonVisible(non_visible);
+            inspector_gui_->on_gui_non_visible(non_visible);
         });
 
     [=]() {

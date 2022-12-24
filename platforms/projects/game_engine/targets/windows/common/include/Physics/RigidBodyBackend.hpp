@@ -2,13 +2,18 @@
 
 #include <btBulletDynamicsCommon.h>
 
-#include <memory>
 #include <cassert>
+#include <memory>
 
 class RigidBodyBackend final {
 public:
-    RigidBodyBackend(const btRigidBody::btRigidBodyConstructionInfo& info) {
-        native_.reset(new btRigidBody(info));
+    RigidBodyBackend(float mass,
+                     std::unique_ptr<btMotionState> motion_state,
+                     std::unique_ptr<btCollisionShape> collision_shape,
+                     const btVector3 &local_inertia = btVector3(0, 0, 0))
+        : motion_state_(std::move(motion_state)),
+          collision_shape_(std::move(collision_shape)) {
+        native_.reset(new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass, motion_state_.get(), collision_shape_.get(), local_inertia)));
     }
 
     ~RigidBodyBackend() {
@@ -17,7 +22,7 @@ public:
         }
     }
 
-    btRigidBody& native() {
+    btRigidBody &native() {
         return *native_;
     }
 
@@ -36,6 +41,8 @@ public:
     }
 
 private:
-    btDynamicsWorld *binded_world{nullptr};
+    std::unique_ptr<btMotionState> motion_state_;
+    std::unique_ptr<btCollisionShape> collision_shape_;
     std::unique_ptr<btRigidBody> native_;
+    btDynamicsWorld *binded_world{nullptr};
 };

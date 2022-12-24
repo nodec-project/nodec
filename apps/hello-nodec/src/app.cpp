@@ -116,7 +116,10 @@ private:
 
             auto entt = world.scene().create_entity();
 
-            world.scene().registry().emplace_component<RigidBody>(entt);
+            auto &rb = world.scene().registry().emplace_component<RigidBody>(entt).first;
+
+            rb.mass = 10;
+
             world.scene().registry().emplace_component<PhysicsShape>(entt);
 
             temp = entt;
@@ -138,7 +141,7 @@ private:
     }
 
     void on_stepped(World &world) {
-        world.scene().registry().remove_component<nodec_physics::components::PhysicsShape>(temp);
+        //world.scene().registry().remove_component<nodec_physics::components::PhysicsShape>(temp);
     }
 
 private:

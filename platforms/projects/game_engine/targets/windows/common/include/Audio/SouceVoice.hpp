@@ -4,6 +4,8 @@
 #include <Exceptions.hpp>
 
 #include <atomic>
+#include <chrono>
+#include <thread>
 
 class SourceVoice : private IXAudio2VoiceCallback {
 public:

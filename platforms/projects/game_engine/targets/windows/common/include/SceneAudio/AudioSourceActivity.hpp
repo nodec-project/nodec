@@ -4,16 +4,13 @@
 
 #include <Audio/SouceVoice.hpp>
 
-#include <memory>
 #include <chrono>
-
+#include <memory>
 
 /**
  * ECS Component
  */
-class AudioSourceActivity {
-public:
-
+struct AudioSourceActivity {
     enum class State {
         Stopped,
         Playing
@@ -23,6 +20,4 @@ public:
     std::shared_ptr<AudioClipBackend> pClip;
     std::unique_ptr<SourceVoice> pVoice;
     std::chrono::milliseconds playBeginTime;
-
-
 };
