@@ -84,7 +84,7 @@ public:
         add_module<nodec_scene_serialization::SceneLoader>(scene_loader_);
 
         // ---
-        
+
         physics_system_.reset(new PhysicsSystemBackend(*world_module_));
 
         visibility_system_.reset(new nodec_rendering::systems::VisibilitySystem(world_module_->scene()));
@@ -173,7 +173,6 @@ public:
     }
 
 private:
-
     // imgui must be destroyed after window.
     std::unique_ptr<ImguiManager> imgui_manager_;
     std::unique_ptr<Window> window_;
@@ -204,5 +203,4 @@ private:
     std::unique_ptr<SceneAudioSystem> scene_audio_system_;
 
     std::shared_ptr<PhysicsSystemBackend> physics_system_;
-
 };
