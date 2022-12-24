@@ -1,5 +1,6 @@
 #include "InspectorGUI.hpp"
 
+//#include <ImGuizmo.h>
 
 using namespace nodec_scene::components;
 using namespace nodec_rendering::components;
@@ -58,6 +59,7 @@ void InspectorGUI::on_gui_transform(Transform &trfm) {
     //ImGuiIO &io = ImGui::GetIO();
     //ImGuizmo::SetRect(0, 0, io.DisplaySize.x, io.DisplaySize.y);
     ////ImGuizmo::Manipulate()
+
 }
 
 void InspectorGUI::on_gui_camera(Camera &camera) {

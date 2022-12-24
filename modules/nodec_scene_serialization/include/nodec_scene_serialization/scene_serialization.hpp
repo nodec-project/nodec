@@ -4,6 +4,7 @@
 #include "base_serializable_component.hpp"
 #include "serializable_entity_node.hpp"
 
+#include <nodec/logging.hpp>
 #include <nodec_scene/scene_registry.hpp>
 
 #include <unordered_map>
@@ -54,11 +55,11 @@ public:
      *   @code{.cpp}
      *   std::shared_ptr<SerializableComponent>(const Component&);
      *   @endcode
-     * 
+     *
      * @param preloader
      *  @code{.cpp}
-     *   
-     *  @endcode  
+     *
+     *  @endcode
      *
      * @param emplacer
      *   @code{.cpp}

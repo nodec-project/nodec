@@ -1,6 +1,8 @@
 #ifndef NODEC_RENDERING__SAMPLER_HPP_
 #define NODEC_RENDERING__SAMPLER_HPP_
 
+#include <functional>
+
 namespace nodec_rendering {
 
 struct Sampler {
