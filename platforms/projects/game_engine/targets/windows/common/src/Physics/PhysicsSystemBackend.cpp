@@ -61,8 +61,9 @@ void PhysicsSystemBackend::on_stepped(nodec_world::World &world) {
                     rb_trfm_updated.setOrigin(btVector3(world_position.x, world_position.y, world_position.z));
                     rb_trfm_updated.setRotation(btQuaternion(world_rotation.x, world_rotation.y, world_rotation.z, world_rotation.w));
                     activity->rigid_body_backend->native().setWorldTransform(rb_trfm_updated);
+
+                    activity->rigid_body_backend->native().activate(true);
                 }
-                activity->rigid_body_backend->native().activate(true);
 
                 // activity->rigid_body_backend->native().getMotionState()->setWorldTransform(rb_trfm);
                 // activity->rigid_body_backend->native().translate();
