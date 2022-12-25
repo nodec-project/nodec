@@ -10,6 +10,8 @@
 #include <nodec_scene/scene_registry.hpp>
 #include <nodec_scene_audio/components/audio_source.hpp>
 #include <nodec_scene_serialization/components/non_serialized.hpp>
+#include <nodec_serialization/nodec_physics/components/physics_shape.hpp>
+#include <nodec_serialization/nodec_physics/components/rigid_body.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
 #include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
@@ -28,6 +30,7 @@ SceneSerializationModuleBackend::SceneSerializationModuleBackend(nodec::resource
     using namespace nodec_rendering::resources;
     using namespace nodec_scene::components;
     using namespace nodec_scene_audio::components;
+    using namespace nodec_physics::components;
     using namespace nodec_scene;
 
     register_component<MeshRenderer, SerializableMeshRenderer>(
@@ -226,5 +229,31 @@ SceneSerializationModuleBackend::SceneSerializationModuleBackend(nodec::resource
         [](const SerializableNonVisible &serializable, SceneEntity entity, SceneRegistry &registry) {
             auto &non_visible = registry.emplace_component<NonVisible>(entity).first;
             non_visible.self = serializable.self;
+        });
+
+    register_component<RigidBody, SerializableRigidBody>(
+        [](const RigidBody &body) {
+            auto serializable = std::make_unique<SerializableRigidBody>();
+            serializable->mass = body.mass;
+            return serializable;
+        },
+        [](const SerializableRigidBody &serializable, SceneEntity entity, SceneRegistry &registry) {
+            auto &body = registry.emplace_component<RigidBody>(entity).first;
+            body.mass = serializable.mass;
+        });
+    
+    register_component<PhysicsShape, SerializablePhysicsShape>(
+        [](const PhysicsShape &shape) {
+            auto serializable = std::make_unique<SerializablePhysicsShape>();
+            serializable->shape_type = shape.shape_type;
+            serializable->size = shape.size;
+            serializable->radius = shape.radius;
+            return serializable;
+        },
+        [](const SerializablePhysicsShape &serializable, SceneEntity entity, SceneRegistry &registry) {
+            auto &shape = registry.emplace_component<PhysicsShape>(entity).first;
+            shape.shape_type = serializable.shape_type;
+            shape.size = serializable.size;
+            shape.radius = serializable.radius;
         });
 }

@@ -111,19 +111,19 @@ private:
             SceneEntityEmplacer{mainScene, world.scene(), entities::null_entity, serialization}.emplace_all();
         }
 
-        {
-            using namespace nodec_physics::components;
+        //{
+        //    using namespace nodec_physics::components;
 
-            auto entt = world.scene().create_entity();
+        //    auto entt = world.scene().create_entity();
 
-            auto &rb = world.scene().registry().emplace_component<RigidBody>(entt).first;
+        //    auto &rb = world.scene().registry().emplace_component<RigidBody>(entt).first;
 
-            rb.mass = 10;
+        //    rb.mass = 10;
 
-            world.scene().registry().emplace_component<PhysicsShape>(entt);
+        //    world.scene().registry().emplace_component<PhysicsShape>(entt);
 
-            temp = entt;
-        }
+        //    temp = entt;
+        //}
         //{
         //    target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
 
@@ -145,7 +145,7 @@ private:
     }
 
 private:
-    SceneEntity temp;
+    //SceneEntity temp;
 
     NodecEngine &engine;
     std::shared_ptr<CameraControllerSystem> camera_controller_system_;

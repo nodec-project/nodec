@@ -239,13 +239,39 @@
 "data": {
 "components": [
 {
+"polymorphic_id": 2147483655,
+"polymorphic_name": "nodec_physics::components::SerializablePhysicsShape",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"shape_type": 1,
+"size": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"radius": 0.5
+}
+}
+},
+{
+"polymorphic_id": 2147483656,
+"polymorphic_name": "nodec_physics::components::SerializableRigidBody",
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"mass": 10.0
+}
+}
+},
+{
 "polymorphic_id": 2,
 "ptr_wrapper": {
 "valid": 1,
 "data": {
 "local_position": {
 "x": -1.4500000476837159,
-"y": 1.5099999904632569,
+"y": 1.5049999952316285,
 "z": -2.990000009536743
 },
 "local_scale": {
@@ -296,7 +322,7 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2147483655,
+"polymorphic_id": 2147483657,
 "polymorphic_name": "nodec_rendering::components::SerializableSceneLighting",
 "ptr_wrapper": {
 "valid": 1,
@@ -360,7 +386,7 @@
 "data": {
 "local_position": {
 "x": 1.4249999523162842,
-"y": 1.5099999904632569,
+"y": 1.4850000143051148,
 "z": -2.990000009536743
 },
 "local_scale": {
@@ -1976,7 +2002,7 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2147483656,
+"polymorphic_id": 2147483658,
 "polymorphic_name": "nodec_rendering::components::SerializableDirectionalLight",
 "ptr_wrapper": {
 "valid": 1,
@@ -2035,7 +2061,7 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2147483657,
+"polymorphic_id": 2147483659,
 "polymorphic_name": "SerializableCameraController",
 "ptr_wrapper": {
 "valid": 1,
@@ -2045,7 +2071,7 @@
 }
 },
 {
-"polymorphic_id": 2147483658,
+"polymorphic_id": 2147483660,
 "polymorphic_name": "nodec_rendering::components::SerializableCamera",
 "ptr_wrapper": {
 "valid": 1,
@@ -2092,7 +2118,7 @@
 }
 },
 {
-"polymorphic_id": 2147483659,
+"polymorphic_id": 2147483661,
 "polymorphic_name": "nodec_rendering::components::SerializablePostProcessing",
 "ptr_wrapper": {
 "valid": 1,
@@ -2124,6 +2150,30 @@
 "valid": 1,
 "data": {
 "components": [
+{
+"polymorphic_id": 7,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"shape_type": 0,
+"size": {
+"x": 10.0,
+"y": 0.0010000000474974514,
+"z": 10.0
+},
+"radius": 0.5
+}
+}
+},
+{
+"polymorphic_id": 8,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"mass": 0.0
+}
+}
+},
 {
 "polymorphic_id": 2,
 "ptr_wrapper": {
@@ -2272,7 +2322,7 @@
 }
 },
 {
-"polymorphic_id": 2147483660,
+"polymorphic_id": 2147483662,
 "polymorphic_name": "nodec_rendering::components::SerializableTextRenderer",
 "ptr_wrapper": {
 "valid": 1,
@@ -2302,7 +2352,7 @@
 "data": {
 "components": [
 {
-"polymorphic_id": 2147483661,
+"polymorphic_id": 2147483663,
 "polymorphic_name": "nodec_scene_audio::components::SerializableAudioSource",
 "ptr_wrapper": {
 "valid": 1,
@@ -2390,7 +2440,7 @@
 }
 },
 {
-"polymorphic_id": 2147483662,
+"polymorphic_id": 2147483664,
 "polymorphic_name": "nodec_rendering::components::SerializableImageRenderer",
 "ptr_wrapper": {
 "valid": 1,
@@ -2398,6 +2448,87 @@
 "image": "org.nodec.hello-nodec/textures/proto/marker.png",
 "material": "org.nodec-rendering.essentials/materials/image-default.material",
 "pixels_per_unit": 100
+}
+}
+}
+],
+"children": []
+}
+}
+},
+{
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"components": [
+{
+"polymorphic_id": 7,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"shape_type": 0,
+"size": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"radius": 0.5
+}
+}
+},
+{
+"polymorphic_id": 8,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"mass": 10.0
+}
+}
+},
+{
+"polymorphic_id": 2,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"local_position": {
+"x": -2.0,
+"y": 2.569999933242798,
+"z": -1.3450000286102296
+},
+"local_scale": {
+"x": 1.0,
+"y": 1.0,
+"z": 1.0
+},
+"local_rotation": {
+"x": 0.21954278647899629,
+"y": -0.402608186006546,
+"z": -0.09285818040370941,
+"w": 0.883790135383606
+}
+}
+}
+},
+{
+"polymorphic_id": 3,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"name": "Cube"
+}
+}
+},
+{
+"polymorphic_id": 6,
+"ptr_wrapper": {
+"valid": 1,
+"data": {
+"meshes": [
+"org.nodec-rendering.essentials/meshes/cube.mesh"
+],
+"materials": [
+"org.nodec-rendering.essentials/materials/pbr-defer-default.material"
+]
 }
 }
 }

@@ -81,17 +81,7 @@ public:
         ImGui::DragFloat("Mass", &rigid_body.mass);
     }
 
-    void on_gui_physics_shape(nodec_physics::components::PhysicsShape &shape) {
-        using namespace nodec_physics::components;
-
-        switch (shape.shape_type) {
-        case PhysicsShape::ShapeType::Box:
-            break;
-        default:
-            ImGui::Text("Unsupported shape.");
-            break;
-        }
-    }
+    void on_gui_physics_shape(nodec_physics::components::PhysicsShape &shape);
 
     void on_gui_directional_light(nodec_rendering::components::DirectionalLight &light) {
         using namespace nodec_rendering::components;

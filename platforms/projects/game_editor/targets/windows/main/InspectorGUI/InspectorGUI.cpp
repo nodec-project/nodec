@@ -81,3 +81,28 @@ void InspectorGUI::on_gui_camera(Camera &camera) {
     default: break;
     }
 }
+
+void InspectorGUI::on_gui_physics_shape(nodec_physics::components::PhysicsShape &shape) {
+    using namespace nodec_physics::components;
+
+    
+    {
+        int current = static_cast<int>(shape.shape_type);
+        ImGui::Combo("Shape Type", &current, "Box\0Sphere");
+        shape.shape_type = static_cast<PhysicsShape::ShapeType>(current);
+    }
+
+    switch (shape.shape_type) {
+    case PhysicsShape::ShapeType::Box:
+        ImGui::DragFloat3("Size", shape.size.v);
+
+        break;
+    case PhysicsShape::ShapeType::Sphere:
+        ImGui::DragFloat("Radius", &shape.radius);
+
+        break;
+    default:
+        ImGui::Text("Unsupported shape.");
+        break;
+    }
+}

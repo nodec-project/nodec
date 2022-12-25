@@ -19,6 +19,8 @@ struct PhysicsShape {
     ShapeType shape_type{ShapeType::Box};
 
     nodec::Vector3f size{1.0f, 1.0f, 1.0f};
+
+    float radius{0.5f};
 };
 
 } // namespace components
