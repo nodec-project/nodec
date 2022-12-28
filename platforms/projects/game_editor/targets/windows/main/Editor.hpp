@@ -28,6 +28,8 @@ public:
     ~Editor() {
     }
 
+    void setup();
+
     void step() {
         if (state_ != State::Paused) return;
 
@@ -51,31 +53,7 @@ public:
         state_ = State::Paused;
     }
 
-    void update() {
-        switch (state_) {
-        case State::Playing:
-            engine_->world_module().step();
-            break;
-
-        case State::Paused:
-
-            if (do_one_step_) {
-                engine_->world_module().step(1 / 60.0f);
-                do_one_step_ = false;
-            }
-
-            break;
-        }
-
-        imessentials::impl::show_main_menu();
-
-        ImGuizmo::BeginFrame();
-
-        window_manager_impl().update_windows();
-
-        bool showDemoWindow = true;
-        ImGui::ShowDemoWindow(&showDemoWindow);
-    }
+    void update();
 
     void enter_playmode() noexcept {
         mode_ = Mode::Play;

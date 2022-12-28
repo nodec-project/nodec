@@ -26,9 +26,8 @@ namespace nodec {
  *
  *   DirectX-HLSL:
  *       Column-major representation
- *       Column-major order?
- *          * Maybe Row-major
- *              * https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math
+ *       Maybe Row-major
+ *          * https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math
  * 
  *      
  */
@@ -55,6 +54,8 @@ public:
 
     template<typename U>
     explicit Matrix4x4(const Matrix4x4<U> &mat);
+
+    void set(const T c1[4], const T c2[4], const T c3[4], const T c4[4]);
 
 public:
     static const Matrix4x4<T> identity;
@@ -105,6 +106,14 @@ Matrix4x4<T>::Matrix4x4(
       m21(m21), m22(m22), m23(m23), m24(m24),
       m31(m31), m32(m32), m33(m33), m34(m34),
       m41(m41), m42(m42), m43(m43), m44(m44) {
+}
+
+template<typename T>
+inline void Matrix4x4<T>::set(const T c1[4], const T c2[4], const T c3[4], const T c4[4]) {
+    c[0].set(c1);
+    c[1].set(c2);
+    c[2].set(c3);
+    c[3].set(c4);
 }
 
 template<typename T>

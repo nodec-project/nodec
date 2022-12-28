@@ -2,10 +2,8 @@
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__CAMERA_HPP_
 
 #include <nodec_rendering/components/camera.hpp>
-#include <nodec_scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/base_serializable_component.hpp>
 
-#include <cereal/types/polymorphic.hpp>
-#include <cereal/types/vector.hpp>
 
 namespace nodec_rendering {
 namespace components {

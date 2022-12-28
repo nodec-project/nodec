@@ -13,7 +13,7 @@
 
 namespace imwindows {
 
-class EntityInspectorWindow : public imessentials::BaseWindow {
+class EntityInspectorWindow final : public imessentials::BaseWindow {
     using EntityRegistry = nodec::entities::Registry;
     using Entity = nodec::entities::Entity;
     using ChangeTargetSignal = nodec::signals::Signal<void(Entity)>;
@@ -119,19 +119,6 @@ public:
     };
 
 public:
-    static decltype(auto) init(imessentials::WindowManager &manager,
-                               EntityRegistry *entity_registry,
-                               ComponentRegistry *component_registry,
-                               Entity init_target_entity,
-                               ChangeTargetSignal::SignalInterface change_target_signal) {
-        auto &window = manager.get_window<EntityInspectorWindow>();
-        window.entity_registry_ = entity_registry;
-        window.component_registry_ = component_registry;
-        window.target_entity_ = init_target_entity;
-        window.change_target_signal_connection_ = change_target_signal.connect([&](auto entity) { window.inspect(entity); });
-        ImGui::SetWindowFocus(window.name());
-    }
-
     static void help_marker(const char *desc) {
         ImGui::TextDisabled("(?)");
         if (ImGui::IsItemHovered()) {
@@ -144,8 +131,15 @@ public:
     }
 
 public:
-    EntityInspectorWindow()
-        : BaseWindow("Entity Inspector", nodec::Vector2f(300, 500)) {
+    EntityInspectorWindow(EntityRegistry *entity_registry,
+                          ComponentRegistry *component_registry,
+                          Entity init_target_entity,
+                          ChangeTargetSignal::SignalInterface change_target_signal)
+        : BaseWindow("Entity Inspector", nodec::Vector2f(300, 500)),
+          entity_registry_(entity_registry),
+          component_registry_(component_registry),
+          target_entity_(init_target_entity),
+          change_target_signal_connection_(change_target_signal.connect([&](auto entity) { inspect(entity); })) {
     }
 
     ~EntityInspectorWindow() {}

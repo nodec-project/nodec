@@ -1,20 +1,13 @@
 #include <SceneSerialization/SceneSerializationModuleBackend.hpp>
 
-#include <nodec_rendering/components/image_renderer.hpp>
-#include <nodec_rendering/components/mesh_renderer.hpp>
-#include <nodec_rendering/components/non_visible.hpp>
-#include <nodec_rendering/components/point_light.hpp>
-#include <nodec_rendering/components/text_renderer.hpp>
-#include <nodec_scene/components/name.hpp>
-#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene/scene_registry.hpp>
-#include <nodec_scene_audio/components/audio_source.hpp>
 #include <nodec_scene_serialization/components/non_serialized.hpp>
 #include <nodec_serialization/nodec_physics/components/physics_shape.hpp>
 #include <nodec_serialization/nodec_physics/components/rigid_body.hpp>
 #include <nodec_serialization/nodec_rendering/components/camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/directional_light.hpp>
 #include <nodec_serialization/nodec_rendering/components/image_renderer.hpp>
+#include <nodec_serialization/nodec_rendering/components/main_camera.hpp>
 #include <nodec_serialization/nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_serialization/nodec_rendering/components/non_visible.hpp>
 #include <nodec_serialization/nodec_rendering/components/point_light.hpp>
@@ -114,6 +107,15 @@ SceneSerializationModuleBackend::SceneSerializationModuleBackend(nodec::resource
             for (const auto &effect : serializable.effects) {
                 processing.effects.push_back({effect.enabled, resource_registry->get_resource<Material>(effect.material).get()});
             }
+        });
+
+    register_component<MainCamera, SerializableMainCamera>(
+        [=](const MainCamera &camera) {
+            auto serializable = std::make_unique<SerializableMainCamera>();
+            return serializable;
+        },
+        [=](const SerializableMainCamera &serializable, SceneEntity entity, SceneRegistry &registry) {
+            auto &camera = registry.emplace_component<MainCamera>(entity).first;
         });
 
     register_component<Name, SerializableName>(
@@ -241,7 +243,7 @@ SceneSerializationModuleBackend::SceneSerializationModuleBackend(nodec::resource
             auto &body = registry.emplace_component<RigidBody>(entity).first;
             body.mass = serializable.mass;
         });
-    
+
     register_component<PhysicsShape, SerializablePhysicsShape>(
         [](const PhysicsShape &shape) {
             auto serializable = std::make_unique<SerializablePhysicsShape>();

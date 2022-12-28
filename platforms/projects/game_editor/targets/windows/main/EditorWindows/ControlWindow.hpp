@@ -9,15 +9,14 @@
 class ControlWindow : public imessentials::BaseWindow {
 
 public:
-    static void init(imessentials::WindowManager& manager, Editor* editor) {
-        auto& window = manager.get_window<ControlWindow>();
-        window.editor_ = editor;
-        ImGui::SetWindowFocus(window.name());
-    }
+    //static void init(imessentials::WindowManager& manager, ) {
+    //    ImGui::SetWindowFocus(window.name());
+    //}
 
 public:
-    ControlWindow()
-        : BaseWindow("Control##EditorWindows", nodec::Vector2f(500, 50)) {
+    ControlWindow(Editor *editor)
+        : BaseWindow("Control##EditorWindows", nodec::Vector2f(500, 50)),
+          editor_(editor) {
 
     }
 

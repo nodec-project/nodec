@@ -11,9 +11,9 @@
 namespace nodec_scene_editor {
 
 class SceneEditor {
-    using EntityInspectorWindow = imwindows::EntityInspectorWindow;
-
 public:
+    using EntityInspectorWindow = imwindows::EntityInspectorWindow;
+    
     SceneEditor() = default;
 
 public:

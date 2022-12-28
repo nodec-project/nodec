@@ -29,6 +29,7 @@ protected:
         engine->screen_module().internal_size = engine->screen_module().internal_resolution;
 
         engine->setup();
+        editor->setup();
 
         // Do first step (initialize).
         engine->world_module().reset();

@@ -11,13 +11,25 @@ namespace math {
  */
 namespace gfx {
 
-inline Vector3f transform(const Vector3f &vec, const Quaternionf &q) {
-    Quaternionf qv(vec.x, vec.y, vec.z, 0.0f);
-    auto vb = q * Quaternionf(vec.x, vec.y, vec.z, 0.0f) * conj(q);
-    return Vector3f(vb.x, vb.y, vb.z);
+/**
+ * @brief Rotates the vector v by rotation q.
+ * 
+ * v' = q * [v.x, v.y, v.z, 0] * conj(q)  (|q| = 1)
+ */
+inline Vector3f rotate(const Vector3f &v, const Quaternionf &q) {
+    // implementation refs:
+    //  * https://github.com/MonoGame/MonoGame/blob/develop/MonoGame.Framework/Vector3.cs#L1084
+    float x = 2 * (q.y * v.z - q.z * v.y);
+    float y = 2 * (q.z * v.x - q.x * v.z);
+    float z = 2 * (q.x * v.y - q.y * v.x);
+
+    return {
+        v.x + x * q.w + (q.y * z - q.z * y),
+        v.y + y * q.w + (q.z * x - q.x * z),
+        v.z + z * q.w + (q.x * y - q.y * x)};
 }
 
-inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f matrix) {
+inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
     float sqrt;
     float half;
     float scale = matrix.m11 + matrix.m22 + matrix.m33;
@@ -102,13 +114,10 @@ inline bool decompose_trs(const Matrix4x4f &trs, Vector3f &translation, Quaterni
     }
 
     rotation = quaternion_from_rotation_matrix(
-        {
-            trs.m11 / scale.x, trs.m12 / scale.y, trs.m13 / scale.z, 0.f,
-            trs.m21 / scale.x, trs.m22 / scale.y, trs.m23 / scale.z, 0.f,
-            trs.m31 / scale.x, trs.m32 / scale.y, trs.m33 / scale.z, 0.f,
-            0.f, 0.f, 0.f, 1.f
-        }
-    );
+        {trs.m11 / scale.x, trs.m12 / scale.y, trs.m13 / scale.z, 0.f,
+         trs.m21 / scale.x, trs.m22 / scale.y, trs.m23 / scale.z, 0.f,
+         trs.m31 / scale.x, trs.m32 / scale.y, trs.m33 / scale.z, 0.f,
+         0.f, 0.f, 0.f, 1.f});
 
     return true;
 }

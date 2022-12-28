@@ -1,9 +1,9 @@
 #ifndef NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__MESH_RENDERER_HPP_
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__MESH_RENDERER_HPP_
 
+#include <nodec_rendering/components/mesh_renderer.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 
-#include <cereal/types/polymorphic.hpp>
 #include <cereal/types/vector.hpp>
 
 namespace nodec_rendering {

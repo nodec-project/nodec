@@ -101,8 +101,8 @@ private:
         world.scene().registry().view<Transform, CameraController>().each([&](const SceneEntity &entity, Transform &trfm, CameraController &ctrl) {
             const float delta_time = world.clock().delta_time();
 
-            auto forward = math::gfx::transform(Vector3f(0, 0, 1), trfm.local_rotation);
-            auto right = math::gfx::transform(Vector3f(1, 0, 0), trfm.local_rotation);
+            auto forward = math::gfx::rotate(Vector3f(0, 0, 1), trfm.local_rotation);
+            auto right = math::gfx::rotate(Vector3f(1, 0, 0), trfm.local_rotation);
 
             Vector2f move_vec;
 

@@ -12,15 +12,8 @@
 
 namespace imwindows {
 
-class LogWindow : public imessentials::BaseWindow {
+class LogWindow final : public imessentials::BaseWindow {
     const int MAX_RECORDS = 100;
-
-public:
-    static void init(imessentials::WindowManager &manager) {
-        auto &window = manager.get_window<LogWindow>();
-
-        ImGui::SetWindowFocus(window.name());
-    }
 
 public:
     LogWindow()

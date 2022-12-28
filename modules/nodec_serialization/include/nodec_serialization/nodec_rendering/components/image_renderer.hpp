@@ -1,12 +1,12 @@
 #ifndef NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__IMAGE_RENDERER_HPP_
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__IMAGE_RENDERER_HPP_
 
+#include <nodec_rendering/components/image_renderer.hpp>
 #include <nodec_rendering/resources/material.hpp>
 #include <nodec_rendering/resources/texture.hpp>
 #include <nodec_scene_serialization/base_serializable_component.hpp>
 
 #include <cereal/types/polymorphic.hpp>
-#include <cereal/types/vector.hpp>
 
 namespace nodec_rendering {
 namespace components {

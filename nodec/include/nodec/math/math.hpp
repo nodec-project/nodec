@@ -85,7 +85,7 @@ template<typename T>
 constexpr T default_rel_tol = std::numeric_limits<T>::epsilon() * 128;
 
 template<typename T>
-constexpr T default_abs_tol = std::numeric_limits<T>::min();
+constexpr T default_abs_tol = (std::numeric_limits<T>::min)();
 
 /**
  * @brief
@@ -121,8 +121,8 @@ bool approx_equal(T a, T b,
     // For comparison with infinities.
     if (a == b) return true;
     // Clamp the value with max for handing infinity.
-    const float norm = (std::min)((std::max)(std::abs(a), std::abs(b)), std::numeric_limits<T>::max());
-    return std::abs(a - b) <= std::max(rel_tol * norm, abs_tol);
+    const float norm = (std::min)((std::max)(std::abs(a), std::abs(b)), (std::numeric_limits<T>::max)());
+    return std::abs(a - b) <= (std::max)(rel_tol * norm, abs_tol);
 }
 
 template<typename T,

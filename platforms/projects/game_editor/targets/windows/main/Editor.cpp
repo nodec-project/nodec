@@ -14,6 +14,8 @@
 #include <imwindows/material_editor_window.hpp>
 #include <imwindows/scene_hierarchy_window.hpp>
 
+//#include <nodec_rendering/components/main_camera.hpp>
+
 Editor::Editor(Engine *engine)
     : engine_{engine} {
     using namespace nodec;
@@ -25,58 +27,90 @@ Editor::Editor(Engine *engine)
     using namespace nodec_scene_serialization::components;
     using namespace nodec_physics::components;
 
-    register_menu_item("Window/Control",
-                       [=]() { ControlWindow::init(window_manager(), this); });
+    window_manager().register_window<ControlWindow>([=]() {
+        return std::make_unique<ControlWindow>(this);
+    });
 
-    // register_menu_item("Window/Scene View",
-    //                    [=]() { SceneViewWindow::init(window_manager(),
-    //                                                  engine->window().GetGraphics(),
-    //                                                  engine->world_module().scene(), engine->scene_renderer()); });
+    window_manager().register_window<SceneViewWindow>([=]() {
+        return std::make_unique<SceneViewWindow>(engine->window().GetGraphics(),
+                                                 engine->world_module().scene(), engine->scene_renderer());
+    });
 
-    register_menu_item("Window/Scene Hierarchy",
-                       [=]() {
-                           auto &window = SceneHierarchyWindow::init(window_manager(), &engine->world_module().scene());
-                           window.selected_entity_changed().connect([=](auto entity) { selection().select(entity); });
-                       });
+    window_manager().register_window<SceneHierarchyWindow>([=]() {
+        auto window = std::make_unique<SceneHierarchyWindow>(&engine->world_module().scene());
+        window->selected_entity_changed().connect([=](auto entity) { selection().select(entity); });
+        return window;
+    });
 
-    register_menu_item("Window/Entity Inspector",
-                       [=]() {
-                           EntityInspectorWindow::init(
-                               window_manager(),
-                               &engine->world_module().scene().registry(),
-                               &inspector_component_registry_impl(),
-                               selection().active_scene_entity(),
-                               selection().active_scene_entity_changed());
-                       });
+    window_manager().register_window<EntityInspectorWindow>([=]() {
+        return std::make_unique<EntityInspectorWindow>(&engine->world_module().scene().registry(),
+                                                       &inspector_component_registry_impl(),
+                                                       selection().active_scene_entity(),
+                                                       selection().active_scene_entity_changed());
+    });
 
-    register_menu_item("Window/Log",
-                       [=]() { LogWindow::init(window_manager()); });
+    window_manager().register_window<LogWindow>([=]() {
+        return std::make_unique<LogWindow>();
+    });
 
-    register_menu_item("Window/Material Editor",
-                       [=]() { MaterialEditorWindow::init(
-                                   window_manager(),
-                                   &engine->resources_module().registry()); });
+    window_manager().register_window<MaterialEditorWindow>([=]() {
+        return std::make_unique<MaterialEditorWindow>(&engine->resources_module().registry());
+    });
 
-    register_menu_item("Window/Asset Importer",
-                       [=]() {
-                           AssetImportWindow::init(
-                               window_manager(),
-                               engine->resources_module().resource_path(),
-                               &engine->world_module().scene(),
-                               &engine->resources_module().registry());
-                       });
+    window_manager().register_window<AssetImportWindow>([=]() {
+        return std::make_unique<AssetImportWindow>(engine->resources_module().resource_path(),
+                                                   &engine->world_module().scene(),
+                                                   &engine->resources_module().registry());
+    });
 
-    register_menu_item("Window/Scene Serialization",
-                       [=]() {
-                           SceneSerializationWindow::init(
-                               window_manager(),
-                               &engine->world_module().scene(),
-                               &engine->scene_serialization(),
-                               engine->resources_module().resource_path(),
-                               &engine->resources_module().registry(),
-                               selection().active_scene_entity(),
-                               selection().active_scene_entity_changed());
-                       });
+    window_manager().register_window<SceneSerializationWindow>([=]() {
+        return std::make_unique<SceneSerializationWindow>(&engine->world_module().scene(),
+                                                          &engine->scene_serialization(),
+                                                          engine->resources_module().resource_path(),
+                                                          &engine->resources_module().registry(),
+                                                          selection().active_scene_entity(),
+                                                          selection().active_scene_entity_changed());
+    });
+
+    register_menu_item("Window/Control", [=]() {
+        auto &window = window_manager().get_window<ControlWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Scene View", [=]() {
+        auto &window = window_manager().get_window<SceneViewWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Scene Hierarchy", [=]() {
+        auto &window = window_manager().get_window<SceneHierarchyWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Entity Inspector", [=]() {
+        auto &window = window_manager().get_window<EntityInspectorWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Log", [&]() {
+        auto &window = window_manager().get_window<LogWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Material Editor", [&]() {
+        auto &window = window_manager().get_window<MaterialEditorWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Asset Importer", [&]() {
+        auto &window = window_manager().get_window<AssetImportWindow>();
+        window.focus();
+    });
+
+    register_menu_item("Window/Scene Serialization", [&]() {
+        auto &window = window_manager().get_window<SceneSerializationWindow>();
+        window.focus();
+    });
 
     inspector_gui_.reset(new InspectorGUI(&engine->resources_module().registry()));
 
@@ -166,6 +200,11 @@ Editor::Editor(Engine *engine)
             inspector_gui_->on_gui_non_visible(non_visible);
         });
 
+    // inspector_component_registry_impl().register_component<MainCamera>(
+    //     "Main Camera",
+    //     [=](auto &camera) {
+    //     });
+
     [=]() {
         std::ifstream file("editor-config.json", std::ios::binary);
         if (!file) return;
@@ -193,3 +232,57 @@ Editor::Editor(Engine *engine)
         }
     }();
 }
+
+void Editor::setup() {
+    using namespace imwindows;
+
+    window_manager().get_window<ControlWindow>();
+
+    // TODO: At first we should fix SceneRenderer.
+    //  SceneRenderer is so buggy for using multi-target rendering.
+    // window_manager().get_window<SceneViewWindow>();
+
+    window_manager().get_window<SceneHierarchyWindow>();
+    window_manager().get_window<EntityInspectorWindow>();
+    window_manager().get_window<LogWindow>();
+    window_manager().get_window<MaterialEditorWindow>();
+    window_manager().get_window<AssetImportWindow>();
+    window_manager().get_window<SceneSerializationWindow>();
+}
+
+void Editor::update() {
+    switch (state_) {
+    case State::Playing:
+        engine_->world_module().step();
+        break;
+
+    case State::Paused:
+
+        if (do_one_step_) {
+            engine_->world_module().step(1 / 60.0f);
+            do_one_step_ = false;
+        }
+
+        break;
+    }
+
+    // switch (mode_) {
+    // case Mode::Edit:
+    //     update_on_edit_mode();
+    //     break;
+    // default: break;
+    // }
+
+    imessentials::impl::show_main_menu();
+
+    ImGuizmo::BeginFrame();
+
+    window_manager_impl().update_windows();
+
+    bool showDemoWindow = true;
+    ImGui::ShowDemoWindow(&showDemoWindow);
+}
+//
+// void Editor::update_on_edit_mode() {
+//    auto &scene_registry = engine_->world_module().scene().registry();
+//}

@@ -9,29 +9,18 @@
 namespace imwindows {
 
 class SceneHierarchyWindow : public imessentials::BaseWindow {
-    using Scene = nodec_scene::Scene;
-    using SceneEntity = nodec_scene::SceneEntity;
-
 public:
-    static decltype(auto) init(imessentials::WindowManager &manager, Scene *scene) {
-        auto &window = manager.get_window<SceneHierarchyWindow>();
-        window.scene_ = scene;
-        ImGui::SetWindowFocus(window.name());
-        return window;
-    }
-
-public:
-    SceneHierarchyWindow()
-        : BaseWindow("Scene Hierarchy", nodec::Vector2f(200, 500)) {
+    SceneHierarchyWindow(nodec_scene::Scene *scene)
+        : BaseWindow("Scene Hierarchy", nodec::Vector2f(200, 500)),
+          scene_(scene) {
     }
 
     void on_gui() override {
         using namespace nodec_scene::components;
         using namespace nodec::entities;
+        using namespace nodec_scene;
 
-        if (!scene_) {
-            return;
-        }
+        if (!scene_) return;
 
         if (ImGui::Button("Create")) {
             auto entity = scene_->create_entity("New Entity");
@@ -58,10 +47,11 @@ public:
     }
 
 private:
-    void show_entity_node(const SceneEntity entity) {
+    void show_entity_node(const nodec_scene::SceneEntity entity) {
         using namespace nodec;
         using namespace nodec::entities;
         using namespace nodec_scene::components;
+        using namespace nodec_scene;
 
         bool node_open = false;
         {
@@ -141,7 +131,7 @@ private:
         }
     }
 
-    void select(SceneEntity entity) {
+    void select(nodec_scene::SceneEntity entity) {
         if (entity == selected_entity_) {
             return;
         }
@@ -150,10 +140,10 @@ private:
     }
 
 private:
-    Scene *scene_{nullptr};
-    SceneEntity selected_entity_{nodec::entities::null_entity};
+    nodec_scene::Scene *scene_{nullptr};
+    nodec_scene::SceneEntity selected_entity_{nodec::entities::null_entity};
 
-    nodec::signals::Signal<void(SceneEntity selected)> selected_entity_changed_;
+    nodec::signals::Signal<void(nodec_scene::SceneEntity selected)> selected_entity_changed_;
 };
 
 } // namespace imwindows
