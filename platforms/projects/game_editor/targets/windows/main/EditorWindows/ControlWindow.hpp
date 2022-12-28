@@ -21,24 +21,7 @@ public:
     }
 
     void on_gui() override {
-        if (!editor_) {
-            return;
-        }
-
-
-        switch (editor_->mode()) {
-        case Editor::Mode::Edit:
-            if (ImGui::Button("Play Mode")) {
-                editor_->enter_playmode();
-            }
-            break;
-
-        case Editor::Mode::Play:
-            if (ImGui::Button("Edit Mode")) {
-                editor_->exit_playmode();
-            }
-            break;
-        }
+        if (!editor_) return;
 
         switch (editor_->state()) {
         case Editor::State::Paused:
@@ -64,12 +47,10 @@ public:
         if (ImGui::Button("Reset")) {
             editor_->reset();
         }
-
     }
 
 private:
     Editor* editor_{ nullptr };
-    bool edit_mode_{ false };
 };
 
 
