@@ -18,6 +18,9 @@ class SceneViewWindow : public imessentials::BaseWindow {
     const UINT VIEW_WIDTH = 640;
     const UINT VIEW_HEIGHT = 480;
 
+    //const UINT VIEW_WIDTH = 1280;
+    //const UINT VIEW_HEIGHT = 720;
+
 public:
     SceneViewWindow(Graphics &gfx, nodec_scene::Scene &scene, SceneRenderer &renderer);
 

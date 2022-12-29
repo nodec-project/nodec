@@ -4,7 +4,6 @@
 
 #include <DirectXMath.h>
 
-
 SceneViewWindow::SceneViewWindow(Graphics &gfx, nodec_scene::Scene &scene, SceneRenderer &renderer)
     : BaseWindow("Scene View##EditorWindows", nodec::Vector2f(VIEW_WIDTH, VIEW_HEIGHT)),
       scene_(&scene), renderer_(&renderer) {
@@ -75,9 +74,8 @@ void SceneViewWindow::on_gui() {
         projection_.set(matrix.m[0], matrix.m[1], matrix.m[2], matrix.m[3]);
     }
 
-    auto &io = ImGui::GetIO();
-
-    {
+    if (ImGui::IsWindowFocused()) {
+        auto &io = ImGui::GetIO();
         Vector3f position;
         Vector3f scale;
         Quaternionf rotation;
@@ -99,6 +97,19 @@ void SceneViewWindow::on_gui() {
             position += up * delta.y * SCALE_FACTOR;
 
             ImGui::ResetMouseDragDelta(ImGuiMouseButton_Middle);
+        }
+
+        if (ImGui::IsMouseDragging(ImGuiMouseButton_Right)) {
+            constexpr float SCALE_FACTOR = 0.1f;
+            const auto delta = ImGui::GetMouseDragDelta(ImGuiMouseButton_Right);
+
+            // Apply rotation around the local right vector after current rotation.
+            rotation = math::gfx::quatenion_from_angle_axis(delta.y * SCALE_FACTOR, right) * rotation;
+
+            // And apply rotation arround the world up vector.
+            rotation = math::gfx::quatenion_from_angle_axis(delta.x * SCALE_FACTOR, Vector3f(0.f, 1.f, 0.f)) * rotation;
+
+            ImGui::ResetMouseDragDelta(ImGuiMouseButton_Right);
         }
 
         position += forward * io.MouseWheel;

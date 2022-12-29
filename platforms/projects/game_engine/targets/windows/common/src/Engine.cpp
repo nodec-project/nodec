@@ -73,3 +73,22 @@ void Engine::setup() {
         scene_audio_system_->UpdateAudio(world_module_->scene().registry());
     });
 }
+
+void Engine::frame_end() {
+    using namespace nodec::entities;
+    using namespace nodec_scene::components;
+
+    {
+        auto root = world_module_->scene().hierarchy_system().root_hierarchy().first;
+        while (root != null_entity) {
+            nodec_scene::systems::update_transform(world_module_->scene().registry(), root);
+            root = world_module_->scene().registry().get_component<Hierarchy>(root).next;
+        }
+    }
+
+    scene_renderer_->Render(world_module_->scene(),
+                            &window_->GetGraphics().GetRenderTargetView(),
+                            window_->GetGraphics().GetWidth(), window_->GetGraphics().GetHeight());
+
+    window_->GetGraphics().EndFrame();
+}

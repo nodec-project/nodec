@@ -50,7 +50,7 @@ public:
             if (!world.scene().registry().is_valid(center_entt)) return;
 
             auto &trfm = world.scene().registry().get_component<Transform>(center_entt);
-            trfm.local_rotation = math::gfx::angle_axis(curve.evaluate(world.clock().current_time() * 1000).second, Vector3f{0.0f, 1.0f, 0.0f});
+            trfm.local_rotation = math::gfx::quatenion_from_angle_axis(curve.evaluate(world.clock().current_time() * 1000).second, Vector3f{0.0f, 1.0f, 0.0f});
             trfm.dirty = true;
         });
     }
