@@ -1,7 +1,11 @@
 #pragma once
 
+#include "RigidBodyMotionState.hpp"
+
 #include <nodec_physics/components/physics_shape.hpp>
 #include <nodec_physics/components/rigid_body.hpp>
+#include <nodec/math/math.hpp>
+#include <nodec_bullet3_compat/nodec_bullet3_compat.hpp>
 
 #include <btBulletDynamicsCommon.h>
 
@@ -39,7 +43,7 @@ public:
         btVector3 local_inertia(0, 0, 0);
         collision_shape_->calculateLocalInertia(mass, local_inertia);
 
-        motion_state_.reset(new btDefaultMotionState());
+        motion_state_.reset(new RigidBodyMotionState());
         native_.reset(new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass, motion_state_.get(), collision_shape_.get(), local_inertia)));
     }
 
@@ -67,8 +71,29 @@ public:
         binded_world->removeRigidBody(native_.get());
     }
 
+    void update_transform(const nodec::Vector3f& world_position, const nodec::Quaternionf& world_rotation) {
+        using namespace nodec;
+
+        //btTransform rb_trfm;
+        //motion_state_->getWorldTransform(rb_trfm);
+        const auto &rb_trfm = native_->getWorldTransform();
+
+        const auto rb_position = static_cast<Vector3f>(to_vector3(rb_trfm.getOrigin()));
+        const auto rb_rotation = static_cast<Quaternionf>(to_quatenion(rb_trfm.getRotation()));
+
+        if (math::approx_equal(world_position, rb_position) && math::approx_equal_rotation(world_rotation, rb_rotation, math::default_rel_tol<float>, 0.001f)) return;
+
+        btTransform rb_trfm_updated;
+        rb_trfm_updated.setIdentity();
+        rb_trfm_updated.setOrigin(btVector3(world_position.x, world_position.y, world_position.z));
+        rb_trfm_updated.setRotation(btQuaternion(world_rotation.x, world_rotation.y, world_rotation.z, world_rotation.w));
+        native_->setWorldTransform(rb_trfm_updated);
+
+        native_->activate();
+    }
+
 private:
-    std::unique_ptr<btMotionState> motion_state_;
+    std::unique_ptr<RigidBodyMotionState> motion_state_;
     std::unique_ptr<btCollisionShape> collision_shape_;
     std::unique_ptr<btRigidBody> native_;
     btDynamicsWorld *binded_world{nullptr};

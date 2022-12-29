@@ -4,6 +4,7 @@
 
 #include <nodec_physics/components/physics_shape.hpp>
 #include <nodec_physics/components/rigid_body.hpp>
+#include <nodec_bullet3_compat/nodec_bullet3_compat.hpp>
 
 #include <nodec/logging.hpp>
 #include <nodec/math/gfx.hpp>
@@ -42,6 +43,9 @@ void PhysicsSystemBackend::on_stepped(nodec_world::World &world) {
                     // When the activity is first created.
 
                     auto rigid_body_backend = std::make_unique<RigidBodyBackend>(rigid_body.mass, shape, world_scale);
+                    rigid_body_backend->update_transform(world_position, world_rotation);
+                    activity->prev_world_position = world_position;
+                    activity->prev_world_rotation = world_rotation;
 
                     rigid_body_backend->bind_world(*dynamics_world_);
                     activity->rigid_body_backend = std::move(rigid_body_backend);
@@ -49,28 +53,13 @@ void PhysicsSystemBackend::on_stepped(nodec_world::World &world) {
             }
 
             // Sync entity -> bullet rigid body.
+            activity->rigid_body_backend->update_transform(world_position, world_rotation);
 
-            {
-
-                btTransform rb_trfm;
-                activity->rigid_body_backend->native().getMotionState()->getWorldTransform(rb_trfm);
-
-                if (activity->prev_world_position != world_position || activity->prev_world_rotation != world_rotation) {
-                    btTransform rb_trfm_updated;
-                    rb_trfm_updated.setIdentity();
-                    rb_trfm_updated.setOrigin(btVector3(world_position.x, world_position.y, world_position.z));
-                    rb_trfm_updated.setRotation(btQuaternion(world_rotation.x, world_rotation.y, world_rotation.z, world_rotation.w));
-                    activity->rigid_body_backend->native().setWorldTransform(rb_trfm_updated);
-
-                    activity->rigid_body_backend->native().activate(true);
-                }
-
-                // activity->rigid_body_backend->native().getMotionState()->setWorldTransform(rb_trfm);
-                // activity->rigid_body_backend->native().translate();
-
-                activity->prev_world_position = world_position;
-                activity->prev_world_rotation = world_rotation;
-            }
+            //if (world_position != activity->prev_world_position || world_rotation != activity->prev_world_rotation) {
+            //    activity->rigid_body_backend->update_transform(world_position, world_rotation);
+            //}
+            activity->prev_world_position = world_position;
+            activity->prev_world_rotation = world_rotation;
         });
 
     {
@@ -89,7 +78,11 @@ void PhysicsSystemBackend::on_stepped(nodec_world::World &world) {
         }
     }
 
-    dynamics_world_->stepSimulation(world.clock().delta_time(), 10);
+    {
+        const auto delta_time = world.clock().delta_time();
+        if (delta_time == 0.f) return;
+        dynamics_world_->stepSimulation(delta_time, 10);
+    }
 
     // Sync rigid body -> entity.
     world.scene().registry().view<RigidBody, RigidBodyActivity, Transform>().each(
@@ -99,15 +92,14 @@ void PhysicsSystemBackend::on_stepped(nodec_world::World &world) {
             btTransform rb_trfm;
             activity.rigid_body_backend->native().getMotionState()->getWorldTransform(rb_trfm);
 
-            Vector3f world_position(rb_trfm.getOrigin().getX(), rb_trfm.getOrigin().getY(), rb_trfm.getOrigin().getZ());
-            Quaternionf world_rotation(
-                rb_trfm.getRotation().getX(),
-                rb_trfm.getRotation().getY(),
-                rb_trfm.getRotation().getZ(),
-                rb_trfm.getRotation().getW());
+            const auto world_position = static_cast<Vector3f>(to_vector3(rb_trfm.getOrigin()));
+            const auto world_rotation = static_cast<Quaternionf>(to_quatenion(rb_trfm.getRotation()));
+
+            //activity.prev_world_position = world_position;
+            //activity.prev_world_rotation = world_rotation;
 
             auto delta_position = world_position - activity.prev_world_position;
-            auto delta_rotation = math::conj(activity.prev_world_rotation) * world_rotation;
+            auto delta_rotation = math::inv(activity.prev_world_rotation) * world_rotation;
 
             trfm.local_position += delta_position;
             trfm.local_rotation = delta_rotation * trfm.local_rotation;

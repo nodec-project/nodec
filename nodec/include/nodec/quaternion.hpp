@@ -74,6 +74,11 @@ inline void Quaternion<T>::set(T _x, T _y, T _z, T _w) {
 }
 
 template<typename T>
+inline Quaternion<T> operator-(const Quaternion<T> &right) {
+    return Quaternion<T>(-right.x, -right.y, -right.z, -right.w);
+}
+
+template<typename T>
 inline Quaternion<T> operator*(const Quaternion<T> &left, const Quaternion<T> &right) {
     return Quaternion<T>(
         +left.x * right.w + left.y * right.z - left.z * right.y + left.w * right.x,
