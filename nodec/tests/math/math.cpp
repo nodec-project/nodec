@@ -161,7 +161,7 @@ TEST_CASE("testing matrix inv.") {
 
         auto inv = math::inv(mat, &determinant);
 
-        CHECK(math::approx_equal(mat * inv, Matrix4x4f::identity));
+        CHECK(math::approx_equal(mat * inv, Matrix4x4f::identity, math::default_rel_tol<float>, 0.000001f));
         CHECK(math::approx_equal(determinant, 88.f));
     }
 

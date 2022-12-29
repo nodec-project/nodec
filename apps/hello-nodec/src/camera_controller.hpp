@@ -68,7 +68,7 @@ public:
 
         serialization.register_component<CameraController, SerializableCameraController>(
             [&](const CameraController &controller) {
-                auto serializable = std::make_shared<SerializableCameraController>();
+                auto serializable = std::make_unique<SerializableCameraController>();
                 serializable->speed = controller.speed;
                 return serializable;
             },
@@ -101,8 +101,8 @@ private:
         world.scene().registry().view<Transform, CameraController>().each([&](const SceneEntity &entity, Transform &trfm, CameraController &ctrl) {
             const float delta_time = world.clock().delta_time();
 
-            auto forward = math::gfx::transform(Vector3f(0, 0, 1), trfm.local_rotation);
-            auto right = math::gfx::transform(Vector3f(1, 0, 0), trfm.local_rotation);
+            auto forward = math::gfx::rotate(Vector3f(0, 0, 1), trfm.local_rotation);
+            auto right = math::gfx::rotate(Vector3f(1, 0, 0), trfm.local_rotation);
 
             Vector2f move_vec;
 
@@ -111,9 +111,9 @@ private:
             if (a_pressed) move_vec.x -= 1;
             if (d_pressed) move_vec.x += 1;
             if (math::norm(move_vec) > 0.001f) {
-                //logging::InfoStream(__FILE__, __LINE__) << move_vec;
+                // logging::InfoStream(__FILE__, __LINE__) << move_vec;
                 move_vec = math::normalize(move_vec);
-                //logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
+                // logging::InfoStream(__FILE__, __LINE__) << trfm.local_position;
 
                 trfm.local_position += move_vec.y * forward * ctrl.speed * delta_time;
                 trfm.local_position += move_vec.x * right * ctrl.speed * delta_time;
@@ -123,10 +123,17 @@ private:
             }
 
             if (math::norm(rotation_delta) > 1) {
+                constexpr float SCALE_FACTOR = 0.1f;
                 // logging::InfoStream(__FILE__, __LINE__) << rotation_delta;
 
-                trfm.local_rotation *= math::gfx::angle_axis(rotation_delta.x * 0.1f, Vector3f(0, 1, 0));
-                trfm.local_rotation *= math::gfx::angle_axis(rotation_delta.y * 0.1f, Vector3f(1, 0, 0));
+                // Apply rotation around the local right vector after current rotation.
+                trfm.local_rotation = math::gfx::quatenion_from_angle_axis(rotation_delta.y * SCALE_FACTOR, right) * trfm.local_rotation;
+
+                // And apply rotation arround the world up vector.
+                trfm.local_rotation = math::gfx::quatenion_from_angle_axis(rotation_delta.x * SCALE_FACTOR, Vector3f(0.f, 1.f, 0.f)) * trfm.local_rotation;
+
+                //trfm.local_rotation *= math::gfx::quatenion_from_angle_axis(rotation_delta.x * 0.1f, Vector3f(0, 1, 0));
+                //trfm.local_rotation *= math::gfx::quatenion_from_angle_axis(rotation_delta.y * 0.1f, Vector3f(1, 0, 0));
                 trfm.dirty = true;
                 rotation_delta.set(0, 0);
             }

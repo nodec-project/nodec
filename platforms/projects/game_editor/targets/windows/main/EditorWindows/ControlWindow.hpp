@@ -9,37 +9,19 @@
 class ControlWindow : public imessentials::BaseWindow {
 
 public:
-    static void init(imessentials::WindowManager& manager, Editor* editor) {
-        auto& window = manager.get_window<ControlWindow>();
-        window.editor_ = editor;
-        ImGui::SetWindowFocus(window.name());
-    }
+    //static void init(imessentials::WindowManager& manager, ) {
+    //    ImGui::SetWindowFocus(window.name());
+    //}
 
 public:
-    ControlWindow()
-        : BaseWindow("Control##EditorWindows", nodec::Vector2f(500, 50)) {
+    ControlWindow(Editor *editor)
+        : BaseWindow("Control##EditorWindows", nodec::Vector2f(500, 50)),
+          editor_(editor) {
 
     }
 
     void on_gui() override {
-        if (!editor_) {
-            return;
-        }
-
-
-        switch (editor_->mode()) {
-        case Editor::Mode::Edit:
-            if (ImGui::Button("Play Mode")) {
-                editor_->enter_playmode();
-            }
-            break;
-
-        case Editor::Mode::Play:
-            if (ImGui::Button("Edit Mode")) {
-                editor_->exit_playmode();
-            }
-            break;
-        }
+        if (!editor_) return;
 
         switch (editor_->state()) {
         case Editor::State::Paused:
@@ -65,12 +47,10 @@ public:
         if (ImGui::Button("Reset")) {
             editor_->reset();
         }
-
     }
 
 private:
     Editor* editor_{ nullptr };
-    bool edit_mode_{ false };
 };
 
 

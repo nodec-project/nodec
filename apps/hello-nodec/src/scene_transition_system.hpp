@@ -37,7 +37,7 @@ public:
         : scene_loader_{loader} {
         serialization.register_component<SceneTransition, SerializableSceneTransition>(
             [&](auto &transition) {
-                auto serializable = std::make_shared<SerializableSceneTransition>();
+                auto serializable = std::make_unique<SerializableSceneTransition>();
                 serializable->scenes = transition.scenes;
                 serializable->current_scene_index = transition.current_scene_index;
                 return serializable;

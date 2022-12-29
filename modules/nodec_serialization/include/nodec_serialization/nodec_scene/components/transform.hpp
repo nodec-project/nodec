@@ -1,8 +1,8 @@
 #ifndef NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__TRANSFORM_HPP_
 #define NODEC_SERIALIZATION__NODEC_SCENE__COMPONENTS__TRANSFORM_HPP_
 
+#include <nodec_scene/components/transform.hpp>
 #include <nodec_scene_serialization/base_serializable_component.hpp>
-
 #include <nodec_serialization/nodec/quaternion.hpp>
 #include <nodec_serialization/nodec/vector3.hpp>
 

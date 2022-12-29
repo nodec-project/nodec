@@ -22,11 +22,13 @@ public:
 public:
     Vector4();
     Vector4(T x, T y, T z, T w);
+    Vector4(const T v[4]);
 
     template<typename U>
     explicit Vector4(const Vector4<U> &vector);
 
     void set(T x, T y, T z, T w);
+    void set(const T v[4]);
 
 public:
     static const Vector4<T> ones;
@@ -52,6 +54,10 @@ inline Vector4<T>::Vector4(T x, T y, T z, T w)
     : x(x), y(y), z(z), w(w) {}
 
 template<typename T>
+inline Vector4<T>::Vector4(const T v[4])
+    : x(v[0]), y(v[1]), z(v[2]), w(v[3]) {}
+
+template<typename T>
 template<typename U>
 inline Vector4<T>::Vector4(const Vector4<U> &vector)
     : x(static_cast<T>(vector.x)),
@@ -66,6 +72,14 @@ inline void Vector4<T>::set(T _x, T _y, T _z, T _w) {
     y = _y;
     z = _z;
     w = _w;
+}
+
+template<typename T>
+inline void Vector4<T>::set(const T v[4]) {
+    x = v[0];
+    y = v[1];
+    z = v[2];
+    w = v[3];
 }
 
 template<typename T>

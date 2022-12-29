@@ -85,7 +85,7 @@ template<typename T>
 constexpr T default_rel_tol = std::numeric_limits<T>::epsilon() * 128;
 
 template<typename T>
-constexpr T default_abs_tol = std::numeric_limits<T>::min();
+constexpr T default_abs_tol = (std::numeric_limits<T>::min)();
 
 /**
  * @brief
@@ -121,8 +121,38 @@ bool approx_equal(T a, T b,
     // For comparison with infinities.
     if (a == b) return true;
     // Clamp the value with max for handing infinity.
-    const float norm = (std::min)((std::max)(std::abs(a), std::abs(b)), std::numeric_limits<T>::max());
-    return std::abs(a - b) <= std::max(rel_tol * norm, abs_tol);
+    const float norm = (std::min)((std::max)(std::abs(a), std::abs(b)), (std::numeric_limits<T>::max)());
+    return std::abs(a - b) <= (std::max)(rel_tol * norm, abs_tol);
+}
+
+template<typename T,
+         std::enable_if_t<std::is_floating_point<T>::value> * = nullptr>
+bool approx_equal(const Vector3<T> &a, const Vector3<T> &b,
+                  T rel_tol = default_rel_tol<T>,
+                  T abs_tol = default_abs_tol<T>) {
+    return approx_equal(a.x, b.x, rel_tol, abs_tol)
+           && approx_equal(a.y, b.y, rel_tol, abs_tol)
+           && approx_equal(a.z, b.z, rel_tol, abs_tol);
+}
+
+template<typename T,
+         std::enable_if_t<std::is_floating_point<T>::value> * = nullptr>
+bool approx_equal(const Quaternion<T> &a, const Quaternion<T> &b,
+                  T rel_tol = default_rel_tol<T>,
+                  T abs_tol = default_abs_tol<T>) {
+    return approx_equal(a.x, b.x, rel_tol, abs_tol)
+           && approx_equal(a.y, b.y, rel_tol, abs_tol)
+           && approx_equal(a.z, b.z, rel_tol, abs_tol)
+           && approx_equal(a.w, b.w, rel_tol, abs_tol);
+}
+
+template<typename T,
+         std::enable_if_t<std::is_floating_point<T>::value> * = nullptr>
+bool approx_equal_rotation(const Quaternion<T> &a, const Quaternion<T> &b,
+                           T rel_tol = default_rel_tol<T>,
+                           T abs_tol = default_abs_tol<T>) {
+    // https://gamedev.stackexchange.com/questions/75072/how-can-i-compare-two-quaternions-for-logical-equality
+    return approx_equal(a, b, rel_tol, abs_tol) || approx_equal(a, -b, rel_tol, abs_tol);
 }
 
 template<typename T,
@@ -131,21 +161,29 @@ bool approx_equal(const Matrix4x4<T> &a, const Matrix4x4<T> &b,
                   T rel_tol = default_rel_tol<T>,
                   T abs_tol = default_abs_tol<T>) {
     return approx_equal(a.m[0], b.m[0], rel_tol, abs_tol)
-           || approx_equal(a.m[1], b.m[1], rel_tol, abs_tol)
-           || approx_equal(a.m[2], b.m[2], rel_tol, abs_tol)
-           || approx_equal(a.m[3], b.m[3], rel_tol, abs_tol)
-           || approx_equal(a.m[4], b.m[4], rel_tol, abs_tol)
-           || approx_equal(a.m[5], b.m[5], rel_tol, abs_tol)
-           || approx_equal(a.m[6], b.m[6], rel_tol, abs_tol)
-           || approx_equal(a.m[7], b.m[7], rel_tol, abs_tol)
-           || approx_equal(a.m[8], b.m[8], rel_tol, abs_tol)
-           || approx_equal(a.m[9], b.m[9], rel_tol, abs_tol)
-           || approx_equal(a.m[10], b.m[10], rel_tol, abs_tol)
-           || approx_equal(a.m[11], b.m[11], rel_tol, abs_tol)
-           || approx_equal(a.m[12], b.m[12], rel_tol, abs_tol)
-           || approx_equal(a.m[13], b.m[13], rel_tol, abs_tol)
-           || approx_equal(a.m[14], b.m[14], rel_tol, abs_tol)
-           || approx_equal(a.m[15], b.m[15], rel_tol, abs_tol);
+           && approx_equal(a.m[1], b.m[1], rel_tol, abs_tol)
+           && approx_equal(a.m[2], b.m[2], rel_tol, abs_tol)
+           && approx_equal(a.m[3], b.m[3], rel_tol, abs_tol)
+           && approx_equal(a.m[4], b.m[4], rel_tol, abs_tol)
+           && approx_equal(a.m[5], b.m[5], rel_tol, abs_tol)
+           && approx_equal(a.m[6], b.m[6], rel_tol, abs_tol)
+           && approx_equal(a.m[7], b.m[7], rel_tol, abs_tol)
+           && approx_equal(a.m[8], b.m[8], rel_tol, abs_tol)
+           && approx_equal(a.m[9], b.m[9], rel_tol, abs_tol)
+           && approx_equal(a.m[10], b.m[10], rel_tol, abs_tol)
+           && approx_equal(a.m[11], b.m[11], rel_tol, abs_tol)
+           && approx_equal(a.m[12], b.m[12], rel_tol, abs_tol)
+           && approx_equal(a.m[13], b.m[13], rel_tol, abs_tol)
+           && approx_equal(a.m[14], b.m[14], rel_tol, abs_tol)
+           && approx_equal(a.m[15], b.m[15], rel_tol, abs_tol);
+}
+
+template<typename T>
+Quaternion<T> inv(const Quaternion<T> &q) {
+    const float num2 = (((q.x * q.x) + (q.y * q.y)) + (q.z * q.z)) + (q.w * q.w);
+    const float num = 1.f / num2;
+
+    return {-q.x * num, -q.y * num, -q.z * num, q.w * num};
 }
 
 template<typename T>

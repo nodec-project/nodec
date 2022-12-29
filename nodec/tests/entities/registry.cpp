@@ -61,6 +61,26 @@ TEST_CASE("Testing component_constructed signal.") {
     }
 }
 
+TEST_CASE("Testing all_of, any_of.") {
+    using namespace nodec::entities;
+
+    Registry registry;
+
+    const auto e0 = registry.create_entity();
+    const auto e1 = registry.create_entity();
+
+    registry.emplace_component<int>(e1);
+    registry.emplace_component<char>(e1);
+
+    CHECK(registry.all_of<>(e0));
+    CHECK(!registry.any_of<>(e1));
+
+    CHECK(!registry.all_of<int, const char>(e0));
+    CHECK(registry.all_of<const int, char>(e1));
+
+    CHECK(!registry.any_of<const int, double>(e0));
+    CHECK(registry.any_of<const int, double>(e1));
+}
 
 
 //

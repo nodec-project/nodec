@@ -3,14 +3,14 @@
 "roots": [
 {
 "ptr_wrapper": {
-"id": 2147483649,
+"valid": 1,
 "data": {
 "components": [
 {
 "polymorphic_id": 2147483649,
 "polymorphic_name": "nodec_rendering::components::SerializablePointLight",
 "ptr_wrapper": {
-"id": 2147483650,
+"valid": 1,
 "data": {
 "color": {
 "x": 1.0,
@@ -27,7 +27,7 @@
 "polymorphic_id": 2147483650,
 "polymorphic_name": "nodec_scene::components::SerializableTransform",
 "ptr_wrapper": {
-"id": 2147483651,
+"valid": 1,
 "data": {
 "local_position": {
 "x": 0.0,
@@ -52,7 +52,7 @@
 "polymorphic_id": 2147483651,
 "polymorphic_name": "nodec_scene::components::SerializableName",
 "ptr_wrapper": {
-"id": 2147483652,
+"valid": 1,
 "data": {
 "name": "Light"
 }
@@ -62,7 +62,7 @@
 "polymorphic_id": 2147483652,
 "polymorphic_name": "nodec_rendering::components::SerializableMeshRenderer",
 "ptr_wrapper": {
-"id": 2147483653,
+"valid": 1,
 "data": {
 "meshes": [
 "org.nodec-rendering.essentials/meshes/sphere.mesh"

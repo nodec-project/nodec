@@ -9,6 +9,7 @@
 #include "storage.hpp"
 #include "view.hpp"
 
+#include <algorithm>
 #include <cassert>
 #include <memory>
 #include <sstream>
@@ -17,7 +18,6 @@
 
 namespace nodec {
 namespace entities {
-
 
 template<typename Entity>
 class BasicRegistry {
@@ -28,7 +28,7 @@ class BasicRegistry {
 
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
-        const type_info* type_info;
+        const type_info *type_info;
     };
 
     decltype(auto) generate_identifier(const std::size_t pos) noexcept {
@@ -177,6 +177,30 @@ public:
         }
     }
 
+    /**
+     * @brief Check if an entity is part of all the given component.
+     */
+    template<typename... Components>
+    bool all_of(const Entity entity) const {
+        // NOTE: If over C++17, we can use fold expression.
+        //  return (pool_assured<std::remove_const_t<Type>>().contains(entt) && ...);
+
+        std::array<bool, sizeof...(Components)> values{pool_assured<std::remove_const_t<Components>>()->contains(entity)...};
+        return std::all_of(values.cbegin(), values.cend(), [](auto value) { return value; });
+    }
+
+    /**
+     * @brief Check if an entity is part of at least one given component.
+     */
+    template<typename... Components>
+    bool any_of(const Entity entity) const {
+        // NOTE: If over C++17, we can use fold expression.
+        //  return (pool_assured<std::remove_const_t<Type>>().contains(entt) || ...);
+
+        std::array<bool, sizeof...(Components)> values{pool_assured<std::remove_const_t<Components>>()->contains(entity)...};
+        return std::any_of(values.cbegin(), values.cend(), [](auto value) { return value; });
+    }
+
     void clear() {
         for (auto pos = pools.size(); pos; --pos) {
             auto &pdata = pools[pos - 1];
@@ -198,7 +222,7 @@ public:
 
         return pool_assured<Component>()->emplace(*this, entity, std::forward<Args>(args)...);
     }
-    
+
     template<typename Component>
     bool remove_component(const Entity entity) {
         if (!is_valid(entity)) {

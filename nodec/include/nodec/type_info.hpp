@@ -5,6 +5,7 @@
 
 #include <atomic>
 #include <cstdint>
+#include <functional>
 #include <type_traits>
 
 namespace nodec {
@@ -73,9 +74,9 @@ constexpr bool operator>=(const type_info &lhs, const type_info &rhs) noexcept {
 /**
  * @brief Returns the type info object associated to a given type.
  *
- * If type is a reference type, the result refers to a type_info object 
+ * If type is a reference type, the result refers to a type_info object
  * representing the referenced type (that is, type_id(T&) == type_id(T)).
- * In all cases, top-level cv-qualifiers are ignored by type_id (that is, 
+ * In all cases, top-level cv-qualifiers are ignored by type_id (that is,
  * type_id(const T) == type_id(T)).
  * These behaviors are same as native typeid operator.
  *
@@ -96,10 +97,20 @@ type_id() noexcept {
 }
 
 template<typename Type>
-const type_info& type_id(Type&&) noexcept {
+const type_info &type_id(Type &&) noexcept {
     return type_id<std::remove_cv_t<std::remove_reference_t<Type>>>();
 }
 
 } // namespace nodec
 
+namespace std {
+
+template<>
+struct hash<nodec::type_info> {
+    std::size_t operator()(const nodec::type_info &info) const noexcept {
+        return info.seq_index();
+    }
+};
+
+}; // namespace std
 #endif

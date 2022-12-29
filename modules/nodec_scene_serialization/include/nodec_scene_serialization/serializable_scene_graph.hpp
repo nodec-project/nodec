@@ -13,7 +13,7 @@ namespace nodec_scene_serialization {
 
 class SerializableSceneGraph {
 public:
-    std::vector<std::shared_ptr<SerializableEntityNode>> roots;
+    std::vector<std::unique_ptr<SerializableEntityNode>> roots;
 };
 
 template<class Archive>

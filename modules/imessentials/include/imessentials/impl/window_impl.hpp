@@ -3,24 +3,22 @@
 
 #include <imessentials/window.hpp>
 
-#include <imgui.h>
-
 #include <nodec/logging.hpp>
 
 namespace imessentials {
 namespace impl {
 
-class WindowManagerImpl : public WindowManager {
+class WindowManagerImpl final : public WindowManager {
 public:
     WindowManagerImpl() = default;
 
 public:
     void update_windows() {
-        for (auto iter = active_windows.begin(); iter != active_windows.end();) {
+        for (auto iter = active_windows_.begin(); iter != active_windows_.end();) {
             auto &window = iter->second;
 
             if (window->is_closed()) {
-                iter = active_windows.erase(iter);
+                iter = active_windows_.erase(iter);
                 continue;
             }
 

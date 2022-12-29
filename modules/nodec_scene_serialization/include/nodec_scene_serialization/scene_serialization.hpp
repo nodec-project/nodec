@@ -4,6 +4,7 @@
 #include "base_serializable_component.hpp"
 #include "serializable_entity_node.hpp"
 
+#include <nodec/logging.hpp>
 #include <nodec_scene/scene_registry.hpp>
 
 #include <unordered_map>
@@ -12,23 +13,25 @@
 namespace nodec_scene_serialization {
 
 class SceneSerialization {
+public:
     using SceneRegistry = nodec_scene::SceneRegistry;
     using SceneEntity = nodec_scene::SceneEntity;
 
+private:
     class BaseComponentSerialization {
     public:
-        virtual std::shared_ptr<BaseSerializableComponent> serialize(const void *component) const = 0;
+        virtual std::unique_ptr<BaseSerializableComponent> serialize(const void *component) const = 0;
 
         virtual void emplace_component(const BaseSerializableComponent *, SceneEntity, SceneRegistry &) const = 0;
     };
 
     template<typename Component, typename SerializableComponent>
     class ComponentSerialization : public BaseComponentSerialization {
-        using Serializer = std::function<std::shared_ptr<SerializableComponent>(const Component &)>;
+        using Serializer = std::function<std::unique_ptr<SerializableComponent>(const Component &)>;
         using Emplacer = std::function<void(const SerializableComponent &, SceneEntity, SceneRegistry &)>;
 
     public:
-        std::shared_ptr<BaseSerializableComponent> serialize(const void *component) const override {
+        std::unique_ptr<BaseSerializableComponent> serialize(const void *component) const override {
             assert(component);
 
             return serializer(*static_cast<const Component *>(component));
@@ -52,13 +55,13 @@ public:
     /**
      * @param serializer
      *   @code{.cpp}
-     *   std::shared_ptr<SerializableComponent>(const Component&);
+     *   std::unique_ptr<SerializableComponent>(const Component&);
      *   @endcode
-     * 
+     *
      * @param preloader
      *  @code{.cpp}
-     *   
-     *  @endcode  
+     *
+     *  @endcode
      *
      * @param emplacer
      *   @code{.cpp}
@@ -84,12 +87,12 @@ public:
         serializable_component_dict[serializable_component_type_id] = serialization;
     }
 
-    std::shared_ptr<SerializableEntityNode> make_serializable_node(
+    std::unique_ptr<SerializableEntityNode> make_serializable_node(
         const SceneEntity entity,
         const SceneRegistry &scene_registry) const {
         using namespace nodec;
 
-        auto node = std::make_shared<SerializableEntityNode>();
+        auto node = std::make_unique<SerializableEntityNode>();
 
         auto exception_handler = [=](type_seq_index_type component_type_id) {
             std::string details;
@@ -118,7 +121,7 @@ public:
                 assert(static_cast<bool>(serialization));
 
                 auto serializable_component = serialization->serialize(comp);
-                node->components.push_back(serializable_component);
+                node->components.push_back(std::move(serializable_component));
             } catch (...) {
                 exception_handler(type_info.seq_index());
             }
@@ -128,7 +131,7 @@ public:
     }
 
     SceneEntity make_entity(
-        std::shared_ptr<SerializableEntityNode> entity_node,
+        const SerializableEntityNode* entity_node,
         SceneRegistry &scene_registry) const {
         using namespace nodec;
 

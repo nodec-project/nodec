@@ -1,8 +1,6 @@
 #ifndef APP_HPP_
 #define APP_HPP_
 
-#define CEREAL_THREAD_SAFE 1
-
 #define EDITOR_MODE
 
 #include <nodec_animations/animation_curve.hpp>
@@ -10,6 +8,8 @@
 #include <nodec_input/input_devices.hpp>
 #include <nodec_input/keyboard/keyboard.hpp>
 #include <nodec_input/mouse/mouse.hpp>
+#include <nodec_physics/components/physics_shape.hpp>
+#include <nodec_physics/components/rigid_body.hpp>
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_rendering/components/image_renderer.hpp>

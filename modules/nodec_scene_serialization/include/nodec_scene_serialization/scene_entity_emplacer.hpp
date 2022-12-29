@@ -17,7 +17,7 @@ namespace nodec_scene_serialization {
  *
  */
 class SceneEntityEmplacer {
-    using NodePtr = std::shared_ptr<SerializableEntityNode>;
+    using NodePtr = SerializableEntityNode *;
     using NodePtrIterator = std::vector<NodePtr>::const_iterator;
 
     struct EmplacementData {
@@ -34,8 +34,8 @@ public:
           scene_{&scene},
           serialization_{&serialization} {
         if (graph) {
-            for (auto node : graph->roots) {
-                queue_.push({node, parent});
+            for (auto &node : graph->roots) {
+                queue_.push({node.get(), parent});
             }
         }
     }
@@ -58,8 +58,8 @@ public:
             scene_->hierarchy_system().append_child(emplacement.parent, entity);
         }
 
-        for (auto child : emplacement.node->children) {
-            queue_.push({child, entity});
+        for (auto &child : emplacement.node->children) {
+            queue_.push({child.get(), entity});
         }
         return true;
     }

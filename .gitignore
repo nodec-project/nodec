@@ -1,2 +1,5 @@
-*.drawio.bkp
 .vscode
+.vs
+
+*.drawio.bkp
+*.drawio.dtmp

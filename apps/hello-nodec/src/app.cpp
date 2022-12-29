@@ -112,6 +112,19 @@ private:
         }
 
         //{
+        //    using namespace nodec_physics::components;
+
+        //    auto entt = world.scene().create_entity();
+
+        //    auto &rb = world.scene().registry().emplace_component<RigidBody>(entt).first;
+
+        //    rb.mass = 10;
+
+        //    world.scene().registry().emplace_component<PhysicsShape>(entt);
+
+        //    temp = entt;
+        //}
+        //{
         //    target_material = resources.registry().get_resource<Material>("models/primitives/Default.material").get();
 
         //    auto dodon_clip = resources.registry().get_resource<AudioClip>("audios/dodon.wav").get();
@@ -127,10 +140,13 @@ private:
         //}
     }
 
-    void on_stepped(World &scene) {
+    void on_stepped(World &world) {
+        //world.scene().registry().remove_component<nodec_physics::components::PhysicsShape>(temp);
     }
 
 private:
+    //SceneEntity temp;
+
     NodecEngine &engine;
     std::shared_ptr<CameraControllerSystem> camera_controller_system_;
     std::shared_ptr<LightParticle> light_particle;

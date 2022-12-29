@@ -10,7 +10,7 @@
 
 #include <ImGuizmo.h>
 
-class Editor : public nodec_scene_editor::impl::SceneEditorModule {
+class Editor final : public nodec_scene_editor::impl::SceneEditorModule {
 public:
     enum class Mode {
         Edit,
@@ -27,6 +27,8 @@ public:
 
     ~Editor() {
     }
+
+    void setup();
 
     void step() {
         if (state_ != State::Paused) return;
@@ -51,52 +53,15 @@ public:
         state_ = State::Paused;
     }
 
-    void update() {
-        switch (state_) {
-        case State::Playing:
-            engine_->world_module().step();
-            break;
-
-        case State::Paused:
-
-            if (do_one_step_) {
-                engine_->world_module().step(1 / 60.0f);
-                do_one_step_ = false;
-            }
-
-            break;
-        }
-
-        imessentials::impl::show_main_menu();
-
-        ImGuizmo::BeginFrame();
-
-        window_manager_impl().update_windows();
-
-        bool showDemoWindow = true;
-        ImGui::ShowDemoWindow(&showDemoWindow);
-    }
-
-    void enter_playmode() noexcept {
-        mode_ = Mode::Play;
-    }
-
-    void exit_playmode() noexcept {
-        mode_ = Mode::Edit;
-    }
+    void update();
 
     State state() const noexcept {
         return state_;
     }
 
-    Mode mode() const noexcept {
-        return mode_;
-    }
-
 private:
     Engine *engine_;
     State state_{State::Paused};
-    Mode mode_{Mode::Edit};
     bool do_one_step_{false};
 
     std::unique_ptr<InspectorGUI> inspector_gui_;

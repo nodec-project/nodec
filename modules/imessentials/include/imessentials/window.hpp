@@ -2,11 +2,14 @@
 #define IMESSENTIALS__WINDOW_HPP_
 
 #include <nodec/macros.hpp>
+#include <nodec/type_info.hpp>
 #include <nodec/vector2.hpp>
 
+#include <cassert>
 #include <functional>
-#include <typeindex>
 #include <unordered_map>
+
+#include <imgui.h>
 
 namespace imessentials {
 
@@ -32,6 +35,10 @@ public:
         return name_;
     }
 
+    void focus() const {
+        ImGui::SetWindowFocus(name_);
+    }
+
 private:
     const char *name_;
     bool is_closed_;
@@ -43,26 +50,44 @@ private:
 class WindowManager {
 public:
     WindowManager() = default;
+    virtual ~WindowManager() {}
 
 public:
+    template<typename T, typename MakeFunc>
+    void register_window(MakeFunc &&make_func) {
+        static_assert(std::is_base_of<BaseWindow, T>::value, "T must be derived from BaseWindow.");
+
+        auto &info = nodec::type_id<T>();
+
+        assert(window_makers_.find(info) == window_makers_.end());
+
+        window_makers_[info] = make_func;
+    }
+
     template<typename T>
     T &get_window() {
         static_assert(std::is_base_of<BaseWindow, T>::value, "T must be derived from BaseWindow.");
 
-        auto iter = active_windows.find(typeid(T));
-        if (iter == active_windows.end()) {
-            // auto window = std::make_unique<T>();
-            auto pair = active_windows.emplace(typeid(T), std::make_unique<T>());
-            return static_cast<T &>(*pair.first->second);
-            // return *window;
+        auto &info = nodec::type_id<T>();
+
+        {
+            auto iter = active_windows_.find(info);
+            if (iter != active_windows_.end()) {
+                return static_cast<T &>(*iter->second);
+            }
         }
 
-        // auto &test = *iter->second;
+        // Not active, make the window.
+        auto window = window_makers_[info]();
+        assert(window);
+
+        auto iter = active_windows_.emplace(info, std::move(window)).first;
         return static_cast<T &>(*iter->second);
     }
 
 protected:
-    std::unordered_map<std::type_index, std::unique_ptr<BaseWindow>> active_windows;
+    std::unordered_map<nodec::type_info, std::unique_ptr<BaseWindow>> active_windows_;
+    std::unordered_map<nodec::type_info, std::function<std::unique_ptr<BaseWindow>()>> window_makers_;
 
 private:
     NODEC_DISABLE_COPY(WindowManager)

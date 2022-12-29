@@ -1,7 +1,5 @@
 #pragma once
 
-#define CEREAL_THREAD_SAFE 1
-
 #include "Editor.hpp"
 
 #include <Engine.hpp>
@@ -31,6 +29,7 @@ protected:
         engine->screen_module().internal_size = engine->screen_module().internal_resolution;
 
         engine->setup();
+        editor->setup();
 
         // Do first step (initialize).
         engine->world_module().reset();

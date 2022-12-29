@@ -20,17 +20,9 @@ class MaterialEditorWindow : public imessentials::BaseWindow {
     };
 
 public:
-    static decltype(auto) init(
-        imessentials::WindowManager &manager, nodec::resource_management::ResourceRegistry *registry) {
-        auto &window = manager.get_window<MaterialEditorWindow>();
-        window.registry_ = registry;
-        ImGui::SetWindowFocus(window.name());
-        return window;
-    }
-
-public:
-    MaterialEditorWindow()
-        : BaseWindow{"Material Editor", nodec::Vector2f{200, 500}} {
+    MaterialEditorWindow(nodec::resource_management::ResourceRegistry *registry)
+        : BaseWindow{"Material Editor", nodec::Vector2f{200, 500}},
+          registry_(registry) {
     }
 
     void on_gui() override {
