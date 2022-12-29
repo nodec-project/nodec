@@ -41,10 +41,18 @@ public:
         }
 
         btVector3 local_inertia(0, 0, 0);
-        collision_shape_->calculateLocalInertia(mass, local_inertia);
+
+        if (mass != 0.f) {
+            collision_shape_->calculateLocalInertia(mass, local_inertia);
+        }
 
         motion_state_.reset(new RigidBodyMotionState());
         native_.reset(new btRigidBody(btRigidBody::btRigidBodyConstructionInfo(mass, motion_state_.get(), collision_shape_.get(), local_inertia)));
+
+        if (mass == 0.0f) {
+            native_->setCollisionFlags(btCollisionObject::CF_KINEMATIC_OBJECT | btCollisionObject::CF_STATIC_OBJECT);
+            native_->setActivationState(DISABLE_DEACTIVATION);
+        }
     }
 
     ~RigidBodyBackend() {
@@ -74,9 +82,9 @@ public:
     void update_transform(const nodec::Vector3f& world_position, const nodec::Quaternionf& world_rotation) {
         using namespace nodec;
 
-        //btTransform rb_trfm;
-        //motion_state_->getWorldTransform(rb_trfm);
-        const auto &rb_trfm = native_->getWorldTransform();
+        btTransform rb_trfm;
+        motion_state_->getWorldTransform(rb_trfm);
+        //const auto &rb_trfm = native_->getWorldTransform();
 
         const auto rb_position = static_cast<Vector3f>(to_vector3(rb_trfm.getOrigin()));
         const auto rb_rotation = static_cast<Quaternionf>(to_quatenion(rb_trfm.getRotation()));
@@ -87,7 +95,11 @@ public:
         rb_trfm_updated.setIdentity();
         rb_trfm_updated.setOrigin(btVector3(world_position.x, world_position.y, world_position.z));
         rb_trfm_updated.setRotation(btQuaternion(world_rotation.x, world_rotation.y, world_rotation.z, world_rotation.w));
+
+        // NOTE: We need to also set the trfm of rigid body not only motion state.
+        //  Why?
         native_->setWorldTransform(rb_trfm_updated);
+        motion_state_->setWorldTransform(rb_trfm_updated);
 
         native_->activate();
     }

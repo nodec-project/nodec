@@ -55,9 +55,6 @@ void PhysicsSystemBackend::on_stepped(nodec_world::World &world) {
             // Sync entity -> bullet rigid body.
             activity->rigid_body_backend->update_transform(world_position, world_rotation);
 
-            //if (world_position != activity->prev_world_position || world_rotation != activity->prev_world_rotation) {
-            //    activity->rigid_body_backend->update_transform(world_position, world_rotation);
-            //}
             activity->prev_world_position = world_position;
             activity->prev_world_rotation = world_rotation;
         });

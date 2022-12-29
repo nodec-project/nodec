@@ -4,8 +4,9 @@
 
 class RigidBodyMotionState final : public btMotionState {
 public:
-    RigidBodyMotionState()
-        : current_trfm_(current_trfm_) {}
+    RigidBodyMotionState() {
+        current_trfm_.setIdentity();
+    }
 
     /// synchronizes world transform from user to physics
     void getWorldTransform(btTransform &trfm) const override {
