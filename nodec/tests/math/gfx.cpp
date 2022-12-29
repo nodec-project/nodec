@@ -7,7 +7,7 @@ TEST_CASE("Testing decompose_trs.") {
     using namespace nodec;
 
     Vector3f t_expected(1.f, 2.f, 3.f);
-    Quaternionf r_expected = math::gfx::angle_axis(30.f, Vector3f(1.f, 0.f, 0.f));
+    Quaternionf r_expected = math::gfx::quatenion_from_angle_axis(30.f, Vector3f(1.f, 0.f, 0.f));
     Vector3f s_expected(11.f, 13.f, 15.f);
 
     auto trs = nodec::math::gfx::trs(t_expected, r_expected, s_expected);
