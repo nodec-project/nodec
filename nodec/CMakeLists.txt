@@ -4,7 +4,7 @@ project(nodec LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_library(${PROJECT_NAME}
+add_library(${PROJECT_NAME} STATIC
     src/nodec/logging.cpp
     src/nodec/unicode.cpp
 )
