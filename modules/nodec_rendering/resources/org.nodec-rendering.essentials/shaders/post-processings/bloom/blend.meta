@@ -1,8 +1,0 @@
-{
-    "meta": {
-        "render_targets": [],
-        "texture_resources": [
-            "screen", "brightness_a"
-        ]
-    }
-}
