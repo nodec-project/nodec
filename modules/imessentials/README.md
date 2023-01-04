@@ -2,5 +2,5 @@
 
 ## Dependencies
 
-* imgui
+* modules/imgui
 * nodec

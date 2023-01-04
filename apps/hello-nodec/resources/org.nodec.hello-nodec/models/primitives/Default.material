@@ -1,8 +1,0 @@
-{
-    "material": {
-        "shader": "org.nodec-rendering.essentials/shaders/pbr",
-        "float_properties": [],
-        "vector4_properties": [],
-        "texture_properties": []
-    }
-}

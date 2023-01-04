@@ -1,9 +1,0 @@
-{
-    "material": {
-        "shader": "org.nodec-rendering.essentials/shaders/image",
-        "cull_mode": 0,
-        "float_properties": [],
-        "vector4_properties": [],
-        "texture_properties": []
-    }
-}
