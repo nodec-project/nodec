@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(nodec_engine LANGUAGES CXX)
+project(nodec_application LANGUAGES CXX)
 
 add_library(${PROJECT_NAME} INTERFACE)
 

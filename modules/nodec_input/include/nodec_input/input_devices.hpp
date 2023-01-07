@@ -1,8 +1,6 @@
 #ifndef NODEC_INPUT__INPUT_HPP_
 #define NODEC_INPUT__INPUT_HPP_
 
-#include "input_device.hpp"
-
 #include <nodec/memory.hpp>
 #include <nodec/signals.hpp>
 #include <nodec/type_info.hpp>
@@ -17,7 +15,7 @@ namespace nodec_input {
 class InputDevices {
     template<typename Device>
     struct DeviceBlock {
-        DeviceBlock(){}
+        DeviceBlock() {}
         std::list<std::shared_ptr<Device>> devices;
         std::shared_ptr<void> system;
     };
@@ -34,7 +32,7 @@ class InputDevices {
     }
 
     template<typename Device>
-    const DeviceBlock<Device>& device_block_assured() const {
+    const DeviceBlock<Device> &device_block_assured() const {
         const auto index = nodec::type_seq_index<Device>::value();
         const DeviceBlock<Device> *block{nullptr};
 
@@ -57,7 +55,7 @@ public:
     template<typename Device>
     class RegistryOperations {
     public:
-        RegistryOperations(InputDevices* devices)
+        RegistryOperations(InputDevices *devices)
             : devices_{devices} {}
 
         decltype(auto) add_device(std::shared_ptr<Device> device) {
@@ -81,7 +79,7 @@ public:
     };
 
     template<typename System, class... Args>
-    System& emplace_device_system(Args&&... args) {
+    System &emplace_device_system(Args &&...args) {
         using Device = typename System::device_type;
         DeviceBlock<Device> &block = device_block_assured<Device>();
         block.system = std::make_shared<System>(std::forward<Args>(args)..., RegistryOperations<Device>{this});
@@ -113,8 +111,8 @@ private:
     }
 
 private:
-    nodec::signals::Signal<void(std::shared_ptr<InputDevice>)> device_added_;
-    nodec::signals::Signal<void(std::shared_ptr<InputDevice>)> device_removed_;
+    // nodec::signals::Signal<void(std::shared_ptr<InputDevice>)> device_added_;
+    // nodec::signals::Signal<void(std::shared_ptr<InputDevice>)> device_removed_;
 
     std::vector<std::shared_ptr<void>> device_blocks_;
 };

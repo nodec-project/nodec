@@ -6,7 +6,7 @@
 namespace nodec_world {
 namespace impl {
 
-class WorldModule : public World {
+class WorldModule final : public World {
 public:
     WorldModule()
         : World{initialized_.signal_interface(), stepped_.signal_interface(), clock_.clock_interface()} {}
