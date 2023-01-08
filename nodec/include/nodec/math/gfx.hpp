@@ -122,7 +122,7 @@ inline bool decompose_trs(const Matrix4x4f &trs, Vector3f &translation, Quaterni
     return true;
 }
 
-inline Quaternionf quatenion_from_angle_axis(const float &angle_deg, const Vector3f &axis) {
+inline Quaternionf quaternion_from_angle_axis(const float &angle_deg, const Vector3f &axis) {
     auto theta = angle_deg * deg2rad<float> / 2.0f;
     auto s = std::sin(theta);
     auto a = normalize(axis);
