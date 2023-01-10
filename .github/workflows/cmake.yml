@@ -23,7 +23,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
-    - name: test-nodec
+    - name: Test nodec
       working-directory: ${{github.workspace}}/nodec
 
       run: |
@@ -41,7 +41,7 @@ jobs:
         ctest -C ${{env.BUILD_TYPE}} --output-on-failure
 
 
-    - name: test-nodec_animation
+    - name: Test nodec_animation
       working-directory: ${{github.workspace}}/modules/nodec_animations
         
       run: |
