@@ -6,7 +6,9 @@
 
 #include <nodec/algorithm.hpp>
 
+#include <algorithm>
 #include <cassert>
+#include <iterator>
 #include <vector>
 
 namespace nodec_animations {
