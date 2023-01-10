@@ -3,13 +3,16 @@
 
 #include "../components/hierarchy.hpp"
 
+#include <nodec/signals/scoped_block.hpp>
+#include <nodec/signals/signal.hpp>
+
 #include <cassert>
 
 namespace nodec_scene {
 namespace systems {
 
 class HierarchySystem {
-    using RegistryConnection = nodec::signals::Signal<void(SceneRegistry &, const SceneEntity)>::Connection;
+    using RegistryConnection = nodec::signals::Connection;
 
 public:
     HierarchySystem(SceneRegistry *registry)
@@ -20,15 +23,13 @@ public:
                                             .connect(
                                                 [&](SceneRegistry &registry, const SceneEntity entity) {
                                                     on_hierarchy_created(registry, entity);
-                                                })
-                                            .assign();
+                                                });
 
         hierarchy_destroyed_connection_ = registry_->component_destroyed<Hierarchy>()
                                               .connect(
                                                   [&](SceneRegistry &registry, const SceneEntity entity) {
                                                       on_hierarchy_destroyed(registry, entity);
-                                                  })
-                                              .assign();
+                                                  });
     }
 
     void append_child(const SceneEntity parent, const SceneEntity child) {

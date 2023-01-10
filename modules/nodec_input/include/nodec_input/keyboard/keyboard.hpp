@@ -4,7 +4,7 @@
 #include "key.hpp"
 
 #include <nodec/macros.hpp>
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 #include <sstream>
 

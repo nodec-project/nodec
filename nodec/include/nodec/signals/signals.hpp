@@ -25,6 +25,7 @@ inline void throw_broken_connection_exception(const char *file, size_t line) {
 
 template<typename>
 class BaseSignal;
+
 template<typename... Args>
 class BaseSignal<void(Args...)> {
 public:
@@ -42,6 +43,7 @@ public:
 
         BaseConnection(BaseSignal *sig, size_t idx)
             : sig(sig), idx(idx) {}
+
         ~BaseConnection() {
             if (!blocked) {
                 if (sig) {
@@ -142,6 +144,7 @@ public:
 
 template<typename>
 class Signal;
+
 template<typename... Args>
 class Signal<void(Args...)> {
     using BaseSignal = details::BaseSignal<void(Args...)>;

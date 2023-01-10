@@ -1,7 +1,7 @@
 #ifndef NODEC__LOGGING_HPP_
 #define NODEC__LOGGING_HPP_
 
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 #include <functional>
 #include <ostream>

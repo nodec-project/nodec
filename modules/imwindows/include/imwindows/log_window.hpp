@@ -4,6 +4,8 @@
 #include <imessentials/window.hpp>
 
 #include <nodec/logging.hpp>
+#include <nodec/signals/scoped_block.hpp>
+#include <nodec/signals/signal.hpp>
 #include <nodec/vector2.hpp>
 
 #include <imgui.h>
@@ -68,8 +70,10 @@ public:
 
 private:
     void recordHandler(const nodec::logging::LogRecord &record) {
-        using ScopedBlock = nodec::signals::ScopedBlock<nodec::logging::RecordHandlers::Connection>;
-        ScopedBlock scoped_block{loggingHandlerConnection};
+        using namespace nodec::signals;
+
+        //using ScopedBlock = nodec::signals::ScopedBlock<nodec::logging::RecordHandlers::Connection>;
+        ScopedBlock<Connection> scoped_block{logging_hander_conn};
 
         records.push_back(record);
         if (records.size() > MAX_RECORDS) {
@@ -78,7 +82,7 @@ private:
     }
 
 private:
-    nodec::logging::RecordHandlers::Connection loggingHandlerConnection = nodec::logging::record_handlers().connect(
+    nodec::signals::Connection logging_hander_conn = nodec::logging::record_handlers().connect(
         [&](const nodec::logging::LogRecord &record) {
             recordHandler(record);
         });

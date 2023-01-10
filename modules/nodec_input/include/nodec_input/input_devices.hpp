@@ -2,7 +2,7 @@
 #define NODEC_INPUT__INPUT_HPP_
 
 #include <nodec/memory.hpp>
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 #include <nodec/type_info.hpp>
 
 #include <list>
