@@ -3,7 +3,7 @@
 
 #include "../screen.hpp"
 
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 #include <nodec/logging.hpp>
 
 namespace nodec_screen {

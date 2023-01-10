@@ -3,7 +3,7 @@
 
 #include <nodec_scene/scene_registry.hpp>
 
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 namespace nodec_scene_editor {
 

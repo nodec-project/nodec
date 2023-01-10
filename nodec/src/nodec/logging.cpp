@@ -168,4 +168,3 @@ FatalStream::FatalStream(const char *file, size_t line)
 
 } // namespace logging
 } // namespace nodec
-

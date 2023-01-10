@@ -4,7 +4,7 @@
 #include "../collision_info.hpp"
 
 #include <nodec/macros.hpp>
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 namespace nodec_physics {
 

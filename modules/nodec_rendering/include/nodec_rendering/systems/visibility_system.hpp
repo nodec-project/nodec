@@ -38,8 +38,6 @@ inline void set_visible(nodec_scene::SceneRegistry &registry, nodec_scene::Scene
 }
 
 class VisibilitySystem {
-    using ComponentSignal = nodec::signals::Signal<void(nodec_scene::SceneRegistry &, const nodec_scene::SceneEntity)>;
-
 public:
     VisibilitySystem(nodec_scene::Scene &scene) {
         using namespace nodec::signals;
@@ -50,7 +48,7 @@ public:
 
         constructed_conn_ = scene.registry().component_constructed<NonVisible>().connect(
             [&](SceneRegistry &registry, const SceneEntity entity) {
-                ScopedBlock<ComponentSignal::Connection> block(constructed_conn_);
+                ScopedBlock<nodec::signals::Connection> block(constructed_conn_);
 
                 std::vector<SceneEntity> stack;
                 stack.emplace_back(entity);
@@ -75,7 +73,7 @@ public:
 
         destroyed_conn_ = scene.registry().component_destroyed<NonVisible>().connect(
             [&](SceneRegistry &registry, const SceneEntity entity) {
-                ScopedBlock<ComponentSignal::Connection> block(destroyed_conn_);
+                ScopedBlock<nodec::signals::Connection> block(destroyed_conn_);
 
                 std::vector<SceneEntity> stack;
                 stack.emplace_back(entity);
@@ -123,8 +121,8 @@ public:
     }
 
 private:
-    ComponentSignal::Connection constructed_conn_;
-    ComponentSignal::Connection destroyed_conn_;
+    nodec::signals::Connection constructed_conn_;
+    nodec::signals::Connection destroyed_conn_;
 };
 } // namespace systems
 } // namespace nodec_rendering

@@ -6,7 +6,7 @@
 #include <nodec_scene/scene.hpp>
 
 #include <nodec/macros.hpp>
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 namespace nodec_world {
 
@@ -14,8 +14,8 @@ class World {
 public:
     using WorldSignal = nodec::signals::Signal<void(World &)>;
 
-    World(WorldSignal::SignalInterface initialized_signal,
-          WorldSignal::SignalInterface stepped_signal,
+    World(WorldSignal &initialized_signal,
+          WorldSignal &stepped_signal,
           WorldClock::WorldClockInterface clock_interface)
         : initialized_{initialized_signal},
           stepped_{stepped_signal},
@@ -36,11 +36,11 @@ public:
     //  * https://www.gymlibrary.ml/content/environment_creation/
 
     WorldSignal::SignalInterface initialized() {
-        return initialized_;
+        return initialized_.signal_interface();
     }
 
     WorldSignal::SignalInterface stepped() {
-        return stepped_;
+        return stepped_.signal_interface();
     }
 
     const WorldClock::WorldClockInterface &clock() const noexcept {
@@ -53,8 +53,8 @@ public:
 
 private:
     nodec_scene::Scene scene_;
-    WorldSignal::SignalInterface initialized_;
-    WorldSignal::SignalInterface stepped_;
+    WorldSignal& initialized_;
+    WorldSignal& stepped_;
     WorldClock::WorldClockInterface clock_;
 
     NODEC_DISABLE_COPY(World)

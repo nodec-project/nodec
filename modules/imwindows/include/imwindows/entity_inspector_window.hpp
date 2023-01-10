@@ -228,7 +228,7 @@ private:
     EntityRegistry *entity_registry_{nullptr};
     ComponentRegistry *component_registry_{nullptr};
     Entity target_entity_{nodec::entities::null_entity};
-    ChangeTargetSignal::Connection change_target_signal_connection_;
+    nodec::signals::Connection change_target_signal_connection_;
     ImGuiTextFilter filter;
 };
 

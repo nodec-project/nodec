@@ -4,7 +4,7 @@
 #include "../application.hpp"
 
 #include <nodec/logging.hpp>
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 #include <cassert>
 #include <memory>

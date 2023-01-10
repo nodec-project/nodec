@@ -4,7 +4,7 @@
 #include "mouse_button.hpp"
 
 #include <nodec/macros.hpp>
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 #include <nodec/vector2.hpp>
 #include <nodec/logging.hpp>
 

@@ -3,7 +3,7 @@
 
 #include "../resources.hpp"
 
-#include <nodec/signals.hpp>
+#include <nodec/signals/signal.hpp>
 
 namespace nodec_resources {
 namespace impl {
