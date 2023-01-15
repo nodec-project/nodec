@@ -41,6 +41,8 @@ public:
 
     private:
         void update() {
+            using namespace nodec::entities;
+
             switch (state_) {
             case State::NotStarted: {
                 graph_future_ = resource_registry_->get_resource<SerializableSceneGraph>(graph_name_);
@@ -59,7 +61,7 @@ public:
                 return;
 
             case State::Emplacing: {
-                if (!entity_emplacer_->emplace_one()) {
+                if (entity_emplacer_->emplace_one() == null_entity) {
                     // Nothing to emplace.
                     progress_ = 1.0f;
                     state_ = State::Done;

@@ -186,6 +186,12 @@ public:
     //    return *comp;
     //}
 
+    /**
+     * @brief
+     *
+     * @tparam Func
+     * @param func void(SceneEntity, Components...)
+     */
     template<typename Func>
     void each(Func func) const {
         for (const auto entt : *this) {

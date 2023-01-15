@@ -40,10 +40,15 @@ public:
         }
     }
 
-    bool emplace_one() {
+    /**
+     * @brief Emplace one entity from the graph.
+     *
+     * @return nodec_scene::SceneEntity A placed entity id.
+     */
+    nodec_scene::SceneEntity emplace_one() {
         using namespace nodec::entities;
 
-        if (queue_.empty()) return false;
+        if (queue_.empty()) return null_entity;
         auto emplacement = std::move(queue_.front());
         queue_.pop();
 
@@ -61,11 +66,19 @@ public:
         for (auto &child : emplacement.node->children) {
             queue_.push({child.get(), entity});
         }
-        return true;
+        return entity;
     }
 
-    void emplace_all() {
-        while (emplace_one()) {}
+    /**
+     * @brief Emplace all entities from the graph.
+     *
+     * @return nodec_scene::SceneEntity The placed first entity id.
+     */
+    nodec_scene::SceneEntity emplace_all() {
+        using namespace nodec::entities;
+        auto first = emplace_one();
+        while (emplace_one() != null_entity) {}
+        return first;
     }
 
 private:
