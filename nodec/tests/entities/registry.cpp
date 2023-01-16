@@ -5,11 +5,33 @@
 
 #include <algorithm>
 
+TEST_CASE("Testing destroy_entities.") {
+    using namespace nodec::entities;
+
+    Registry registry;
+
+    std::array<Entity, 3> entities;
+
+    for (auto &entity : entities) {
+        entity = registry.create_entity();
+    }
+
+    CHECK(registry.is_valid(entities[0]));
+    CHECK(registry.is_valid(entities[1]));
+    CHECK(registry.is_valid(entities[2]));
+
+    registry.destroy_entities(entities.begin(), entities.end());
+
+    CHECK(!registry.is_valid(entities[0]));
+    CHECK(!registry.is_valid(entities[1]));
+    CHECK(!registry.is_valid(entities[2]));
+}
+
 TEST_CASE("Testing emplace_component.") {
     {
         nodec::entities::Registry registry;
         auto e0 = registry.create_entity();
-        
+
         auto result = registry.emplace_component<int>(e0, 100);
         CHECK(result.first == 100);
         CHECK(result.second);
@@ -24,7 +46,6 @@ TEST_CASE("Testing remove_component.") {
 
     Registry registry;
 
-    
     std::array<Entity, 3> entities;
 
     std::generate(entities.begin(), entities.end(), [&]() { return registry.create_entity(); });
@@ -32,10 +53,10 @@ TEST_CASE("Testing remove_component.") {
     registry.emplace_component<int>(entities[0]);
     registry.emplace_component<char>(entities[0]);
     registry.emplace_component<double>(entities[0]);
-    
+
     registry.emplace_component<int>(entities[1]);
     registry.emplace_component<char>(entities[1]);
-    
+
     registry.emplace_component<int>(entities[2]);
 
     REQUIRE(registry.try_get_component<int>(entities[2]) != nullptr);
@@ -50,11 +71,11 @@ TEST_CASE("Testing component_constructed signal.") {
 
         bool called = false;
 
-        registry.component_constructed<int>().connect([&](auto& reg, auto entt) {
+        registry.component_constructed<int>().connect([&](auto &reg, auto entt) {
             CHECK(entt == e0);
             CHECK(&reg == &registry);
             called = true;
-            });
+        });
 
         REQUIRE(registry.emplace_component<int>(e0).second);
         CHECK(called);
@@ -82,58 +103,57 @@ TEST_CASE("Testing all_of, any_of.") {
     CHECK(registry.any_of<const int, double>(e1));
 }
 
-
 //
 //
-//#include <nodec/logging.hpp>
-//#include <nodec/stopwatch.hpp>
+// #include <nodec/logging.hpp>
+// #include <nodec/stopwatch.hpp>
 //
-//#include <nodec/entities/entity.hpp>
-//#include <nodec/entities/registry.hpp>
-//#include <nodec/entities/sparse_table.hpp>
+// #include <nodec/entities/entity.hpp>
+// #include <nodec/entities/registry.hpp>
+// #include <nodec/entities/sparse_table.hpp>
 //
-//#include <type_traits>
-//#include <vector>
+// #include <type_traits>
+// #include <vector>
 //
-//#include <cstdlib>
+// #include <cstdlib>
 //
-//using namespace nodec;
-//using namespace nodec::entities;
+// using namespace nodec;
+// using namespace nodec::entities;
 //
 ///**
 // * @note the way to "template template class, call a function if it exists"
 // *   <https://stackoverflow.com/questions/43317175/template-template-class-call-a-function-if-it-exists/43317995>
 // */
 //
-//template<typename T, typename = int>
-//struct has_on_destroy : std::false_type {};
+// template<typename T, typename = int>
+// struct has_on_destroy : std::false_type {};
 //
-//template<typename T>
-//struct has_on_destroy<T, decltype(&T::on_destroy, 0)> : std::true_type {};
+// template<typename T>
+// struct has_on_destroy<T, decltype(&T::on_destroy, 0)> : std::true_type {};
 //
-//template<typename T>
-//typename std::enable_if<has_on_destroy<T>::value>::type
-//call_on_destroy(T &com) {
+// template<typename T>
+// typename std::enable_if<has_on_destroy<T>::value>::type
+// call_on_destroy(T &com) {
 //    com.on_destroy();
 //
 //    logging::info("call on_destroy()", __FILE__, __LINE__);
 //}
 //
-//template<typename T>
-//typename std::enable_if<!has_on_destroy<T>::value>::type
-//call_on_destroy(T &) {
+// template<typename T>
+// typename std::enable_if<!has_on_destroy<T>::value>::type
+// call_on_destroy(T &) {
 //    logging::info("no on_destroy()", __FILE__, __LINE__);
 //}
 //
-//class Test {
-//public:
+// class Test {
+// public:
 //    ~Test() {
 //        logging::info("called", __FILE__, __LINE__);
 //    }
 //};
 //
-//class ComponentA {
-//public:
+// class ComponentA {
+// public:
 //    ComponentA(int field)
 //        : field(field) {
 //        //logging::InfoStream(__FILE__, __LINE__) << "constructed.";
@@ -160,28 +180,28 @@ TEST_CASE("Testing all_of, any_of.") {
 //        //logging::InfoStream(__FILE__, __LINE__) << "destroyed.";
 //    }
 //
-//public:
+// public:
 //    int field;
 //};
 //
-//struct ComponentB {
+// struct ComponentB {
 //    std::string field;
 //};
 //
-//struct BaseComponent {
+// struct BaseComponent {
 //    int bfield;
 //};
 //
-//struct DerivedComponentA : public BaseComponent {
+// struct DerivedComponentA : public BaseComponent {
 //    int dfield;
 //};
 //
-//struct DerivedComponentB : public BaseComponent {
+// struct DerivedComponentB : public BaseComponent {
 //    int dfield;
 //};
 //
-//class TestComponentWithOnDestroy {
-//public:
+// class TestComponentWithOnDestroy {
+// public:
 //    int field;
 //
 //    void on_destroy() {
@@ -189,15 +209,15 @@ TEST_CASE("Testing all_of, any_of.") {
 //    }
 //};
 //
-//template<typename Component>
-//void test(Component &com) {
+// template<typename Component>
+// void test(Component &com) {
 //    com.field;
 //
 //    com.on_destroy();
 //}
 //
-//template<typename Table>
-//void print(Table &table) {
+// template<typename Table>
+// void print(Table &table) {
 //    logging::InfoStream info_stream(__FILE__, __LINE__);
 //    for (auto iter = table.begin(); iter != table.end(); ++iter) {
 //        // info_stream << "( " << iter->first << ", " << iter->second << "), ";
@@ -212,7 +232,7 @@ TEST_CASE("Testing all_of, any_of.") {
 //    }
 //}
 //
-//int main() {
+// int main() {
 //    try {
 //        logging::record_handlers().connect(logging::record_to_stdout_handler);
 //
@@ -235,7 +255,7 @@ TEST_CASE("Testing all_of, any_of.") {
 //            // auto view = registry.view<const ComponentA, ComponentB>(type_list<ComponentB>());
 //
 //            using namespace std::chrono;
-//           
+//
 //            Stopwatch<high_resolution_clock> sw;
 //
 //            sw.restart();
@@ -249,7 +269,7 @@ TEST_CASE("Testing all_of, any_of.") {
 //
 //            logging::InfoStream(__FILE__, __LINE__) << duration_cast<milliseconds>(sw.elapsed()).count();
 //
-//            
+//
 //            sw.restart();
 //            auto view = registry.view<ComponentA, ComponentB>();
 //            for (const auto entt : view) {

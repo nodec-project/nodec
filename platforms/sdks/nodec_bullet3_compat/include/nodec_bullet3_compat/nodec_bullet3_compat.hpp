@@ -12,10 +12,15 @@ inline Vector3<btScalar> to_vector3(const btVector3 &v) {
     return {v.x(), v.y(), v.z()};
 }
 
-inline Quaternion<btScalar> to_quatenion(const btQuaternion &q) {
+inline Quaternion<btScalar> to_quaternion(const btQuaternion &q) {
     return {q.x(), q.y(), q.z(), q.w()};
 }
 
 } // namespace nodec
+
+
+inline btVector3 to_bt_vector3(const nodec::Vector3<btScalar> &v) {
+    return {v.x, v.y, v.z};
+}
 
 #endif

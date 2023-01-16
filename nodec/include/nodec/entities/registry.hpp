@@ -145,6 +145,16 @@ public:
     }
 
     /**
+     * @brief Destroys all entities in a range and releases their identifiers.
+     */
+    template<typename It>
+    void destroy_entities(It first, It last) {
+        for (; first != last; ++first) {
+            destroy_entity(*first);
+        }
+    }
+
+    /**
      * @brief Iterates all the entities that are still in use.
      *
      * The function object is invoked for each entity that is still in use.<br/>
