@@ -51,7 +51,7 @@ class BasicRegistry {
     }
 
     template<typename Component>
-    Storage<Component> *pool_assured() const {
+    Storage<Component> *pool_assured() {
         static_assert(std::is_same<Component, std::decay_t<Component>>::value, "Non-decayed types (s.t. array) not allowed");
         const auto index = type_id<Component>().seq_index();
 
@@ -59,13 +59,27 @@ class BasicRegistry {
             pools.resize(index + 1u);
         }
 
-        auto &&pdata = pools[index];
-        if (!pdata.pool) {
-            pdata.pool.reset(new Storage<Component>());
-            pdata.type_info = &type_id<Component>();
+        auto &&pool_data = pools[index];
+        if (!pool_data.pool) {
+            pool_data.pool.reset(new Storage<Component>());
+            pool_data.pool->bind_registry(const_cast<BasicRegistry *>(this));
+            pool_data.type_info = &type_id<Component>();
         }
 
         return static_cast<Storage<Component> *>(pools[index].pool.get());
+    }
+
+    template<typename Component>
+    const Storage<Component> *pool_assured() const {
+        static_assert(std::is_same<Component, std::decay_t<Component>>::value, "Non-decayed types (s.t. array) not allowed");
+
+        const auto index = type_id<Component>().seq_index();
+        if (index < pools.size() && pools[index].pool) {
+            return static_cast<const Storage<Component> *>(pools[index].pool.get());
+        }
+
+        static Storage<Component> placeholder{};
+        return &placeholder;
     }
 
     template<typename Component>
@@ -213,9 +227,9 @@ public:
 
     void clear() {
         for (auto pos = pools.size(); pos; --pos) {
-            auto &pdata = pools[pos - 1];
-            if (pdata.pool) {
-                pdata.pool->clear(*this);
+            auto &pool_data = pools[pos - 1];
+            if (pool_data.pool) {
+                pool_data.pool->clear();
             }
         }
         each_entity(
@@ -230,7 +244,7 @@ public:
             exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        return pool_assured<Component>()->emplace(*this, entity, std::forward<Args>(args)...);
+        return pool_assured<Component>()->emplace(entity, std::forward<Args>(args)...);
     }
 
     template<typename Component>
@@ -239,8 +253,8 @@ public:
             exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        auto *cpool = pool_if_exists<Component>();
-        return cpool != nullptr && cpool->erase(*this, entity);
+        auto *pool = pool_if_exists<Component>();
+        return pool != nullptr && pool->erase(entity);
     }
 
     template<typename... Components>
@@ -251,8 +265,8 @@ public:
             exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
-        return std::make_tuple(([this, entity](auto *cpool) {
-            return cpool != nullptr && cpool->erase(*this, entity);
+        return std::make_tuple(([this, entity](auto *pool) {
+            return pool != nullptr && pool->erase(entity);
         })(pool_if_exists<Components>())...);
     }
 
@@ -262,11 +276,18 @@ public:
         }
 
         for (auto pos = pools.size(); pos; --pos) {
-            auto &pdata = pools[pos - 1];
-            if (pdata.pool) {
-                pdata.pool->erase(*this, entity);
+            auto &pool_date = pools[pos - 1];
+            if (pool_date.pool) {
+                pool_date.pool->erase(entity);
             }
         }
+    }
+
+    template<typename Component>
+    void clear_component() {
+        auto *pool = pool_if_exists<Component>();
+        if (pool == nullptr) return;
+        pool->clear();
     }
 
     template<typename Component>
@@ -276,12 +297,12 @@ public:
         }
 
         using Comp = std::remove_const_t<Component>;
-        const auto *cpool = pool_if_exists<Comp>();
-        if (!cpool) {
+        const auto *pool = pool_if_exists<Comp>();
+        if (!pool) {
             exceptions::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
-        auto *component = cpool->try_get(entity);
+        auto *component = pool->try_get(entity);
         if (!component) {
             exceptions::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
@@ -309,8 +330,8 @@ public:
         if (!is_valid(entity)) {
             exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
-        auto *cpool = pool_if_exists<std::remove_const_t<Component>>();
-        return cpool ? cpool->try_get(entity) : nullptr;
+        auto *pool = pool_if_exists<std::remove_const_t<Component>>();
+        return pool ? pool->try_get(entity) : nullptr;
     }
 
     template<typename Component>
@@ -367,13 +388,13 @@ public:
     template<typename Func>
     void visit(Entity entity, Func func) const {
         for (auto pos = pools.size(); pos; --pos) {
-            const auto &pdata = pools[pos - 1];
-            if (!pdata.pool) continue;
+            const auto &pool_data = pools[pos - 1];
+            if (!pool_data.pool) continue;
 
-            auto component = pdata.pool->try_get_opaque(entity);
+            auto component = pool_data.pool->try_get_opaque(entity);
             if (!component) continue;
 
-            func(*pdata.type_info, component);
+            func(*pool_data.type_info, component);
         }
     }
 
@@ -394,7 +415,7 @@ public:
     }
 
 private:
-    mutable std::vector<PoolData> pools{};
+    std::vector<PoolData> pools{};
     std::vector<Entity> entities;
     Entity free_list{tombstone_entity};
 };

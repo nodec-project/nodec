@@ -31,6 +31,14 @@ public:
     virtual ~BaseStorage() {}
 
 public:
+    void bind_registry(BasicRegistry<Entity> *registry) {
+        registry_ = registry;
+    }
+
+    BasicRegistry<Entity>* registry() const noexcept {
+        return registry_;
+    }
+
     const_iterator begin() const noexcept {
         return packed_.begin();
     }
@@ -54,13 +62,14 @@ public:
         return sparse_table_.contains(entity);
     }
 
-    virtual bool erase(BasicRegistry<Entity> &owner, const Entity entity) = 0;
-    virtual void clear(BasicRegistry<Entity> &owner) = 0;
+    virtual bool erase(const Entity entity) = 0;
+    virtual void clear() = 0;
     virtual void *try_get_opaque(const Entity entity) = 0;
 
 private:
     PackedContainer &packed_;
     SparseTable &sparse_table_;
+    BasicRegistry<Entity> *registry_;
 };
 
 template<typename Value, typename Entity>
@@ -89,7 +98,7 @@ public:
         : Base{packed, sparse_table} {}
 
     template<typename... Args>
-    std::pair<Value &, bool> emplace(BasicRegistry<Entity> &owner, const Entity entity, Args &&...args) {
+    std::pair<Value &, bool> emplace(const Entity entity, Args &&...args) {
         {
             auto *pos = sparse_table.try_get(entity);
             if (pos != nullptr) return {instances[*pos], false};
@@ -100,7 +109,7 @@ public:
         instances.push_back({args...});
         packed.emplace_back(entity);
 
-        element_constructed_(owner, entity);
+        element_constructed_(*registry(), entity);
 
         return {instances[pos], true};
     }
@@ -154,12 +163,12 @@ public:
         return try_get(entity);
     }
 
-    bool erase(BasicRegistry<Entity> &owner, const Entity entity) override {
+    bool erase(const Entity entity) override {
         if (!sparse_table.contains(entity)) {
             return false;
         }
 
-        element_destroyed_(owner, entity); // cause structural changes.
+        element_destroyed_(*registry(), entity); // cause structural changes.
 
         auto *pos = sparse_table.try_get(entity);
         assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
@@ -179,9 +188,9 @@ public:
         return true;
     }
 
-    void clear(BasicRegistry<Entity> &owner) override {
+    void clear() override {
         while (packed.size() > 0) {
-            erase(owner, packed.front());
+            erase(packed.front());
         }
     }
 

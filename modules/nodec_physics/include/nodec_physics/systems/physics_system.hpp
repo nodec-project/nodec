@@ -14,8 +14,8 @@ class PhysicsSystem {
 public:
     using CollisionSignal = nodec::signals::Signal<void(const CollisionInfo &)>;
 
-    PhysicsSystem(CollisionSignal &collision_signal)
-        : collsion_signal_(collision_signal) {}
+    PhysicsSystem(CollisionSignal &collision_stay_signal)
+        : collision_stay_signal_(collision_stay_signal) {}
 
     virtual ~PhysicsSystem() {}
 
@@ -25,12 +25,12 @@ public:
 
     // nodec::Vector3f gravity();
 
-    CollisionSignal::SignalInterface collision() {
-        return collsion_signal_.signal_interface();
+    CollisionSignal::SignalInterface collision_stay() {
+        return collision_stay_signal_.signal_interface();
     }
 
 private:
-    CollisionSignal &collsion_signal_;
+    CollisionSignal &collision_stay_signal_;
 
 private:
     NODEC_DISABLE_COPY(PhysicsSystem)

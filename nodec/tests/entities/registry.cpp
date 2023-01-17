@@ -64,6 +64,29 @@ TEST_CASE("Testing remove_component.") {
     CHECK(registry.try_get_component<int>(entities[2]) == nullptr);
 }
 
+TEST_CASE("Testing remove_components.") {
+    using namespace nodec::entities;
+
+    Registry registry;
+
+    std::array<Entity, 3> entities;
+
+    std::generate(entities.begin(), entities.end(), [&]() { return registry.create_entity(); });
+
+    registry.emplace_component<int>(entities[0]);
+    registry.emplace_component<int>(entities[1]);
+
+    registry.emplace_component<char>(entities[0]);
+
+    REQUIRE(registry.try_get_component<int>(entities[0]) != nullptr);
+    REQUIRE(registry.try_get_component<char>(entities[0]) != nullptr);
+
+    registry.remove_components<int, char>(entities[0]);
+
+    REQUIRE(registry.try_get_component<int>(entities[0]) == nullptr);
+    REQUIRE(registry.try_get_component<char>(entities[0]) == nullptr);
+}
+
 TEST_CASE("Testing component_constructed signal.") {
     {
         nodec::entities::Registry registry;
@@ -103,6 +126,26 @@ TEST_CASE("Testing all_of, any_of.") {
     CHECK(registry.any_of<const int, double>(e1));
 }
 
+TEST_CASE("Testing clear_component().") {
+    using namespace nodec::entities;
+
+    Registry registry;
+
+    const auto e0 = registry.create_entity();
+    const auto e1 = registry.create_entity();
+
+    registry.emplace_component<char>(e0);
+    registry.emplace_component<int>(e0);
+    registry.emplace_component<int>(e1);
+
+    REQUIRE(registry.try_get_component<int>(e0) != nullptr);
+    REQUIRE(registry.try_get_component<int>(e1) != nullptr);
+
+    registry.clear_component<int>();
+
+    REQUIRE(registry.try_get_component<int>(e0) == nullptr);
+    REQUIRE(registry.try_get_component<int>(e1) == nullptr);
+}
 //
 //
 // #include <nodec/logging.hpp>
