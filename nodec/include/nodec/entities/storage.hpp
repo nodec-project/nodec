@@ -109,7 +109,7 @@ public:
         instances.push_back({args...});
         packed.emplace_back(entity);
 
-        element_constructed_(*registry(), entity);
+        element_constructed_(*this->registry(), entity);
 
         return {instances[pos], true};
     }
@@ -168,7 +168,7 @@ public:
             return false;
         }
 
-        element_destroyed_(*registry(), entity); // cause structural changes.
+        element_destroyed_(*this->registry(), entity); // cause structural changes.
 
         auto *pos = sparse_table.try_get(entity);
         assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
