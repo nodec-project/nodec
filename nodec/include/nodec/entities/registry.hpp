@@ -24,7 +24,7 @@ class BasicRegistry {
     using entt_traits = entity_traits<Entity>;
 
     template<typename Type>
-    using Storage = storage_for_t<Type, Entity>;
+    using Storage = storage_for_t<Entity, Type>;
 
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
@@ -249,10 +249,6 @@ public:
 
     template<typename Component>
     bool remove_component(const Entity entity) {
-        if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
-        }
-
         auto *pool = pool_if_exists<Component>();
         return pool != nullptr && pool->erase(entity);
     }
@@ -261,26 +257,36 @@ public:
     decltype(auto) remove_components(const Entity entity) {
         static_assert(sizeof...(Components) > 0, "Must provide one or more component types");
 
-        if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
-        }
-
         return std::make_tuple(([this, entity](auto *pool) {
             return pool != nullptr && pool->erase(entity);
         })(pool_if_exists<Components>())...);
     }
 
     void remove_all_components(const Entity entity) {
-        if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
-        }
-
         for (auto pos = pools.size(); pos; --pos) {
             auto &pool_date = pools[pos - 1];
             if (pool_date.pool) {
                 pool_date.pool->erase(entity);
             }
         }
+    }
+
+    /**
+     * @brief Removes the given components from all the entities in a range.
+     *
+     * @return std::size_t The number of components actually removed.
+     */
+    template<typename Component, typename It>
+    std::size_t remove_component(It first, It last) {
+        auto *pool = pool_if_exists<Component>();
+        if (!pool) return 0;
+
+        return pool->erase(first, last);
+    }
+
+    template<typename... Components, typename It>
+    decltype(auto) remove_components(It first, It last) {
+        return std::forward_as_tuple(remove_component<Components>(first, last)...);
     }
 
     template<typename Component>
