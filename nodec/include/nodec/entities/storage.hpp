@@ -6,23 +6,142 @@
 #include "../type_traits.hpp"
 
 #include <cassert>
+#include <iterator>
 #include <vector>
 
 namespace nodec {
 namespace entities {
 
+namespace internal {
+
+/**
+ * @brief Internal storage iterator.
+ *
+ * This iterator walks the packed entity storage in reverse order.
+ * This is useful for deleting the element while iterating.
+ *
+ * @tparam Container
+ */
+template<typename Container>
+class StorageIterator final {
+public:
+    using value_type = typename Container::value_type;
+    using pointer = typename Container::const_pointer;
+    using reference = typename Container::const_reference;
+    using difference_type = typename Container::difference_type;
+    using iterator_type = std::random_access_iterator_tag;
+
+    constexpr StorageIterator() noexcept
+        : packed_{}, offset_{} {}
+
+    constexpr StorageIterator(const Container &ref, const difference_type offset) noexcept
+        : packed_{std::addressof(ref)}, offset_{offset} {}
+
+    constexpr StorageIterator &operator++() noexcept {
+        return --offset_, *this;
+    }
+
+    constexpr StorageIterator operator++(int) noexcept {
+        StorageIterator orig = *this;
+        return ++(*this), orig;
+    }
+
+    constexpr StorageIterator &operator--() noexcept {
+        return ++offset_, *this;
+    }
+
+    constexpr StorageIterator operator--(int) noexcept {
+        StorageIterator orig = *this;
+        return --(*this), orig;
+    }
+
+    constexpr StorageIterator &operator+=(const difference_type value) noexcept {
+        offset_ -= value;
+        return *this;
+    }
+
+    constexpr StorageIterator operator+(const difference_type value) const noexcept {
+        StorageIterator copy = *this;
+        return (copy += value);
+    }
+
+    constexpr StorageIterator &operator-=(const difference_type value) noexcept {
+        return (*this += -value);
+    }
+
+    constexpr StorageIterator operator-(const difference_type value) const noexcept {
+        return (*this + -value);
+    }
+
+    constexpr pointer operator->() const noexcept {
+        return packed_->data() + index();
+    }
+
+    constexpr reference operator*() const noexcept {
+        return *operator->();
+    }
+
+    constexpr difference_type index() const noexcept {
+        return offset_ - 1;
+    }
+
+private:
+    const Container *packed_;
+    difference_type offset_;
+};
+
+template<typename Container>
+constexpr std::ptrdiff_t operator-(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    return rhs.index() - lhs.index();
+}
+
+template<typename Container>
+constexpr bool operator==(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    return lhs.index() == rhs.index();
+}
+
+template<typename Container>
+constexpr bool operator!=(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    return !(lhs == rhs);
+}
+
+template<typename Container>
+constexpr bool operator<(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    // The iterator iterates over the storage in reverse order.
+    return lhs.index() > rhs.index();
+}
+
+template<typename Container>
+constexpr bool operator>(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    // The iterator iterates over the storage in reverse order.
+    return lhs.index() < rhs.index();
+}
+
+template<typename Container>
+constexpr bool operator<=(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    return !(lhs > rhs);
+}
+
+template<typename Container>
+constexpr bool operator>=(const StorageIterator<Container> &lhs, const StorageIterator<Container> &rhs) noexcept {
+    return !(lhs < rhs);
+}
+
+} // namespace internal
+
 template<typename Entity>
 class BasicRegistry;
 
-template<typename EntityT>
+template<typename Entity>
 class BaseStorage {
-    using PackedContainer = std::vector<EntityT>;
+    using PackedContainer = std::vector<Entity>;
     using SparseTable = containers::SparseTable<size_t>;
 
 public:
-    using Entity = EntityT;
+    using entity_type = Entity;
 
-    using const_iterator = typename PackedContainer::const_iterator;
+    using const_iterator = internal::StorageIterator<PackedContainer>;
+    using iterator = const_iterator;
 
 public:
     BaseStorage(PackedContainer &packed, SparseTable &sparse_table)
@@ -35,12 +154,13 @@ public:
         registry_ = registry;
     }
 
-    BasicRegistry<Entity>* registry() const noexcept {
+    BasicRegistry<Entity> *registry() const noexcept {
         return registry_;
     }
 
     const_iterator begin() const noexcept {
-        return packed_.begin();
+        const auto pos = static_cast<typename iterator::difference_type>(packed_.size());
+        return iterator{packed_, pos};
     }
 
     const_iterator cbegin() const noexcept {
@@ -48,7 +168,7 @@ public:
     }
 
     const_iterator end() const noexcept {
-        return packed_.end();
+        return iterator{packed_, {}};
     }
     const_iterator cend() const noexcept {
         return end();
@@ -66,13 +186,27 @@ public:
     virtual void clear() = 0;
     virtual void *try_get_opaque(const Entity entity) = 0;
 
+    template<typename It>
+    std::size_t erase(It first, It last) {
+        std::size_t count{};
+
+        for (; first != last; ++first) {
+            if (erase(*first)) ++count;
+        }
+        return count;
+    }
+
 private:
+    //! Compressed entity vector.
     PackedContainer &packed_;
+
+    //! Conversion table from entity to packed index.
     SparseTable &sparse_table_;
+
     BasicRegistry<Entity> *registry_;
 };
 
-template<typename Value, typename Entity>
+template<typename Entity, typename Value>
 class BasicStorage : public BaseStorage<Entity> {
     static_assert(std::is_move_constructible<Value>::value && std::is_move_assignable<Value>::value,
                   "The managed value must be at least move constructible and move assignable.");
@@ -188,6 +322,8 @@ public:
         return true;
     }
 
+    using base_type::erase;
+
     void clear() override {
         while (packed.size() > 0) {
             erase(packed.front());
@@ -215,13 +351,13 @@ private:
 /**
  * @brief Type-to-storage conversion utility that preserves constness.
  */
-template<typename Type, typename Entity>
+template<typename Entity, typename Type>
 struct storage_for {
-    using type = constness_as_t<BasicStorage<std::remove_const_t<Type>, Entity>, Type>;
+    using type = constness_as_t<BasicStorage<Entity, std::remove_const_t<Type>>, Type>;
 };
 
-template<typename Type, typename Entity>
-using storage_for_t = typename storage_for<Type, Entity>::type;
+template<typename Entity, typename Type>
+using storage_for_t = typename storage_for<Entity, Type>::type;
 
 } // namespace entities
 } // namespace nodec
