@@ -2,6 +2,7 @@
 #define NODEC__ENTITIES__STORAGE_HPP_
 
 #include "../containers/sparse_table.hpp"
+#include "../formatter.hpp"
 #include "../signals/signal.hpp"
 #include "../type_traits.hpp"
 
