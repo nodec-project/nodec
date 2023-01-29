@@ -5,6 +5,8 @@
 #include "../formatter.hpp"
 #include "../signals/signal.hpp"
 #include "../type_traits.hpp"
+#include "../utility.hpp"
+#include "entity.hpp"
 
 #include <cassert>
 #include <iterator>
@@ -140,6 +142,7 @@ class BaseStorage {
 
 public:
     using entity_type = Entity;
+    using entity_traits_type = entity_traits<Entity>;
 
     using const_iterator = internal::StorageIterator<PackedContainer>;
     using iterator = const_iterator;
@@ -179,8 +182,15 @@ public:
         return packed_.size();
     }
 
+    /**
+     * @brief Checks if a storage contains an entity.
+     */
     bool contains(const Entity entity) const {
-        return sparse_table_.contains(entity);
+        const auto entity_number = entity_traits_type::to_entity(entity);
+        auto *pos = sparse_table_.try_get(entity_number);
+        if (pos == nullptr) return false;
+
+        return packed_[*pos] == entity;
     }
 
     virtual bool erase(const Entity entity) = 0;
@@ -216,12 +226,6 @@ class BasicStorage : public BaseStorage<Entity> {
 
     using Base = BaseStorage<Entity>;
 
-    void throw_out_of_range_exception(Entity entity, const char *file, const std::size_t line) const {
-        throw std::out_of_range(ErrorFormatter<std::out_of_range>(file, line)
-                                << "Storage {" << typeid(BasicStorage).name() << "} does not contains the entity {0x"
-                                << std::hex << entity << "; entity: 0x" << to_entity(entity) << "; version: 0x" << to_version(entity) << "}.");
-    }
-
 public:
     // like stl.
     using value_type = Value;
@@ -230,65 +234,69 @@ public:
 
 public:
     BasicStorage()
-        : Base{packed, sparse_table} {}
+        : Base{packed_, sparse_table_} {}
 
+    /**
+     * @brief Assigns an entity to a storage and constructs its object.
+     *
+     * If the entity is already exists, return the reference to its object.
+     *
+     * @warning
+     * The version of the given entity that already exists must match the one in storage.
+     */
     template<typename... Args>
-    std::pair<Value &, bool> emplace(const Entity entity, Args &&...args) {
+    std::pair<value_type &, bool> emplace(const Entity entity, Args &&...args) {
+        const auto entity_number = entity_traits_type::to_entity(entity);
+
         {
-            auto *pos = sparse_table.try_get(entity);
-            if (pos != nullptr) return {instances[*pos], false};
+            auto *pos = sparse_table_.try_get(entity_number);
+            if (pos != nullptr) {
+                assert(packed_[*pos] == entity);
+                return {instances_[*pos], false};
+            }
         }
 
-        auto pos = instances.size();
-        sparse_table[entity] = pos;
-        instances.push_back({args...});
-        packed.emplace_back(entity);
+        auto pos = instances_.size();
+        sparse_table_[entity_number] = pos;
+        instances_.push_back({args...});
+        packed_.emplace_back(entity);
 
         element_constructed_(*this->registry(), entity);
 
-        return {instances[pos], true};
+        return {instances_[pos], true};
     }
 
-    const Value *try_get(const Entity entity) const {
-        auto *pos = sparse_table.try_get(entity);
+    const value_type *try_get(const Entity entity) const {
+        const auto *pos = sparse_table_.try_get(entity_traits_type::to_entity(entity));
         if (!pos) return nullptr;
 
-        return &instances[*pos];
+        assert(packed_[*pos] == entity);
+
+        return &instances_[*pos];
     }
 
-    Value *try_get(const Entity entity) {
-        auto *pos = sparse_table.try_get(entity);
-        if (!pos) return nullptr;
-
-        return &instances[*pos];
+    value_type *try_get(const Entity entity) {
+        return const_cast<value_type *>(as_const(*this).try_get(entity));
     }
 
     const value_type &get(const Entity entity) const {
-        auto *pos = sparse_table.try_get(entity);
-        if (!pos) throw_out_of_range_exception(entity, __FILE__, __LINE__);
+        const auto *pos = sparse_table_.try_get(entity_traits_type::to_entity(entity));
+        assert(pos != nullptr);
+        assert(packed_[*pos] == entity);
 
-        return instances[*pos];
+        return instances_[*pos];
     }
 
     value_type &get(const Entity entity) {
-        auto *pos = sparse_table.try_get(entity);
-        if (!pos) throw_out_of_range_exception(entity, __FILE__, __LINE__);
-
-        return instances[*pos];
+        return const_cast<value_type &>(as_const(*this).get(entity));
     }
 
-    std::tuple<const value_type &> get_as_tuple(const entity_type entity) const {
-        auto *pos = sparse_table.try_get(entity);
-        if (!pos) throw_out_of_range_exception(entity, __FILE__, __LINE__);
-
-        return std::forward_as_tuple(instances[*pos]);
+    std::tuple<const value_type &> get_as_tuple(const Entity entity) const {
+        return std::forward_as_tuple(get(entity));
     }
 
-    std::tuple<value_type &> get_as_tuple(const entity_type entity) {
-        auto *pos = sparse_table.try_get(entity);
-        if (!pos) throw_out_of_range_exception(entity, __FILE__, __LINE__);
-
-        return std::forward_as_tuple(instances[*pos]);
+    std::tuple<value_type &> get_as_tuple(const Entity entity) {
+        return std::forward_as_tuple(get(entity));
     }
 
 public:
@@ -299,26 +307,25 @@ public:
     }
 
     bool erase(const Entity entity) override {
-        if (!sparse_table.contains(entity)) {
-            return false;
-        }
+        if (!contains(entity)) return false;
 
         element_destroyed_(*this->registry(), entity); // cause structural changes.
 
-        auto *pos = sparse_table.try_get(entity);
+        const auto entity_number = entity_traits_type::to_entity(entity);
+        auto *pos = sparse_table_.try_get(entity_number);
         assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
 
         // move the back of instances to the removed index.
-        auto &other_entity = packed.back();
-        packed[*pos] = other_entity;
-        packed.pop_back();
+        auto &other_entity = packed_.back();
+        packed_[*pos] = other_entity;
+        packed_.pop_back();
 
-        instances[*pos] = std::move(instances.back());
-        instances.pop_back();
+        instances_[*pos] = std::move(instances_.back());
+        instances_.pop_back();
 
-        // link the location of the moved instance to the entity number.
-        sparse_table[other_entity] = *pos;
-        sparse_table.erase(entity);
+        // Updates the location of other entity.
+        sparse_table_[entity_traits_type::to_entity(other_entity)] = *pos;
+        sparse_table_.erase(entity_number);
 
         return true;
     }
@@ -326,8 +333,8 @@ public:
     using base_type::erase;
 
     void clear() override {
-        while (packed.size() > 0) {
-            erase(packed.front());
+        while (packed_.size() > 0) {
+            erase(packed_.front());
         }
     }
 
@@ -341,9 +348,9 @@ public:
     }
 
 private:
-    containers::SparseTable<size_t> sparse_table;
-    std::vector<Entity> packed;
-    std::vector<Value> instances;
+    containers::SparseTable<size_t> sparse_table_;
+    std::vector<Entity> packed_;
+    std::vector<Value> instances_;
 
     StorageSignal element_constructed_;
     StorageSignal element_destroyed_;

@@ -96,23 +96,6 @@ private:
         bitmap_[bit_to_byte(i)] &= ~mod_bit(i);
     }
 
-    // size_type calculate_growth(size_type new_capacity) {
-    //     // given _Oldcapacity and _Newsize, calculate geometric growth
-    //     const size_type old_capacity = buckets_.size();
-
-    //    if (old_capacity > GROUP_SIZE - old_capacity / 2) {
-    //        return GROUP_SIZE; // geometric growth would overflow
-    //    }
-
-    //    const size_type geometric = old_capacity + old_capacity / 2;
-
-    //    if (geometric < new_capacity) {
-    //        return new_capacity; // geometric growth would be insufficient
-    //    }
-
-    //    return geometric; // geometric growth is sufficient
-    //}
-
 public:
     BasicSparseGroup() {
         buckets_.reserve(GROUP_SIZE);
@@ -186,10 +169,6 @@ public:
     BasicSparseTable() {}
     ~BasicSparseTable() {}
 
-    // constexpr std::uint16_t group_size() const noexcept {
-    //     return GROUP_SIZE;
-    // }
-
 private:
     /**
      * @brief Returns the index of the group in which the given index belongs.
@@ -260,16 +239,6 @@ public:
 
         return group->contains(pos_in_group(i));
     }
-
-    ///**
-    // * @brief Returns the number of actually existing buckets.
-    // */
-    // size_type group_bucket_count(size_type group_index) const {
-    //    if (!(group_index < groups_.size())) return 0;
-    //    auto &group = groups_[group_index];
-    //    if (!group) return 0;
-    //    return group->bucket_count();
-    //}
 
 private:
     std::vector<std::unique_ptr<Group>> groups_;

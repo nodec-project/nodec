@@ -41,6 +41,28 @@ TEST_CASE("Testing emplace_component.") {
     }
 }
 
+TEST_CASE("Testing get_component.") {
+    using namespace nodec::entities;
+
+    Registry registry;
+
+    auto e0 = registry.create_entity();
+    registry.emplace_component<int>(e0, 100);
+
+    CHECK(registry.get_component<int>(e0) == 100);
+    CHECK_THROWS(registry.get_component<char>(e0));
+    CHECK(registry.try_get_component<int>(e0) != nullptr);
+    CHECK(*registry.try_get_component<int>(e0) == 100);
+
+    {
+        auto invalid = entity_traits<Entity>::combine(e0, tombstone_entity);
+        CHECK_THROWS(registry.get_component<int>(invalid));
+        CHECK_THROWS(registry.get_component<char>(invalid));
+        CHECK_THROWS(registry.try_get_component<int>(invalid));
+        CHECK_THROWS(registry.try_get_component<char>(invalid));
+    }
+}
+
 TEST_CASE("Testing remove_component.") {
     using namespace nodec::entities;
 
@@ -130,7 +152,7 @@ TEST_CASE("Testing remove_components.") {
         registry.emplace_component<double>(entities[0]);
         registry.emplace_component<double>(entities[1]);
         registry.emplace_component<double>(entities[2]);
-        
+
         {
             auto view = registry.view<char>();
             registry.remove_components<int, double>(view.begin(), view.end());
@@ -138,7 +160,7 @@ TEST_CASE("Testing remove_components.") {
 
         CHECK(registry.try_get_component<int>(entities[0]) == nullptr);
         CHECK(registry.try_get_component<int>(entities[2]) == nullptr);
-        
+
         CHECK(registry.try_get_component<double>(entities[0]) == nullptr);
         CHECK(registry.try_get_component<double>(entities[2]) == nullptr);
     }
@@ -181,6 +203,13 @@ TEST_CASE("Testing all_of, any_of.") {
 
     CHECK(!registry.any_of<const int, double>(e0));
     CHECK(registry.any_of<const int, double>(e1));
+
+    CHECK(!registry.all_of<int>(null_entity));
+    {
+        auto invalid = entity_traits<Entity>::combine(e1, tombstone_entity);
+        REQUIRE(!registry.is_valid(invalid));
+        CHECK(!registry.all_of<int>(invalid));
+    }
 }
 
 TEST_CASE("Testing clear_component().") {
