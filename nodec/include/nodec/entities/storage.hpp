@@ -194,7 +194,6 @@ public:
     }
 
     virtual bool erase(const Entity entity) = 0;
-    virtual void clear() = 0;
     virtual void *try_get_opaque(const Entity entity) = 0;
 
     template<typename It>
@@ -206,6 +205,8 @@ public:
         }
         return count;
     }
+    
+    virtual void clear() = 0;
 
 private:
     //! Compressed entity vector.
@@ -246,7 +247,7 @@ public:
      */
     template<typename... Args>
     std::pair<value_type &, bool> emplace(const Entity entity, Args &&...args) {
-        const auto entity_number = entity_traits_type::to_entity(entity);
+        const auto entity_number = Base::entity_traits_type::to_entity(entity);
 
         {
             auto *pos = sparse_table_.try_get(entity_number);
@@ -267,7 +268,7 @@ public:
     }
 
     const value_type *try_get(const Entity entity) const {
-        const auto *pos = sparse_table_.try_get(entity_traits_type::to_entity(entity));
+        const auto *pos = sparse_table_.try_get(Base::entity_traits_type::to_entity(entity));
         if (!pos) return nullptr;
 
         assert(packed_[*pos] == entity);
@@ -280,7 +281,7 @@ public:
     }
 
     const value_type &get(const Entity entity) const {
-        const auto *pos = sparse_table_.try_get(entity_traits_type::to_entity(entity));
+        const auto *pos = sparse_table_.try_get(Base::entity_traits_type::to_entity(entity));
         assert(pos != nullptr);
         assert(packed_[*pos] == entity);
 
@@ -311,7 +312,7 @@ public:
 
         element_destroyed_(*this->registry(), entity); // cause structural changes.
 
-        const auto entity_number = entity_traits_type::to_entity(entity);
+        const auto entity_number = Base::entity_traits_type::to_entity(entity);
         auto *pos = sparse_table_.try_get(entity_number);
         assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
 
@@ -324,7 +325,7 @@ public:
         instances_.pop_back();
 
         // Updates the location of other entity.
-        sparse_table_[entity_traits_type::to_entity(other_entity)] = *pos;
+        sparse_table_[Base::entity_traits_type::to_entity(other_entity)] = *pos;
         sparse_table_.erase(entity_number);
 
         return true;

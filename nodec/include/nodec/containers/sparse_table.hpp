@@ -1,5 +1,5 @@
-#ifndef NODEC__CONTAINERS__SPARSE_VECTOR_HPP_
-#define NODEC__CONTAINERS__SPARSE_VECTOR_HPP_
+#ifndef NODEC__CONTAINERS__SPARSE_TABLE_HPP_
+#define NODEC__CONTAINERS__SPARSE_TABLE_HPP_
 
 #include "../utility.hpp"
 
@@ -177,8 +177,8 @@ private:
         return i / GROUP_SIZE;
     }
 
-    uint16_t pos_in_group(const size_type i) const {
-        return static_cast<uint16_t>(i % GROUP_SIZE);
+    std::uint16_t pos_in_group(const size_type i) const {
+        return static_cast<std::uint16_t>(i % GROUP_SIZE);
     }
 
     Group *group_assured(size_type i) {
