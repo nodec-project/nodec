@@ -205,8 +205,12 @@ public:
         }
         return count;
     }
-    
-    virtual void clear() = 0;
+
+    void clear() {
+        while (packed_.size() > 0) {
+            erase(packed_.front());
+        }
+    }
 
 private:
     //! Compressed entity vector.
@@ -308,7 +312,7 @@ public:
     }
 
     bool erase(const Entity entity) override {
-        if (!contains(entity)) return false;
+        if (!this->contains(entity)) return false;
 
         element_destroyed_(*this->registry(), entity); // cause structural changes.
 
@@ -331,13 +335,8 @@ public:
         return true;
     }
 
-    using base_type::erase;
-
-    void clear() override {
-        while (packed_.size() > 0) {
-            erase(packed_.front());
-        }
-    }
+    using Base::clear;
+    using Base::erase;
 
 public:
     decltype(auto) element_constructed() {
