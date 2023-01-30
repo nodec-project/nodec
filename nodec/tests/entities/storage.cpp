@@ -35,15 +35,50 @@ TEST_CASE("Testing storage iterator.") {
 TEST_CASE("Testing erase().") {
     using namespace nodec::entities;
 
+    SUBCASE("basic") {
+        BasicStorage<Entity, int> storage;
+
+        std::array<Entity, 3> entities{
+            entity_traits<Entity>::construct(0, 0),
+            entity_traits<Entity>::construct(1, 0),
+            entity_traits<Entity>::construct(2, 1),
+        };
+
+        for (auto &entity : entities) {
+            storage.emplace(entity, 100);
+        }
+
+        REQUIRE(storage.size() == 3);
+
+        for (auto &entity : entities) {
+            INFO(entity);
+            CHECK(storage.erase(entity));
+        }
+
+        CHECK(storage.size() == 0);
+    }
+
+    SUBCASE("range") {
+        BasicStorage<std::uint32_t, int> storage;
+
+        storage.emplace(0, 'a');
+        storage.emplace(1, 'a');
+        storage.emplace(2, 'a');
+
+        REQUIRE(storage.size() == 3);
+
+        CHECK(storage.erase(storage.begin(), storage.end()) == 3);
+
+        CHECK(storage.size() == 0);
+    }
+}
+
+TEST_CASE("Testing contains().") {
+    using namespace nodec::entities;
+
     BasicStorage<std::uint32_t, int> storage;
 
-    storage.emplace(0, 'a');
-    storage.emplace(1, 'a');
-    storage.emplace(2, 'a');
+    storage.emplace(0, 0);
 
-    REQUIRE(storage.size() == 3);
-
-    CHECK(storage.erase(storage.begin(), storage.end()) == 3);
-
-    CHECK(storage.size() == 0);
+    CHECK(storage.contains(0));
 }

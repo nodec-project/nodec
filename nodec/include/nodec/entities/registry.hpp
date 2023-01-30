@@ -21,8 +21,6 @@ namespace entities {
 
 template<typename Entity>
 class BasicRegistry {
-    using entt_traits = entity_traits<Entity>;
-
     template<typename Type>
     using Storage = storage_for_t<Entity, Type>;
 
@@ -31,22 +29,27 @@ class BasicRegistry {
         const type_info *type_info;
     };
 
+public:
+    using entity_traits_type = entity_traits<Entity>;
+    using entity_type = Entity;
+
+private:
     decltype(auto) generate_identifier(const std::size_t pos) noexcept {
-        assert(pos < entt_traits::to_integral(null_entity) && "No entities available");
-        return entt_traits::combine(static_cast<typename entt_traits::entity_type>(pos), {});
+        assert(pos < entity_traits_type::to_integral(null_entity) && "No entities available");
+        return entity_traits_type::combine(static_cast<typename entity_traits_type::entity_type>(pos), {});
     }
 
     decltype(auto) recycle_identifier() {
         assert(free_list != null_entity && "No entities available");
-        const auto curr = entt_traits::to_entity(free_list);
-        free_list = entt_traits::combine(entt_traits::to_integral(entities[curr]), tombstone_entity);
-        return (entities[curr] = entt_traits::combine(curr, entt_traits::to_integral(entities[curr])));
+        const auto curr = entity_traits_type::to_entity(free_list);
+        free_list = entity_traits_type::combine(entity_traits_type::to_integral(entities[curr]), tombstone_entity);
+        return (entities[curr] = entity_traits_type::combine(curr, entity_traits_type::to_integral(entities[curr])));
     }
 
-    decltype(auto) release_entity(const Entity entity, const typename entt_traits::version_type version) {
-        const typename entt_traits::version_type vers = version + (version == entt_traits::to_version(tombstone_entity));
-        entities[entt_traits::to_entity(entity)] = entt_traits::construct(entt_traits::to_integral(free_list), vers);
-        free_list = entt_traits::combine(entt_traits::to_integral(entity), tombstone_entity);
+    decltype(auto) release_entity(const Entity entity, const typename entity_traits_type::version_type version) {
+        const typename entity_traits_type::version_type vers = version + (version == entity_traits_type::to_version(tombstone_entity));
+        entities[entity_traits_type::to_entity(entity)] = entity_traits_type::construct(entity_traits_type::to_integral(free_list), vers);
+        free_list = entity_traits_type::combine(entity_traits_type::to_integral(entity), tombstone_entity);
         return vers;
     }
 
@@ -93,11 +96,7 @@ class BasicRegistry {
 
     template<typename Component>
     Storage<Component> *pool_if_exists() {
-        static_assert(std::is_same<Component, std::decay_t<Component>>::value, "Non-decayed types (s.t. array) not allowed");
-        const auto index = type_id<Component>().seq_index();
-        return (index < pools.size() && pools[index].pool)
-                   ? static_cast<Storage<Component> *>(pools[index].pool.get())
-                   : nullptr;
+        return const_cast<Storage<Component> *>(as_const(*this).template pool_if_exists<Component>());
     }
 
 public:
@@ -123,7 +122,7 @@ public:
      * @return True if the identifier is valid, false otherwise.
      */
     bool is_valid(const Entity entity) const {
-        const auto pos = std::size_t(entt_traits::to_entity(entity));
+        const auto pos = std::size_t(entity_traits_type::to_entity(entity));
         return (pos < entities.size() && entities[pos] == entity);
     }
 
@@ -151,11 +150,11 @@ public:
      */
     void destroy_entity(const Entity entity) {
         if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         remove_all_components(entity);
-        release_entity(entity, entt_traits::to_version(entity) + 1u);
+        release_entity(entity, entity_traits_type::to_version(entity) + 1u);
     }
 
     /**
@@ -194,7 +193,7 @@ public:
         } else {
             for (auto pos = entities.size(); pos; --pos) {
                 const auto entity = entities[pos - 1];
-                if (entt_traits::to_entity(entity) == (pos - 1)) {
+                if (entity_traits_type::to_entity(entity) == (pos - 1)) {
                     func(entity);
                 }
             }
@@ -234,14 +233,14 @@ public:
         }
         each_entity(
             [this](const auto entity) {
-                release_entity(entity, entt_traits::to_version(entity) + 1u);
+                release_entity(entity, entity_traits_type::to_version(entity) + 1u);
             });
     }
 
     template<typename Component, typename... Args>
     decltype(auto) emplace_component(const Entity entity, Args &&...args) {
         if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         return pool_assured<Component>()->emplace(entity, std::forward<Args>(args)...);
@@ -299,18 +298,18 @@ public:
     template<typename Component>
     decltype(auto) get_component(const Entity entity) const {
         if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
 
         using Comp = std::remove_const_t<Component>;
         const auto *pool = pool_if_exists<Comp>();
         if (!pool) {
-            exceptions::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
+            throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
         auto *component = pool->try_get(entity);
         if (!component) {
-            exceptions::throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
+            throw_no_component_exception<Comp>(entity, __FILE__, __LINE__);
         }
 
         return *component;
@@ -334,7 +333,7 @@ public:
     template<typename Component>
     auto try_get_component(const Entity entity) const {
         if (!is_valid(entity)) {
-            exceptions::throw_invalid_entity_exception(entity, __FILE__, __LINE__);
+            throw_invalid_entity_exception(entity, __FILE__, __LINE__);
         }
         auto *pool = pool_if_exists<std::remove_const_t<Component>>();
         return pool ? pool->try_get(entity) : nullptr;

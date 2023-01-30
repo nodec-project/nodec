@@ -1,6 +1,10 @@
 #ifndef NODEC__CONTAINERS__SPARSE_TABLE_HPP_
 #define NODEC__CONTAINERS__SPARSE_TABLE_HPP_
 
+#include "../utility.hpp"
+
+#include <cassert>
+#include <memory>
 #include <vector>
 
 namespace nodec {
@@ -15,106 +19,27 @@ namespace containers {
  * smaller) and the faster insert it, because there's less to move.
  * On the other hand, there are more groups.
  */
-constexpr uint16_t DEFAULT_SPARSE_GROUP_SIZE = 48;
+constexpr std::uint16_t DEFAULT_SPARSE_GROUP_SIZE = 48;
 
-template<typename Table>
-class TableIterator {
-    using GroupIterator = typename Table::Group::iterator;
-
-public:
-    using value_type = typename Table::Group::Value;
-    using pointer = value_type *;
-    using reference = value_type &;
-
-public:
-    TableIterator(Table *table, size_t group_num, GroupIterator group_iter)
-        : table_(table), group_num_(group_num), group_iter_(group_iter) {
-    }
-
-    TableIterator(const TableIterator &from)
-        : table_(from.table_), group_num_(from.group_num_), group_iter_(from.group_iter_) {
-    }
-
-    reference operator*() const {
-        return *group_iter_;
-    }
-
-    pointer operator->() const {
-        return group_iter_.operator->();
-    }
-
-    TableIterator &operator++() {
-        ++group_iter_;
-        if (group_iter_ == table_->end(group_num_)
-            && group_num_ + 1 < table_->group_count()) {
-            ++group_num_;
-            group_iter_ = table_->begin(group_num_);
-        }
-        return *this;
-    }
-
-    TableIterator &operator--() {
-        if (group_iter_ == table_->begin(group_num_)
-            && group_num_ > 0) {
-            --group_num_;
-            group_iter_ = table_->end(group_num_);
-        }
-        --group_iter_;
-        return *this;
-    }
-
-    bool operator==(const TableIterator &it) {
-        return table_ == it.table_
-               && group_num_ == it.group_num_
-               && group_iter_ == it.group_iter_;
-    }
-    bool operator!=(const TableIterator &it) {
-        return !(*this == it);
-    }
-
-private:
-    Table *table_;
-    size_t group_num_;
-    GroupIterator group_iter_;
-};
-
-template<typename ValueT, uint16_t GROUP_SIZE>
+template<typename Value, std::uint16_t GROUP_SIZE>
 class BasicSparseGroup {
 public:
-    using Value = ValueT;
-
-public:
-    using size_type = uint16_t;
-    using iterator = typename std::vector<Value>::iterator;
+    using value_type = Value;
+    using size_type = std::uint16_t;
 
 private:
     /**
      * @brief i bits to bytes (rounded down)
      */
-    static size_type bytebit(size_type i) {
+    static size_type bit_to_byte(size_type i) {
         return i >> 3;
     }
 
     /**
      * @brief Gets the leftover bits with division by byte.
      */
-    static size_type modbit(size_type i) {
+    static size_type mod_bit(size_type i) {
         return 1 << (i & 0x07);
-    }
-
-    /**
-     * @brief Tests bucket i is occuoued or not.
-     */
-    int bmtest(size_type i) const {
-        return bitmap[bytebit(i)] & modbit(i);
-    }
-
-    void bmset(size_type i) {
-        bitmap[bytebit(i)] |= modbit(i);
-    }
-
-    void bmclear(size_type i) {
-        bitmap[bytebit(i)] &= ~modbit(i);
     }
 
     static size_type bits_in_byte(uint8_t byte) {
@@ -141,7 +66,6 @@ private:
         return bits_in[byte];
     }
 
-public:
     /*
      * @brief We need a small function that tells us how many set bits there are
      *   in position 0..i-1 of the bitmap.
@@ -157,133 +81,144 @@ public:
         return retval + bits_in_byte(*bm & ((1 << pos) - 1));
     }
 
-public:
-    iterator begin() {
-        return group.begin();
-    }
-    iterator end() {
-        return group.end();
+    /**
+     * @brief Tests bucket i is occurred or not.
+     */
+    int bm_test(size_type i) const {
+        return bitmap_[bit_to_byte(i)] & mod_bit(i);
     }
 
-    size_type num_buckets() {
-        return num_buckets_;
+    void bm_set(size_type i) {
+        bitmap_[bit_to_byte(i)] |= mod_bit(i);
     }
+
+    void bm_clear(size_type i) {
+        bitmap_[bit_to_byte(i)] &= ~mod_bit(i);
+    }
+
+public:
+    BasicSparseGroup() {
+        buckets_.reserve(GROUP_SIZE);
+    }
+    ~BasicSparseGroup() {}
 
     bool contains(const size_type i) const {
-        return bmtest(i) != 0x00;
+        return bm_test(i) != 0x00;
     }
 
     template<typename... Args>
-    std::pair<Value &, bool> emplace(const size_type i, Args &&...args) {
-        if (bmtest(i)) {
-            return {group[pos_to_offset(bitmap, i)], false};
+    std::pair<value_type &, bool> emplace(const size_type i, Args &&...args) {
+        if (bm_test(i)) {
+            return {buckets_[pos_to_offset(bitmap_, i)], false};
         }
 
-        auto offset = pos_to_offset(bitmap, i);
-        group.emplace(group.begin() + offset, std::forward<Args>(args)...);
-        ++num_buckets_;
-        bmset(i);
-        return {group[offset], true};
+        const auto offset = pos_to_offset(bitmap_, i);
+        buckets_.emplace(buckets_.begin() + offset, std::forward<Args>(args)...);
+
+        bm_set(i);
+
+        return {buckets_[offset], true};
     }
 
-    const Value *try_get(const size_type i) const {
-        if (!bmtest(i)) {
-            return nullptr;
-        }
+    const value_type *try_get(const size_type i) const {
+        if (!bm_test(i)) return nullptr;
 
-        return &group[pos_to_offset(bitmap, i)];
+        return &buckets_[pos_to_offset(bitmap_, i)];
     }
 
-    Value *try_get(const size_type i) {
-        if (!bmtest(i)) {
-            return nullptr;
-        }
+    value_type *try_get(const size_type i) {
+        if (!bm_test(i)) return nullptr;
 
-        return &group[pos_to_offset(bitmap, i)];
+        return &buckets_[pos_to_offset(bitmap_, i)];
     }
 
     bool erase(const size_type i) {
-        if (!bmtest(i)) {
-            return false;
-        }
+        if (!bm_test(i)) return false;
 
-        auto offset = pos_to_offset(bitmap, i);
-        group.erase(group.begin() + offset);
-        --num_buckets_;
-        bmclear(i);
+        auto offset = pos_to_offset(bitmap_, i);
+        buckets_.erase(buckets_.begin() + offset);
+        bm_clear(i);
         return true;
     }
 
+    /**
+     * @brief Returns the number of actually existing buckets.
+     */
+    size_type bucket_count() const noexcept {
+        return buckets_.capacity();
+    }
+
 private:
-    std::vector<Value> group;
-    uint8_t bitmap[(GROUP_SIZE - 1) / 8 + 1]; // fancy math is so we round up
-    size_type num_buckets_;                   // limits GROUP_SIZE to 64KB
+    std::vector<value_type> buckets_;
+    std::uint8_t bitmap_[(GROUP_SIZE - 1) / 8 + 1]{}; // fancy math is so we round up
+
+    // NOTE: Consider to save the next group index.
+    //  To iterate the values.
+    // size_type next_group_;
 };
 
 template<typename T, uint16_t GROUP_SIZE>
 class BasicSparseTable {
-public:
     using Group = BasicSparseGroup<T, GROUP_SIZE>;
 
 public:
-    using size_type = size_t;
-    using iterator = TableIterator<BasicSparseTable<T, GROUP_SIZE>>;
-    using local_iterator = typename Group::iterator;
+    using size_type = std::size_t;
+    using value_type = T;
 
 public:
-    // TODO: Support move semantics.
+    BasicSparseTable() {}
+    ~BasicSparseTable() {}
 
-    uint16_t pos_in_group(const size_type i) const {
-        return static_cast<uint16_t>(i % GROUP_SIZE);
-    }
-
-    size_type group_num(const size_type i) const {
+private:
+    /**
+     * @brief Returns the index of the group in which the given index belongs.
+     */
+    size_type group_index(const size_type i) const {
         return i / GROUP_SIZE;
     }
 
+    std::uint16_t pos_in_group(const size_type i) const {
+        return static_cast<std::uint16_t>(i % GROUP_SIZE);
+    }
+
     Group *group_assured(size_type i) {
-        auto num = group_num(i);
-        if (!(num < groups.size())) {
-            groups.resize(num + 1);
+        const auto index = group_index(i);
+        if (!(index < groups_.size())) {
+            groups_.resize(index + 1);
         }
-        // nodec:logging::DebugStream(__FILE__, __LINE__) << sizeof(Group) << " * " << groups.size();
-        return &groups[num];
+
+        auto &group = groups_[index];
+        if (group) return group.get();
+
+        group.reset(new Group());
+        return group.get();
     }
 
     const Group *group_if_exists(size_type i) const {
-        auto num = group_num(i);
-        if (!(num < groups.size())) {
-            return nullptr;
-        }
-        return &groups[num];
+        const auto index = group_index(i);
+        if (!(index < groups_.size())) return nullptr;
+        auto &group = groups_[index];
+
+        return groups_[index].get();
     }
 
     Group *group_if_exists(size_type i) {
-        auto num = group_num(i);
-        if (!(num < groups.size())) {
-            return nullptr;
-        }
-        return &groups[num];
+        return const_cast<Group *>(as_const(*this).group_if_exists(i));
     }
 
-    bool has_group(size_type i) const {
-        return group_num(i) < groups.size();
-    }
-
-    iterator begin() {
-        return {this, 0, begin(0)};
-    }
-
-    iterator end() {
-        auto group_num = groups.size() - 1;
-        return {this, group_num, end(group_num)};
-    }
-
-    T &operator[](const size_type i) {
+public:
+    value_type &operator[](const size_type i) {
         return group_assured(i)->emplace(pos_in_group(i)).first;
     }
 
-    const T *try_get(const size_type i) const {
+    const value_type *try_get(size_type i) const {
+        auto *group = group_if_exists(i);
+        if (!group) return nullptr;
+
+        return group->try_get(pos_in_group(i));
+    }
+
+    T *try_get(size_type i) {
         auto *group = group_if_exists(i);
         if (!group) {
             return nullptr;
@@ -291,45 +226,22 @@ public:
         return group->try_get(pos_in_group(i));
     }
 
-    T *try_get(const size_type i) {
+    bool erase(size_type i) {
         auto *group = group_if_exists(i);
-        if (!group) {
-            return nullptr;
-        }
-        return group->try_get(pos_in_group(i));
-    }
-
-    bool erase(const size_type i) {
-        auto *group = group_if_exists(i);
-        if (!group) {
-            return false;
-        }
+        if (!group) return false;
 
         return group->erase(pos_in_group(i));
     }
 
-    bool contains(const size_type i) const {
+    bool contains(size_type i) const {
         auto *group = group_if_exists(i);
-        if (!group) {
-            return false;
-        }
+        if (!group) return false;
 
         return group->contains(pos_in_group(i));
     }
 
-    size_type group_count() const noexcept {
-        return groups.size();
-    }
-
-    local_iterator begin(size_type n) {
-        return groups[n].begin();
-    }
-    local_iterator end(size_type n) {
-        return groups[n].end();
-    }
-
 private:
-    std::vector<Group> groups;
+    std::vector<std::unique_ptr<Group>> groups_;
 };
 
 template<typename T>

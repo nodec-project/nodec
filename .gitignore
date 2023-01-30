@@ -5,3 +5,5 @@
 *.drawio.dtmp
 
 build
+
+CMakeSettings.json

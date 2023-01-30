@@ -5,7 +5,6 @@
 
 namespace nodec {
 namespace entities {
-namespace exceptions {
 
 template<typename Entity>
 inline void throw_invalid_entity_exception(const Entity entity, const char *file, size_t line) {
@@ -21,7 +20,6 @@ inline void throw_no_component_exception(const Entity entity, const char *file, 
                              << "} doesn't have the component {" << typeid(Component).name() << "}.");
 }
 
-}
 } // namespace entities
 } // namespace nodec
 #endif
