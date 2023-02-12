@@ -11,9 +11,7 @@
 namespace nodec_scene {
 namespace systems {
 
-class HierarchySystem {
-    using RegistryConnection = nodec::signals::Connection;
-
+class HierarchySystem final {
 public:
     HierarchySystem(SceneRegistry *registry)
         : registry_{registry} {
@@ -190,7 +188,7 @@ private:
         }
 
         {
-            nodec::signals::ScopedBlock<RegistryConnection> block(hierarchy_destroyed_connection_);
+            nodec::signals::ScopedBlock<nodec::signals::Connection> block(hierarchy_destroyed_connection_);
             auto iter = to_deletes.begin();
             // The first element is already deleted.
             ++iter;
@@ -205,8 +203,8 @@ private:
 
     components::Hierarchy root_hierarchy_;
 
-    RegistryConnection hierarchy_destroyed_connection_;
-    RegistryConnection hierarchy_created_connection_;
+    nodec::signals::Connection hierarchy_destroyed_connection_;
+    nodec::signals::Connection hierarchy_created_connection_;
 
     nodec::signals::Signal<void(SceneEntity, SceneEntity)> hierarchy_changed_;
 };
