@@ -8,9 +8,9 @@
 namespace nodec_scene_editor {
 
 class Selection {
+public:
     using SceneEntity = nodec_scene::SceneEntity;
 
-public:
     SceneEntity active_scene_entity() const noexcept {
         return active_scene_entity_;
     }

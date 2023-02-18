@@ -62,7 +62,7 @@ private:
 
             ImGuiTreeNodeFlags flags = (hierarchy.child_count > 0 ? 0x00 : ImGuiTreeNodeFlags_Leaf)
                                        | (entity == selected_entity_ ? ImGuiTreeNodeFlags_Selected : 0x00)
-                                       | ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_OpenOnDoubleClick;
+                                       | ImGuiTreeNodeFlags_OpenOnArrow; // | ImGuiTreeNodeFlags_OpenOnDoubleClick;
 
             node_open = ImGui::TreeNodeEx(label.c_str(), flags);
 
@@ -132,9 +132,8 @@ private:
     }
 
     void select(nodec_scene::SceneEntity entity) {
-        if (entity == selected_entity_) {
-            return;
-        }
+        if (entity == selected_entity_) return;
+
         selected_entity_ = entity;
         selected_entity_changed_(selected_entity_);
     }
