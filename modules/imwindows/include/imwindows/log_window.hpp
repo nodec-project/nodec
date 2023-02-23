@@ -19,12 +19,12 @@ class LogWindow final : public imessentials::BaseWindow {
 
 public:
     LogWindow()
-        : BaseWindow("Log", nodec::Vector2f(500, 400)), auto_scroll(true){};
+        : BaseWindow("Log", nodec::Vector2f(500, 400)), auto_scroll_(true){};
 
     void on_gui() override {
         // Options menu
         if (ImGui::BeginPopup("Options")) {
-            ImGui::Checkbox("Auto-scroll", &auto_scroll);
+            ImGui::Checkbox("Auto-scroll", &auto_scroll_);
             ImGui::EndPopup();
         }
 
@@ -35,33 +35,33 @@ public:
         bool clear = ImGui::Button("Clear");
 
         ImGui::SameLine();
-        filter.Draw("Filter", -100.0f);
+        filter_.Draw("Filter", -100.0f);
 
         ImGui::Separator();
         ImGui::BeginChild("scrolling", ImVec2(0, 0), false, ImGuiWindowFlags_HorizontalScrollbar);
 
-        if (clear) records.clear();
+        if (clear) records_.clear();
 
-        if (filter.IsActive()) {
-            for (const auto &record : records) {
+        if (filter_.IsActive()) {
+            for (const auto &record : records_) {
                 const std::string text = nodec::Formatter() << record;
-                if (filter.PassFilter(text.c_str())) {
+                if (filter_.PassFilter(text.c_str())) {
                     ImGui::TextUnformatted(text.c_str());
                 }
             }
         } else {
             ImGuiListClipper clipper;
-            clipper.Begin(records.size());
+            clipper.Begin(records_.size());
             while (clipper.Step()) {
                 for (int i = clipper.DisplayStart; i < clipper.DisplayEnd; ++i) {
-                    std::string text = nodec::Formatter() << records[i];
+                    std::string text = nodec::Formatter() << records_[i];
                     ImGui::TextUnformatted(text.c_str());
                 }
             }
             clipper.End();
         }
 
-        if (auto_scroll && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
+        if (auto_scroll_ && ImGui::GetScrollY() >= ImGui::GetScrollMaxY()) {
             ImGui::SetScrollHereY(1.0f);
         }
 
@@ -72,28 +72,25 @@ private:
     void recordHandler(const nodec::logging::LogRecord &record) {
         using namespace nodec::signals;
 
-        //using ScopedBlock = nodec::signals::ScopedBlock<nodec::logging::RecordHandlers::Connection>;
-        ScopedBlock<Connection> scoped_block{logging_hander_conn};
+        // using ScopedBlock = nodec::signals::ScopedBlock<nodec::logging::RecordHandlers::Connection>;
+        ScopedBlock<Connection> scoped_block{logging_handler_conn_};
 
-        records.push_back(record);
-        if (records.size() > MAX_RECORDS) {
-            records.pop_front();
+        records_.push_back(record);
+        if (records_.size() > MAX_RECORDS) {
+            records_.pop_front();
         }
     }
 
 private:
-    nodec::signals::Connection logging_hander_conn = nodec::logging::record_handlers().connect(
+    nodec::signals::Connection logging_handler_conn_ = nodec::logging::record_handlers().connect(
         [&](const nodec::logging::LogRecord &record) {
             recordHandler(record);
         });
 
-    std::deque<nodec::logging::LogRecord> records;
-    bool auto_scroll;
-    ImGuiTextFilter filter;
+    std::deque<nodec::logging::LogRecord> records_;
+    bool auto_scroll_;
+    ImGuiTextFilter filter_;
 };
-
-//
-// inline static bool registered = game_editor::menu::register_menu_item("Window/Log", LogWindow::init);
 
 } // namespace imwindows
 
