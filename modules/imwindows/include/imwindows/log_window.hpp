@@ -93,12 +93,7 @@ public:
                 selected_id_ = entry.id;
                 selected_entry_text_ = entry.formatted_text;
             }
-            // ImGui::Selectable(text.c_str(), &selected, ImGuiSelectableFlags_None, ImVec2(0, 50));
-            // ImGui::Text(static_cast<std::string>(Formatter() << record.level).c_str());
-            // ImGui::Text(text.c_str());
-
             ImGui::PopStyleColor();
-            // ImGui::EndChild();
         };
 
         if (filter_.IsActive()) {
