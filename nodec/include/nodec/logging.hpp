@@ -39,6 +39,8 @@ std::string default_formatter(const LogRecord &record) noexcept;
  *   Example:
  *       // connect stdout handler.
  *       record_handlers().connect(logging::record_to_stdout_handler);
+ * 
+ * @todo Support thread-safe.
  */
 RecordHandlers::SignalInterface record_handlers();
 
