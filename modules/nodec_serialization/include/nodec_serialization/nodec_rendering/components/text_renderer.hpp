@@ -4,7 +4,7 @@
 #include <nodec_rendering/components/text_renderer.hpp>
 #include <nodec_rendering/resources/font.hpp>
 #include <nodec_rendering/resources/material.hpp>
-#include <nodec_scene_serialization/base_serializable_component.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 #include <nodec_serialization/nodec/vector4.hpp>
 
 namespace nodec_rendering {
