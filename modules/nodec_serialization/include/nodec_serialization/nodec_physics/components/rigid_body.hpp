@@ -1,7 +1,7 @@
 #ifndef NODEC_SERIALIZATION__NODEC_PHYSICS__COMPONENTS__RIGID_BODY_HPP_
 #define NODEC_SERIALIZATION__NODEC_PHYSICS__COMPONENTS__RIGID_BODY_HPP_
 
-#include <nodec_scene_serialization/base_serializable_component.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 #include <nodec_physics/components/rigid_body.hpp>
 
 namespace nodec_physics {

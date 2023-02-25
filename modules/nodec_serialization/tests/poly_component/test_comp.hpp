@@ -1,4 +1,4 @@
-#include <nodec_scene_serialization/base_serializable_component.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 
 class TestComponent : public nodec_scene_serialization::BaseSerializableComponent {
 public:

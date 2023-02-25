@@ -2,7 +2,7 @@
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__NON_VISIBLE_HPP_
 
 #include <nodec_rendering/components/non_visible.hpp>
-#include <nodec_scene_serialization/base_serializable_component.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 
 namespace nodec_rendering {
 namespace components {

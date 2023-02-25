@@ -32,7 +32,7 @@ public:
     }
 
 private:
-    //virtual void rtti() = 0;
+    // virtual void rtti() = 0;
     const nodec::type_info *type_info_;
 };
 
@@ -63,5 +63,9 @@ using JSONInputArchiveWithContext = cereal::UserDataAdapter<nodec_scene_serializ
 } // namespace nodec_scene_serialization
 
 CEREAL_REGISTER_ARCHIVE(nodec_scene_serialization::internal::JSONInputArchiveWithContext)
+
+#define NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(T) \
+    CEREAL_REGISTER_TYPE(T) \
+    CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, T)
 
 #endif

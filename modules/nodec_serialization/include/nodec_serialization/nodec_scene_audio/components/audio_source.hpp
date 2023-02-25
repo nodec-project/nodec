@@ -3,7 +3,7 @@
 
 #include <nodec_scene_audio/components/audio_source.hpp>
 #include <nodec_scene_audio/resources/audio_clip.hpp>
-#include <nodec_scene_serialization/base_serializable_component.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 
 namespace nodec_scene_audio {
 namespace components {

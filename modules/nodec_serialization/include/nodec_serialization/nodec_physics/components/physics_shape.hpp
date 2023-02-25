@@ -2,7 +2,7 @@
 #define NODEC_SERIALIZATION__NODEC_PHYSICS__COMPONENTS__PHYSICS_SHAPE_HPP_
 
 #include <nodec_physics/components/physics_shape.hpp>
-#include <nodec_scene_serialization/base_serializable_component.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 
 namespace nodec_physics {
 namespace components {
