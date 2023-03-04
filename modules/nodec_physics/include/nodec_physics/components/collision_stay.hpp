@@ -7,7 +7,7 @@ namespace nodec_physics {
 namespace components {
 
 struct CollisionStay {
-    // nodec_scene::SceneEntity other;
+    nodec_scene::SceneEntity other;
 };
 
 } // namespace components
