@@ -9,6 +9,7 @@
 #ifndef NODEC__RANDOM_HPP_
 #define NODEC__RANDOM_HPP_
 
+#include <algorithm>
 #include <chrono>
 #include <iterator>
 #include <random>
@@ -89,6 +90,11 @@ public:
         if (size == 0) return last;
         using diff_t = typename std::iterator_traits<Iter>::difference_type;
         return std::next(first, rand_int<diff_t>(0, size - 1));
+    }
+
+    template<typename Iter>
+    void shuffle(Iter first, Iter last) {
+        std::shuffle(first, last, engine_);
     }
 
 private:

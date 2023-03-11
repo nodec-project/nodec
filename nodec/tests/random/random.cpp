@@ -42,3 +42,11 @@ TEST_CASE("testing choice().") {
         CHECK(*iter <= 3);
     }
 }
+
+TEST_CASE("testing shuffle().") {
+    using namespace nodec;
+
+    std::array<int, 3> array{{0, 1, 2}};
+    random::global().shuffle(array.begin(), array.end());
+    // MESSAGE(array[0], array[1], array[2]);
+}
