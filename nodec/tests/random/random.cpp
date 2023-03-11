@@ -17,6 +17,8 @@ TEST_CASE("testing basic functionalities.") {
     random::global().rand_int(0, 100);
 
     CHECK(random::global().rand_int(0, 0) == 0);
+
+    random::global().uniform<float>();
 }
 
 TEST_CASE("testing choice().") {
