@@ -4,9 +4,9 @@ function(add_basic_test TARGET TEST_SOURCES)
     add_executable(${TARGET} ${TEST_SOURCES})
     target_link_libraries(${TARGET} nodec)
     target_include_directories(${TARGET} PRIVATE common)
-    set_target_properties(${TARGET} PROPERTIES
-        CXX_STANDARD_REQUIRED ON
-        CXX_STANDARD 14)
+    # set_target_properties(${TARGET} PROPERTIES
+    #     CXX_STANDARD_REQUIRED ON
+    #     CXX_STANDARD 14)
 
     add_test(NAME ${TARGET} COMMAND ${TARGET})
 endfunction(add_basic_test)
