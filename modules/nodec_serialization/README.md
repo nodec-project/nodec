@@ -2,8 +2,8 @@
 
 ## Dependencies
 
-* nodec
+<!-- * nodec
 * nodec_physics
 * nodec_rendering
 * nodec_scene
-* nodec_scene_audio
+* nodec_scene_audio -->
