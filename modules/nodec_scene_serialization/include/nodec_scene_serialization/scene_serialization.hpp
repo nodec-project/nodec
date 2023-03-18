@@ -2,9 +2,8 @@
 #define NODEC_SCENE_SERIALIZATION__SCENE_SERIALIZATION_HPP_
 
 #include "serializable_component.hpp"
-#include "serializable_entity_node.hpp"
+#include "serializable_entity.hpp"
 
-#include <nodec/logging.hpp>
 #include <nodec_scene/scene_registry.hpp>
 
 #include <unordered_map>
@@ -58,11 +57,6 @@ public:
      *   std::unique_ptr<SerializableComponent>(const Component&);
      *   @endcode
      *
-     * @param preloader
-     *  @code{.cpp}
-     *
-     *  @endcode
-     *
      * @param emplacer
      *   @code{.cpp}
      *   void(const SerializableComponent&, SceneEntity, SceneRegistry&);
@@ -87,89 +81,51 @@ public:
         serializable_component_dict[serializable_component_type_id] = serialization;
     }
 
-    std::unique_ptr<SerializableEntityNode> make_serializable_node(
+    std::unique_ptr<SerializableEntity> make_serializable_entity(
         const SceneEntity entity,
         const SceneRegistry &scene_registry) const {
         using namespace nodec;
 
-        auto node = std::make_unique<SerializableEntityNode>();
+        auto serializable_entity = std::make_unique<SerializableEntity>();
 
-        auto exception_handler = [=](type_seq_index_type component_type_id) {
-            std::string details;
-
-            try {
-                throw;
-            } catch (std::exception &e) {
-                details = e.what();
-            } catch (...) {
-                details = "Unknown";
-            }
-
-            logging::WarnStream(__FILE__, __LINE__)
-                << "Failed to serialize component ( type_seq_id: " << component_type_id
-                << " ) of entity ( entity: 0x" << std::hex << entity << " )\n"
-                << "details: \n"
-                << details;
-        };
-
-        scene_registry.visit(entity, [=, &node](const nodec::type_info type_info, void *comp) {
+        scene_registry.visit(entity, [=, &serializable_entity](const nodec::type_info type_info, void *comp) {
             assert(comp);
 
-            try {
-                auto &serialization = component_dict.at(type_info.seq_index());
+            auto iter = component_dict.find(type_info.seq_index());
+            if (iter == component_dict.end()) return;
 
-                assert(static_cast<bool>(serialization));
+            auto &serialization = iter->second;
+            assert(static_cast<bool>(serialization));
 
-                auto serializable_component = serialization->serialize(comp);
-                node->components.push_back(std::move(serializable_component));
-            } catch (...) {
-                exception_handler(type_info.seq_index());
-            }
+            auto serializable_component = serialization->serialize(comp);
+            serializable_entity->components.push_back(std::move(serializable_component));
         });
 
-        return node;
+        return serializable_entity;
     }
 
+    /**
+     * @brief Make the entity from the serializable entity.
+     */
     SceneEntity make_entity(
-        const SerializableEntityNode* entity_node,
+        const SerializableEntity *serializable_entity,
         SceneRegistry &scene_registry) const {
         using namespace nodec;
 
-        if (!entity_node) {
-            return entities::null_entity;
-        }
-
-        auto exception_handler = [](type_seq_index_type component_type_id) {
-            std::string details;
-
-            try {
-                throw;
-            } catch (std::exception &e) {
-                details = e.what();
-            } catch (...) {
-                details = "Unknown";
-            }
-
-            logging::WarnStream(__FILE__, __LINE__)
-                << "Failed to emplace component from serializable component ( type_seq_id: " << component_type_id << " )\n"
-                << "details: \n"
-                << details;
-        };
+        if (!serializable_entity) return entities::null_entity;
 
         auto entity = scene_registry.create_entity();
 
-        for (auto &comp : entity_node->components) {
+        for (auto &comp : serializable_entity->components) {
             if (!comp) continue;
 
-            try {
-                auto &serialization = serializable_component_dict.at(comp->type_info().seq_index());
+            auto iter = serializable_component_dict.find(comp->type_info().seq_index());
+            if (iter == serializable_component_dict.end()) continue;
 
-                assert(static_cast<bool>(serialization));
+            auto &serialization = iter->second;
+            assert(static_cast<bool>(serialization));
 
-                serialization->emplace_component(comp.get(), entity, scene_registry);
-            } catch (...) {
-                exception_handler(comp->type_info().seq_index());
-            }
+            serialization->emplace_component(comp.get(), entity, scene_registry);
         }
 
         return entity;

@@ -15,4 +15,6 @@ function(add_basic_test TARGET TEST_SOURCES)
     add_test(NAME ${TARGET} COMMAND ${TARGET})
 endfunction(add_basic_test)
 
-add_basic_test("scene_entity_placer" scene_entity_placer.cpp)
+add_basic_test("entity_emplacer" entity_emplacer.cpp)
+add_basic_test("entity_serializer" entity_serializer.cpp)
+add_basic_test("scene_serialization" scene_serialization.cpp)

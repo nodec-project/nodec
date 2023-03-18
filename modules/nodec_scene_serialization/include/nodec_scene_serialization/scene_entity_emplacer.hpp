@@ -17,7 +17,7 @@ namespace nodec_scene_serialization {
  *
  */
 class SceneEntityEmplacer {
-    using NodePtr = SerializableEntityNode *;
+    using NodePtr = SerializableEntity *;
     using NodePtrIterator = std::vector<NodePtr>::const_iterator;
 
     struct EmplacementData {
