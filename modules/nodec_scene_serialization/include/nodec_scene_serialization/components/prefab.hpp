@@ -41,7 +41,6 @@ public:
      */
     bool active{true};
 
-    // ロードの仕方を指定できるようにする? 非同期とか同期とか.
     // Can we specify how to load?
     // Synchronously or asynchronously?
     // loadPolicy?
