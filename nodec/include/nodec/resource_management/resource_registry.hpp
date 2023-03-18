@@ -135,12 +135,6 @@ private:
     }
 
 public:
-    ResourceRegistry() = default;
-
-    ResourceRegistry(ResourceRegistry &&) = default;
-
-    ResourceRegistry &operator=(ResourceRegistry &&) = default;
-
     /**
      *
      * @param direct_loader
