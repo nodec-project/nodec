@@ -52,4 +52,24 @@ TEST_CASE("testing serialization.") {
     auto cloned_root_entt = serialization.make_entity(serializable_root_entt.get(), scene.registry());
 
     CHECK(scene.registry().get_component<TestComponent>(cloned_root_entt).field == 100);
+
+    {
+        std::ofstream file("test.json", std::ios::binary);
+        cereal::JSONOutputArchive archive(file);
+
+        archive(serializable_root_entt);
+    }
+    {
+        std::ifstream file("test.json", std::ios::binary);
+        cereal::JSONInputArchive archive(file);
+
+        std::unique_ptr<SerializableEntity> loaded_root_entt;
+        archive(loaded_root_entt);
+
+        CHECK(loaded_root_entt);
+        CHECK(loaded_root_entt->components.size() == 1);
+        CHECK(loaded_root_entt->components[0]->type_info() == nodec::type_id<SerializableTestComponent>());
+        const auto *comp = static_cast<const SerializableTestComponent *>(loaded_root_entt->components[0].get());
+        CHECK(comp->field == 100);
+    }
 }

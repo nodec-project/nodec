@@ -22,17 +22,12 @@ public:
 
     virtual ~BaseSerializableComponent() = 0;
 
-    // template<class Archive>
-    // void serialize(Archive &) {}
-    // virtual void say_hello() = 0;
-
 public:
     const nodec::type_info &type_info() const noexcept {
         return *type_info_;
     }
 
 private:
-    // virtual void rtti() = 0;
     const nodec::type_info *type_info_;
 };
 
