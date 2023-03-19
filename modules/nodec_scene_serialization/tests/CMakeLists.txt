@@ -16,3 +16,4 @@ function(add_basic_test TARGET TEST_SOURCES)
 endfunction(add_basic_test)
 
 add_basic_test("scene_serialization" scene_serialization.cpp)
+add_basic_test("entity_serializer" entity_serializer.cpp)
