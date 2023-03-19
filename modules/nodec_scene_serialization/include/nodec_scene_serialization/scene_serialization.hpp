@@ -20,7 +20,6 @@ private:
     class BaseComponentSerialization {
     public:
         virtual std::unique_ptr<BaseSerializableComponent> serialize(const void *component) const = 0;
-
         virtual void emplace_component(const BaseSerializableComponent *, SceneEntity, SceneRegistry &) const = 0;
     };
 

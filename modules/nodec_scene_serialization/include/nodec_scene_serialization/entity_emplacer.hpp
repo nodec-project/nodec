@@ -2,90 +2,66 @@
 #define NODEC_SCENE_SERIALIZATION__ENTITY_EMPLACER_HPP_
 
 #include "scene_serialization.hpp"
-#include "serializable_scene_graph.hpp"
+#include "serializable_entity.hpp"
 
 #include <nodec_scene/components/hierarchy.hpp>
 #include <nodec_scene/scene.hpp>
 
 #include <cassert>
-#include <queue>
+#include <stack>
 
 namespace nodec_scene_serialization {
 
 /**
- * @brief The SceneEntityEmplacer class allows emplacing the nodes of graph to the scene as new scene entity.
- *
+ * @brief The EntityEmplacer class allows emplacing the nodes of graph to the scene as new scene entity.
  */
-class SceneEntityEmplacer {
-    using NodePtr = SerializableEntity *;
-    using NodePtrIterator = std::vector<NodePtr>::const_iterator;
-
-    struct EmplacementData {
-        NodePtr node;
-        nodec_scene::SceneEntity parent;
-    };
-
+class EntityEmplacer {
 public:
-    SceneEntityEmplacer(std::shared_ptr<const SerializableSceneGraph> graph,
-                        nodec_scene::Scene &scene,
-                        nodec_scene::SceneEntity parent,
-                        const SceneSerialization &serialization)
-        : graph_{graph},
-          scene_{&scene},
-          serialization_{&serialization} {
-        if (graph) {
-            for (auto &node : graph->roots) {
-                queue_.push({node.get(), parent});
+    EntityEmplacer(const SceneSerialization &serialization)
+        : serialization_{serialization} {}
+
+    nodec_scene::SceneEntity emplace(SerializableEntity *source, const nodec_scene::SceneEntity &parent, nodec_scene::Scene &scene) const {
+        using namespace nodec::entities;
+        using namespace nodec_scene;
+
+        if (source == nullptr) return null_entity;
+
+        struct Context {
+            SerializableEntity *entity;
+            SceneEntity parent;
+        };
+
+        SceneEntity root{null_entity};
+
+        std::stack<Context> stack;
+        stack.push({source, parent});
+
+        while (!stack.empty()) {
+            auto context = std::move(stack.top());
+            stack.pop();
+
+            auto entity = serialization_.make_entity(context.entity, scene.registry());
+            assert(entity != null_entity);
+
+            if (root == null_entity) root = entity;
+
+            if (context.parent == null_entity) {
+                // if no parent, just attach the Hierarchy component as root entity.
+                scene.registry().emplace_component<nodec_scene::components::Hierarchy>(entity);
+            } else {
+                scene.hierarchy_system().append_child(context.parent, entity);
+            }
+
+            for (auto &child : context.entity->children) {
+                stack.push({child.get(), entity});
             }
         }
-    }
 
-    /**
-     * @brief Emplace one entity from the graph.
-     *
-     * @return nodec_scene::SceneEntity A placed entity id.
-     */
-    nodec_scene::SceneEntity emplace_one() {
-        using namespace nodec::entities;
-
-        if (queue_.empty()) return null_entity;
-        auto emplacement = std::move(queue_.front());
-        queue_.pop();
-
-        auto entity = serialization_->make_entity(emplacement.node, scene_->registry());
-
-        assert(entity != null_entity);
-
-        if (emplacement.parent == null_entity) {
-            // if no parent, just attach the Hierarchy component as root entity.
-            scene_->registry().emplace_component<nodec_scene::components::Hierarchy>(entity);
-        } else {
-            scene_->hierarchy_system().append_child(emplacement.parent, entity);
-        }
-
-        for (auto &child : emplacement.node->children) {
-            queue_.push({child.get(), entity});
-        }
-        return entity;
-    }
-
-    /**
-     * @brief Emplace all entities from the graph.
-     *
-     * @return nodec_scene::SceneEntity The placed first entity id.
-     */
-    nodec_scene::SceneEntity emplace_all() {
-        using namespace nodec::entities;
-        auto first = emplace_one();
-        while (emplace_one() != null_entity) {}
-        return first;
+        return root;
     }
 
 private:
-    const SceneSerialization *serialization_;
-    std::shared_ptr<const SerializableSceneGraph> graph_;
-    nodec_scene::Scene *scene_;
-    std::queue<EmplacementData> queue_;
+    const SceneSerialization &serialization_;
 };
 } // namespace nodec_scene_serialization
 

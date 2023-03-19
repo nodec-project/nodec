@@ -17,3 +17,4 @@ endfunction(add_basic_test)
 
 add_basic_test("scene_serialization" scene_serialization.cpp)
 add_basic_test("entity_serializer" entity_serializer.cpp)
+add_basic_test("entity_emplacer" entity_emplacer.cpp)

@@ -23,7 +23,7 @@ TEST_CASE("testing serialization.") {
         scene.hierarchy_system().append_child(root, child);
     }
 
-    auto serializable_root = EntitySerializer(root, scene, serialization).serialize();
+    auto serializable_root = EntitySerializer(serialization).serialize(root, scene);
     CHECK(serializable_root);
 
     CHECK(serializable_root->children.size() == 2);

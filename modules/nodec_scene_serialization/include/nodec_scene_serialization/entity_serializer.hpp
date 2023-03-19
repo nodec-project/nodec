@@ -7,37 +7,38 @@
 #include <nodec_scene/components/hierarchy.hpp>
 #include <nodec_scene/scene.hpp>
 
+#include <cassert>
 #include <stack>
 
 namespace nodec_scene_serialization {
 
 class EntitySerializer final {
 public:
-    EntitySerializer(const nodec_scene::SceneEntity &entity, const nodec_scene::Scene &scene, const SceneSerialization &serialization)
-        : serialization_(serialization), scene_(scene), target_entity_(entity) {}
+    EntitySerializer(const SceneSerialization &serialization)
+        : serialization_(serialization) {}
 
-    std::unique_ptr<SerializableEntity> serialize() const {
+    std::unique_ptr<SerializableEntity> serialize(const nodec_scene::SceneEntity &target_entity, const nodec_scene::Scene &scene) const {
         using namespace nodec::entities;
         using namespace nodec_scene;
         using namespace nodec_scene::components;
 
         // If the entity is null, the process does not continue.
         // This is to guarantee that the null entity will not be included in the context that follows.
-        if (target_entity_ == null_entity) return {};
+        if (target_entity == null_entity) return {};
 
         struct Context {
             SceneEntity entity;
             SerializableEntity *parent;
         };
 
-        const auto &scene_registry = scene_.registry();
+        const auto &scene_registry = scene.registry();
         std::unique_ptr<SerializableEntity> root;
 
         std::stack<Context> stack;
-        stack.push({target_entity_, nullptr});
+        stack.push({target_entity, nullptr});
 
         while (!stack.empty()) {
-            auto context = stack.top();
+            auto context = std::move(stack.top());
             stack.pop();
 
             SerializableEntity *ser_entity_ptr;
@@ -71,8 +72,6 @@ public:
 
 private:
     const SceneSerialization &serialization_;
-    const nodec_scene::Scene &scene_;
-    const nodec_scene::SceneEntity target_entity_;
 };
 } // namespace nodec_scene_serialization
 

@@ -53,7 +53,7 @@ public:
             case State::GraphLoading: {
                 if (graph_future_.wait_for(std::chrono::seconds(0)) != std::future_status::timeout) {
                     auto graph = graph_future_.get();
-                    entity_emplacer_ = std::make_unique<SceneEntityEmplacer>(graph, *scene_, parent_, *serialization_);
+                    entity_emplacer_ = std::make_unique<EntityEmplacer>(graph, *scene_, parent_, *serialization_);
                     progress_ = 0.9f;
                     state_ = State::Emplacing;
                 }
@@ -88,7 +88,7 @@ public:
         nodec_scene_serialization::SceneSerialization *serialization_;
         nodec::resource_management::ResourceRegistry *resource_registry_;
         std::shared_future<std::shared_ptr<SerializableSceneGraph>> graph_future_;
-        std::unique_ptr<SceneEntityEmplacer> entity_emplacer_;
+        std::unique_ptr<EntityEmplacer> entity_emplacer_;
         float progress_{0.0f};
     };
 
