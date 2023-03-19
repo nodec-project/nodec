@@ -29,7 +29,7 @@ public:
     SceneEntityEmplacer(std::shared_ptr<const SerializableSceneGraph> graph,
                         nodec_scene::Scene &scene,
                         nodec_scene::SceneEntity parent,
-                        const EntitySerialization &serialization)
+                        const SceneSerialization &serialization)
         : graph_{graph},
           scene_{&scene},
           serialization_{&serialization} {
@@ -82,7 +82,7 @@ public:
     }
 
 private:
-    const EntitySerialization *serialization_;
+    const SceneSerialization *serialization_;
     std::shared_ptr<const SerializableSceneGraph> graph_;
     nodec_scene::Scene *scene_;
     std::queue<EmplacementData> queue_;

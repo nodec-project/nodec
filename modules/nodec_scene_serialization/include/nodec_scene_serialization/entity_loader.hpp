@@ -1,5 +1,5 @@
-#ifndef NODEC_SCENE_SERIALIZATION__SCENE_LOADER_HPP_
-#define NODEC_SCENE_SERIALIZATION__SCENE_LOADER_HPP_
+#ifndef NODEC_SCENE_SERIALIZATION__ENTITY_LOADER_HPP_
+#define NODEC_SCENE_SERIALIZATION__ENTITY_LOADER_HPP_
 
 #include "scene_entity_emplacer.hpp"
 #include "scene_serialization.hpp"
@@ -20,7 +20,7 @@ public:
         AsyncOperation(const std::string &graph_name,
                        nodec_scene::SceneEntity parent,
                        nodec_scene::Scene &scene,
-                       nodec_scene_serialization::EntitySerialization &serialization,
+                       nodec_scene_serialization::SceneSerialization &serialization,
                        nodec::resource_management::ResourceRegistry &resource_registry)
             : graph_name_{graph_name},
               parent_{parent},
@@ -85,14 +85,14 @@ public:
         std::string graph_name_;
         nodec_scene::SceneEntity parent_;
         nodec_scene::Scene *scene_;
-        nodec_scene_serialization::EntitySerialization *serialization_;
+        nodec_scene_serialization::SceneSerialization *serialization_;
         nodec::resource_management::ResourceRegistry *resource_registry_;
         std::shared_future<std::shared_ptr<SerializableSceneGraph>> graph_future_;
         std::unique_ptr<SceneEntityEmplacer> entity_emplacer_;
         float progress_{0.0f};
     };
 
-    SceneLoader(EntitySerialization &serialization,
+    SceneLoader(SceneSerialization &serialization,
                 nodec_scene::Scene &scene,
                 nodec::resource_management::ResourceRegistry &resource_registry)
         : serialization_{&serialization},
@@ -105,7 +105,7 @@ public:
     }
 
 private:
-    EntitySerialization *serialization_;
+    SceneSerialization *serialization_;
     nodec_scene::Scene *scene_;
     nodec::resource_management::ResourceRegistry *resource_registry_;
 };

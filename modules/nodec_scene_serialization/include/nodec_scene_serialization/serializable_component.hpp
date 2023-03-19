@@ -9,7 +9,7 @@
 
 namespace nodec_scene_serialization {
 
-class BaseSerializableComponent {
+struct BaseSerializableComponent {
 public:
     template<class Derived>
     BaseSerializableComponent(Derived *)

@@ -15,5 +15,4 @@ function(add_basic_test TARGET TEST_SOURCES)
     add_test(NAME ${TARGET} COMMAND ${TARGET})
 endfunction(add_basic_test)
 
-add_basic_test("entity_serialization" entity_serialization.cpp)
 add_basic_test("scene_serialization" scene_serialization.cpp)
