@@ -10,7 +10,7 @@ However, these platforms are developed individually,
 and the app code that runs on them has a complementary different aspect.
 
 The `nodec` framework allows you to build new platforms efficiently.
-The `nodec` framework provides functionalities tha can be commonly used across different platforms.
+The `nodec` framework provides functionalities that can be commonly used across different platforms.
 In addition, interfaces to applications are predefined, allowing reuse of architectures.
 
 The implementation of application code can also be made efficient with the `nodec` framework.
