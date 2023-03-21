@@ -11,17 +11,17 @@ namespace components {
 /**
  * @brief
  * @note
- * * 拡張子は, ".entity"
- * * ロード時すでにあるコンポーネントは上書きされない
- * * SerializableEntityNodeをキャッシュしておくか検討
+ * * The file extension is ".entity".
+ * * Not overwrite the already existed components.
+ * * Consider caching the loaded SerializableEntity.
  *
  * @note
  * Prefab is basically loaded but not unloaded.
  *
  * @note
- * Considering the name "Serializable".
- * ただ, Serializableであることとファイルに保存することは別であると思うので,
- * Prefabなのかなと思った.
+ * Should we name it "Serializable"?
+ * However, I think being Serializable and being saved to a file are two separate things,
+ * so I thought it might be a Prefab.
  */
 class Prefab : public BaseSerializableComponent {
 public:
@@ -50,6 +50,7 @@ public:
     template<class Archive>
     void serialize(Archive &archive) {
         archive(cereal::make_nvp("source", source));
+        archive(cereal::make_nvp("active", active));
     }
 };
 
