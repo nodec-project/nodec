@@ -52,13 +52,13 @@ TEST_CASE("testing serialization.") {
     CHECK(scene.registry().get_component<TestComponent>(cloned_root_entt).field == 100);
 
     {
-        std::ofstream file("test.json", std::ios::binary);
+        std::ofstream file("scene_serialization__test.json", std::ios::binary);
         cereal::JSONOutputArchive archive(file);
 
         archive(serializable_root_entt);
     }
     {
-        std::ifstream file("test.json", std::ios::binary);
+        std::ifstream file("scene_serialization__test.json", std::ios::binary);
         cereal::JSONInputArchive archive(file);
 
         std::unique_ptr<SerializableEntity> loaded_root_entt;
@@ -106,13 +106,13 @@ TEST_CASE("testing serialization of serializable runtime components.") {
     CHECK(scene.registry().get_component<SerializableRuntimeComponent>(cloned_root_entt).field == 100);
 
     {
-        std::ofstream file("test2.json", std::ios::binary);
+        std::ofstream file("scene_serialization__test2.json", std::ios::binary);
         cereal::JSONOutputArchive archive(file);
 
         archive(serializable_root_entt);
     }
     {
-        std::ifstream file("test2.json", std::ios::binary);
+        std::ifstream file("scene_serialization__test2.json", std::ios::binary);
         cereal::JSONInputArchive archive(file);
 
         std::unique_ptr<SerializableEntity> loaded_root_entt;

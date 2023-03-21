@@ -1,113 +1,114 @@
 #ifndef NODEC_SCENE_SERIALIZATION__ENTITY_LOADER_HPP_
 #define NODEC_SCENE_SERIALIZATION__ENTITY_LOADER_HPP_
 
-#include "scene_entity_emplacer.hpp"
+#include "entity_emplacer.hpp"
 #include "scene_serialization.hpp"
-#include "serializable_scene_graph.hpp"
+#include "serializable_entity.hpp"
 
 #include <nodec_scene/scene.hpp>
 
+#include <nodec/macros.hpp>
 #include <nodec/resource_management/resource_registry.hpp>
 
 #include <cassert>
+#include <memory>
 
 namespace nodec_scene_serialization {
 
-class SceneLoader {
+class EntityLoader {
 public:
-    class AsyncOperation {
+    class Task {
     public:
-        AsyncOperation(const std::string &graph_name,
-                       nodec_scene::SceneEntity parent,
-                       nodec_scene::Scene &scene,
-                       nodec_scene_serialization::SceneSerialization &serialization,
-                       nodec::resource_management::ResourceRegistry &resource_registry)
-            : graph_name_{graph_name},
-              parent_{parent},
-              scene_{&scene},
-              serialization_{&serialization},
-              resource_registry_{&resource_registry} {
+        enum class State {
+            NotStarted,
+            ResourceLoading,
+            Done,
+        };
+
+        Task(const std::string &source, const nodec_scene::SceneEntity &parent,
+             const SceneSerialization &serialization, nodec_scene::Scene &scene, nodec::resource_management::ResourceRegistry &resource_registry)
+            : serialization_(serialization),
+              scene_(scene),
+              resource_registry_(resource_registry),
+              source_(source), parent_(parent) {}
+
+        void update() {
+            switch (state_) {
+            case State::NotStarted:
+                entity_future_ = resource_registry_.get_resource_async<SerializableEntity>(source_);
+                state_ = State::ResourceLoading;
+                break;
+
+            case State::ResourceLoading:
+                if (entity_future_.wait_for(std::chrono::seconds(0)) != std::future_status::timeout) {
+                    auto ser_entity = entity_future_.get();
+                    result_ = EntityEmplacer(serialization_).emplace(ser_entity.get(), parent_, scene_);
+                    state_ = State::Done;
+                }
+                break;
+
+            case State::Done:
+                break;
+            }
         }
 
-        bool is_done() {
-            update();
-            return state_ == State::Done;
+        State state() const noexcept {
+            return state_;
         }
 
-        float progress() {
-            update();
-            return progress_;
+        nodec_scene::SceneEntity result() const noexcept {
+            assert(state_ == State::Done);
+            return result_;
         }
 
     private:
-        void update() {
-            using namespace nodec::entities;
-
-            switch (state_) {
-            case State::NotStarted: {
-                graph_future_ = resource_registry_->get_resource<SerializableSceneGraph>(graph_name_);
-                state_ = State::GraphLoading;
-            }
-                return;
-
-            case State::GraphLoading: {
-                if (graph_future_.wait_for(std::chrono::seconds(0)) != std::future_status::timeout) {
-                    auto graph = graph_future_.get();
-                    entity_emplacer_ = std::make_unique<EntityEmplacer>(graph, *scene_, parent_, *serialization_);
-                    progress_ = 0.9f;
-                    state_ = State::Emplacing;
-                }
-            }
-                return;
-
-            case State::Emplacing: {
-                if (entity_emplacer_->emplace_one() == null_entity) {
-                    // Nothing to emplace.
-                    progress_ = 1.0f;
-                    state_ = State::Done;
-                }
-            }
-                return;
-
-            case State::Done: return;
-            }
-        }
-
-        enum class State {
-            NotStarted,
-            GraphLoading,
-            Emplacing,
-            Done
-        };
-
-        State state_{State::NotStarted};
-
-        std::string graph_name_;
+        const SceneSerialization &serialization_;
+        nodec_scene::Scene &scene_;
+        nodec::resource_management::ResourceRegistry &resource_registry_;
+        std::string source_;
         nodec_scene::SceneEntity parent_;
-        nodec_scene::Scene *scene_;
-        nodec_scene_serialization::SceneSerialization *serialization_;
-        nodec::resource_management::ResourceRegistry *resource_registry_;
-        std::shared_future<std::shared_ptr<SerializableSceneGraph>> graph_future_;
-        std::unique_ptr<EntityEmplacer> entity_emplacer_;
-        float progress_{0.0f};
+        nodec_scene::SceneEntity result_;
+        State state_{State::NotStarted};
+        std::shared_future<std::shared_ptr<SerializableEntity>> entity_future_;
+
+    private:
+        NODEC_DISABLE_COPY(Task)
     };
 
-    SceneLoader(SceneSerialization &serialization,
-                nodec_scene::Scene &scene,
-                nodec::resource_management::ResourceRegistry &resource_registry)
-        : serialization_{&serialization},
-          scene_{&scene},
-          resource_registry_{&resource_registry} {
-    }
+    class AsyncOperation {
+    public:
+        AsyncOperation(std::shared_ptr<Task> task)
+            : task_(task) {
+        }
 
-    AsyncOperation load_async(const std::string &graph_name, nodec_scene::SceneEntity parent = nodec::entities::null_entity) {
-        return {graph_name, parent, *scene_, *serialization_, *resource_registry_};
-    }
+        AsyncOperation(AsyncOperation &&other)
+            : task_(std::move(other.task_)) {
+        }
 
-private:
-    SceneSerialization *serialization_;
-    nodec_scene::Scene *scene_;
-    nodec::resource_management::ResourceRegistry *resource_registry_;
+        nodec_scene::SceneEntity result() const {
+            while (task_->state() != Task::State::Done) task_->update();
+            return task_->result();
+        }
+
+        bool is_done() const {
+            return task_->state() == Task::State::Done;
+        }
+
+        // TODO: progress()
+
+    private:
+        std::shared_ptr<Task> task_;
+
+    private:
+        NODEC_DISABLE_COPY(AsyncOperation)
+    };
+
+public:
+    virtual nodec_scene::SceneEntity load_direct(const std::string &source,
+                                                 const nodec_scene::SceneEntity &parent = nodec::entities::null_entity) = 0;
+
+    virtual AsyncOperation load_async(const std::string &source,
+                                      const nodec_scene::SceneEntity &parent = nodec::entities::null_entity) = 0;
 };
 
 } // namespace nodec_scene_serialization
