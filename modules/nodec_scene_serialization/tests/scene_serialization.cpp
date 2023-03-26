@@ -35,9 +35,10 @@ TEST_CASE("testing serialization.") {
             serializable->field = comp.field;
             return serializable;
         },
-        [](const SerializableTestComponent &serializable, SceneEntity entity, SceneRegistry &registry) {
-            auto &comp = registry.emplace_component<TestComponent>(entity).first;
+        [](const SerializableTestComponent &serializable) {
+            TestComponent comp;
             comp.field = serializable.field;
+            return comp;
         });
 
     Scene scene;
