@@ -12,7 +12,7 @@
 
 namespace nodec_scene_serialization {
 
-class SceneSerialization {
+class SceneSerialization final {
 public:
     using SceneRegistry = nodec_scene::SceneRegistry;
     using SceneEntity = nodec_scene::SceneEntity;
