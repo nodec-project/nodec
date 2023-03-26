@@ -74,16 +74,27 @@ public:
         type_seq_index_type component_type_id = type_seq_index<Component>::value();
         type_seq_index_type serializable_component_type_id = type_seq_index<SerializableComponent>::value();
 
-        assert(component_dict.find(component_type_id) == component_dict.end());
-        assert(serializable_component_dict.find(serializable_component_type_id) == serializable_component_dict.end());
+        assert(component_dict_.find(component_type_id) == component_dict_.end());
+        assert(serializable_component_dict_.find(serializable_component_type_id) == serializable_component_dict_.end());
 
         auto serialization = std::make_shared<ComponentSerialization<Component, SerializableComponent>>();
 
         serialization->serializer = serializer;
         serialization->deserializer = deserializer;
 
-        component_dict[component_type_id] = serialization;
-        serializable_component_dict[serializable_component_type_id] = serialization;
+        component_dict_[component_type_id] = serialization;
+        serializable_component_dict_[serializable_component_type_id] = serialization;
+    }
+
+    template<typename Component, typename SerializableComponent>
+    void register_component() {
+        register_component<Component, SerializableComponent>(
+            [](const Component &comp) {
+                return std::make_unique<SerializableComponent>(comp);
+            },
+            [](const SerializableComponent &serializable) {
+                return static_cast<Component>(serializable);
+            });
     }
 
     template<typename Component>
@@ -107,8 +118,8 @@ public:
         scene_registry.visit(entity, [=, &serializable_entity](const nodec::type_info type_info, void *comp) {
             assert(comp);
 
-            auto iter = component_dict.find(type_info.seq_index());
-            if (iter == component_dict.end()) return;
+            auto iter = component_dict_.find(type_info.seq_index());
+            if (iter == component_dict_.end()) return;
 
             auto &serialization = iter->second;
             assert(static_cast<bool>(serialization));
@@ -135,8 +146,8 @@ public:
         for (auto &comp : serializable_entity->components) {
             if (!comp) continue;
 
-            auto iter = serializable_component_dict.find(comp->type_info().seq_index());
-            if (iter == serializable_component_dict.end()) continue;
+            auto iter = serializable_component_dict_.find(comp->type_info().seq_index());
+            if (iter == serializable_component_dict_.end()) continue;
 
             auto &serialization = iter->second;
             assert(static_cast<bool>(serialization));
@@ -160,8 +171,8 @@ public:
     //     for (const auto &comp : source->components) {
     //         if (!comp) continue;
 
-    //         auto iter = serializable_component_dict.find(comp->type_info().seq_index());
-    //         if (iter == serializable_component_dict.end()) continue;
+    //         auto iter = serializable_component_dict_.find(comp->type_info().seq_index());
+    //         if (iter == serializable_component_dict_.end()) continue;
 
     //         auto &serialization = iter->second;
     //         assert(static_cast<bool>(serialization));
@@ -169,8 +180,8 @@ public:
     // }
 
 private:
-    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> component_dict;
-    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict;
+    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> component_dict_;
+    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict_;
 };
 
 } // namespace nodec_scene_serialization

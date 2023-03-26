@@ -16,9 +16,9 @@ public:
         : type_info_{&nodec::type_id<Derived>()} {
     }
 
-    BaseSerializableComponent()
-        : type_info_{&nodec::type_id<BaseSerializableComponent>()} {
-    }
+    // BaseSerializableComponent()
+    //     : type_info_{&nodec::type_id<BaseSerializableComponent>()} {
+    // }
 
     virtual ~BaseSerializableComponent() = 0;
 

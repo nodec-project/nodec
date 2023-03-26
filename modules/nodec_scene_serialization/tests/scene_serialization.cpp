@@ -73,6 +73,56 @@ TEST_CASE("testing serialization.") {
     }
 }
 
+/**
+ * @brief This class is convertible to TestComponent.
+ */
+struct SerializableTestComponentConvertible : public nodec_scene_serialization::BaseSerializableComponent {
+public:
+    SerializableTestComponentConvertible()
+        : BaseSerializableComponent(this) {}
+
+    SerializableTestComponentConvertible(const TestComponent &other)
+        : BaseSerializableComponent(this),
+          field(other.field) {}
+
+    operator TestComponent() const noexcept {
+        TestComponent comp;
+        comp.field = field;
+        return comp;
+    }
+
+    int field;
+
+    template<class Archive>
+    void serialize(Archive &archive) {
+        archive(cereal::make_nvp("field", field));
+    }
+};
+
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(SerializableTestComponentConvertible)
+
+TEST_CASE("testing serialization of convertible components.") {
+    using namespace nodec_scene;
+    using namespace nodec_scene_serialization;
+
+    SceneSerialization serialization;
+
+    serialization.register_component<TestComponent, SerializableTestComponentConvertible>();
+
+    Scene scene;
+
+    const auto root_entt = scene.create_entity("root");
+    scene.registry().emplace_component<TestComponent>(root_entt).first.field = 100;
+
+    auto serializable_root_entt = serialization.make_serializable_entity(root_entt, scene.registry());
+    CHECK(serializable_root_entt);
+
+    auto cloned_root_entt = serialization.make_entity(serializable_root_entt.get(), scene.registry());
+    CHECK(scene.registry().get_component<TestComponent>(cloned_root_entt).field == 100);
+}
+
+// ---
+
 struct SerializableRuntimeComponent : public nodec_scene_serialization::BaseSerializableComponent {
     SerializableRuntimeComponent()
         : BaseSerializableComponent(this) {}
