@@ -8,6 +8,7 @@
 
 #include <imgui.h>
 
+#include <type_traits>
 #include <unordered_map>
 #include <vector>
 
@@ -25,7 +26,7 @@ public:
             virtual ~BaseComponentHandler(){};
 
             virtual const std::string &component_name() const = 0;
-            virtual void on_gui(void *comp) = 0;
+            virtual void on_gui(void *comp, const Entity &entity, EntityRegistry &registry) = 0;
             virtual void remove(EntityRegistry &entity_registry, Entity entity) = 0;
             virtual void add(EntityRegistry &entity_registry, Entity entity) = 0;
         };
@@ -38,13 +39,14 @@ public:
                 : component_name_{component_name}, on_gui_callback_{on_gui_callback} {
             }
 
-            void on_gui(void *comp) override {
-                on_gui_callback_(*static_cast<Component *>(comp));
+            void on_gui(void *comp, const Entity &entity, EntityRegistry &registry) override {
+                on_gui_callback_(*static_cast<Component *>(comp), entity, registry);
             }
 
             void remove(EntityRegistry &entity_registry, Entity entity) override {
                 entity_registry.remove_components<Component>(entity);
             }
+
             void add(EntityRegistry &entity_registry, Entity entity) override {
                 entity_registry.emplace_component<Component>(entity);
             }
@@ -54,7 +56,7 @@ public:
             }
 
         private:
-            std::function<void(Component &)> on_gui_callback_;
+            std::function<void(Component &, const Entity &, EntityRegistry &)> on_gui_callback_;
             const std::string component_name_;
         };
 
@@ -74,7 +76,8 @@ public:
             ComponentRegistry *registry_{nullptr};
         };
 
-        template<typename Component, typename Callback>
+        template<typename Component, typename Callback,
+                 std::enable_if_t<std::is_assignable<std::function<void(Component &, const Entity &, EntityRegistry &)>, Callback>::value> * = nullptr>
         decltype(auto) register_component(const std::string &name, const Callback &&on_gui_callback) {
             using namespace nodec;
 
@@ -85,6 +88,12 @@ public:
                 auto pair = handlers.emplace(index, new ComponentHandler<Component>{name, on_gui_callback});
                 iter = pair.first;
             }
+        }
+
+        template<typename Component, typename Callback,
+                 std::enable_if_t<std::is_assignable<std::function<void(Component &)>, Callback>::value> * = nullptr>
+        decltype(auto) register_component(const std::string &name, const Callback &&on_gui_callback) {
+            register_component<Component>(name, [=](Component &comp, const Entity &, EntityRegistry &) { on_gui_callback(comp); });
         }
 
         BaseComponentHandler *get_handler(nodec::type_seq_index_type type_seq_index) {
@@ -153,7 +162,7 @@ public:
 
         struct InspectionInfo {
             int num_of_total_components{0};
-            int num_of_visted_components{0};
+            int num_of_visited_components{0};
         };
 
         InspectionInfo inspection_info;
@@ -164,11 +173,11 @@ public:
             auto *handler = component_registry_->get_handler(type_info.seq_index());
             if (!handler) return;
 
-            ++inspection_info.num_of_visted_components;
+            ++inspection_info.num_of_visited_components;
 
             auto opened = ImGui::CollapsingHeader(handler->component_name().c_str());
 
-            // this context item is binded with last element (CollapsingHeader).
+            // this context item is bound with last element (CollapsingHeader).
             if (ImGui::BeginPopupContextItem()) {
                 if (ImGui::Button("Remove")) {
                     handler->remove(*entity_registry_, target_entity_);
@@ -177,7 +186,7 @@ public:
             }
 
             if (opened) {
-                handler->on_gui(component);
+                handler->on_gui(component, target_entity_, *entity_registry_);
             }
         });
 
@@ -188,14 +197,14 @@ public:
         }
 
         if (ImGui::BeginPopup("add-component-popup")) {
-            filter.Draw("Filter");
+            filter_.Draw("Filter");
             if (ImGui::BeginListBox("##component-list")) {
                 for (auto &pair : *component_registry_) {
                     auto &handler = pair.second;
 
                     const char *component_name = handler->component_name().c_str();
 
-                    if (filter.IsActive() && !filter.PassFilter(component_name)) continue;
+                    if (filter_.IsActive() && !filter_.PassFilter(component_name)) continue;
 
                     if (ImGui::Selectable(component_name)) {
                         handler->add(*entity_registry_, target_entity_);
@@ -210,17 +219,17 @@ public:
 
         ImGui::Separator();
 
-        ImGui::Text(static_cast<std::string>(Formatter() << "Visited " << inspection_info.num_of_visted_components << " / "
+        ImGui::Text(static_cast<std::string>(Formatter() << "Visited " << inspection_info.num_of_visited_components << " / "
                                                          << inspection_info.num_of_total_components << " components.")
                         .c_str());
-        if (inspection_info.num_of_visted_components < inspection_info.num_of_total_components) {
+        if (inspection_info.num_of_visited_components < inspection_info.num_of_total_components) {
             ImGui::SameLine();
             help_marker(static_cast<std::string>(Formatter() << "To inspect a component, it must be registered through EntityInspectorWindow::ComponentRegistry.").c_str());
         }
     }
 
 private:
-    void inspect(Entity entity) {
+    void inspect(const Entity &entity) {
         target_entity_ = entity;
     }
 
@@ -229,7 +238,7 @@ private:
     ComponentRegistry *component_registry_{nullptr};
     Entity target_entity_{nodec::entities::null_entity};
     nodec::signals::Connection change_target_signal_connection_;
-    ImGuiTextFilter filter;
+    ImGuiTextFilter filter_;
 };
 
 } // namespace imwindows

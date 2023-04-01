@@ -158,26 +158,28 @@ public:
         return entity;
     }
 
-    // /**
-    //  * @brief Emplaces the source's components into the target entity.
-    //  *
-    //  * @param source
-    //  * @param target
-    //  * @param scene_registry
-    //  */
-    // void emplace_components(const SerializableEntity *source, const nodec_scene::SceneEntity &target, nodec_scene::SceneRegistry &scene_registry) const {
-    //     if (!source) return;
+    /**
+     * @brief Emplaces the source's components into the target entity.
+     *
+     * @param source
+     * @param target
+     * @param scene_registry
+     */
+    void emplace_components(const SerializableEntity *source, const nodec_scene::SceneEntity &target, nodec_scene::SceneRegistry &scene_registry) const {
+        if (!source) return;
 
-    //     for (const auto &comp : source->components) {
-    //         if (!comp) continue;
+        for (const auto &comp : source->components) {
+            if (!comp) continue;
 
-    //         auto iter = serializable_component_dict_.find(comp->type_info().seq_index());
-    //         if (iter == serializable_component_dict_.end()) continue;
+            auto iter = serializable_component_dict_.find(comp->type_info().seq_index());
+            if (iter == serializable_component_dict_.end()) continue;
 
-    //         auto &serialization = iter->second;
-    //         assert(static_cast<bool>(serialization));
-    //     }
-    // }
+            auto &serialization = iter->second;
+            assert(static_cast<bool>(serialization));
+
+            serialization->emplace_component(comp.get(), target, scene_registry);
+        }
+    }
 
 private:
     std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> component_dict_;
