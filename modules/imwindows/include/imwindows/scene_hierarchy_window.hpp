@@ -122,8 +122,13 @@ private:
 
                 auto child = hierarchy.first;
                 while (child != null_entity) {
+                    // We first save next entity.
+                    // During show_entity_node(), the child entity may be destroyed.
+                    auto next = scene_->registry().get_component<Hierarchy>(child).next;
+
                     show_entity_node(child);
-                    child = scene_->registry().get_component<Hierarchy>(child).next;
+
+                    child = next;
                 }
             }
 
