@@ -15,6 +15,21 @@ public:
         : BaseSerializableComponent(this) {
     }
 
+    SerializableTransform(const Transform &other)
+        : BaseSerializableComponent(this),
+          local_position(other.local_position),
+          local_rotation(other.local_rotation),
+          local_scale(other.local_scale) {}
+
+    operator Transform() const noexcept {
+        Transform value;
+        value.local_position = local_position;
+        value.local_rotation = local_rotation;
+        value.local_scale = local_scale;
+        value.dirty = true;
+        return value;
+    }
+
     nodec::Vector3f local_position;
     nodec::Vector3f local_scale;
     nodec::Quaternionf local_rotation;
@@ -29,7 +44,6 @@ public:
 } // namespace components
 } // namespace nodec_scene
 
-CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableTransform)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableTransform)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_scene::components::SerializableTransform)
 
 #endif

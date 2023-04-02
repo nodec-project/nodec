@@ -26,6 +26,9 @@ class BasicRegistry {
 
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
+
+        // XXX: Avoid to name member the same as their type.
+        // https://stackoverflow.com/questions/34450095/variable-with-same-name-as-type-which-compiler-is-right
         const type_info *type_info;
     };
 

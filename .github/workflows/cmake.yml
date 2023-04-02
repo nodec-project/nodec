@@ -22,6 +22,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
     - name: Test nodec
       working-directory: ${{github.workspace}}/nodec
@@ -55,6 +57,15 @@ jobs:
 
       run: |
         cmake -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DNODEC_SCENE_BUILD_TESTS=ON
+        cd build
+        cmake --build . --config ${{env.BUILD_TYPE}}
+        ctest -C ${{env.BUILD_TYPE}} --output-on-failure
+
+    - name: Test nodec_scene_serialization
+      working-directory: ${{github.workspace}}/modules/nodec_scene_serialization
+
+      run: |
+        cmake -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DNODEC_SCENE_SERIALIZATION_BUILD_TESTS=ON
         cd build
         cmake --build . --config ${{env.BUILD_TYPE}}
         ctest -C ${{env.BUILD_TYPE}} --output-on-failure

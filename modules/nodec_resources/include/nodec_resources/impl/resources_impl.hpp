@@ -1,5 +1,5 @@
-#ifndef NODEC_RESOURCES__IMPL__RESOURCES_HPP_
-#define NODEC_RESOURCES__IMPL__RESOURCES_HPP_
+#ifndef NODEC_RESOURCES__IMPL__RESOURCES_IMPL_HPP_
+#define NODEC_RESOURCES__IMPL__RESOURCES_IMPL_HPP_
 
 #include "../resources.hpp"
 
@@ -8,11 +8,11 @@
 namespace nodec_resources {
 namespace impl {
 
-class ResourcesModule : public Resources {
+class ResourcesImpl : public Resources {
     using ResourceRegistry = nodec::resource_management::ResourceRegistry;
 
 public:
-    using ResourcePathChangedSignal = nodec::signals::Signal<void(ResourcesModule &, const std::string &)>;
+    using ResourcePathChangedSignal = nodec::signals::Signal<void(ResourcesImpl &, const std::string &)>;
 
 public:
     ResourceRegistry &registry() override {

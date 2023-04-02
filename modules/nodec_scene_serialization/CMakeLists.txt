@@ -12,3 +12,12 @@ target_include_directories(
 target_link_libraries(${PROJECT_NAME}
     INTERFACE nodec nodec_serialization nodec_scene
 )
+
+# Tests
+option(NODEC_SCENE_SERIALIZATION_BUILD_TESTS "Enable building tests." OFF)
+
+if(NODEC_SCENE_SERIALIZATION_BUILD_TESTS)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

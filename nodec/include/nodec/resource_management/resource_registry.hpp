@@ -45,7 +45,7 @@ inline void throw_no_resource_exception(const std::string &resource_name, const 
 template<typename Type>
 inline void throw_resource_already_exists_exception(const std::string &resource_name, const char *file, size_t line) {
     throw std::runtime_error(ErrorFormatter<std::runtime_error>(file, line)
-                             << "The resource named '" << resource_name << " (type: " << typeid(Type).name() << ")' already exisis.");
+                             << "The resource named '" << resource_name << " (type: " << typeid(Type).name() << ")' already exists.");
 }
 
 } // namespace details
@@ -135,12 +135,6 @@ private:
     }
 
 public:
-    ResourceRegistry() = default;
-
-    ResourceRegistry(ResourceRegistry &&) = default;
-
-    ResourceRegistry &operator=(ResourceRegistry &&) = default;
-
     /**
      *
      * @param direct_loader

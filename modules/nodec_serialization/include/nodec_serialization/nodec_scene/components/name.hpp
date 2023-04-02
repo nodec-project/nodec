@@ -13,6 +13,15 @@ public:
         : BaseSerializableComponent(this) {
     }
 
+    SerializableName(const Name &other)
+        : BaseSerializableComponent(this), name(other.name) {}
+
+    operator Name() const noexcept {
+        Name value;
+        value.name = name;
+        return value;
+    }
+
     std::string name;
 
     template<class Archive>
@@ -24,7 +33,6 @@ public:
 } // namespace components
 } // namespace nodec_scene
 
-CEREAL_REGISTER_TYPE(nodec_scene::components::SerializableName)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene::components::SerializableName)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_scene::components::SerializableName)
 
 #endif

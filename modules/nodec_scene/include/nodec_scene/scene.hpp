@@ -31,6 +31,10 @@ public:
         return registry_;
     }
 
+    const SceneRegistry &registry() const noexcept {
+        return registry_;
+    }
+
     systems::HierarchySystem &hierarchy_system() noexcept {
         return hierarchy_system_;
     }

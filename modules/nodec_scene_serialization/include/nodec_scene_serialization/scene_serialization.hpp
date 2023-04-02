@@ -2,17 +2,17 @@
 #define NODEC_SCENE_SERIALIZATION__SCENE_SERIALIZATION_HPP_
 
 #include "serializable_component.hpp"
-#include "serializable_entity_node.hpp"
+#include "serializable_entity.hpp"
 
-#include <nodec/logging.hpp>
 #include <nodec_scene/scene_registry.hpp>
 
+#include <cassert>
 #include <unordered_map>
 #include <vector>
 
 namespace nodec_scene_serialization {
 
-class SceneSerialization {
+class SceneSerialization final {
 public:
     using SceneRegistry = nodec_scene::SceneRegistry;
     using SceneEntity = nodec_scene::SceneEntity;
@@ -21,14 +21,13 @@ private:
     class BaseComponentSerialization {
     public:
         virtual std::unique_ptr<BaseSerializableComponent> serialize(const void *component) const = 0;
-
         virtual void emplace_component(const BaseSerializableComponent *, SceneEntity, SceneRegistry &) const = 0;
     };
 
     template<typename Component, typename SerializableComponent>
     class ComponentSerialization : public BaseComponentSerialization {
         using Serializer = std::function<std::unique_ptr<SerializableComponent>(const Component &)>;
-        using Emplacer = std::function<void(const SerializableComponent &, SceneEntity, SceneRegistry &)>;
+        using Deserializer = std::function<Component(const SerializableComponent &)>;
 
     public:
         std::unique_ptr<BaseSerializableComponent> serialize(const void *component) const override {
@@ -38,17 +37,22 @@ private:
         }
 
         void emplace_component(const BaseSerializableComponent *serializable_component, SceneEntity entity, SceneRegistry &scene_registry) const override {
-            using namespace nodec;
-
             assert(serializable_component);
-            assert(serializable_component->type_info() == type_id<SerializableComponent>());
+            assert(serializable_component->type_info() == nodec::type_id<SerializableComponent>());
 
-            emplacer(*static_cast<const SerializableComponent *>(serializable_component), entity, scene_registry);
+            auto result = scene_registry.emplace_component<Component>(entity);
+            if (!result.second) {
+                // If the component is already existing, will not overwrite it.
+                return;
+            }
+
+            auto comp = deserializer(*static_cast<const SerializableComponent *>(serializable_component));
+            result.first = std::move(comp);
         }
 
     public:
         Serializer serializer;
-        Emplacer emplacer;
+        Deserializer deserializer;
     };
 
 public:
@@ -58,126 +62,128 @@ public:
      *   std::unique_ptr<SerializableComponent>(const Component&);
      *   @endcode
      *
-     * @param preloader
-     *  @code{.cpp}
-     *
-     *  @endcode
-     *
-     * @param emplacer
+     * @param deserializer
      *   @code{.cpp}
-     *   void(const SerializableComponent&, SceneEntity, SceneRegistry&);
+     *   Component(const SerializableComponent&);
      *   @endcode
      */
-    template<typename Component, typename SerializableComponent, typename Serializer, typename Emplacer>
-    void register_component(Serializer &&serializer, Emplacer &&emplacer) {
+    template<typename Component, typename SerializableComponent, typename Serializer, typename Deserializer>
+    void register_component(Serializer &&serializer, Deserializer &&deserializer) {
         using namespace nodec;
 
         type_seq_index_type component_type_id = type_seq_index<Component>::value();
         type_seq_index_type serializable_component_type_id = type_seq_index<SerializableComponent>::value();
 
-        assert(component_dict.find(component_type_id) == component_dict.end());
-        assert(serializable_component_dict.find(serializable_component_type_id) == serializable_component_dict.end());
+        assert(component_dict_.find(component_type_id) == component_dict_.end());
+        assert(serializable_component_dict_.find(serializable_component_type_id) == serializable_component_dict_.end());
 
         auto serialization = std::make_shared<ComponentSerialization<Component, SerializableComponent>>();
 
         serialization->serializer = serializer;
-        serialization->emplacer = emplacer;
+        serialization->deserializer = deserializer;
 
-        component_dict[component_type_id] = serialization;
-        serializable_component_dict[serializable_component_type_id] = serialization;
+        component_dict_[component_type_id] = serialization;
+        serializable_component_dict_[serializable_component_type_id] = serialization;
     }
 
-    std::unique_ptr<SerializableEntityNode> make_serializable_node(
-        const SceneEntity entity,
-        const SceneRegistry &scene_registry) const {
+    template<typename Component, typename SerializableComponent>
+    void register_component() {
+        register_component<Component, SerializableComponent>(
+            [](const Component &comp) {
+                return std::make_unique<SerializableComponent>(comp);
+            },
+            [](const SerializableComponent &serializable) {
+                return static_cast<Component>(serializable);
+            });
+    }
+
+    template<typename Component>
+    void register_component() {
+        register_component<Component, Component>(
+            [](const Component &comp) {
+                return std::make_unique<Component>(comp);
+            },
+            [](const Component &serializable) {
+                return serializable;
+            });
+    }
+
+    std::unique_ptr<SerializableEntity> make_serializable_entity(
+        const nodec_scene::SceneEntity &entity,
+        const nodec_scene::SceneRegistry &scene_registry) const {
         using namespace nodec;
 
-        auto node = std::make_unique<SerializableEntityNode>();
+        auto serializable_entity = std::make_unique<SerializableEntity>();
 
-        auto exception_handler = [=](type_seq_index_type component_type_id) {
-            std::string details;
-
-            try {
-                throw;
-            } catch (std::exception &e) {
-                details = e.what();
-            } catch (...) {
-                details = "Unknown";
-            }
-
-            logging::WarnStream(__FILE__, __LINE__)
-                << "Failed to serialize component ( type_seq_id: " << component_type_id
-                << " ) of entity ( entity: 0x" << std::hex << entity << " )\n"
-                << "details: \n"
-                << details;
-        };
-
-        scene_registry.visit(entity, [=, &node](const nodec::type_info type_info, void *comp) {
+        scene_registry.visit(entity, [=, &serializable_entity](const nodec::type_info type_info, void *comp) {
             assert(comp);
 
-            try {
-                auto &serialization = component_dict.at(type_info.seq_index());
+            auto iter = component_dict_.find(type_info.seq_index());
+            if (iter == component_dict_.end()) return;
 
-                assert(static_cast<bool>(serialization));
+            auto &serialization = iter->second;
+            assert(static_cast<bool>(serialization));
 
-                auto serializable_component = serialization->serialize(comp);
-                node->components.push_back(std::move(serializable_component));
-            } catch (...) {
-                exception_handler(type_info.seq_index());
-            }
+            auto serializable_component = serialization->serialize(comp);
+            serializable_entity->components.push_back(std::move(serializable_component));
         });
 
-        return node;
+        return serializable_entity;
     }
 
-    SceneEntity make_entity(
-        const SerializableEntityNode* entity_node,
-        SceneRegistry &scene_registry) const {
+    /**
+     * @brief Makes the entity from the serializable entity.
+     */
+    nodec_scene::SceneEntity make_entity(
+        const SerializableEntity *serializable_entity,
+        nodec_scene::SceneRegistry &scene_registry) const {
         using namespace nodec;
 
-        if (!entity_node) {
-            return entities::null_entity;
-        }
-
-        auto exception_handler = [](type_seq_index_type component_type_id) {
-            std::string details;
-
-            try {
-                throw;
-            } catch (std::exception &e) {
-                details = e.what();
-            } catch (...) {
-                details = "Unknown";
-            }
-
-            logging::WarnStream(__FILE__, __LINE__)
-                << "Failed to emplace component from serializable component ( type_seq_id: " << component_type_id << " )\n"
-                << "details: \n"
-                << details;
-        };
+        if (!serializable_entity) return entities::null_entity;
 
         auto entity = scene_registry.create_entity();
 
-        for (auto &comp : entity_node->components) {
+        for (auto &comp : serializable_entity->components) {
             if (!comp) continue;
 
-            try {
-                auto &serialization = serializable_component_dict.at(comp->type_info().seq_index());
+            auto iter = serializable_component_dict_.find(comp->type_info().seq_index());
+            if (iter == serializable_component_dict_.end()) continue;
 
-                assert(static_cast<bool>(serialization));
+            auto &serialization = iter->second;
+            assert(static_cast<bool>(serialization));
 
-                serialization->emplace_component(comp.get(), entity, scene_registry);
-            } catch (...) {
-                exception_handler(comp->type_info().seq_index());
-            }
+            serialization->emplace_component(comp.get(), entity, scene_registry);
         }
 
         return entity;
     }
 
+    /**
+     * @brief Emplaces the source's components into the target entity.
+     *
+     * @param source
+     * @param target
+     * @param scene_registry
+     */
+    void emplace_components(const SerializableEntity *source, const nodec_scene::SceneEntity &target, nodec_scene::SceneRegistry &scene_registry) const {
+        if (!source) return;
+
+        for (const auto &comp : source->components) {
+            if (!comp) continue;
+
+            auto iter = serializable_component_dict_.find(comp->type_info().seq_index());
+            if (iter == serializable_component_dict_.end()) continue;
+
+            auto &serialization = iter->second;
+            assert(static_cast<bool>(serialization));
+
+            serialization->emplace_component(comp.get(), target, scene_registry);
+        }
+    }
+
 private:
-    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> component_dict;
-    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict;
+    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> component_dict_;
+    std::unordered_map<nodec::type_seq_index_type, std::shared_ptr<BaseComponentSerialization>> serializable_component_dict_;
 };
 
 } // namespace nodec_scene_serialization

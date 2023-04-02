@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.0)
 
 project(nodec LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 14)
-
 add_library(${PROJECT_NAME} STATIC
     src/nodec/logging.cpp
     src/nodec/unicode.cpp
 )
+
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_14)
 
 target_include_directories(
     ${PROJECT_NAME}
