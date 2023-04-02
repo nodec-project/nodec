@@ -1,6 +1,7 @@
 #ifndef NODEC_SCENE_SERIALIZATION__ENTITY_SERIALIZER_HPP_
 #define NODEC_SCENE_SERIALIZATION__ENTITY_SERIALIZER_HPP_
 
+#include "components/prefab.hpp"
 #include "scene_serialization.hpp"
 #include "serializable_entity.hpp"
 
@@ -18,18 +19,20 @@ public:
         : serialization_(serialization) {}
 
     /**
-     * @brief 
-     * 
+     * @brief
+     *
      * @todo Add filter.
-     * 
-     * @param target_entity 
-     * @param scene 
-     * @return std::unique_ptr<SerializableEntity> 
+     *
+     * @param target_entity
+     * @param scene
+     * @return std::unique_ptr<SerializableEntity>
      */
-    std::unique_ptr<SerializableEntity> serialize(const nodec_scene::SceneEntity &target_entity, const nodec_scene::Scene &scene) const {
+    template<typename Filter>
+    std::unique_ptr<SerializableEntity> serialize(const nodec_scene::SceneEntity &target_entity, const nodec_scene::Scene &scene, Filter &&filter) const {
         using namespace nodec::entities;
         using namespace nodec_scene;
         using namespace nodec_scene::components;
+        using namespace components;
 
         // If the entity is null, the process does not continue.
         // This is to guarantee that the null entity will not be included in the context that follows.
@@ -50,6 +53,8 @@ public:
             auto context = std::move(stack.top());
             stack.pop();
 
+            // If we don't want to serialize the current entity, add a filter function here.
+
             SerializableEntity *ser_entity_ptr;
             {
                 auto ser_entity = serialization_.make_serializable_entity(context.entity, scene_registry);
@@ -64,6 +69,11 @@ public:
                 }
             }
 
+            // A filter function for when we want to serialize the components of current entity
+            // but not its children.
+            // Mainly used for prefab system.
+            if (!filter(context.entity)) continue;
+
             auto *hierarchy = scene_registry.try_get_component<Hierarchy>(context.entity);
             if (hierarchy == nullptr) continue;
 
@@ -77,6 +87,10 @@ public:
         }
 
         return root;
+    }
+
+    std::unique_ptr<SerializableEntity> serialize(const nodec_scene::SceneEntity &target_entity, const nodec_scene::Scene &scene) const {
+        return serialize(target_entity, scene, [](const nodec_scene::SceneEntity &) { return true; });
     }
 
 private:
