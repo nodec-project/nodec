@@ -19,7 +19,9 @@ TEST_CASE("testing emplacement.") {
 
     Scene scene;
 
-    auto root_entity = EntityEmplacer(serialization).emplace(root.get(), null_entity, scene);
+    auto root_entity = scene.create_entity();
+
+    EntityEmplacer(serialization).emplace(root.get(), root_entity, scene);
     CHECK(scene.registry().is_valid(root_entity));
 
     CHECK(scene.registry().get_component<Hierarchy>(root_entity).child_count == 2);

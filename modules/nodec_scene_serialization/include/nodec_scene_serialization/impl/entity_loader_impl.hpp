@@ -21,17 +21,17 @@ public:
           resource_registry_{resource_registry} {
     }
 
-    nodec_scene::SceneEntity load_direct(const std::string &source,
-                                         const nodec_scene::SceneEntity &parent = nodec::entities::null_entity) override {
+    void load_direct(const std::string &source,
+                     const nodec_scene::SceneEntity &target) override {
         using namespace nodec::entities;
         auto ser_entity = resource_registry_.get_resource_direct<SerializableEntity>(source);
-        if (!ser_entity) return null_entity;
+        if (!ser_entity) return;
 
-        return EntityEmplacer(serialization_).emplace(ser_entity.get(), parent, scene_);
+        EntityEmplacer(serialization_).emplace(ser_entity.get(), target, scene_);
     }
 
-    AsyncOperation load_async(const std::string &source, const nodec_scene::SceneEntity &parent = nodec::entities::null_entity) override {
-        auto task = std::make_shared<Task>(source, parent, serialization_, scene_, resource_registry_);
+    AsyncOperation load_async(const std::string &source, const nodec_scene::SceneEntity &target) override {
+        auto task = std::make_shared<Task>(source, target, serialization_, scene_, resource_registry_);
         tasks_.push_back(task);
         return {task};
     }

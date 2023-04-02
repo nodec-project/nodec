@@ -20,21 +20,25 @@ public:
     EntityEmplacer(const SceneSerialization &serialization)
         : serialization_{serialization} {}
 
-    nodec_scene::SceneEntity emplace(SerializableEntity *source, const nodec_scene::SceneEntity &parent, nodec_scene::Scene &scene) const {
+    void emplace(SerializableEntity *source, const nodec_scene::SceneEntity &target, nodec_scene::Scene &scene) const {
         using namespace nodec::entities;
         using namespace nodec_scene;
 
-        if (source == nullptr) return null_entity;
+        assert(scene.registry().is_valid(target));
+
+        if (source == nullptr) return;
+
+        serialization_.emplace_components(source, target, scene.registry());
 
         struct Context {
             SerializableEntity *entity;
             SceneEntity parent;
         };
 
-        SceneEntity root{null_entity};
-
         std::stack<Context> stack;
-        stack.push({source, parent});
+        for (auto &child : source->children) {
+            stack.push({child.get(), target});
+        }
 
         while (!stack.empty()) {
             auto context = std::move(stack.top());
@@ -43,21 +47,13 @@ public:
             auto entity = serialization_.make_entity(context.entity, scene.registry());
             assert(entity != null_entity);
 
-            if (root == null_entity) root = entity;
-
-            if (context.parent == null_entity) {
-                // if no parent, just attach the Hierarchy component as root entity.
-                scene.registry().emplace_component<nodec_scene::components::Hierarchy>(entity);
-            } else {
-                scene.hierarchy_system().append_child(context.parent, entity);
-            }
+            // The context.parent must exists.
+            scene.hierarchy_system().append_child(context.parent, entity);
 
             for (auto &child : context.entity->children) {
                 stack.push({child.get(), entity});
             }
         }
-
-        return root;
     }
 
 private:

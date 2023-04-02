@@ -17,6 +17,15 @@ public:
     EntitySerializer(const SceneSerialization &serialization)
         : serialization_(serialization) {}
 
+    /**
+     * @brief 
+     * 
+     * @todo Add filter.
+     * 
+     * @param target_entity 
+     * @param scene 
+     * @return std::unique_ptr<SerializableEntity> 
+     */
     std::unique_ptr<SerializableEntity> serialize(const nodec_scene::SceneEntity &target_entity, const nodec_scene::Scene &scene) const {
         using namespace nodec::entities;
         using namespace nodec_scene;
