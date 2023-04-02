@@ -27,7 +27,7 @@ public:
         auto ser_entity = resource_registry_.get_resource_direct<SerializableEntity>(source);
         if (!ser_entity) return;
 
-        EntityEmplacer(serialization_).emplace(ser_entity.get(), target, scene_);
+        EntityBuilder(serialization_).build(ser_entity.get(), target, scene_);
     }
 
     AsyncOperation load_async(const std::string &source, const nodec_scene::SceneEntity &target) override {

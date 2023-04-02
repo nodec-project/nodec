@@ -1,10 +1,9 @@
 #ifndef NODEC_SCENE_SERIALIZATION__ENTITY_LOADER_HPP_
 #define NODEC_SCENE_SERIALIZATION__ENTITY_LOADER_HPP_
 
-#include "entity_emplacer.hpp"
+#include "entity_builder.hpp"
 #include "scene_serialization.hpp"
 #include "serializable_entity.hpp"
-#include "components/entity_loaded.hpp"
 
 #include <nodec_scene/scene.hpp>
 
@@ -43,8 +42,7 @@ public:
             case State::ResourceLoading:
                 if (entity_future_.wait_for(std::chrono::seconds(0)) != std::future_status::timeout) {
                     auto ser_entity = entity_future_.get();
-                    EntityEmplacer(serialization_).emplace(ser_entity.get(), target_, scene_);
-                    scene_.registry().emplace_component<components::EntityLoaded>(target_);
+                    EntityBuilder(serialization_).build(ser_entity.get(), target_, scene_);
                     state_ = State::Done;
                 }
                 break;

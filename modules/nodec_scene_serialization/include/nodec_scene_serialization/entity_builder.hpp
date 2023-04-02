@@ -1,6 +1,7 @@
-#ifndef NODEC_SCENE_SERIALIZATION__ENTITY_EMPLACER_HPP_
-#define NODEC_SCENE_SERIALIZATION__ENTITY_EMPLACER_HPP_
+#ifndef NODEC_SCENE_SERIALIZATION__ENTITY_BUILDER_HPP_
+#define NODEC_SCENE_SERIALIZATION__ENTITY_BUILDER_HPP_
 
+#include "components/entity_built.hpp"
 #include "scene_serialization.hpp"
 #include "serializable_entity.hpp"
 
@@ -13,16 +14,17 @@
 namespace nodec_scene_serialization {
 
 /**
- * @brief The EntityEmplacer class allows emplacing the nodes of graph to the scene as new scene entity.
+ * @brief The EntityBuilder class allows building the entity from the serializable entity.
  */
-class EntityEmplacer {
+class EntityBuilder final {
 public:
-    EntityEmplacer(const SceneSerialization &serialization)
+    EntityBuilder(const SceneSerialization &serialization)
         : serialization_{serialization} {}
 
-    void emplace(SerializableEntity *source, const nodec_scene::SceneEntity &target, nodec_scene::Scene &scene) const {
+    void build(SerializableEntity *source, const nodec_scene::SceneEntity &target, nodec_scene::Scene &scene) const {
         using namespace nodec::entities;
         using namespace nodec_scene;
+        using namespace components;
 
         assert(scene.registry().is_valid(target));
 
@@ -54,6 +56,7 @@ public:
                 stack.push({child.get(), entity});
             }
         }
+        scene.registry().emplace_component<EntityBuilt>(target);
     }
 
 private:

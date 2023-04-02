@@ -1,8 +1,8 @@
 #ifndef NODEC_SCENE_SERIALIZATION__SYSTEMS__PREFAB_LOAD_SYSTEM_HPP_
 #define NODEC_SCENE_SERIALIZATION__SYSTEMS__PREFAB_LOAD_SYSTEM_HPP_
 
+#include "../components/entity_built.hpp"
 #include "../components/prefab.hpp"
-#include "../components/entity_loaded.hpp"
 #include "../entity_loader.hpp"
 
 #include <nodec/optional.hpp>
@@ -37,7 +37,8 @@ public:
         using namespace nodec_scene;
 
         {
-            auto view = scene_.registry().view<PrefabLoadActivity, EntityLoaded>();
+            // Entities already built with EntityBuilder should not be loaded newly.
+            auto view = scene_.registry().view<PrefabLoadActivity, EntityBuilt>();
             scene_.registry().remove_component<PrefabLoadActivity>(view.begin(), view.end());
         }
 
