@@ -144,7 +144,7 @@ inline Vector3f euler_angles_xyz(const Quaternionf &rotation) {
     float sin_y = 2 * (rotation.x * rotation.z + rotation.y * rotation.w);
     if (std::abs(sin_y) >= 1) {
         // use 90 degrees if out of range
-        angles.y = std::copysign(90, sin_y);
+        angles.y = std::copysign(90.f, sin_y);
     } else {
         angles.y = std::asin(sin_y);
     }

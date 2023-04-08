@@ -9,8 +9,8 @@ target_include_directories(
     INTERFACE include
 )
 
-target_link_libraries(${PROJECT_NAME}
-    INTERFACE 
-    nodec nodec_scene nodec_rendering
-    imgui
-)
+# target_link_libraries(${PROJECT_NAME}
+#     INTERFACE 
+#     nodec nodec_scene nodec_rendering
+#     imgui
+# )
