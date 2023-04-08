@@ -2,7 +2,6 @@
 #define IMWINDOWS__MATERIAL_EDITOR_WINDOW_HPP_
 
 #include <imessentials/window.hpp>
-
 #include <nodec_rendering/resources/material.hpp>
 
 #include <nodec/resource_management/resource_registry.hpp>
