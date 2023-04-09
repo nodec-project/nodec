@@ -38,16 +38,6 @@ public:
         registry_->emplace_component<Hierarchy>(parent);
         registry_->emplace_component<Hierarchy>(child);
 
-        auto &parent_hierarchy = registry_->get_component<Hierarchy>(parent);
-        auto &child_hierarchy = registry_->get_component<Hierarchy>(child);
-
-        // If the child is belong to a parent, we need to remove the child from the parent.
-        if (child_hierarchy.parent != null_entity) {
-            remove_from(registry_->get_component<Hierarchy>(child_hierarchy.parent), child, child_hierarchy);
-        } else {
-            remove_from(root_hierarchy_, child, child_hierarchy);
-        }
-
         // Check the circular reference.
         auto grand = parent;
         while (grand != null_entity) {
@@ -58,6 +48,16 @@ public:
             }
             auto &hierarchy = registry_->get_component<components::Hierarchy>(grand);
             grand = hierarchy.parent;
+        }
+
+        auto &parent_hierarchy = registry_->get_component<Hierarchy>(parent);
+        auto &child_hierarchy = registry_->get_component<Hierarchy>(child);
+
+        // If the child is belong to a parent, we need to remove the child from the parent.
+        if (child_hierarchy.parent != null_entity) {
+            remove_from(registry_->get_component<Hierarchy>(child_hierarchy.parent), child, child_hierarchy);
+        } else {
+            remove_from(root_hierarchy_, child, child_hierarchy);
         }
 
         append_last(parent, parent_hierarchy, child, child_hierarchy);
