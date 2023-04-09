@@ -179,9 +179,10 @@ public:
 
             // this context item is bound with last element (CollapsingHeader).
             if (ImGui::BeginPopupContextItem()) {
-                if (ImGui::Button("Remove")) {
+                if (ImGui::MenuItem("Remove")) {
                     handler->remove(*entity_registry_, target_entity_);
                 }
+
                 ImGui::EndPopup();
             }
 
