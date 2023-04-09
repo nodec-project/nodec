@@ -60,12 +60,21 @@ void show_menu_items(const MenuItem &item) {
 
 } // namespace
 
-void show_main_menu() {
+void show_main_menu_bar() {
     init();
 
     if (ImGui::BeginMainMenuBar()) {
         show_menu_items(*root_menu_item);
         ImGui::EndMainMenuBar();
+    }
+}
+
+void show_menu_bar() {
+    init();
+
+    if (ImGui::BeginMenuBar()) {
+        show_menu_items(*root_menu_item);
+        ImGui::EndMenuBar();
     }
 }
 

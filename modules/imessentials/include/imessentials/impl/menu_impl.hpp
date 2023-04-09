@@ -6,9 +6,11 @@
 namespace imessentials {
 namespace impl {
 
-void show_main_menu();
+void show_main_menu_bar();
 
-}
+void show_menu_bar();
+
+} // namespace impl
 } // namespace imessentials
 
 #endif
