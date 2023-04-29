@@ -60,6 +60,9 @@ struct SerializableMaterial {
     }
 
     void apply_to(Material &dest, nodec::resource_management::ResourceRegistry &registry) {
+        // Reset all properties of the material.
+        dest.set_shader(std::shared_ptr<Shader>());
+
         auto shader_ptr = registry.get_resource_direct<Shader>(shader);
         dest.set_shader(shader_ptr);
 

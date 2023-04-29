@@ -17,11 +17,7 @@ namespace resources {
 
 class Material {
 public:
-    using ShaderPtr = std::shared_ptr<Shader>;
-    using TexturePtr = std::shared_ptr<Texture>;
-
-public:
-    void set_shader(ShaderPtr shader) {
+    void set_shader(std::shared_ptr<Shader> shader) {
         if (shader_ == shader) {
             return;
         }
@@ -30,19 +26,19 @@ public:
         on_shader_changed();
     }
 
-    ShaderPtr shader() const {
+    std::shared_ptr<Shader> shader() const {
         return shader_;
     }
 
 public:
     struct TextureEntry {
-        TextureEntry(TexturePtr texture, Sampler sampler)
+        TextureEntry(std::shared_ptr<Texture> texture, Sampler sampler)
             : texture(texture), sampler(sampler) {
         }
 
         TextureEntry() {}
 
-        TexturePtr texture;
+        std::shared_ptr<Texture> texture;
         Sampler sampler;
     };
 
@@ -69,7 +65,7 @@ protected:
 
 private:
     CullMode cull_mode_{CullMode::Back};
-    ShaderPtr shader_;
+    std::shared_ptr<Shader> shader_;
 };
 
 } // namespace resources
