@@ -2,7 +2,7 @@
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__POINT_LIGHT_HPP_
 
 #include <nodec_rendering/components/point_light.hpp>
-#include <nodec_scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 #include <nodec_serialization/nodec/vector4.hpp>
 
 namespace nodec_rendering {
@@ -12,6 +12,20 @@ class SerializablePointLight : public nodec_scene_serialization::BaseSerializabl
 public:
     SerializablePointLight()
         : BaseSerializableComponent(this) {
+    }
+
+    SerializablePointLight(const PointLight &other)
+        : BaseSerializableComponent(this),
+          color(other.color),
+          intensity(other.intensity),
+          range(other.range) {}
+
+    operator PointLight() const noexcept {
+        PointLight value;
+        value.color = color;
+        value.intensity = intensity;
+        value.range = range;
+        return value;
     }
 
     nodec::Vector4f color{1.0f, 1.0f, 1.0f, 1.0f};
@@ -29,7 +43,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializablePointLight)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializablePointLight)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializablePointLight)
 
 #endif

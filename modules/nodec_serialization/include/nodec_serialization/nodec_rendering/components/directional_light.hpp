@@ -4,9 +4,6 @@
 #include <nodec_rendering/components/directional_light.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 
-#include <cereal/types/polymorphic.hpp>
-#include <cereal/types/vector.hpp>
-
 namespace nodec_rendering {
 namespace components {
 
@@ -14,6 +11,18 @@ class SerializableDirectionalLight : public nodec_scene_serialization::BaseSeria
 public:
     SerializableDirectionalLight()
         : BaseSerializableComponent(this) {
+    }
+
+    SerializableDirectionalLight(const DirectionalLight &other)
+        : BaseSerializableComponent(this),
+          color(other.color),
+          intensity(other.intensity) {}
+
+    operator DirectionalLight() const noexcept {
+        DirectionalLight value;
+        value.color = color;
+        value.intensity = intensity;
+        return value;
     }
 
     nodec::Vector4f color{1.0f, 1.0f, 1.0f, 1.0f};
@@ -29,7 +38,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableDirectionalLight)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableDirectionalLight)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializableDirectionalLight)
 
 #endif

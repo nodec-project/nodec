@@ -12,6 +12,16 @@ public:
     SerializableNonVisible()
         : BaseSerializableComponent(this) {}
 
+    SerializableNonVisible(const NonVisible &other)
+        : BaseSerializableComponent(this),
+          self(other.self) {}
+
+    operator NonVisible() const noexcept {
+        NonVisible value;
+        value.self = self;
+        return value;
+    }
+
     bool self{false};
 
     template<class Archive>
@@ -22,7 +32,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableNonVisible)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableNonVisible)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializableNonVisible)
 
 #endif

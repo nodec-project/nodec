@@ -13,6 +13,18 @@ public:
     SerializableSceneLighting()
         : BaseSerializableComponent(this) {}
 
+    SerializableSceneLighting(const SceneLighting &other)
+        : BaseSerializableComponent(this),
+          ambient_color(other.ambient_color),
+          skybox(other.skybox) {}
+
+    operator SceneLighting() const noexcept {
+        SceneLighting value;
+        value.ambient_color = ambient_color;
+        value.skybox = skybox;
+        return value;
+    }
+
     nodec::Vector4f ambient_color;
     std::shared_ptr<resources::Material> skybox;
 

@@ -13,6 +13,25 @@ public:
     SerializableAudioSource()
         : BaseSerializableComponent{this} {}
 
+    SerializableAudioSource(const AudioSource &other)
+        : BaseSerializableComponent(this),
+          clip(other.clip),
+          is_playing(other.is_playing),
+          loop(other.loop),
+          volume(other.volume),
+          position(other.position) {}
+    
+    operator AudioSource() const noexcept {
+        AudioSource value;
+
+        value.clip = clip;
+        value.is_playing = is_playing;
+        value.loop = loop;
+        value.volume = volume;
+        value.position = position;
+        return value;
+    }
+
     std::shared_ptr<resources::AudioClip> clip;
 
     bool is_playing{false};
@@ -49,8 +68,6 @@ public:
 } // namespace components
 } // namespace nodec_scene_audio
 
-CEREAL_REGISTER_TYPE(nodec_scene_audio::components::SerializableAudioSource)
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_scene_audio::components::SerializableAudioSource)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_scene_audio::components::SerializableAudioSource)
 
 #endif

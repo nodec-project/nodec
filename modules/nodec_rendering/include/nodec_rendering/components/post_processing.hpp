@@ -11,11 +11,9 @@ namespace nodec_rendering {
 namespace components {
 
 struct PostProcessing {
-    using MaterialSharedPtr = std::shared_ptr<resources::Material>;
-
     struct Effect {
         bool enabled;
-        MaterialSharedPtr material;
+        std::shared_ptr<resources::Material> material;
     };
 
     std::vector<Effect> effects;
