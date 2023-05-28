@@ -1,8 +1,8 @@
 #ifndef NODEC_SERIALIZATION__NODEC_PHYSICS__COMPONENTS__RIGID_BODY_HPP_
 #define NODEC_SERIALIZATION__NODEC_PHYSICS__COMPONENTS__RIGID_BODY_HPP_
 
-#include <nodec_scene_serialization/serializable_component.hpp>
 #include <nodec_physics/components/rigid_body.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 
 namespace nodec_physics {
 namespace components {
@@ -11,6 +11,16 @@ class SerializableRigidBody : public nodec_scene_serialization::BaseSerializable
 public:
     SerializableRigidBody()
         : BaseSerializableComponent(this) {}
+
+    SerializableRigidBody(const RigidBody &other)
+        : BaseSerializableComponent(this),
+          mass(other.mass) {}
+
+    operator RigidBody() const noexcept {
+        RigidBody value;
+        value.mass = mass;
+        return value;
+    }
 
     float mass{0.0f};
 
@@ -22,7 +32,6 @@ public:
 } // namespace components
 } // namespace nodec_physics
 
-CEREAL_REGISTER_TYPE(nodec_physics::components::SerializableRigidBody)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_physics::components::SerializableRigidBody)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_physics::components::SerializableRigidBody)
 
 #endif

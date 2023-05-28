@@ -6,8 +6,6 @@
 #include <nodec_rendering/resources/texture.hpp>
 #include <nodec_scene_serialization/serializable_component.hpp>
 
-#include <cereal/types/polymorphic.hpp>
-
 namespace nodec_rendering {
 namespace components {
 
@@ -15,6 +13,20 @@ class SerializableImageRenderer : public nodec_scene_serialization::BaseSerializ
 public:
     SerializableImageRenderer()
         : BaseSerializableComponent(this) {}
+
+    SerializableImageRenderer(const ImageRenderer &other)
+        : BaseSerializableComponent(this),
+          image(other.image),
+          material(other.material),
+          pixels_per_unit(other.pixels_per_unit) {}
+
+    operator ImageRenderer() const noexcept {
+        ImageRenderer value;
+        value.image = image;
+        value.material = material;
+        value.pixels_per_unit = pixels_per_unit;
+        return value;
+    }
 
     std::shared_ptr<resources::Texture> image;
     std::shared_ptr<resources::Material> material;
@@ -55,7 +67,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableImageRenderer)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableImageRenderer)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializableImageRenderer)
 
 #endif

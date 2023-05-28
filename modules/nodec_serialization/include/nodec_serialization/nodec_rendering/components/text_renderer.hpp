@@ -15,6 +15,26 @@ public:
     SerializableTextRenderer()
         : BaseSerializableComponent(this) {}
 
+    SerializableTextRenderer(const TextRenderer &other)
+        : BaseSerializableComponent(this),
+          text(other.text),
+          font(other.font),
+          material(other.material),
+          pixel_size(other.pixel_size),
+          pixels_per_unit(other.pixels_per_unit),
+          color(other.color) {}
+
+    operator TextRenderer() const noexcept {
+        TextRenderer value;
+        value.text = text;
+        value.font = font;
+        value.material = material;
+        value.pixel_size = pixel_size;
+        value.pixels_per_unit = pixels_per_unit;
+        value.color = color;
+        return value;
+    }
+
     std::string text;
     std::shared_ptr<resources::Font> font;
     std::shared_ptr<resources::Material> material;
@@ -64,8 +84,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableTextRenderer)
-
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableTextRenderer)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializableTextRenderer)
 
 #endif

@@ -12,6 +12,20 @@ public:
     SerializablePhysicsShape()
         : BaseSerializableComponent(this) {}
 
+    SerializablePhysicsShape(const PhysicsShape &other)
+        : BaseSerializableComponent(this),
+          shape_type(other.shape_type),
+          size(other.size),
+          radius(other.radius) {}
+
+    operator PhysicsShape() const noexcept {
+        PhysicsShape value;
+        value.shape_type = shape_type;
+        value.size = size;
+        value.radius = radius;
+        return value;
+    }
+
     PhysicsShape::ShapeType shape_type{PhysicsShape::ShapeType::Box};
 
     nodec::Vector3f size{1.0f, 1.0f, 1.0f};
@@ -25,10 +39,10 @@ public:
         archive(cereal::make_nvp("radius", radius));
     }
 };
+
 } // namespace components
 } // namespace nodec_physics
 
-CEREAL_REGISTER_TYPE(nodec_physics::components::SerializablePhysicsShape)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_physics::components::SerializablePhysicsShape)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_physics::components::SerializablePhysicsShape)
 
 #endif

@@ -2,9 +2,8 @@
 #define NODEC_SERIALIZATION__NODEC_RENDERING__COMPONENTS__POST_PROCESSING_HPP_
 
 #include <nodec_rendering/components/post_processing.hpp>
-#include <nodec_scene_serialization/scene_serialization.hpp>
+#include <nodec_scene_serialization/serializable_component.hpp>
 
-#include <cereal/types/polymorphic.hpp>
 #include <cereal/types/vector.hpp>
 
 namespace nodec_rendering {
@@ -16,18 +15,17 @@ public:
         : BaseSerializableComponent(this) {
     }
 
-    struct Effect {
-        bool enabled;
-        std::string material;
+    SerializablePostProcessing(const PostProcessing &other)
+        : BaseSerializableComponent(this),
+          effects(other.effects) {}
 
-        template<class Archive>
-        void serialize(Archive &archive) {
-            archive(cereal::make_nvp("enabled", enabled));
-            archive(cereal::make_nvp("material", material));
-        }
-    };
-    
-    std::vector<Effect> effects;
+    operator PostProcessing() const noexcept {
+        PostProcessing value;
+        value.effects = effects;
+        return value;
+    }
+
+    std::vector<PostProcessing::Effect> effects;
 
     template<class Archive>
     void serialize(Archive &archive) {
@@ -35,10 +33,29 @@ public:
     }
 };
 
+template<class Archive>
+void save(Archive &archive, const PostProcessing::Effect &effect) {
+    using namespace nodec_scene_serialization;
+    ArchiveContext &context = cereal::get_user_data<ArchiveContext>(archive);
+
+    archive(cereal::make_nvp("enabled", effect.enabled));
+    archive(cereal::make_nvp("material", context.resource_registry().lookup_name<resources::Material>(effect.material).first));
+}
+
+template<class Archive>
+void load(Archive &archive, PostProcessing::Effect &effect) {
+    using namespace nodec_scene_serialization;
+    ArchiveContext &context = cereal::get_user_data<ArchiveContext>(archive);
+    archive(cereal::make_nvp("enabled", effect.enabled));
+
+    std::string name;
+    archive(cereal::make_nvp("material", name));
+    effect.material = context.resource_registry().get_resource_direct<resources::Material>(name);
+}
+
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializablePostProcessing)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializablePostProcessing)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializablePostProcessing)
 
 #endif

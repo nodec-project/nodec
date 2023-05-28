@@ -11,11 +11,8 @@ namespace nodec_rendering {
 namespace components {
 
 struct MeshRenderer {
-    using SharedMesh = std::shared_ptr<resources::Mesh>;
-    using SharedMaterial = std::shared_ptr<resources::Material>;
-
-    std::vector<SharedMesh> meshes;
-    std::vector<SharedMaterial> materials;
+    std::vector<std::shared_ptr<resources::Mesh>> meshes;
+    std::vector<std::shared_ptr<resources::Material>> materials;
 };
 
 } // namespace components

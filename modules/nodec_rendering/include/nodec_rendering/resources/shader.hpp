@@ -1,10 +1,10 @@
 #ifndef NODEC_RENDERING__RESOURCES__SHADER_HPP_
 #define NODEC_RENDERING__RESOURCES__SHADER_HPP_
 
-#include <nodec/vector4.hpp>
-
 #include <string>
 #include <unordered_map>
+
+#include <nodec/vector4.hpp>
 
 namespace nodec_rendering {
 namespace resources {
@@ -43,9 +43,9 @@ public:
     virtual std::size_t vector4_property_count() const noexcept = 0;
     virtual std::size_t texture_entry_count() const noexcept = 0;
 
-    virtual const std::string& get_float_property_name(int index) const = 0;
-    virtual const std::string& get_vector4_property_name(int index) const = 0;
-    virtual const std::string& get_texture_entry_name(int index) const = 0;
+    virtual const std::string &get_float_property_name(std::size_t index) const = 0;
+    virtual const std::string &get_vector4_property_name(std::size_t index) const = 0;
+    virtual const std::string &get_texture_entry_name(std::size_t index) const = 0;
 };
 
 } // namespace resources

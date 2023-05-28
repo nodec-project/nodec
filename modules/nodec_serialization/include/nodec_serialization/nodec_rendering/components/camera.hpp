@@ -4,7 +4,6 @@
 #include <nodec_rendering/components/camera.hpp>
 #include <nodec_scene_serialization/serializable_component.hpp>
 
-
 namespace nodec_rendering {
 namespace components {
 
@@ -14,13 +13,31 @@ public:
         : BaseSerializableComponent(this) {
     }
 
+    SerializableCamera(const Camera &other)
+        : BaseSerializableComponent(this),
+          far_clip_plane(other.far_clip_plane),
+          near_clip_plane(other.near_clip_plane),
+          projection(other.projection),
+          fov_angle(other.fov_angle),
+          ortho_width(other.ortho_width) {}
+
+    operator Camera() const noexcept {
+        Camera value;
+        value.far_clip_plane = far_clip_plane;
+        value.near_clip_plane = near_clip_plane;
+        value.projection = projection;
+        value.fov_angle = fov_angle;
+        value.ortho_width = ortho_width;
+        return value;
+    }
+
     float far_clip_plane{100.0f};
     float near_clip_plane{0.01f};
 
-    Camera::Projection projection{Camera::Projection::Perspective};
-
     float fov_angle{45.0f};
     float ortho_width{10.0f};
+
+    Camera::Projection projection{Camera::Projection::Perspective};
 
     template<class Archive>
     void serialize(Archive &archive) {
@@ -35,7 +52,6 @@ public:
 } // namespace components
 } // namespace nodec_rendering
 
-CEREAL_REGISTER_TYPE(nodec_rendering::components::SerializableCamera)
-CEREAL_REGISTER_POLYMORPHIC_RELATION(nodec_scene_serialization::BaseSerializableComponent, nodec_rendering::components::SerializableCamera)
+NODEC_SCENE_REGISTER_SERIALIZABLE_COMPONENT(nodec_rendering::components::SerializableCamera)
 
 #endif
