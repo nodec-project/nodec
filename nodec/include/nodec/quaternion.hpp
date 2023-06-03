@@ -79,6 +79,42 @@ inline Quaternion<T> operator-(const Quaternion<T> &right) {
 }
 
 template<typename T>
+inline Quaternion<T> &operator+=(Quaternion<T> &left, const Quaternion<T> &right) {
+    left.x += right.x;
+    left.y += right.y;
+    left.z += right.z;
+    left.w += right.w;
+
+    return left;
+}
+
+template<typename T>
+inline Quaternion<T> &operator-=(Quaternion<T> &left, const Quaternion<T> &right) {
+    left.x -= right.x;
+    left.y -= right.y;
+    left.z -= right.z;
+    left.w -= right.w;
+
+    return left;
+}
+
+template<typename T>
+inline Quaternion<T> operator+(const Quaternion<T> &left, const Quaternion<T> &right) {
+    return Quaternion<T>(left.x + right.x,
+                         left.y + right.y,
+                         left.z + right.z,
+                         left.w + right.w);
+}
+
+template<typename T>
+inline Quaternion<T> operator-(const Quaternion<T> &left, const Quaternion<T> &right) {
+    return Quaternion<T>(left.x - right.x,
+                         left.y - right.y,
+                         left.z - right.z,
+                         left.w - right.w);
+}
+
+template<typename T>
 inline Quaternion<T> operator*(const Quaternion<T> &left, const Quaternion<T> &right) {
     return Quaternion<T>(
         +left.x * right.w + left.y * right.z - left.z * right.y + left.w * right.x,
@@ -100,23 +136,52 @@ inline Quaternion<T> &operator*=(Quaternion<T> &left, const Quaternion<T> &right
     return left;
 }
 
+// --- Arithmetic operations between quaternion and scalar value ---
+
 template<typename T>
-inline Quaternion<T> operator+(const Quaternion<T> &left, const Quaternion<T> &right) {
-    return Quaternion<T>(
-        left.x + right.x,
-        left.y + right.y,
-        left.z + right.z,
-        left.w + right.w);
+inline Quaternion<T> operator*(const Quaternion<T> &left, T right) {
+    return Quaternion<T>(left.x * right,
+                         left.y * right,
+                         left.z * right,
+                         left.w * right);
 }
 
 template<typename T>
-inline Quaternion<T> operator+=(Quaternion<T> &left, const Quaternion<T> &right) {
-    left.x += right.x;
-    left.y += right.y;
-    left.z += right.z;
-    left.w += right.w;
+inline Quaternion<T> operator*(T left, const Quaternion<T> &right) {
+    return Quaternion<T>(left * right.x,
+                         left * right.y,
+                         left * right.z,
+                         left * right.w);
+}
+
+template<typename T>
+inline Quaternion<T> &operator*=(Quaternion<T> &left, T right) {
+    left.x *= right;
+    left.y *= right;
+    left.z *= right;
+    left.w *= right;
+
     return left;
 }
+
+template<typename T>
+inline Quaternion<T> operator/(const Quaternion<T> &left, T right) {
+    return Quaternion<T>(left.x / right,
+                         left.y / right,
+                         left.z / right,
+                         left.w / right);
+}
+
+template<typename T>
+inline Quaternion<T> &operator/=(Quaternion<T> &left, T right) {
+    left.x /= right;
+    left.y /= right;
+    left.z /= right;
+    left.w /= right;
+
+    return left;
+}
+// ---
 
 template<typename T>
 inline bool operator==(const Quaternion<T> &left, const Quaternion<T> &right) {
