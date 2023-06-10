@@ -2,6 +2,7 @@
 #define NODEC_SCENE__SCENE_HPP_
 
 #include "components/hierarchy.hpp"
+#include "components/local_to_world.hpp"
 #include "components/name.hpp"
 #include "components/transform.hpp"
 #include "scene_registry.hpp"
@@ -18,10 +19,16 @@ public:
         : hierarchy_system_{&registry_} {
         using namespace components;
 
-        hierarchy_system_.hierarchy_changed().connect([&](auto parent, auto child) {
+        hierarchy_system_.hierarchy_changed().connect([&](SceneEntity parent, SceneEntity child) {
             auto *trfm = registry_.try_get_component<Transform>(child);
             if (trfm == nullptr) return;
             trfm->dirty = true;
+        });
+
+        // NOTE: No case about disconnecting of signal.
+        //  Because the registry is owned by this.
+        registry_.component_constructed<Transform>().connect([](SceneRegistry &registry, SceneEntity entity) {
+            registry.emplace_component<LocalToWorld>(entity);
         });
     }
 
@@ -44,7 +51,7 @@ public:
     }
 
     SceneEntity create_entity(const std::string &name) {
-        using namespace nodec_scene::components;
+        using namespace components;
 
         auto entity = registry_.create_entity();
 
@@ -56,7 +63,7 @@ public:
     }
 
     SceneEntity create_entity() {
-        using namespace nodec_scene::components;
+        using namespace components;
 
         auto entity = registry_.create_entity();
         registry_.emplace_component<Hierarchy>(entity);

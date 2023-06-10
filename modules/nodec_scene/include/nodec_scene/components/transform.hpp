@@ -9,11 +9,10 @@ namespace nodec_scene {
 namespace components {
 
 struct Transform {
-    nodec::Vector3f local_position{nodec::Vector3f::zero};
-    nodec::Vector3f local_scale{nodec::Vector3f::ones};
-    nodec::Quaternionf local_rotation{nodec::Quaternionf::identity};
+    nodec::Vector3f position{nodec::Vector3f::zero};
+    nodec::Vector3f scale{nodec::Vector3f::ones};
+    nodec::Quaternionf rotation{nodec::Quaternionf::identity};
 
-    nodec::Matrix4x4f local2world;
     bool dirty{true};
 };
 } // namespace components

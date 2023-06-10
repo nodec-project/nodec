@@ -17,15 +17,15 @@ public:
 
     SerializableTransform(const Transform &other)
         : BaseSerializableComponent(this),
-          local_position(other.local_position),
-          local_rotation(other.local_rotation),
-          local_scale(other.local_scale) {}
+          local_position(other.position),
+          local_rotation(other.rotation),
+          local_scale(other.scale) {}
 
     operator Transform() const noexcept {
         Transform value;
-        value.local_position = local_position;
-        value.local_rotation = local_rotation;
-        value.local_scale = local_scale;
+        value.position = local_position;
+        value.rotation = local_rotation;
+        value.scale = local_scale;
         value.dirty = true;
         return value;
     }
