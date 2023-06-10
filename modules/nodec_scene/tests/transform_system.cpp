@@ -19,7 +19,7 @@ TEST_CASE("Testing update_transform()") {
         scene.hierarchy_system().append_child(root, child_1);
 
         {
-            auto &root_local_trfm = scene.registry().emplace_component<Transform>(root).first;
+            auto &root_local_trfm = scene.registry().emplace_component<LocalTransform>(root).first;
             root_local_trfm.position.set(1.f, 1.f, 1.f);
             root_local_trfm.dirty = true;
         }

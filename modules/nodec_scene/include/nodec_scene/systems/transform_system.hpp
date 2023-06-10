@@ -9,7 +9,7 @@
 
 #include "../components/hierarchy.hpp"
 #include "../components/local_to_world.hpp"
-#include "../components/transform.hpp"
+#include "../components/local_transform.hpp"
 #include "../scene_registry.hpp"
 
 namespace nodec_scene {
@@ -27,7 +27,7 @@ inline void update_transform(SceneRegistry &registry,
     using namespace nodec::entities;
     using namespace nodec_scene::components;
 
-    auto *local_trfm = registry.try_get_component<Transform>(entity);
+    auto *local_trfm = registry.try_get_component<LocalTransform>(entity);
 
     if (local_trfm && local_trfm->dirty) {
         local_to_world.value = parent_local_to_world * math::gfx::trs(local_trfm->position, local_trfm->rotation, local_trfm->scale);
@@ -44,24 +44,6 @@ inline void update_transform(SceneRegistry &registry,
             if (!math::gfx::decompose_trs(delta, local_trfm->position, local_trfm->rotation, local_trfm->scale)) {
                 assert(false);
             }
-
-            //Vector3f parent_position;
-            //Vector3f parent_scale;
-            //Quaternionf parent_rotation;
-            //if (!math::gfx::decompose_trs(parent_local_to_world, parent_position, parent_rotation, parent_scale)) {
-            //    assert(false);
-            //}
-
-            //Vector3f position;
-            //Vector3f scale;
-            //Quaternionf rotation;
-            //if (!math::gfx::decompose_trs(local_to_world.value, position, rotation, scale)) {
-            //    assert(false);
-            //}
-
-            //local_trfm->position = position - parent_position;
-            //local_trfm->scale.set(scale.x / parent_scale.x, scale.y / parent_scale.y, scale.z / parent_scale.z);
-            //local_trfm->rotation = math::inv(parent_rotation) * rotation;
         }
     } else {
         if (dirty && local_trfm) {

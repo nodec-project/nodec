@@ -1,5 +1,5 @@
-#ifndef NODEC_SCENE__COMPONENTS__TRANSFORM_HPP_
-#define NODEC_SCENE__COMPONENTS__TRANSFORM_HPP_
+#ifndef NODEC_SCENE__COMPONENTS__LOCAL_TRANSFORM_HPP_
+#define NODEC_SCENE__COMPONENTS__LOCAL_TRANSFORM_HPP_
 
 #include <nodec/matrix4x4.hpp>
 #include <nodec/quaternion.hpp>
@@ -8,7 +8,7 @@
 namespace nodec_scene {
 namespace components {
 
-struct Transform {
+struct LocalTransform {
     nodec::Vector3f position{nodec::Vector3f::zero};
     nodec::Vector3f scale{nodec::Vector3f::ones};
     nodec::Quaternionf rotation{nodec::Quaternionf::identity};

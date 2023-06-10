@@ -4,7 +4,7 @@
 #include "components/hierarchy.hpp"
 #include "components/local_to_world.hpp"
 #include "components/name.hpp"
-#include "components/transform.hpp"
+#include "components/local_transform.hpp"
 #include "scene_registry.hpp"
 #include "systems/hierarchy_system.hpp"
 
@@ -20,14 +20,14 @@ public:
         using namespace components;
 
         hierarchy_system_.hierarchy_changed().connect([&](SceneEntity parent, SceneEntity child) {
-            auto *trfm = registry_.try_get_component<Transform>(child);
+            auto *trfm = registry_.try_get_component<LocalTransform>(child);
             if (trfm == nullptr) return;
             trfm->dirty = true;
         });
 
         // NOTE: No case about disconnecting of signal.
         //  Because the registry is owned by this.
-        registry_.component_constructed<Transform>().connect([](SceneRegistry &registry, SceneEntity entity) {
+        registry_.component_constructed<LocalTransform>().connect([](SceneRegistry &registry, SceneEntity entity) {
             registry.emplace_component<LocalToWorld>(entity);
         });
     }
@@ -57,7 +57,7 @@ public:
 
         registry_.emplace_component<Name>(entity, name);
         registry_.emplace_component<Hierarchy>(entity);
-        registry_.emplace_component<Transform>(entity);
+        registry_.emplace_component<LocalTransform>(entity);
 
         return entity;
     }
@@ -67,7 +67,7 @@ public:
 
         auto entity = registry_.create_entity();
         registry_.emplace_component<Hierarchy>(entity);
-        registry_.emplace_component<Transform>(entity);
+        registry_.emplace_component<LocalTransform>(entity);
 
         return entity;
     }

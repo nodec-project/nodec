@@ -128,14 +128,14 @@ TEST_CASE("testing transform dirty") {
         auto child_2 = scene.create_entity("child 2");
         // scene.registry().emplace_component<Transform>(child_2);
 
-        scene.registry().get_component<Transform>(root).dirty = false;
-        scene.registry().get_component<Transform>(child_1).dirty = false;
-        scene.registry().get_component<Transform>(child_2).dirty = false;
+        scene.registry().get_component<LocalTransform>(root).dirty = false;
+        scene.registry().get_component<LocalTransform>(child_1).dirty = false;
+        scene.registry().get_component<LocalTransform>(child_2).dirty = false;
 
         scene.hierarchy_system().append_child(root, child_1);
-        CHECK(scene.registry().get_component<Transform>(child_1).dirty);
-        CHECK(!scene.registry().get_component<Transform>(root).dirty);
-        CHECK(!scene.registry().get_component<Transform>(child_2).dirty);
+        CHECK(scene.registry().get_component<LocalTransform>(child_1).dirty);
+        CHECK(!scene.registry().get_component<LocalTransform>(root).dirty);
+        CHECK(!scene.registry().get_component<LocalTransform>(child_2).dirty);
     }
 }
 
