@@ -15,7 +15,7 @@ TEST_CASE("testing create_entity") {
         CHECK(scene.registry().is_valid(entt));
 
         auto &name = scene.registry().get_component<Name>(entt);
-        CHECK(name.name == "test");
+        CHECK(name.value == "test");
 
         REQUIRE(scene.hierarchy_system().root_hierarchy().child_count == 1);
         CHECK(scene.hierarchy_system().root_hierarchy().first == entt);

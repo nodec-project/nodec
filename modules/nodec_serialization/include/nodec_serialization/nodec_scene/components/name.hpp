@@ -14,19 +14,19 @@ public:
     }
 
     SerializableName(const Name &other)
-        : BaseSerializableComponent(this), name(other.name) {}
+        : BaseSerializableComponent(this), value(other.value) {}
 
     operator Name() const noexcept {
-        Name value;
-        value.name = name;
-        return value;
+        Name name;
+        name.value = value;
+        return name;
     }
 
-    std::string name;
+    std::string value;
 
     template<class Archive>
     void serialize(Archive &archive) {
-        archive(cereal::make_nvp("name", name));
+        archive(cereal::make_nvp("value", value));
     }
 };
 
