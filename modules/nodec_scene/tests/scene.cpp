@@ -15,7 +15,7 @@ TEST_CASE("testing create_entity") {
         CHECK(scene.registry().is_valid(entt));
 
         auto &name = scene.registry().get_component<Name>(entt);
-        CHECK(name.name == "test");
+        CHECK(name.value == "test");
 
         REQUIRE(scene.hierarchy_system().root_hierarchy().child_count == 1);
         CHECK(scene.hierarchy_system().root_hierarchy().first == entt);
@@ -101,7 +101,7 @@ TEST_CASE("testing remove_child") {
 
         REQUIRE(scene.hierarchy_system().root_hierarchy().child_count == 1);
 
-        auto& root_hierarchy = scene.registry().get_component<Hierarchy>(root);
+        auto &root_hierarchy = scene.registry().get_component<Hierarchy>(root);
 
         CHECK(root_hierarchy.first == child_1);
         CHECK(root_hierarchy.last == child_2);
@@ -122,19 +122,23 @@ TEST_CASE("testing transform dirty") {
         Scene scene;
 
         auto root = scene.create_entity("root");
+        // scene.registry().emplace_component<Transform>(root);
         auto child_1 = scene.create_entity("child 1");
+        // scene.registry().emplace_component<Transform>(child_1);
         auto child_2 = scene.create_entity("child 2");
+        // scene.registry().emplace_component<Transform>(child_2);
 
-        scene.registry().get_component<Transform>(root).dirty = false;
-        scene.registry().get_component<Transform>(child_1).dirty = false;
-        scene.registry().get_component<Transform>(child_2).dirty = false;
+        scene.registry().get_component<LocalTransform>(root).dirty = false;
+        scene.registry().get_component<LocalTransform>(child_1).dirty = false;
+        scene.registry().get_component<LocalTransform>(child_2).dirty = false;
 
         scene.hierarchy_system().append_child(root, child_1);
-        CHECK(scene.registry().get_component<Transform>(child_1).dirty);
-        CHECK(!scene.registry().get_component<Transform>(root).dirty);
-        CHECK(!scene.registry().get_component<Transform>(child_2).dirty);
+        CHECK(scene.registry().get_component<LocalTransform>(child_1).dirty);
+        CHECK(!scene.registry().get_component<LocalTransform>(root).dirty);
+        CHECK(!scene.registry().get_component<LocalTransform>(child_2).dirty);
     }
 }
+
 // #include <nodec_scene/impl/scene_module.hpp>
 // #include <nodec_scene/components/standard.hpp>
 // #include <nodec_scene/systems/hierarchy_system.hpp>

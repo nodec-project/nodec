@@ -7,7 +7,7 @@ namespace nodec_scene {
 namespace components {
 
 struct Name {
-    std::string name;
+    std::string value;
 };
 
 } // namespace components

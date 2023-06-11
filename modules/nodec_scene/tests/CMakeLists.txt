@@ -15,3 +15,4 @@ function(add_basic_test TARGET TEST_SOURCES)
 endfunction(add_basic_test)
 
 add_basic_test("scene" scene.cpp)
+add_basic_test("transform_system" transform_system.cpp)

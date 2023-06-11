@@ -6,7 +6,7 @@
 namespace nodec {
 
 /**
- * 3-dimentional vector
+ * 3-dimensional vector
  * give just container and basic operation
  */
 template<typename T>

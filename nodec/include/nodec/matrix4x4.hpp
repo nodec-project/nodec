@@ -28,8 +28,8 @@ namespace nodec {
  *       Column-major representation
  *       Maybe Row-major
  *          * https://docs.microsoft.com/en-us/windows/win32/direct3dhlsl/dx-graphics-hlsl-per-component-math
- * 
- *      
+ *
+ *
  */
 template<typename T>
 class Matrix4x4 {
@@ -297,6 +297,46 @@ inline Matrix4x4<T> operator-(const Matrix4x4<T> &left, const Matrix4x4<T> &righ
          left.m[4] - right.m[4], left.m[5] - right.m[5], left.m[6] - right.m[6], left.m[7] - right.m[7],
          left.m[8] - right.m[8], left.m[9] - right.m[9], left.m[10] - right.m[10], left.m[11] - right.m[11],
          left.m[12] - right.m[12], left.m[13] - right.m[13], left.m[14] - right.m[14], left.m[15] - right.m[15]}};
+}
+
+template<typename T>
+inline bool operator==(const Matrix4x4<T> &left, const Matrix4x4<T> &right) {
+    return (left.m11 == right.m11)
+           && (left.m12 == right.m12)
+           && (left.m13 == right.m13)
+           && (left.m14 == right.m14)
+           && (left.m21 == right.m21)
+           && (left.m22 == right.m22)
+           && (left.m23 == right.m23)
+           && (left.m24 == right.m24)
+           && (left.m31 == right.m31)
+           && (left.m32 == right.m32)
+           && (left.m33 == right.m33)
+           && (left.m34 == right.m34)
+           && (left.m41 == right.m41)
+           && (left.m42 == right.m42)
+           && (left.m43 == right.m43)
+           && (left.m44 == right.m44);
+}
+
+template<typename T>
+inline bool operator!=(const Matrix4x4<T> &left, const Matrix4x4<T> &right) {
+    return (left.m11 != right.m11)
+           || (left.m12 != right.m12)
+           || (left.m13 != right.m13)
+           || (left.m14 != right.m14)
+           || (left.m21 != right.m21)
+           || (left.m22 != right.m22)
+           || (left.m23 != right.m23)
+           || (left.m24 != right.m24)
+           || (left.m31 != right.m31)
+           || (left.m32 != right.m32)
+           || (left.m33 != right.m33)
+           || (left.m34 != right.m34)
+           || (left.m41 != right.m41)
+           || (left.m42 != right.m42)
+           || (left.m43 != right.m43)
+           || (left.m44 != right.m44);
 }
 
 template<typename T>
