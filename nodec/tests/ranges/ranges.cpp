@@ -80,13 +80,6 @@ TEST_CASE("Testing keys()") {
         static_assert(std::is_same<decltype(keys.begin())::pointer, const std::string *>::value, "failed");
 
         CHECK(keys.size() == 5);
-        auto iter = keys.begin();
-        CHECK(*iter++ == "0");
-        CHECK(*iter++ == "1");
-        CHECK(*iter++ == "2");
-        CHECK(*iter++ == "3");
-        CHECK(*iter++ == "4");
-        CHECK(iter == keys.end());
     }
 
     SUBCASE("using const unordered_map") {
@@ -106,13 +99,6 @@ TEST_CASE("Testing keys()") {
         static_assert(std::is_same<decltype(keys.begin())::pointer, const std::string *>::value, "failed");
 
         CHECK(keys.size() == 5);
-        auto iter = keys.begin();
-        CHECK(*iter++ == "0");
-        CHECK(*iter++ == "1");
-        CHECK(*iter++ == "2");
-        CHECK(*iter++ == "3");
-        CHECK(*iter++ == "4");
-        CHECK(iter == keys.end());
     }
 
     SUBCASE("using std::copy") {
