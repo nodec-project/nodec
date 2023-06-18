@@ -10,7 +10,7 @@ target_include_directories(
 )
 
 target_link_libraries(${PROJECT_NAME}
-    INTERFACE nodec
+    INTERFACE nodec nodec_scene nodec_scene_serialization
 )
 
 # Tests
