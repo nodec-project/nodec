@@ -24,7 +24,7 @@ struct AnimatedComponent {
 };
 
 struct AnimatedEntity {
-    const AnimatedEntity& child(const std::string& name) const {
+    const AnimatedEntity &child(const std::string &name) const {
         static const AnimatedEntity dummy;
         auto iter = children.find(name);
         if (iter == children.end()) return dummy;
@@ -42,8 +42,6 @@ public:
 
     template<class Component>
     void set_curve(const std::string &relative_path, const std::string &property_name, const AnimationCurve &curve) {
-        // curves_[relative_path][nodec::type_id<Component>()][property_name] = curve;
-
         auto split_string = [](const std::string &s, const char *delim) {
             // https://gist.github.com/ScottHutchinson/6b699c997a33c33130821922c11d25c3
             std::vector<std::string> elems;
@@ -78,36 +76,11 @@ public:
     const AnimatedEntity &root_entity() const {
         return root_entity_;
     }
-    // decltype(auto) paths() const {
-    //     return nodec::views::keys(curves_);
-    // }
-
-    // decltype(auto) components(const std::string &path) const {
-    //     static const std::unordered_map<nodec::type_info, std::unordered_map<std::string, AnimationCurve>> dummy;
-
-    //     auto iter = curves_.find(path);
-    //     if (iter == curves_.end()) {
-    //         return nodec::views::keys(dummy);
-    //     }
-    //     return nodec::views::keys(iter->second);
-    // }
-
-    // decltype(auto) properties(const std::string &path, const nodec::type_info &component_type_info) const {
-    //     static const std::unordered_map<std::string, AnimationCurve> dummy;
-
-    //     auto path_iter = curves_.find(path);
-    //     if (path_iter == curves_.end()) return nodec::views::keys(dummy);
-    // }
 
 private:
     std::uint16_t ticks_per_second_;
 
     AnimatedEntity root_entity_;
-
-    std::map<std::string,                                                         // relative path
-             std::unordered_map<nodec::type_info,                                 // component type info
-                                std::unordered_map<std::string, AnimationCurve>>> // (property name, curve)
-        curves_;
 };
 } // namespace resources
 } // namespace nodec_animations
