@@ -24,3 +24,4 @@ add_basic_test("resource_management__resource_registry" resource_management/reso
 add_basic_test("vector" vector/vector.cpp)
 add_basic_test("quaternion" quaternion/quaternion.cpp)
 add_basic_test("ranges" ranges/ranges.cpp)
+add_basic_test("stopwatch" stopwatch/stopwatch.cpp)
