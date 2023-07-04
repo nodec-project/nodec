@@ -1,5 +1,5 @@
-#ifndef NODEC_ANIMATIONS__SYSTEMS__ANIMATOR_SYSTEM_HPP_
-#define NODEC_ANIMATIONS__SYSTEMS__ANIMATOR_SYSTEM_HPP_
+#ifndef NODEC_ANIMATION__SYSTEMS__ANIMATOR_SYSTEM_HPP_
+#define NODEC_ANIMATION__SYSTEMS__ANIMATOR_SYSTEM_HPP_
 
 #include <nodec_scene/scene_registry.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>

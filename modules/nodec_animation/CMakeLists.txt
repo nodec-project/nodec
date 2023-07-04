@@ -14,9 +14,9 @@ target_link_libraries(${PROJECT_NAME}
 )
 
 # Tests
-option(NODEC_ANIMATIONS_BUILD_TESTS "Enable building tests." OFF)
+option(NODEC_ANIMATION_BUILD_TESTS "Enable building tests." OFF)
 
-if(NODEC_ANIMATIONS_BUILD_TESTS)
+if(NODEC_ANIMATION_BUILD_TESTS)
     include(CTest)
     enable_testing()
     add_subdirectory(tests)
