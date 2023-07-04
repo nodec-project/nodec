@@ -10,7 +10,7 @@ add_subdirectory(${MODULE_DIR}/nodec_scene_serialization nodec_scene_serializati
 
 function(add_basic_test TARGET TEST_SOURCES)
     add_executable(${TARGET} ${TEST_SOURCES})
-    target_link_libraries(${TARGET} nodec_animations)
+    target_link_libraries(${TARGET} nodec_animation)
     target_include_directories(${TARGET}
         PRIVATE ${NODEC_DIR}/tests/common
     )

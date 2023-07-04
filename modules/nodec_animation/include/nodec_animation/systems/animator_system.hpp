@@ -6,7 +6,7 @@
 
 #include "../components/animator.hpp"
 
-namespace nodec_animations {
+namespace nodec_animation {
 namespace systems {
 
 namespace internal {
@@ -45,5 +45,5 @@ private:
     nodec_scene_serialization::SceneSerialization &serialization_;
 };
 } // namespace systems
-} // namespace nodec_animations
+} // namespace nodec_animation
 #endif

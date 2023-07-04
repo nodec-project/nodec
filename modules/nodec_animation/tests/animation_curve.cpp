@@ -1,12 +1,12 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-#include <nodec_animations/animation_curve.hpp>
+#include <nodec_animation/animation_curve.hpp>
 
 #include <nodec/math/math.hpp>
 
 TEST_CASE("testing add_keyframe()") {
-    using namespace nodec_animations;
+    using namespace nodec_animation;
 
     AnimationCurve curve;
 
@@ -24,7 +24,7 @@ TEST_CASE("testing add_keyframe()") {
 }
 
 TEST_CASE("testing evaluate()") {
-    using namespace nodec_animations;
+    using namespace nodec_animation;
     using namespace nodec::math;
 
     SUBCASE("Testing basic curve.") {

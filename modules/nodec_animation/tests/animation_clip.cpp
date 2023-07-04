@@ -2,7 +2,7 @@
 #include <doctest.h>
 
 #include <nodec/ranges.hpp>
-#include <nodec_animations/resources/animation_clip.hpp>
+#include <nodec_animation/resources/animation_clip.hpp>
 
 #include <algorithm>
 #include <vector>
@@ -16,8 +16,8 @@ struct ComponentB {
 };
 
 TEST_CASE("Testing set_curve") {
-    using namespace nodec_animations::resources;
-    using namespace nodec_animations;
+    using namespace nodec_animation::resources;
+    using namespace nodec_animation;
 
     SUBCASE("root path") {
         AnimationClip clip;

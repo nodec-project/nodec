@@ -1,4 +1,4 @@
-# nodec_animations
+# nodec_animation
 
 ## Dependencies
 

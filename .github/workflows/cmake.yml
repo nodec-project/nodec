@@ -44,7 +44,7 @@ jobs:
 
 
     - name: Test nodec_animation
-      working-directory: ${{github.workspace}}/modules/nodec_animations
+      working-directory: ${{github.workspace}}/modules/nodec_animation
 
       run: |
         cmake -B ./build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DNODEC_ANIMATIONS_BUILD_TESTS=ON

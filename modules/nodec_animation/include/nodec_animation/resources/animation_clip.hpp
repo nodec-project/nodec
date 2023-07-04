@@ -12,7 +12,7 @@
 
 #include "../animation_curve.hpp"
 
-namespace nodec_animations {
+namespace nodec_animation {
 namespace resources {
 
 struct AnimatedProperty {
@@ -83,6 +83,6 @@ private:
     AnimatedEntity root_entity_;
 };
 } // namespace resources
-} // namespace nodec_animations
+} // namespace nodec_animation
 
 #endif

@@ -5,7 +5,7 @@
 
 #include "../resources/animation_clip.hpp"
 
-namespace nodec_animations {
+namespace nodec_animation {
 namespace components {
 
 struct Animator {
@@ -15,6 +15,6 @@ struct Animator {
 
 struct AnimatorBegin {};
 }
-} // namespace nodec_animations
+} // namespace nodec_animation
 
 #endif

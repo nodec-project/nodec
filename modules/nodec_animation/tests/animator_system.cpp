@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include <nodec_animations/resources/animation_clip.hpp>
+#include <nodec_animation/resources/animation_clip.hpp>
 #include <nodec_scene/scene.hpp>
 #include <nodec_scene_serialization/scene_serialization.hpp>
 #include <nodec_scene_serialization/serializable_component.hpp>
@@ -63,7 +63,7 @@ public:
 
     class PropertyWriter : public cereal::InputArchive<PropertyWriter> {
     public:
-        PropertyWriter(const nodec_animations::resources::AnimatedComponent &source,
+        PropertyWriter(const nodec_animation::resources::AnimatedComponent &source,
                        AnimatedComponentWriter &owner, InternalTag)
             : InputArchive(this), source_(source), owner_(owner) {}
 
@@ -104,7 +104,7 @@ public:
         }
 
     private:
-        const nodec_animations::resources::AnimatedComponent &source_;
+        const nodec_animation::resources::AnimatedComponent &source_;
         AnimatedComponentWriter &owner_;
         std::vector<const char *> name_stack_;
     };
@@ -118,7 +118,7 @@ public:
         inspector(prototype);
     }
 
-    void sample_animation(const nodec_animations::resources::AnimatedComponent &source,
+    void sample_animation(const nodec_animation::resources::AnimatedComponent &source,
                           std::unique_ptr<nodec_scene_serialization::BaseSerializableComponent> &dest) {
         // curveのhintを使いたいので, contextなどを引数で取りたい.
 
@@ -240,8 +240,8 @@ TEST_CASE("") {
 
     scene.registry().emplace_component<TestComponent>(root_entity);
 
-    using namespace nodec_animations;
-    using namespace nodec_animations::resources;
+    using namespace nodec_animation;
+    using namespace nodec_animation::resources;
 
     AnimationClip clip;
 

@@ -11,7 +11,7 @@
 #include <iterator>
 #include <vector>
 
-namespace nodec_animations {
+namespace nodec_animation {
 
 class AnimationCurve {
 public:
@@ -111,6 +111,6 @@ private:
     WrapMode wrap_mode_{WrapMode::Once};
 };
 
-} // namespace nodec_animations
+} // namespace nodec_animation
 
 #endif

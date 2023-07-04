@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(nodec_animations LANGUAGES CXX)
+project(nodec_animation LANGUAGES CXX)
 
 add_library(${PROJECT_NAME} INTERFACE)
 

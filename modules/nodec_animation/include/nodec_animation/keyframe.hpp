@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace nodec_animations {
+namespace nodec_animation {
 
 struct Keyframe {
     std::uint16_t ticks;
