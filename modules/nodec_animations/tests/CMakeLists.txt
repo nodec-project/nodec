@@ -20,3 +20,4 @@ endfunction(add_basic_test)
 
 add_basic_test("animation_curve" animation_curve.cpp)
 add_basic_test("animation_clip" animation_clip.cpp)
+add_basic_test("animator_system" animator_system.cpp)
