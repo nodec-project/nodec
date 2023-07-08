@@ -13,7 +13,7 @@ namespace gfx {
 
 /**
  * @brief Rotates the vector v by rotation q.
- * 
+ *
  * v' = q * [v.x, v.y, v.z, 0] * conj(q)  (|q| = 1)
  */
 inline Vector3f rotate(const Vector3f &v, const Quaternionf &q) {
@@ -93,7 +93,7 @@ inline Matrix4x4f trs(const Vector3f &t, const Quaternionf &r, const Vector3f &s
 
 /**
  * @brief Decompose trs matrix to translation, rotation and scale elements.
- *  Returns true if matrix can be decomposed; false otherwise.
+ * Returns true if matrix can be decomposed; false otherwise.
  */
 inline bool decompose_trs(const Matrix4x4f &trs, Vector3f &translation, Quaternionf &rotation, Vector3f &scale) {
     translation.x = trs.m14;

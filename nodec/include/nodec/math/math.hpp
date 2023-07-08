@@ -82,6 +82,15 @@ inline T dot(const Vector4<T> &a, const Vector4<T> &b) {
 }
 
 template<typename T>
+inline Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b) {
+    return {
+        a.y * b.z - a.z * b.y,
+        a.z * b.x - a.x * b.z,
+        a.x * b.y - a.y * b.x
+    };
+}
+
+template<typename T>
 constexpr T default_rel_tol = std::numeric_limits<T>::epsilon() * 128;
 
 template<typename T>

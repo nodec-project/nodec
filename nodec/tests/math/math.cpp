@@ -179,3 +179,16 @@ TEST_CASE("testing matrix inv.") {
         CHECK(math::approx_equal(determinant, 0.f));
     }
 }
+
+TEST_CASE("testing cross()") {
+    using namespace nodec;
+
+    Vector3i a(1, 2, 3);
+    Vector3i b(4, 5, 6);
+
+    auto c = math::cross(a, b);
+
+    CHECK(c.x == -3);
+    CHECK(c.y == 6);
+    CHECK(c.z == -3);
+}
