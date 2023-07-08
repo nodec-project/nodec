@@ -22,6 +22,7 @@ private:
     public:
         virtual std::unique_ptr<BaseSerializableComponent> serialize(const void *component) const = 0;
         virtual void emplace_component(const BaseSerializableComponent *, SceneEntity, SceneRegistry &) const = 0;
+        virtual std::unique_ptr<BaseSerializableComponent> make_serializable_component() const = 0;
     };
 
     template<typename Component, typename SerializableComponent>
@@ -48,6 +49,10 @@ private:
 
             auto comp = deserializer(*static_cast<const SerializableComponent *>(serializable_component));
             result.first = std::move(comp);
+        }
+
+        std::unique_ptr<BaseSerializableComponent> make_serializable_component() const {
+            return std::make_unique<SerializableComponent>();
         }
 
     public:
@@ -179,6 +184,16 @@ public:
 
             serialization->emplace_component(comp.get(), target, scene_registry);
         }
+    }
+
+    /**
+     * @brief Makes the serializable component resolved from the given runtime component type.
+     */
+    std::unique_ptr<BaseSerializableComponent> make_serializable_component(const nodec::type_info &type) const {
+        auto iter = component_dict_.find(type.seq_index());
+        if (iter == component_dict_.end()) return nullptr;
+
+        return iter->second->make_serializable_component();
     }
 
 private:
