@@ -3,15 +3,17 @@
 
 // This code is based on...
 //  * https://github.com/astagi/lauda
+//  * https://github.com/ravener/stopwatch.py
 //
 // Thank you :)
 
 #include <chrono>
+#include <ratio>
 
 namespace nodec {
 
 template<typename ClockT>
-class Stopwatch {
+class BasicStopwatch {
 public:
     // using snake_case like std.
     using clock = ClockT;
@@ -19,63 +21,74 @@ public:
     using time_point = typename clock::time_point;
 
 public:
-    Stopwatch()
-        : is_running_(false) {
-    }
+    BasicStopwatch() {}
 
-    ~Stopwatch() {}
+    ~BasicStopwatch() {}
 
 public:
     bool is_running() const noexcept {
-        return is_running_;
+        return !has_end_time_;
     }
 
     void start() {
-        if (is_running_) return;
+        if (!has_end_time_) return;
 
-        start_time = clock::now();
-        checkpoint_time = clock::now();
-        is_running_ = true;
+        start_time_ = clock::now() - elapsed();
+        checkpoint_time_ = start_time_;
+        has_end_time_ = false;
     }
 
     void stop() {
-        if (!is_running_) return;
+        if (has_end_time_) return;
 
-        stop_time = clock::now();
-        is_running_ = false;
+        end_time_ = clock::now();
+        has_end_time_ = true;
     }
 
     void reset() {
-        is_running_ = false;
-        start_time = time_point();
-        stop_time = time_point();
-        checkpoint_time = time_point();
+        start_time_ = clock::now();
+        end_time_ = start_time_;
+        checkpoint_time_ = start_time_;
+        has_end_time_ = true;
     }
 
     void restart() {
-        stop_time = time_point();
-        start_time = clock::now();
-        checkpoint_time = clock::now();
-        is_running_ = true;
+        start_time_ = clock::now();
+        checkpoint_time_ = start_time_;
+        has_end_time_ = false;
     }
 
     duration lap() {
-        const auto current_time_ = (is_running_ ? clock::now() : stop_time);
-        const auto lap_time = current_time_ - checkpoint_time;
-        checkpoint_time = current_time_;
+        const auto current_time = has_end_time_ ? end_time_ : clock::now();
+        const auto lap_time = current_time - checkpoint_time_;
+
+        checkpoint_time_ = current_time;
         return lap_time;
     }
 
+    template<class Rep, class Period = std::ratio<1>>
+    std::chrono::duration<Rep, Period> lap() {
+        return std::chrono::duration_cast<std::chrono::duration<Rep, Period>>(lap());
+    }
+
     duration elapsed() const {
-        return ((is_running_ ? clock::now() : stop_time)) - start_time;
+        return has_end_time_ ? (end_time_ - start_time_)
+                             : (clock::now() - start_time_);
+    }
+
+    template<class Rep, class Period = std::ratio<1>>
+    std::chrono::duration<Rep, Period> elapsed() const {
+        return std::chrono::duration_cast<std::chrono::duration<Rep, Period>>(elapsed());
     }
 
 private:
-    time_point start_time;
-    time_point stop_time;
-    time_point checkpoint_time;
-    bool is_running_;
+    time_point start_time_;
+    time_point end_time_;
+    time_point checkpoint_time_;
+    bool has_end_time_{true};
 };
+
+using Stopwatch = BasicStopwatch<std::chrono::steady_clock>;
 
 } // namespace nodec
 

@@ -1,9 +1,9 @@
-#ifndef NODEC_ANIMATIONS__KEYFRAME_HPP_
-#define NODEC_ANIMATIONS__KEYFRAME_HPP_
+#ifndef NODEC_ANIMATION__KEYFRAME_HPP_
+#define NODEC_ANIMATION__KEYFRAME_HPP_
 
 #include <cstdint>
 
-namespace nodec_animations {
+namespace nodec_animation {
 
 struct Keyframe {
     std::uint16_t ticks;

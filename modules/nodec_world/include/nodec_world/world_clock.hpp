@@ -6,8 +6,6 @@
 namespace nodec_world {
 
 class WorldClock {
-    using Stopwatch = nodec::Stopwatch<std::chrono::steady_clock>;
-
 public:
     using duration = std::chrono::duration<float>;
 
@@ -77,7 +75,7 @@ public:
     }
 
 private:
-    Stopwatch world_stopwatch_;
+    nodec::Stopwatch world_stopwatch_;
     float time_scale_{1.0f};
 
     duration current_time_;

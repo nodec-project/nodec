@@ -1,5 +1,5 @@
-#ifndef NODEC_ANIMATIONS__ANIMATION_CURVE_HPP_
-#define NODEC_ANIMATIONS__ANIMATION_CURVE_HPP_
+#ifndef NODEC_ANIMATION__ANIMATION_CURVE_HPP_
+#define NODEC_ANIMATION__ANIMATION_CURVE_HPP_
 
 #include "keyframe.hpp"
 #include "wrap_mode.hpp"
@@ -11,7 +11,7 @@
 #include <iterator>
 #include <vector>
 
-namespace nodec_animations {
+namespace nodec_animation {
 
 class AnimationCurve {
 public:
@@ -111,6 +111,6 @@ private:
     WrapMode wrap_mode_{WrapMode::Once};
 };
 
-} // namespace nodec_animations
+} // namespace nodec_animation
 
 #endif

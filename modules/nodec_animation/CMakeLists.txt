@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.0)
 
-project(nodec_animations LANGUAGES CXX)
+project(nodec_animation LANGUAGES CXX)
 
 add_library(${PROJECT_NAME} INTERFACE)
 
@@ -10,13 +10,13 @@ target_include_directories(
 )
 
 target_link_libraries(${PROJECT_NAME}
-    INTERFACE nodec
+    INTERFACE nodec nodec_scene nodec_scene_serialization
 )
 
 # Tests
-option(NODEC_ANIMATIONS_BUILD_TESTS "Enable building tests." OFF)
+option(NODEC_ANIMATION_BUILD_TESTS "Enable building tests." OFF)
 
-if(NODEC_ANIMATIONS_BUILD_TESTS)
+if(NODEC_ANIMATION_BUILD_TESTS)
     include(CTest)
     enable_testing()
     add_subdirectory(tests)
