@@ -175,6 +175,24 @@ inline Quaternionf euler_angles_xyz(const Vector3f &euler) {
         cx * cy * cz - sx * sy * sz};
 }
 
+inline Quaternionf look_rotation(const Vector3f& forward, const Vector3f& upwards=Vector3f(0.f, 1.f, 0.f)) {
+    // https://stackoverflow.com/questions/53143175/writing-a-lookat-function
+
+    auto z = normalize(forward);
+    auto x = cross(upwards, z);
+    x = normalize(x);
+    auto y = cross(z, x);
+    y = normalize(y);
+
+    Matrix4x4f matrix(
+        x.x, y.x, z.x, 0.f,
+        x.y, y.y, z.y, 0.f,
+        x.z, y.z, z.z, 0.f,
+        0.f, 0.f, 0.f, 1.f
+    );
+    return quaternion_from_rotation_matrix(matrix);
+}
+
 } // namespace gfx
 } // namespace math
 } // namespace nodec
