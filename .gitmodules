@@ -1,3 +1,0 @@
-[submodule "platforms/sdks/freetype-windows-binaries"]
-	path = platforms/sdks/freetype/freetype-windows-binaries
-	url = https://github.com/ubawurinna/freetype-windows-binaries.git
