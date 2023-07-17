@@ -1,7 +1,6 @@
 #ifndef NODEC__RESOURCE_MANAGEMENT__RESOURCE_REGISTRY_HPP_
 #define NODEC__RESOURCE_MANAGEMENT__RESOURCE_REGISTRY_HPP_
 
-#include <nodec/flags/flags.hpp>
 #include <nodec/formatter.hpp>
 #include <nodec/type_info.hpp>
 
