@@ -1,31 +1,40 @@
-#ifndef NODEC__FLAGS__FLAGS_HPP_
-#define NODEC__FLAGS__FLAGS_HPP_
+#ifndef NODEC__FLAGS_HPP_
+#define NODEC__FLAGS_HPP_
 
 /**
  * https://github.com/grisumbras/enum-flags
  */
-
-#include "allow_flags.hpp"
-#include "iterator.hpp"
-
-#include <nodec/type_traits.hpp>
-
 #include <bitset>
 #include <ostream>
 #include <type_traits>
 
-namespace nodec {
-namespace flags {
+#include "flags_iterator.hpp"
+#include "type_traits.hpp"
 
-constexpr struct Empty {
-    constexpr Empty() noexcept = default;
-} empty;
+namespace nodec {
+
+template<class E, class Enabler = void>
+struct is_flags : public std::false_type {
+};
+
+template<class E>
+struct is_flags<E, void_t<decltype(E::_nodec_flags_enable)>> : std::is_enum<E> {};
+
+} // namespace nodec
+
+#define NODEC_FLAGS_ENABLE(name) \
+    namespace nodec { \
+    template<> \
+    struct is_flags<name> : std::true_type {}; \
+    }
+
+namespace nodec {
 
 template<class E>
 class Flags {
 public:
     static_assert(is_flags<E>::value,
-                  "nodec::flags is disallowed for this type; "
+                  "nodec is disallowed for this type; "
                   "use NODEC_ALLOW_FLAGS_FOR_ENUM macro.");
 
     using enum_type = typename std::decay<E>::type;
@@ -47,13 +56,12 @@ public:
     }
 
 public:
-    Flags() noexcept = default;
     Flags(const Flags &) noexcept = default;
     Flags &operator=(const Flags &) noexcept = default;
     Flags(Flags &&) noexcept = default;
     Flags &operator=(Flags &&) noexcept = default;
 
-    explicit constexpr Flags(Empty) noexcept
+    constexpr Flags() noexcept
         : val_(0) {}
 
     constexpr Flags(enum_type e) noexcept
@@ -161,7 +169,7 @@ private:
 };
 
 template<class E>
-auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
+auto operator<<(std::ostream &stream, const nodec::Flags<E> &flags)
     -> typename std::enable_if<
         nodec::can_stream_out<std::ostream, E>::value, std::ostream &>::type {
     auto iter = flags.begin();
@@ -180,46 +188,45 @@ auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
 }
 
 template<class E>
-auto operator<<(std::ostream &stream, const nodec::flags::Flags<E> &flags)
+auto operator<<(std::ostream &stream, const nodec::Flags<E> &flags)
     -> typename std::enable_if<
         !nodec::can_stream_out<std::ostream, E>::value, std::ostream &>::type {
     return stream << std::bitset<flags.size()>(flags.underlying_value())
                   << "(" << std::showbase << std::hex << flags.underlying_value() << ")";
 }
 
-} // namespace flags
 } // namespace nodec
 
 template<class E>
 constexpr auto operator|(E e1, E e2) noexcept
     -> typename std::enable_if<
-        nodec::flags::is_flags<E>::value,
-        nodec::flags::Flags<E>>::type {
-    return nodec::flags::Flags<E>(e1) | e2;
+        nodec::is_flags<E>::value,
+        nodec::Flags<E>>::type {
+    return nodec::Flags<E>(e1) | e2;
 }
 
 template<class E>
 constexpr auto operator&(E e1, E e2) noexcept
     -> typename std::enable_if<
-        nodec::flags::is_flags<E>::value,
-        nodec::flags::Flags<E>>::type {
-    return nodec::flags::Flags<E>(e1) & e2;
+        nodec::is_flags<E>::value,
+        nodec::Flags<E>>::type {
+    return nodec::Flags<E>(e1) & e2;
 }
 
 template<class E>
 constexpr auto operator^(E e1, E e2) noexcept
     -> typename std::enable_if<
-        nodec::flags::is_flags<E>::value,
-        nodec::flags::Flags<E>>::type {
-    return nodec::flags::Flags<E>(e1) ^ e2;
+        nodec::is_flags<E>::value,
+        nodec::Flags<E>>::type {
+    return nodec::Flags<E>(e1) ^ e2;
 }
 
 template<class E>
 constexpr auto operator~(E e1) noexcept
     -> typename std::enable_if<
-        nodec::flags::is_flags<E>::value,
-        nodec::flags::Flags<E>>::type {
-    return ~nodec::flags::Flags<E>(e1);
+        nodec::is_flags<E>::value,
+        nodec::Flags<E>>::type {
+    return ~nodec::Flags<E>(e1);
 }
 
 #endif

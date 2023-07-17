@@ -1,10 +1,9 @@
-#ifndef NODEC__FLAGS__ITERATOR_HPP_
-#define NODEC__FLAGS__ITERATOR_HPP_
+#ifndef NODEC__FLAGS_ITERATOR_HPP_
+#define NODEC__FLAGS_ITERATOR_HPP_
 
 #include <iterator>
 
 namespace nodec {
-namespace flags {
 
 template<class E>
 class Flags;
@@ -22,16 +21,16 @@ public:
     using iterator_category = std::forward_iterator_tag;
 
     constexpr FlagsIterator() noexcept
-        : uvalue_(0), mask_(0) {
+        : value_(0), mask_(0) {
     }
 
     constexpr FlagsIterator(const FlagsIterator &other) noexcept
-        : uvalue_(other.uvalue_), mask_(other.mask_) {
+        : value_(other.value_), mask_(other.mask_) {
     }
 
-    explicit FlagsIterator(impl_type uv) noexcept
-        : uvalue_(uv), mask_(0x01) {
-        if (!(mask_ & uvalue_)) {
+    explicit FlagsIterator(impl_type value) noexcept
+        : value_(value), mask_(0x01) {
+        if (!(mask_ & value_)) {
             next();
         }
     }
@@ -65,14 +64,13 @@ private:
     void next() noexcept {
         do {
             mask_ <<= 1;
-        } while (mask_ && !(mask_ & uvalue_));
+        } while (mask_ && !(mask_ & value_));
     }
 
-    impl_type uvalue_;
+    impl_type value_;
     impl_type mask_;
 };
 
-} // namespace flags
 } // namespace nodec
 
 #endif
