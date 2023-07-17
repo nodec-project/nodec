@@ -1,8 +1,7 @@
 #ifndef NODEC_INPUT__MOUSE__MOUSE_BUTTON_HPP_
 #define NODEC_INPUT__MOUSE__MOUSE_BUTTON_HPP_
 
-#include <nodec/flags/allow_flags.hpp>
-#include <nodec/flags/flags.hpp>
+#include <nodec/flags.hpp>
 
 #include <sstream>
 
@@ -16,7 +15,8 @@ enum class MouseButton {
     None = 0x00,
     Left = 0x01 << 0,
     Right = 0x01 << 1,
-    Middle = 0x01 << 2
+    Middle = 0x01 << 2,
+    _nodec_flags_enable
 };
 
 inline std::ostream &operator<<(std::ostream &stream, const MouseButton &button) {
@@ -29,17 +29,9 @@ inline std::ostream &operator<<(std::ostream &stream, const MouseButton &button)
     }
 }
 
+using MouseButtons = nodec::Flags<MouseButton>;
+
 } // namespace mouse
-} // namespace nodec_input
-
-NODEC_ALLOW_FLAGS_FOR_ENUM(nodec_input::mouse::MouseButton);
-
-namespace nodec_input {
-namespace mouse {
-
-using MouseButtons = nodec::flags::Flags<MouseButton>;
-
-}
 } // namespace nodec_input
 
 #endif
