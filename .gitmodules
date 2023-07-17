@@ -1,6 +1,3 @@
-[submodule "platforms/sdks/DirectXTex/DirectXTex"]
-	path = platforms/sdks/DirectXTex/DirectXTex
-	url = https://github.com/microsoft/DirectXTex.git
 [submodule "modules/nodec_physics/bullet3"]
 	path = platforms/sdks/bullet3
 	url = https://github.com/bulletphysics/bullet3.git
