@@ -1,5 +1,0 @@
-# imguizmo
-
-## Dependencies
-
-* imgui
