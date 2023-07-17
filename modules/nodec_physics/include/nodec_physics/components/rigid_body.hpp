@@ -1,7 +1,7 @@
 #ifndef NODEC_PHYSICS__COMPONENTS__RIGID_BODY_HPP_
 #define NODEC_PHYSICS__COMPONENTS__RIGID_BODY_HPP_
 
-#include <nodec/flags/flags.hpp>
+#include <nodec/flags.hpp>
 
 namespace nodec_physics {
 
@@ -24,8 +24,7 @@ struct RigidBody {
 
     float mass{0.0f};
 
-    nodec::flags::Flags<RigidBodyConstraints> constrains;
-
+    nodec::Flags<RigidBodyConstraints> constrains;
 };
 
 }
