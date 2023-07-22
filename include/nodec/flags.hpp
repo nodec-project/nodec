@@ -139,9 +139,14 @@ public:
         return static_cast<underlying_type>(val_);
     }
 
+    void set_underlying_value(underlying_type value) noexcept {
+        val_ = static_cast<impl_type>(value);
+    }
+
     constexpr bool none() const noexcept {
         return !val_;
     }
+
     void clear() noexcept {
         val_ = 0;
     }
@@ -149,6 +154,7 @@ public:
     iterator begin() const noexcept {
         return cbegin();
     }
+
     iterator cbegin() const noexcept {
         return iterator{val_};
     }

@@ -31,10 +31,25 @@ enum class FlagsWithAutoDetected {
     _nodec_flags_enable
 };
 
+enum class FlagsWithInt : int {
+    None = 0,
+    FlagA = 0x01,
+    FlagB = 0x02,
+    FlagC = 0x04,
+    _nodec_flags_enable
+};
+
 TEST_CASE("Testing to enable flags") {
     static_assert(nodec::is_flags<FlagsWithRegistered>::value, "Failed");
     static_assert(!nodec::is_flags<NotFlags>::value, "Failed");
     static_assert(nodec::is_flags<FlagsWithAutoDetected>::value, "Failed");
+}
+
+TEST_CASE("Testing traits") {
+    using namespace nodec;
+
+    static_assert(std::is_same<Flags<FlagsWithInt>::enum_type, FlagsWithInt>::value, "Failed");
+    static_assert(std::is_same<Flags<FlagsWithInt>::underlying_type, int>::value, "Failed");
 }
 
 TEST_CASE("Testing bitwise operations") {
