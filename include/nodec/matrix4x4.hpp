@@ -133,7 +133,7 @@ inline Matrix4x4<T>::Matrix4x4(const Matrix4x4<U> &mat)
 
 template<typename T>
 inline Matrix4x4<T> &operator*=(Matrix4x4<T> &left, const Matrix4x4<T> &right) {
-    *left = left * right;
+    left = left * right;
     return left;
 }
 

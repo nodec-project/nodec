@@ -73,16 +73,34 @@ inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
     return result;
 }
 
+inline Matrix4x4f rotation_matrix_from_quaternion(const Quaternionf& r) {
+    const float xx2 = 2.0f * r.x * r.x;
+    const float yy2 = 2.0f * r.y * r.y;
+    const float zz2 = 2.0f * r.z * r.z;
+    const float xy2 = 2.0f * r.x * r.y;
+    const float xz2 = 2.0f * r.x * r.z;
+    const float yz2 = 2.0f * r.y * r.z;
+    const float wx2 = 2.0f * r.w * r.x;
+    const float wy2 = 2.0f * r.w * r.y;
+    const float wz2 = 2.0f * r.w * r.z;
+
+    return {
+        (1.0f - yy2 - zz2), (xy2 - wz2), (xz2 + wy2), 0.f,
+        (xy2 + wz2), (1.0f - xx2 - zz2), (yz2 - wx2), 0.f,
+        (xz2 - wy2), (yz2 + wx2), (1.0f - xx2 - yy2), 0.f,
+        0.0f, 0.0f, 0.0f, 1.0f};
+}
+
 inline Matrix4x4f trs(const Vector3f &t, const Quaternionf &r, const Vector3f &s) {
-    float xx2 = 2.0f * r.x * r.x;
-    float yy2 = 2.0f * r.y * r.y;
-    float zz2 = 2.0f * r.z * r.z;
-    float xy2 = 2.0f * r.x * r.y;
-    float xz2 = 2.0f * r.x * r.z;
-    float yz2 = 2.0f * r.y * r.z;
-    float wx2 = 2.0f * r.w * r.x;
-    float wy2 = 2.0f * r.w * r.y;
-    float wz2 = 2.0f * r.w * r.z;
+    const float xx2 = 2.0f * r.x * r.x;
+    const float yy2 = 2.0f * r.y * r.y;
+    const float zz2 = 2.0f * r.z * r.z;
+    const float xy2 = 2.0f * r.x * r.y;
+    const float xz2 = 2.0f * r.x * r.z;
+    const float yz2 = 2.0f * r.y * r.z;
+    const float wx2 = 2.0f * r.w * r.x;
+    const float wy2 = 2.0f * r.w * r.y;
+    const float wz2 = 2.0f * r.w * r.z;
 
     return {
         (1.0f - yy2 - zz2) * s.x, (xy2 - wz2) * s.y, (xz2 + wy2) * s.z, t.x,
