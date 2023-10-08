@@ -1,0 +1,24 @@
+name: build
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  macos:
+    timeout-minutes: 15
+    runs-on: macos-latest
+    # runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build tests
+        run: |
+          cmake -DNODEC_BUILD_TESTS=ON -B ./build 
+          cmake --build ./build -j 4
+      - name: Run tests
+        working-directory: build
+        run: |
+          ctest -C Debug --output-on-failure
