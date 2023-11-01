@@ -1,12 +1,11 @@
 #ifndef NODEC__RIFF_HPP_
 #define NODEC__RIFF_HPP_
 
-#include <nodec/endian.hpp>
-#include <nodec/logging.hpp>
-
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
+
+#include <nodec/endian.hpp>
 
 namespace nodec {
 
