@@ -10,12 +10,12 @@ namespace nodec {
 namespace logging {
 
 struct LogRecord {
-    LogRecord(const std::string &name, Level level, const std::string &message, const char *file, size_t line)
+    LogRecord(const std::string &name, Level level, const std::string &message, const char *file, std::size_t line)
         : name(name), level(level), message(message), file(file), line(line) {}
 
-    std::string name;
+    const std::string &name;
     Level level;
-    std::string message;
+    const std::string &message;
     const char *file;
     std::size_t line;
 };

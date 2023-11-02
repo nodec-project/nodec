@@ -18,15 +18,16 @@ namespace logging {
 class HandlerConnection {
 public:
     HandlerConnection(signals::Connection &&connection, std::mutex &handlers_mutex)
-        : conn_(std::move(connection)), handlers_mutex_(handlers_mutex) {}
+        : conn_(std::move(connection)), handlers_mutex_(&handlers_mutex) {}
 
     ~HandlerConnection() {
-        std::lock_guard<std::mutex> lock(handlers_mutex_);
+        std::lock_guard<std::mutex> lock(*handlers_mutex_);
         conn_.reset();
     }
 
-    HandlerConnection(HandlerConnection &&other)
-        : conn_(std::move(other.conn_)), handlers_mutex_(std::move(other.handlers_mutex_)) {
+    HandlerConnection(HandlerConnection &&other) noexcept
+        : conn_(std::move(other.conn_)), handlers_mutex_(other.handlers_mutex_) {
+        other.handlers_mutex_ = nullptr;
     }
 
     /**
@@ -46,7 +47,7 @@ public:
 
 private:
     optional<signals::Connection> conn_;
-    std::mutex &handlers_mutex_;
+    std::mutex *handlers_mutex_;
     NODEC_DISABLE_COPY(HandlerConnection)
 };
 
@@ -89,6 +90,7 @@ private:
 public:
     Logger(const std::string &name, std::shared_ptr<Logger> parent)
         : name_(name), parent_(parent) {}
+
     /**
      * @brief Sets the threshold for this logger to level.
      *   Logging messages which are less severe than level will be ignored;
@@ -130,6 +132,7 @@ public:
     void info(const std::string &message, const char *file, std::size_t line) {
         handle(LogRecord{name_, Level::Info, message, file, line});
     }
+
     /**
      * @detail
      *   WARNING: An indication that something unexpected happened, or indicative of some problem in the near future (e.g. 'disk space low').
@@ -138,6 +141,7 @@ public:
     void warn(const std::string &message, const char *file, std::size_t line) {
         handle(LogRecord{name_, Level::Warn, message, file, line});
     }
+
     /**
      * @detail
      *   ERROR: Due to a more serious problem, the software has not been able to perform some function.
@@ -145,6 +149,7 @@ public:
     void error(const std::string &message, const char *file, std::size_t line) {
         handle(LogRecord{name_, Level::Error, message, file, line});
     }
+
     /**
      * @detail
      *   FATAL: A serious error, indicating that the program itself may be unable to continue running.
@@ -152,6 +157,7 @@ public:
     void fatal(const std::string &message, const char *file, std::size_t line) {
         handle(LogRecord{name_, Level::Fatal, message, file, line});
     }
+    
     /**
      * @brief Logs a message with level.
      */

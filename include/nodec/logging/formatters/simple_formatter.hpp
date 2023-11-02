@@ -36,6 +36,7 @@ struct SimpleFormatter {
             oss << "[???]  ";
             break;
         }
+
         if (!record.name.empty()) {
             oss << " [" << record.name << "]";
         }
