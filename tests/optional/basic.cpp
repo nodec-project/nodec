@@ -3,7 +3,6 @@
 
 //#include <optional>
 
-#include <nodec/logging.hpp>
 #include <nodec/optional.hpp>
 
 #include <array>

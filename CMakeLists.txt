@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.0)
 project(nodec LANGUAGES CXX)
 
 add_library(${PROJECT_NAME} STATIC
-    src/nodec/logging.cpp
+    # src/nodec/logging.cpp
     src/nodec/unicode.cpp
 )
 
