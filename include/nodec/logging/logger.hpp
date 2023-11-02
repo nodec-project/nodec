@@ -109,6 +109,7 @@ public:
     template<typename Handler>
     void add_handler(std::shared_ptr<Handler> handler) {
         if (!handler) return;
+        std::lock_guard<std::mutex> lock(handlers_mutex_);
         handlers_.signal_interface().connect([handler](const LogRecord &record) {
             (*handler)(record);
         });

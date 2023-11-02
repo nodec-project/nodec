@@ -2,8 +2,6 @@
 #include <doctest.h>
 
 #include <nodec/logging/logging.hpp>
-#include <nodec/logging/handlers/stdout_handler.hpp>
-#include <nodec/logging/formatters/simple_formatter.hpp>
 
 TEST_CASE("Testing add_handler") {
     using namespace nodec::logging;
@@ -57,14 +55,4 @@ TEST_CASE("Testing LogStream") {
 
         CHECK(result == "Hello100");
     }
-}
-
-TEST_CASE("") {
-    using namespace nodec::logging;
-
-    auto logger = get_logger();
-    logger->add_handler(std::make_shared<handlers::StdoutHandler<formatters::SimpleFormatter>>());
-    logger->info(__FILE__, __LINE__) << "Hello World!";
-
-    get_logger("system")->error(__FILE__, __LINE__) << "System Start Failed.";
 }

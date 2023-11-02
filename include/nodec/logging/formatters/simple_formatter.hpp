@@ -15,7 +15,7 @@ struct SimpleFormatter {
 
         switch (record.level) {
         case nodec::logging::Level::Unset:
-            oss << "UNSET";
+            oss << "[UNSET]";
             break;
         case nodec::logging::Level::Debug:
             oss << "[DEBUG]";
