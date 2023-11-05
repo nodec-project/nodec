@@ -73,7 +73,7 @@ inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
     return result;
 }
 
-inline Matrix4x4f rotation_matrix_from_quaternion(const Quaternionf& r) {
+inline Matrix4x4f rotation_matrix_from_quaternion(const Quaternionf &r) {
     const float xx2 = 2.0f * r.x * r.x;
     const float yy2 = 2.0f * r.y * r.y;
     const float zz2 = 2.0f * r.z * r.z;
@@ -140,6 +140,16 @@ inline bool decompose_trs(const Matrix4x4f &trs, Vector3f &translation, Quaterni
     return true;
 }
 
+struct TRSComponents {
+    Vector3f translation;
+    Quaternionf rotation;
+    Vector3f scale;
+};
+
+inline bool decompose_trs(const Matrix4x4f &trs, TRSComponents &components) {
+    return decompose_trs(trs, components.translation, components.rotation, components.scale);
+}
+
 inline Quaternionf quaternion_from_angle_axis(const float &angle_deg, const Vector3f &axis) {
     auto theta = angle_deg * deg2rad<float> / 2.0f;
     auto s = std::sin(theta);
@@ -193,7 +203,7 @@ inline Quaternionf euler_angles_xyz(const Vector3f &euler) {
         cx * cy * cz - sx * sy * sz};
 }
 
-inline Quaternionf look_rotation(const Vector3f& forward, const Vector3f& upwards=Vector3f(0.f, 1.f, 0.f)) {
+inline Quaternionf look_rotation(const Vector3f &forward, const Vector3f &upwards = Vector3f(0.f, 1.f, 0.f)) {
     // https://stackoverflow.com/questions/53143175/writing-a-lookat-function
 
     auto z = normalize(forward);
@@ -206,8 +216,7 @@ inline Quaternionf look_rotation(const Vector3f& forward, const Vector3f& upward
         x.x, y.x, z.x, 0.f,
         x.y, y.y, z.y, 0.f,
         x.z, y.z, z.z, 0.f,
-        0.f, 0.f, 0.f, 1.f
-    );
+        0.f, 0.f, 0.f, 1.f);
     return quaternion_from_rotation_matrix(matrix);
 }
 
