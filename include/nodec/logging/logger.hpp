@@ -63,7 +63,7 @@ private:
             parent_->handle(record);
         }
     }
-    
+
     class LogStream {
     public:
         LogStream(Logger &logger, Level level, const char *file, std::size_t line)
@@ -122,7 +122,7 @@ public:
      *   DEBUG: Detailed information, typically of interest only when diagnosing problems.
      */
     void debug(const std::string &message, const char *file, std::size_t line) {
-        handle(LogRecord{name_, Level::Debug, message, file, line});
+        handle(LogRecord{std::chrono::system_clock::now(), name_, Level::Debug, message, file, line});
     }
 
     /**
@@ -130,7 +130,7 @@ public:
      *   INFO: Confirmation that things are working as expected.
      */
     void info(const std::string &message, const char *file, std::size_t line) {
-        handle(LogRecord{name_, Level::Info, message, file, line});
+        handle(LogRecord{std::chrono::system_clock::now(), name_, Level::Info, message, file, line});
     }
 
     /**
@@ -139,7 +139,7 @@ public:
      *       The software is still working as expected.
      */
     void warn(const std::string &message, const char *file, std::size_t line) {
-        handle(LogRecord{name_, Level::Warn, message, file, line});
+        handle(LogRecord{std::chrono::system_clock::now(), name_, Level::Warn, message, file, line});
     }
 
     /**
@@ -147,7 +147,7 @@ public:
      *   ERROR: Due to a more serious problem, the software has not been able to perform some function.
      */
     void error(const std::string &message, const char *file, std::size_t line) {
-        handle(LogRecord{name_, Level::Error, message, file, line});
+        handle(LogRecord{std::chrono::system_clock::now(), name_, Level::Error, message, file, line});
     }
 
     /**
@@ -155,14 +155,14 @@ public:
      *   FATAL: A serious error, indicating that the program itself may be unable to continue running.
      */
     void fatal(const std::string &message, const char *file, std::size_t line) {
-        handle(LogRecord{name_, Level::Fatal, message, file, line});
+        handle(LogRecord{std::chrono::system_clock::now(), name_, Level::Fatal, message, file, line});
     }
-    
+
     /**
      * @brief Logs a message with level.
      */
     void log(Level level, const std::string &message, const char *file, std::size_t line) {
-        handle(LogRecord{name_, level, message, file, line});
+        handle(LogRecord{std::chrono::system_clock::now(), name_, level, message, file, line});
     }
 
     LogStream debug(const char *file, std::size_t line) {
