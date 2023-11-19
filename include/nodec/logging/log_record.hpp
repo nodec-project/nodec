@@ -1,6 +1,7 @@
 #ifndef NODEC__LOGGING__LOG_RECORD_HPP_
 #define NODEC__LOGGING__LOG_RECORD_HPP_
 
+#include <chrono>
 #include <cstddef>
 #include <string>
 
@@ -10,14 +11,16 @@ namespace nodec {
 namespace logging {
 
 struct LogRecord {
-    LogRecord(const std::string &name, Level level, const std::string &message, const char *file, std::size_t line)
-        : name(name), level(level), message(message), file(file), line(line) {}
+public:
+    LogRecord(std::chrono::system_clock::time_point time, const std::string &name, Level level, const std::string &message, const char *file, std::size_t line)
+        : time(time), name(name), level(level), message(message), file(file), line(line) {}
 
+    const std::chrono::system_clock::time_point time;
     const std::string &name;
-    Level level;
+    const Level level;
     const std::string &message;
     const char *file;
-    std::size_t line;
+    const std::size_t line;
 };
 
 } // namespace logging
