@@ -155,36 +155,10 @@ public:
         return get<index_of<Comp>>(entt);
     }
 
-    // template<std::size_t I>
-    // std::enable_if_t<(0 <= I) && (I < sizeof...(Storages)), component_at_t<I>>
-    // get(const Entity entt) const {
-    //     return std::get<I>(pools)->get(entt);
-    // }
-
-    // template<typename Comp>
-    // std::enable_if_t<(0 <= index_of<Comp>)&&(index_of<Comp> < sizeof...(Storages)), component_at_t<index_of<Comp>>>
-    //// decltype(auto)
-    // get(const Entity entt) const {
-    //     return get<index_of<Comp>>(entt);
-    // }
-
-    // template<std::size_t... Is>
-    // std::enable_if_t<(sizeof...(Is) != 1u), std::tuple<component_at_t<Is>...>>
-    // get(const Entity entt) const {
-    //     return std::forward_as_tuple(get<Is>(entt)...);
-    // }
-
-    // template<std::size_t I>
-    // std::enable_if_t<(0 <= I) && (I < sizeof...(Storages)),
-    //                  constness_as_t<type_list_element_t<I, type_list<typename Storages::value_type...>>,
-    //                                 type_list_element_t<I, type_list<Storages...>>>>
-    // get(const Entity entt) const {
-    //     auto *comp = std::get<I>(pools)->try_get(entt);
-
-    //    if (comp == nullptr) exceptions::throw_no_component_exception<decltype(*comp)>(entt, __FILE__, __LINE__);
-
-    //    return *comp;
-    //}
+    Entity front() const noexcept {
+        const auto it = begin();
+        return it != end() ? *it : null_entity;
+    }
 
     /**
      * @brief
