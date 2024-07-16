@@ -21,9 +21,7 @@ template<class T>
 void as_const(const T &&) = delete;
 
 /**
- * @brief
  * @note Waiting for C++17.
- * @tparam T
  */
 template<class T>
 struct in_place_type_t {
