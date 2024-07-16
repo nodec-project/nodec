@@ -325,7 +325,7 @@ public:
     }
 
     /**
-     * @brief
+     * @brief Returns the contained value if there is one, otherwise throws an exception.
      *
      * @return constexpr const T&
      */
@@ -350,7 +350,11 @@ public:
     }
 
     /**
-     * @brief
+     * @brief Returns the contained value if there is one,
+     * otherwise it results in undefined behavior.
+     * 
+     * Ensure that the optional has a value (has_value() == true) 
+     * before calling this function.
      *
      * @return constexpr T&
      */
@@ -371,8 +375,12 @@ public:
     }
 
     /**
-     * @brief
+     * @brief Returns a pointer to the contained value if there is one,
+     * otherwise it results in undefined behavior.
      *
+     * Ensure that the optional has a value (has_value() == true)
+     * before calling this function.
+     * 
      * @return constexpr const T*
      */
     constexpr const T *operator->() const noexcept {
