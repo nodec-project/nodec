@@ -26,7 +26,7 @@ public:
 
     void operator()(const LogRecord &record) {
         std::lock_guard<std::mutex> lock(ConsoleMutex::get());
-        std::cout << formatter_(record);
+        std::cout << formatter_(record) << std::flush;
     }
 
 private:
