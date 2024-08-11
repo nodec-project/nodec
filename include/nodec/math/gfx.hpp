@@ -29,6 +29,15 @@ inline Vector3f rotate(const Vector3f &v, const Quaternionf &q) {
         v.z + z * q.w + (q.x * y - q.y * x)};
 }
 
+
+inline Matrix4x4f translation_matrix(const Vector3f &t) {
+    return {
+        1.0f, 0.0f, 0.0f, t.x,
+        0.0f, 1.0f, 0.0f, t.y,
+        0.0f, 0.0f, 1.0f, t.z,
+        0.0f, 0.0f, 0.0f, 1.0f};
+}
+
 inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
     float sqrt;
     float half;
