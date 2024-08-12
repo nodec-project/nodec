@@ -1,10 +1,9 @@
-#ifndef NODEC__MATH__GFX_HPP_
-#define NODEC__MATH__GFX_HPP_
+#ifndef NODEC__GFX__GFX_HPP_
+#define NODEC__GFX__GFX_HPP_
 
-#include <nodec/math/math.hpp>
+#include "../math/math.hpp"
 
 namespace nodec {
-namespace math {
 
 /**
  * math utils for graphics
@@ -28,7 +27,6 @@ inline Vector3f rotate(const Vector3f &v, const Quaternionf &q) {
         v.y + y * q.w + (q.z * x - q.x * z),
         v.z + z * q.w + (q.x * y - q.y * x)};
 }
-
 
 inline Matrix4x4f translation_matrix(const Vector3f &t) {
     return {
@@ -160,9 +158,9 @@ inline bool decompose_trs(const Matrix4x4f &trs, TRSComponents &components) {
 }
 
 inline Quaternionf quaternion_from_angle_axis(const float &angle_deg, const Vector3f &axis) {
-    auto theta = angle_deg * deg2rad<float> / 2.0f;
+    auto theta = angle_deg * math::deg2rad<float> / 2.0f;
     auto s = std::sin(theta);
-    auto a = normalize(axis);
+    auto a = math::normalize(axis);
     return {a.x * s, a.y * s, a.z * s, std::cos(theta)};
 }
 
@@ -191,19 +189,19 @@ inline Vector3f euler_angles_xyz(const Quaternionf &rotation) {
     float cos_z = 2 * (rotation.x * rotation.x + rotation.w * rotation.w) - 1;
     angles.z = std::atan2(sin_z, cos_z);
 
-    return angles * rad2deg<float>;
+    return angles * math::rad2deg<float>;
 }
 
 /**
  * Rx * Ry * Rz = R
  */
 inline Quaternionf euler_angles_xyz(const Vector3f &euler) {
-    float cx = std::cos(euler.x * 0.5f * deg2rad<float>);
-    float sy = std::sin(euler.y * 0.5f * deg2rad<float>);
-    float sz = std::sin(euler.z * 0.5f * deg2rad<float>);
-    float sx = std::sin(euler.x * 0.5f * deg2rad<float>);
-    float cy = std::cos(euler.y * 0.5f * deg2rad<float>);
-    float cz = std::cos(euler.z * 0.5f * deg2rad<float>);
+    float cx = std::cos(euler.x * 0.5f * math::deg2rad<float>);
+    float sy = std::sin(euler.y * 0.5f * math::deg2rad<float>);
+    float sz = std::sin(euler.z * 0.5f * math::deg2rad<float>);
+    float sx = std::sin(euler.x * 0.5f * math::deg2rad<float>);
+    float cy = std::cos(euler.y * 0.5f * math::deg2rad<float>);
+    float cz = std::cos(euler.z * 0.5f * math::deg2rad<float>);
 
     return {
         cx * sy * sz + sx * cy * cz,
@@ -215,11 +213,11 @@ inline Quaternionf euler_angles_xyz(const Vector3f &euler) {
 inline Quaternionf look_rotation(const Vector3f &forward, const Vector3f &upwards = Vector3f(0.f, 1.f, 0.f)) {
     // https://stackoverflow.com/questions/53143175/writing-a-lookat-function
 
-    auto z = normalize(forward);
-    auto x = cross(upwards, z);
-    x = normalize(x);
-    auto y = cross(z, x);
-    y = normalize(y);
+    auto z = math::normalize(forward);
+    auto x = math::cross(upwards, z);
+    x = math::normalize(x);
+    auto y = math::cross(z, x);
+    y = math::normalize(y);
 
     Matrix4x4f matrix(
         x.x, y.x, z.x, 0.f,
@@ -230,7 +228,6 @@ inline Quaternionf look_rotation(const Vector3f &forward, const Vector3f &upward
 }
 
 } // namespace gfx
-} // namespace math
 } // namespace nodec
 
 #endif
