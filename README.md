@@ -53,4 +53,4 @@ The list of projects using `nodec` framework.
 
 ## Requirements
 
-* C++14
+* C++17

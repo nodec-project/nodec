@@ -58,7 +58,7 @@ inline T norm(const Quaternion<T> &q) {
 }
 
 template<typename T>
-inline T normalize(const T &v) {
+inline constexpr T normalize(const T &v) {
     return v / norm(v);
 }
 
@@ -72,7 +72,7 @@ inline T dot(const Vector2<T> &a, const Vector2<T> &b) {
 }
 
 template<typename T>
-inline T dot(const Vector3<T> &a, const Vector3<T> &b) {
+inline constexpr T dot(const Vector3<T> &a, const Vector3<T> &b) {
     return a.x * b.x + a.y * b.y + a.z * b.z;
 }
 
@@ -81,6 +81,11 @@ inline T dot(const Vector4<T> &a, const Vector4<T> &b) {
     return a.x * b.x + a.y * b.y + a.z * b.z + a.w * b.w;
 }
 
+/**
+ * @brief Calculate cross product.
+ * 
+ * @note This equation is same on left-handed and right-handed coordinate system.
+ */
 template<typename T>
 inline Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b) {
     return {

@@ -14,10 +14,10 @@ add_basic_test("entitites__registry" entities/registry.cpp)
 add_basic_test("entitites__storage" entities/storage.cpp)
 add_basic_test("flags" flags/flags.cpp)
 add_basic_test("formatter" formatter/formatter.cpp)
-add_basic_test("logging_bench" logging/bench.cpp)
 add_basic_test("logging__logging" logging/logging.cpp)
+add_basic_test("logging_bench" logging/bench.cpp)
+add_basic_test("gfx" gfx/gfx.cpp)
 add_basic_test("math" math/math.cpp)
-add_basic_test("math_gfx" math/gfx.cpp)
 add_basic_test("matrix4x4" matrix4x4/matrix4x4.cpp)
 add_basic_test("optional__basic" optional/basic.cpp)
 add_basic_test("quaternion" quaternion/quaternion.cpp)
@@ -27,5 +27,11 @@ add_basic_test("resource_management__resource_registry" resource_management/reso
 add_basic_test("signals__signal" signals/signal.cpp)
 add_basic_test("stopwatch" stopwatch/stopwatch.cpp)
 add_basic_test("type_info" type_info/type_info.cpp)
+add_basic_test("unicode" unicode/unicode.cpp)
 add_basic_test("utility" utility/utility.cpp)
 add_basic_test("vector" vector/vector.cpp)
+
+target_compile_definitions(
+    unicode PRIVATE
+    TEST_DATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/unicode/data"
+)
