@@ -3,10 +3,12 @@
 
 #include <iostream>
 
+#include "vector3.hpp"
+
 namespace nodec {
 
 /**
- * 4-dimentional vector
+ * 4-dimensional vector
  * give just container and basic operation
  */
 template<typename T>
@@ -23,6 +25,9 @@ public:
     Vector4();
     Vector4(T x, T y, T z, T w);
     Vector4(const T v[4]);
+
+    constexpr Vector4(const Vector3<T> &vector, T w)
+        : x(vector.x), y(vector.y), z(vector.z), w(w) {}
 
     template<typename U>
     explicit Vector4(const Vector4<U> &vector);
