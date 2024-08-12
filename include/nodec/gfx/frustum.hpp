@@ -51,9 +51,9 @@ struct Frustum {
  * @param z_far
  * @param frustum
  */
-inline void set_frustum_from_camera_lh(const Vector3f &position,
-                                       const Vector3f forward, const Vector3f &up, const Vector3f &right,
-                                       float aspect, float fov, float z_near, float z_far, Frustum &frustum) {
+inline void set_frustum_from_projection_lh(const Vector3f &position,
+                                           const Vector3f forward, const Vector3f &up, const Vector3f &right,
+                                           float aspect, float fov, float z_near, float z_far, Frustum &frustum) {
     const float half_v_side = z_far * std::tanhf(fov * .5f);
     const float half_h_side = half_v_side * aspect;
     Vector3f front_mult_far = z_far * forward;
@@ -68,6 +68,19 @@ inline void set_frustum_from_camera_lh(const Vector3f &position,
         position, math::cross(front_mult_far + up * half_v_side, -right)};
     frustum.bottom_plane = Plane{
         position, math::cross(front_mult_far - up * half_v_side, right)};
+}
+
+inline void set_frustum_from_orthographic(const Vector3f &position,
+                                          const Vector3f forward, const Vector3f &up, const Vector3f &right,
+                                          float width, float height, float z_near, float z_far, Frustum &frustum) {
+    const Vector3f half_right = right * width / 2.f;
+    const Vector3f half_up = up * height / 2.f;
+    frustum.near_plane = Plane{position + z_near * forward, forward};
+    frustum.far_plane = Plane{position + z_far * forward, -forward};
+    frustum.right_plane = Plane{position + half_right, -right};
+    frustum.left_plane = Plane{position - half_right, right};
+    frustum.top_plane = Plane{position + half_up, -up};
+    frustum.bottom_plane = Plane{position - half_up, up};
 }
 
 inline float distance(const Plane &plane, const Vector3f &point) {

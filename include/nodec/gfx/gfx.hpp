@@ -36,6 +36,14 @@ inline Matrix4x4f translation_matrix(const Vector3f &t) {
         0.0f, 0.0f, 0.0f, 1.0f};
 }
 
+inline Matrix4x4f scale_matrix(const float x, const float y, const float z) {
+    return {
+        x, 0.0f, 0.0f, 0.0f,
+        0.0f, y, 0.0f, 0.0f,
+        0.0f, 0.0f, z, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f};
+}
+
 inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
     float sqrt;
     float half;
