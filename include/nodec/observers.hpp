@@ -28,8 +28,8 @@ public:
         }
         auto index = iter->second;
         observers_[index] = observers_.back();
-        observers_.pop_back();
         observer_indices_[observers_[index]] = index;
+        observers_.pop_back();
         observer_indices_.erase(iter);
     }
 
