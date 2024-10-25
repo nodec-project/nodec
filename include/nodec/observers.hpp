@@ -5,9 +5,15 @@
 #include <vector>
 #include <unordered_map>
 
+/**
+ * @note Implementation refs:
+ * https://chromium.googlesource.com/chromium/src.git/+/master/base/observer_list.h
+ * 
+ */
+
 namespace nodec {
 
-template<class IObserver, typename Mutex = std::mutex>
+template<class IObserver, typename Mutex = std::recursive_mutex>
 class Observers {
 
 public:
@@ -27,9 +33,7 @@ public:
             return;
         }
         auto index = iter->second;
-        observers_[index] = observers_.back();
-        observer_indices_[observers_[index]] = index;
-        observers_.pop_back();
+        observers_[index] = nullptr;
         observer_indices_.erase(iter);
     }
 
@@ -42,9 +46,27 @@ public:
     template<typename Func>
     void each(Func func) {
         std::lock_guard<Mutex> lock(mutex_);
-        for (auto observer : observers_) {
+
+        std::size_t n = observers_.size();
+        for (std::size_t i = 0; i < n; ++i) {
+            auto observer = observers_[i];
+            if (observer == nullptr) continue;
             func(observer);
         }
+
+        // Remove all empty slots.
+        std::size_t sz = 0;
+        for (std::size_t i = 0; i < n; ++i) {
+            if (observers_[i] == nullptr) continue;
+            observers_[sz] = observers_[i];
+            observer_indices_[observers_[i]] = sz;
+            ++sz;
+        }
+    }
+
+    std::size_t size() const {
+        std::lock_guard<Mutex> lock(mutex_);
+        return observer_indices_.size();
     }
 
 private:
