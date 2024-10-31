@@ -56,12 +56,13 @@ public:
 
         // Remove all empty slots.
         std::size_t sz = 0;
-        for (std::size_t i = 0; i < n; ++i) {
+        for (std::size_t i = 0; i < observers_.size(); ++i) {
             if (observers_[i] == nullptr) continue;
             observers_[sz] = observers_[i];
             observer_indices_[observers_[i]] = sz;
             ++sz;
         }
+        observers_.resize(sz);
     }
 
     std::size_t size() const {
