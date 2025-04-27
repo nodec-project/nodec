@@ -47,7 +47,7 @@ public:
     ArrayView(ElementType (&array)[Size]) noexcept
         : data_(array), size_(Size) {}
 
-    ArrayView(pointer *first, std::size_t size) noexcept
+    ArrayView(pointer first, std::size_t size) noexcept
         : data_(first), size_(size) {}
 
     template<std::size_t Size>
