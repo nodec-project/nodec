@@ -16,10 +16,29 @@ namespace nodec::asyncio {
 template<typename T>
 class EventPromise;
 
-// Promise state
 enum class PromiseState {
+    /**
+     * @brief Initial state: Promise not yet fulfilled or rejected. Operation is in progress.
+     *
+     * Promise starts in this state and can transition to either Fulfilled or Rejected.
+     */
     Pending,
+
+    /**
+     * @brief Success state: Promise operation completed successfully with a value.
+     * 
+     * Reached when resolve() is called. Triggers callbacks registered with then().
+     * Once in this state, the promise remains fulfilled (immutable).
+     */
     Fulfilled,
+
+    /**
+     * @brief Error state: Promise operation failed with an exception.
+     * 
+     * Reached when reject() is called or when an exception occurs during processing.
+     * Contains error information as std::exception_ptr and triggers catch_error() handlers.
+     * Once in this state, the promise remains rejected (immutable).
+     */
     Rejected
 };
 
