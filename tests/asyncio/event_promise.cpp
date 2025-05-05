@@ -4,6 +4,8 @@
 #include <nodec/asyncio/event_loop.hpp>
 #include <nodec/asyncio/event_promise.hpp>
 
+#include <thread>
+
 TEST_CASE("EventPromise basic usage") {
     using namespace nodec::asyncio;
     EventLoop event_loop;
