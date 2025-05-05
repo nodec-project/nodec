@@ -1,10 +1,11 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-#include <nodec/event_loop.hpp>
+#include <nodec/asyncio/event_loop.hpp>
+#include <nodec/asyncio/event_promise.hpp>
 
 TEST_CASE("testing push events") {
-    using namespace nodec;
+    using namespace nodec::asyncio;
 
     EventLoop event_loop;
 
@@ -30,7 +31,7 @@ TEST_CASE("testing push events") {
 }
 
 TEST_CASE("test push events with nested") {
-    using namespace nodec;
+    using namespace nodec::asyncio;
 
     EventLoop event_loop;
 
@@ -56,7 +57,7 @@ TEST_CASE("test push events with nested") {
 }
 
 TEST_CASE("Single-threaded EventLoop benchmark") {
-    using namespace nodec;
+    using namespace nodec::asyncio;
     using namespace std::chrono;
 
     // std::this_thread::sleep_for(std::chrono::milliseconds(1000)); // スレッドを少し待機させる
@@ -122,3 +123,40 @@ TEST_CASE("Single-threaded EventLoop benchmark") {
         }
     }
 }
+
+// TEST_CASE("test") {
+//     using namespace nodec;
+//     EventLoop event_loop;
+
+//     struct TestProcessFlow {
+//         EventLoop &event_loop;
+
+//         int process_a_retry_count = 0;
+
+//         void run_process_a() {
+//             std::cout << "run_process_a()..." << std::endl;
+//             if (process_a_retry_count++ > 5) {
+//                 std::cout << "run_process_a() retry count exceeded" << std::endl;
+//                 return;
+//             }
+//             bool condition = process_a_retry_count > 3; // 条件判定
+//             if (!condition) {
+//                 event_loop.schedule([this]() { run_process_a(); }, std::chrono::milliseconds(1000));
+//                 return;
+//             }
+//             event_loop.schedule([this]() { run_process_b(); });
+//         }
+
+//         void run_process_b() {
+//             std::cout << "run_process_b()..." << std::endl;
+//         }
+
+//         void start() {
+//             event_loop.schedule([this]() { run_process_a(); });
+//         }
+//     };
+
+//     TestProcessFlow test_process_flow{event_loop};
+//     test_process_flow.start();
+//     event_loop.spin();
+// }

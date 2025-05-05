@@ -10,7 +10,7 @@
 #include <utility>
 #include <vector>
 
-namespace nodec {
+namespace nodec::asyncio {
 
 /**
  * @brief Handles asynchronous event processing.
@@ -75,34 +75,34 @@ public:
     size_t spin_once(size_t max_events = 0) {
         const auto now = Clock::now();
         size_t processed = 0;
-        
+
         // Process events one by one to minimize the lock duration
         while (processed < max_events || max_events == 0) {
             EventCallback callback;
             bool has_event = false;
-            
+
             // Extract a single event under the lock
             {
                 std::lock_guard<std::mutex> lock(mutex_);
-                
+
                 if (event_queue_.empty() || event_queue_.top().scheduled_time > now) {
                     // No more events ready to process
                     break;
                 }
-                
+
                 // Move the callback out of the event
                 callback = std::move(event_queue_.top().callback);
                 event_queue_.pop();
                 has_event = true;
             }
-            
+
             // Execute the callback outside the lock
             if (has_event) {
                 callback();
                 processed++;
             }
         }
-        
+
         return processed;
     }
 
@@ -183,6 +183,6 @@ private:
     std::condition_variable cv_; // Condition variable for waiting on events
 };
 
-} // namespace nodec
+} // namespace nodec::asyncio
 
 #endif // NODEC__EVENT_LOOP_HPP_
