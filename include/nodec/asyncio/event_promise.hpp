@@ -3,7 +3,6 @@
 
 #include <exception>
 #include <functional>
-#include <iostream>
 #include <memory>
 #include <optional>
 #include <string>
@@ -130,11 +129,35 @@ public:
     EventPromise(EventLoop &event_loop, resolver_func executor)
         : EventPromise(event_loop) {
         try {
+            // Capture data_ instead of this pointer (safe because it's a shared_ptr)
+            auto data = data_;
             executor(
-                [this](T value) { this->resolve(std::move(value)); },
-                [this](std::exception_ptr err) { this->reject(err); });
+                [data](T value) {
+                    if (data->state != PromiseState::Pending) return;
+                    data->state = PromiseState::Fulfilled;
+                    detail::ValueHelper<T>::store_value(data->value, std::move(value));
+                    if (data->on_fulfill) {
+                        const T &stored_value = std::get<T>(data->value);
+                        data->on_fulfill(stored_value);
+                    }
+                },
+                [data](std::exception_ptr err) {
+                    if (data->state != PromiseState::Pending) return;
+                    data->state = PromiseState::Rejected;
+                    data->value = err;
+                    if (data->on_reject) {
+                        data->on_reject(std::get<std::exception_ptr>(data->value));
+                    }
+                });
         } catch (...) {
-            reject(std::current_exception());
+            auto data = data_;
+            if (data->state == PromiseState::Pending) {
+                data->state = PromiseState::Rejected;
+                data->value = std::current_exception();
+                if (data->on_reject) {
+                    data->on_reject(std::get<std::exception_ptr>(data->value));
+                }
+            }
         }
     }
 
@@ -234,15 +257,17 @@ public:
                 setup_rejection(std::get<std::exception_ptr>(data_copy->value));
             });
         } else {
-            data_->on_fulfill = [this, setup_fulfillment](const T &value) {
-                auto &loop = data_->event_loop;
+            // Eliminate dependency on this pointer
+            auto data_copy = data_;
+            data_->on_fulfill = [data_copy, setup_fulfillment](const T &value) {
+                auto &loop = data_copy->event_loop;
                 loop.schedule([setup_fulfillment, value]() {
                     setup_fulfillment(value);
                 });
             };
 
-            data_->on_reject = [this, setup_rejection](std::exception_ptr error) {
-                auto &loop = data_->event_loop;
+            data_->on_reject = [data_copy, setup_rejection](std::exception_ptr error) {
+                auto &loop = data_copy->event_loop;
                 loop.schedule([setup_rejection, error]() {
                     setup_rejection(error);
                 });
@@ -322,15 +347,16 @@ public:
                 setup_rejection(std::get<std::exception_ptr>(data_copy->value));
             });
         } else {
-            data_->on_fulfill = [this, setup_fulfillment](const T &value) {
-                auto &loop = data_->event_loop;
+            auto data_copy = data_;
+            data_->on_fulfill = [data_copy, setup_fulfillment](const T &value) {
+                auto &loop = data_copy->event_loop;
                 loop.schedule([setup_fulfillment, value]() {
                     setup_fulfillment(value);
                 });
             };
 
-            data_->on_reject = [this, setup_rejection](std::exception_ptr error) {
-                auto &loop = data_->event_loop;
+            data_->on_reject = [data_copy, setup_rejection](std::exception_ptr error) {
+                auto &loop = data_copy->event_loop;
                 loop.schedule([setup_rejection, error]() {
                     setup_rejection(error);
                 });
@@ -417,11 +443,33 @@ public:
     EventPromise(EventLoop &event_loop, resolver_func executor)
         : EventPromise(event_loop) {
         try {
+            // Capture data_ instead of this pointer (safe because it's a shared_ptr)
+            auto data = data_;
             executor(
-                [this]() { this->resolve(); },
-                [this](std::exception_ptr err) { this->reject(err); });
+                [data]() {
+                    if (data->state != PromiseState::Pending) return;
+                    data->state = PromiseState::Fulfilled;
+                    if (data->on_fulfill) {
+                        data->on_fulfill();
+                    }
+                },
+                [data](std::exception_ptr err) {
+                    if (data->state != PromiseState::Pending) return;
+                    data->state = PromiseState::Rejected;
+                    data->value = err;
+                    if (data->on_reject) {
+                        data->on_reject(std::get<std::exception_ptr>(data->value));
+                    }
+                });
         } catch (...) {
-            reject(std::current_exception());
+            auto data = data_;
+            if (data->state == PromiseState::Pending) {
+                data->state = PromiseState::Rejected;
+                data->value = std::current_exception();
+                if (data->on_reject) {
+                    data->on_reject(std::get<std::exception_ptr>(data->value));
+                }
+            }
         }
     }
 
@@ -495,13 +543,15 @@ public:
                 setup_rejection(std::get<std::exception_ptr>(data_copy->value));
             });
         } else {
-            data_->on_fulfill = [this, setup_fulfillment]() {
-                auto &loop = data_->event_loop;
+            // Eliminate dependency on this pointer
+            auto data_copy = data_;
+            data_->on_fulfill = [data_copy, setup_fulfillment]() {
+                auto &loop = data_copy->event_loop;
                 loop.schedule(setup_fulfillment);
             };
 
-            data_->on_reject = [this, setup_rejection](std::exception_ptr error) {
-                auto &loop = data_->event_loop;
+            data_->on_reject = [data_copy, setup_rejection](std::exception_ptr error) {
+                auto &loop = data_copy->event_loop;
                 loop.schedule([setup_rejection, error]() {
                     setup_rejection(error);
                 });
@@ -568,13 +618,14 @@ public:
                 setup_rejection(std::get<std::exception_ptr>(data_copy->value));
             });
         } else {
-            data_->on_fulfill = [this, setup_fulfillment]() {
-                auto &loop = data_->event_loop;
+            auto data_copy = data_;
+            data_->on_fulfill = [data_copy, setup_fulfillment]() {
+                auto &loop = data_copy->event_loop;
                 loop.schedule(setup_fulfillment);
             };
 
-            data_->on_reject = [this, setup_rejection](std::exception_ptr error) {
-                auto &loop = data_->event_loop;
+            data_->on_reject = [data_copy, setup_rejection](std::exception_ptr error) {
+                auto &loop = data_copy->event_loop;
                 loop.schedule([setup_rejection, error]() {
                     setup_rejection(error);
                 });
@@ -696,6 +747,7 @@ public:
                 event_loop_.schedule([resolve, reject, captured_func]() {
                     try {
                         captured_func();
+                        // Safe because resolve uses data_ which is a shared_ptr
                         resolve();
                     } catch (...) {
                         reject(std::current_exception());
