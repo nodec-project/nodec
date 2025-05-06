@@ -251,6 +251,41 @@ TEST_CASE("Promise flattening") {
     }
 }
 
+TEST_CASE("Parallel execution") {
+    using namespace nodec::asyncio;
+    using namespace std::chrono;
+    EventLoop event_loop;
+
+    auto start_time = high_resolution_clock::now();
+
+    EventPromiseFactory(event_loop).resolve().then([&]() {
+        return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(1000), []() {
+            // 何もしない
+            std::cout << "1 second delay" << std::endl;
+        });
+    });
+    EventPromiseFactory(event_loop).resolve().then([&]() {
+        return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(2000), []() {
+            // 何もしない
+            std::cout << "2 second delay" << std::endl;
+        });
+    });
+    EventPromiseFactory(event_loop).resolve().then([&]() {
+        return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(3000), []() {
+            // 何もしない
+            std::cout << "3 second delay" << std::endl;
+        });
+    });
+
+    event_loop.spin();
+
+    auto end_time = high_resolution_clock::now();
+    auto elapsed = duration_cast<milliseconds>(end_time - start_time).count();
+    MESSAGE("Elapsed time: ", std::to_string(elapsed) + " ms");
+    CHECK(elapsed >= 3000); // 3秒以上経過しているはず
+    CHECK(elapsed < 4000); // 4秒未満であるべき
+}
+
 //  TEST_CASE("test") {
 //      using namespace nodec::asyncio;
 //      EventLoop event_loop;
