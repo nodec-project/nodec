@@ -119,7 +119,8 @@ TEST_CASE("EventPromise with delay") {
     auto start_time = high_resolution_clock::now();
 
     EventPromiseFactory(event_loop)
-        .delay(milliseconds(50), [&log, start_time]() {
+        .delay(milliseconds(50))
+        .then([&log, start_time]() {
             auto elapsed = duration_cast<milliseconds>(high_resolution_clock::now() - start_time).count();
             CHECK(elapsed >= 50);
             log.push_back("Delayed execution after " + std::to_string(elapsed) + " ms");
@@ -164,7 +165,7 @@ TEST_CASE("Promise flattening") {
 
     SUBCASE("Flattening with void return type") {
         log.clear();
-        
+
         EventPromiseFactory(event_loop)
             .resolve()
             .then([&event_loop, &log]() {
@@ -185,7 +186,7 @@ TEST_CASE("Promise flattening") {
 
     SUBCASE("Nested Promise flattening") {
         log.clear();
-        
+
         EventPromiseFactory(event_loop)
             .resolve(5)
             .then([&event_loop, &log](int value) {
@@ -214,7 +215,7 @@ TEST_CASE("Promise flattening") {
 
     SUBCASE("Flattening with rejected Promise") {
         log.clear();
-        
+
         EventPromiseFactory(event_loop)
             .resolve(10)
             .then([&event_loop](int value) {
@@ -233,7 +234,7 @@ TEST_CASE("Promise flattening") {
             .catch_error([&log](std::exception_ptr err) {
                 try {
                     std::rethrow_exception(err);
-                } catch (const std::runtime_error& e) {
+                } catch (const std::runtime_error &e) {
                     // 内部Promiseからのエラーが伝播するはず
                     log.push_back("Caught error: " + std::string(e.what()));
                     return 42; // リカバリー値
@@ -258,24 +259,32 @@ TEST_CASE("Parallel execution") {
 
     auto start_time = high_resolution_clock::now();
 
-    EventPromiseFactory(event_loop).resolve().then([&]() {
-        return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(1000), []() {
-            // 何もしない
+    EventPromiseFactory(event_loop)
+        .resolve()
+        .then([&]() {
+            return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(1000));
+        })
+        .then([]() {
             std::cout << "1 second delay" << std::endl;
         });
-    });
-    EventPromiseFactory(event_loop).resolve().then([&]() {
-        return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(2000), []() {
-            // 何もしない
+    EventPromiseFactory(event_loop)
+        .resolve()
+        .then([&]() {
+            return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(2000));
+        })
+        .then([]() {
             std::cout << "2 second delay" << std::endl;
         });
-    });
-    EventPromiseFactory(event_loop).resolve().then([&]() {
-        return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(3000), []() {
-            // 何もしない
+    ;
+    EventPromiseFactory(event_loop)
+        .resolve()
+        .then([&]() {
+            return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(3000));
+        })
+        .then([]() {
             std::cout << "3 second delay" << std::endl;
         });
-    });
+    ;
 
     event_loop.spin();
 
@@ -283,70 +292,131 @@ TEST_CASE("Parallel execution") {
     auto elapsed = duration_cast<milliseconds>(end_time - start_time).count();
     MESSAGE("Elapsed time: ", std::to_string(elapsed) + " ms");
     CHECK(elapsed >= 3000); // 3秒以上経過しているはず
-    CHECK(elapsed < 4000); // 4秒未満であるべき
+    CHECK(elapsed < 4000);  // 4秒未満であるべき
 }
 
-//  TEST_CASE("test") {
-//      using namespace nodec::asyncio;
-//      EventLoop event_loop;
+// // リトライ関数の実装
+// template<typename Func>
+// auto retry_with_delay(
+//     nodec::asyncio::EventLoop &event_loop,
+//     Func func,
+//     int max_retries,
+//     std::chrono::milliseconds delay) {
+//     using namespace nodec::asyncio;
+//     using Result = decltype(func());
 
-//      // Helper function to create a retry mechanism with EventPromise
-//      auto retry_until_condition = [&event_loop](auto predicate,
-//                                                 int max_retries,
-//                                                 std::chrono::milliseconds delay) -> EventPromise<bool> {
-//          // Create static recursive function with proper flattening
-//          std::function<EventPromise<bool>(int)> static_attempt = 
-//              [&event_loop, predicate, delay, &static_attempt](int retries_left) -> EventPromise<bool> {
-//                  // Check if condition is met
-//                  bool condition_result = predicate();
+//     // 再帰関数をラムダ内に定義
+//     std::function<EventPromise<Result>(int)> attempt =
+//         [&event_loop, func, delay, attempt](int retries_left) -> EventPromise<Result> {
+//         // 条件確認
+//         Result result = func();
 
-//                  // If condition is met or no more retries, return result
-//                  if (condition_result || retries_left <= 0) {
-//                      return EventPromiseFactory(event_loop).resolve(condition_result);
-//                  }
+//         // 条件を満たしたか、リトライ回数が0になったらそのまま返す
+//         if (result || retries_left <= 0) {
+//             return EventPromiseFactory(event_loop).resolve(result);
+//         }
 
-//                  // Otherwise, wait and retry
-//                  return EventPromiseFactory(event_loop)
-//                      .delay(delay, []{ /* No-op delay function */ })
-//                      .then([&static_attempt, retries_left](auto) {
-//                          // ここで戻り値の型を明示しないことで、Promiseのフラット化が行われる
-//                          return static_attempt(retries_left - 1);
-//                      });
-//              };
+//         // リトライ
+//         return EventPromiseFactory(event_loop)
+//             .delay(delay)
+//             .then([&]() {
+//                 // 遅延後に再度試行
+//                 return attempt(retries_left - 1);
+//             });
+//     };
 
-//          return static_attempt(max_retries);
-//      };
+//     // 初回実行
+//     return attempt(max_retries);
+// }
 
-//      EventPromiseFactory(event_loop)
-//          .resolve()
-//          .then([&](void) {
-//              // Start the retry process with a condition check
-//              return retry_until_condition([]() {
-//                  // Simulate a condition check (e.g., waiting for a resource to be available)
-//                  static int attempt = 0;
-//                  return ++attempt > 3; // Condition met after 3 attempts
-//              },
-//                                           5, std::chrono::milliseconds(1000));
-//          });
+template<typename Func>
+auto retry(nodec::asyncio::EventLoop &event_loop, Func func, int retry_count) {
+    // 戻り値の型を推論
+    using ReturnType = decltype(func());
 
-//      // EventPromiseFactory(event_loop)
-//      //     .create<void>([&](auto resolve, auto reject) {
-//      //         retry_until_condition([]() {
-//      //             // Simulate a condition check (e.g., waiting for a resource to be available)
-//      //             static int attempt = 0;
-//      //             return ++attempt > 3; // Condition met after 3 attempts
-//      //         },
-//      //                               5, std::chrono::milliseconds(1000))
-//      //             .then([resolve](bool result) {
-//      //                 CHECK(result); // Ensure the condition was met
-//      //                 resolve();
-//      //             })
-//      //             .catch_error([reject](std::exception_ptr err) {
-//      //                 reject(err); // Handle any errors that occurred during retries
-//      //             });
-//      //     })
-//      //     .then([]() {
-//      //         // Final success callback
-//      //         CHECK(true); // Placeholder for actual success logic
-//      //     });
-//  }
+    // 最初の呼び出し
+    auto promise = func();
+
+    // エラー発生時に再試行するチェーンを構築
+    for (int i = 1; i <= retry_count; ++i) {
+        promise = promise.catch_error([func](std::exception_ptr) {
+            // エラーが発生したら再度関数を実行
+            return func();
+        });
+    }
+
+    return promise;
+}
+
+TEST_CASE("test retry") {
+    using namespace nodec::asyncio;
+    using namespace std::chrono;
+    EventLoop event_loop;
+
+    int retry_count = 0;
+    auto func = [&]() {
+        bool condition = false; // ここで条件をチェックするロジックを実装
+        std::cout << "Retry count: " << retry_count << std::endl;
+        ++retry_count;
+        return condition;
+    };
+
+    retry(
+        event_loop,
+        [&]() { return EventPromiseFactory(event_loop)
+                    .delay(milliseconds(500))
+                    .then([&]() {
+                        std::cout << "Retry count: " << retry_count << std::endl;
+                        ++retry_count;
+                        if (retry_count < 30) {
+                            throw std::runtime_error("Retry error");
+                        }
+                        return true;
+                    }); }, 5)
+        .then([&](bool result) {
+            std::cout << "Final result: " << result << std::endl;
+        })
+        .catch_error([&](std::exception_ptr err) {
+            try {
+                std::rethrow_exception(err);
+            } catch (const std::runtime_error &e) {
+                std::cout << "Caught error: " << e.what() << std::endl;
+            }
+        });
+
+        // retry_with_delay(event_loop, func, 5, milliseconds(100));
+
+        // EventPromiseFactory(event_loop)
+        //     .resolve(func())
+        //     .then([&](bool result) {
+        //         if (!result) {
+        //             return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(1000)).then([&]() {
+        //                 return func();
+        //             });
+        //         }
+        //         return EventPromiseFactory(event_loop).resolve(result);
+        //     })
+        //     .then([&](bool result) {
+        //         if (!result) {
+        //             return EventPromiseFactory(event_loop).delay(std::chrono::milliseconds(1000)).then([&]() {
+        //                 return func();
+        //             });
+        //         }
+        //         return EventPromiseFactory(event_loop).resolve(result);
+        //     })
+        //     .then([](bool result) {
+        //         if (!result) {
+        //             throw std::runtime_error("Failed after retries");
+        //         }
+        //         std::cout << "Condition met after retries" << std::endl;
+        //     })
+        //     .catch_error([](std::exception_ptr err) {
+        //         try {
+        //             std::rethrow_exception(err);
+        //         } catch (const std::runtime_error &e) {
+        //             std::cout << "Caught error: " << e.what() << std::endl;
+        //         }
+        //     });
+
+        event_loop.spin();
+}

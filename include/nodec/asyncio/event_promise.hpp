@@ -45,7 +45,7 @@ enum class PromiseState {
 
     /**
      * @brief Success state: Promise operation completed successfully with a value.
-     * 
+     *
      * Reached when resolve() is called. Triggers callbacks registered with then().
      * Once in this state, the promise remains fulfilled (immutable).
      */
@@ -53,7 +53,7 @@ enum class PromiseState {
 
     /**
      * @brief Error state: Promise operation failed with an exception.
-     * 
+     *
      * Reached when reject() is called or when an exception occurs during processing.
      * Contains error information as std::exception_ptr and triggers catch_error() handlers.
      * Once in this state, the promise remains rejected (immutable).
@@ -235,11 +235,11 @@ public:
     template<typename Func>
     auto then(Func &&on_fulfilled) {
         using raw_result_type = decltype(on_fulfilled(std::declval<T>()));
-        
+
         // If callback returns a Promise, use its value_type; otherwise use the raw result type
         // Using value_type_or_self to safely extract the type
         using result_type = typename value_type_or_self<raw_result_type>::type;
-            
+
         using next_type = typename std::conditional<
             std::is_void<result_type>::value,
             void,
@@ -263,7 +263,7 @@ public:
                 } else if constexpr (is_event_promise<raw_result_type>::value) {
                     // Promise return type - unwrap it
                     auto inner_promise = detail::ValueHelper<T>::invoke_with_value(fulfilled_func, value);
-                    
+
                     // Connect the inner promise to the outer one
                     if (inner_promise.data_->state == PromiseState::Fulfilled) {
                         if constexpr (std::is_void<result_type>::value) {
@@ -276,9 +276,8 @@ public:
                             // Inner promise resolves to a value
                             next_data->state = PromiseState::Fulfilled;
                             detail::ValueHelper<next_type>::store_value(
-                                next_data->value, 
-                                std::get<typename raw_result_type::value_type>(inner_promise.data_->value)
-                            );
+                                next_data->value,
+                                std::get<typename raw_result_type::value_type>(inner_promise.data_->value));
                             if (next_data->on_fulfill) {
                                 next_data->on_fulfill(std::get<next_type>(next_data->value));
                             }
@@ -293,7 +292,7 @@ public:
                     } else {
                         // Set up callbacks on the inner promise
                         auto inner_data = inner_promise.data_;
-                        
+
                         if constexpr (std::is_void<result_type>::value) {
                             inner_data->on_fulfill = [next_data]() {
                                 next_data->state = PromiseState::Fulfilled;
@@ -302,7 +301,7 @@ public:
                                 }
                             };
                         } else {
-                            inner_data->on_fulfill = [next_data](const typename raw_result_type::value_type& inner_value) {
+                            inner_data->on_fulfill = [next_data](const typename raw_result_type::value_type &inner_value) {
                                 next_data->state = PromiseState::Fulfilled;
                                 detail::ValueHelper<next_type>::store_value(next_data->value, inner_value);
                                 if (next_data->on_fulfill) {
@@ -310,7 +309,7 @@ public:
                                 }
                             };
                         }
-                        
+
                         inner_data->on_reject = [next_data](std::exception_ptr error) {
                             next_data->state = PromiseState::Rejected;
                             next_data->value = error;
@@ -390,13 +389,17 @@ public:
      */
     template<typename Func>
     auto catch_error(Func &&on_rejected) {
-        using result_type = decltype(on_rejected(std::declval<std::exception_ptr>()));
-        using promise_type = typename std::conditional<
-            std::is_void<result_type>::value,
-            EventPromise<T>,
-            EventPromise<result_type>>::type;
+        using raw_result_type = decltype(on_rejected(std::declval<std::exception_ptr>()));
 
-        promise_type next_promise(data_->event_loop);
+        // If callback returns a Promise, use its value_type; otherwise use the raw result type
+        using result_type = typename value_type_or_self<raw_result_type>::type;
+
+        using next_type = typename std::conditional<
+            std::is_void<result_type>::value,
+            T, // 戻り値がvoidの場合は元のPromiseタイプを維持
+            result_type>::type;
+
+        EventPromise<next_type> next_promise(data_->event_loop);
 
         // Create copies of variables to capture (for C++17 compatibility)
         auto next_data = next_promise.data_;
@@ -404,27 +407,86 @@ public:
 
         auto setup_fulfillment = [next_data](const T &value) {
             next_data->state = PromiseState::Fulfilled;
-            detail::ValueHelper<T>::store_value(next_data->value, value);
+            detail::ValueHelper<next_type>::store_value(next_data->value, value);
             if (next_data->on_fulfill) {
-                next_data->on_fulfill(value);
+                next_data->on_fulfill(std::get<next_type>(next_data->value));
             }
         };
 
         auto setup_rejection = [next_data, rejected_func](std::exception_ptr error) {
             try {
                 if constexpr (std::is_void<result_type>::value) {
+                    // void型を返す場合
                     rejected_func(error);
                     next_data->state = PromiseState::Fulfilled;
-                    // No value for void type
                     if (next_data->on_fulfill) {
                         next_data->on_fulfill();
                     }
+                } else if constexpr (is_event_promise<raw_result_type>::value) {
+                    // Promise型を返す場合はフラット化
+                    auto inner_promise = rejected_func(error);
+
+                    // 内部Promiseの状態に応じた処理
+                    if (inner_promise.data_->state == PromiseState::Fulfilled) {
+                        if constexpr (std::is_void<typename raw_result_type::value_type>::value) {
+                            // 内部Promiseがvoidを解決する場合
+                            next_data->state = PromiseState::Fulfilled;
+                            if (next_data->on_fulfill) {
+                                next_data->on_fulfill();
+                            }
+                        } else {
+                            // 内部Promiseが値を解決する場合
+                            next_data->state = PromiseState::Fulfilled;
+                            detail::ValueHelper<next_type>::store_value(
+                                next_data->value,
+                                std::get<typename raw_result_type::value_type>(inner_promise.data_->value));
+                            if (next_data->on_fulfill) {
+                                next_data->on_fulfill(std::get<next_type>(next_data->value));
+                            }
+                        }
+                    } else if (inner_promise.data_->state == PromiseState::Rejected) {
+                        // 内部Promiseの拒否を伝播
+                        next_data->state = PromiseState::Rejected;
+                        next_data->value = std::get<std::exception_ptr>(inner_promise.data_->value);
+                        if (next_data->on_reject) {
+                            next_data->on_reject(std::get<std::exception_ptr>(next_data->value));
+                        }
+                    } else {
+                        // 内部Promiseがまだ解決されていない場合はコールバックを設定
+                        auto inner_data = inner_promise.data_;
+
+                        if constexpr (std::is_void<typename raw_result_type::value_type>::value) {
+                            inner_data->on_fulfill = [next_data]() {
+                                next_data->state = PromiseState::Fulfilled;
+                                if (next_data->on_fulfill) {
+                                    next_data->on_fulfill();
+                                }
+                            };
+                        } else {
+                            inner_data->on_fulfill = [next_data](const typename raw_result_type::value_type &inner_value) {
+                                next_data->state = PromiseState::Fulfilled;
+                                detail::ValueHelper<next_type>::store_value(next_data->value, inner_value);
+                                if (next_data->on_fulfill) {
+                                    next_data->on_fulfill(std::get<next_type>(next_data->value));
+                                }
+                            };
+                        }
+
+                        inner_data->on_reject = [next_data](std::exception_ptr inner_error) {
+                            next_data->state = PromiseState::Rejected;
+                            next_data->value = inner_error;
+                            if (next_data->on_reject) {
+                                next_data->on_reject(std::get<std::exception_ptr>(next_data->value));
+                            }
+                        };
+                    }
                 } else {
+                    // 通常の値を返す場合
                     auto recovery_value = rejected_func(error);
                     next_data->state = PromiseState::Fulfilled;
-                    next_data->value = std::move(recovery_value);
+                    detail::ValueHelper<next_type>::store_value(next_data->value, std::move(recovery_value));
                     if (next_data->on_fulfill) {
-                        next_data->on_fulfill(std::get<result_type>(next_data->value));
+                        next_data->on_fulfill(std::get<next_type>(next_data->value));
                     }
                 }
             } catch (...) {
@@ -592,10 +654,10 @@ public:
     template<typename Func>
     auto then(Func &&on_fulfilled) {
         using raw_result_type = decltype(on_fulfilled());
-        
+
         // If callback returns a Promise, use its value_type; otherwise use the raw result type
         using result_type = typename value_type_or_self<raw_result_type>::type;
-        
+
         using next_type = typename std::conditional<
             std::is_void<result_type>::value,
             void,
@@ -619,7 +681,7 @@ public:
                 } else if constexpr (is_event_promise<raw_result_type>::value) {
                     // Promise return type - unwrap it
                     auto inner_promise = detail::ValueHelper<void>::invoke_with_value(fulfilled_func);
-                    
+
                     // Connect the inner promise to the outer one
                     if (inner_promise.data_->state == PromiseState::Fulfilled) {
                         if constexpr (std::is_void<result_type>::value) {
@@ -632,9 +694,8 @@ public:
                             // Inner promise resolves to a value
                             next_data->state = PromiseState::Fulfilled;
                             detail::ValueHelper<next_type>::store_value(
-                                next_data->value, 
-                                std::get<typename raw_result_type::value_type>(inner_promise.data_->value)
-                            );
+                                next_data->value,
+                                std::get<typename raw_result_type::value_type>(inner_promise.data_->value));
                             if (next_data->on_fulfill) {
                                 next_data->on_fulfill(std::get<next_type>(next_data->value));
                             }
@@ -649,7 +710,7 @@ public:
                     } else {
                         // Set up callbacks on the inner promise
                         auto inner_data = inner_promise.data_;
-                        
+
                         if constexpr (std::is_void<result_type>::value) {
                             inner_data->on_fulfill = [next_data]() {
                                 next_data->state = PromiseState::Fulfilled;
@@ -658,7 +719,7 @@ public:
                                 }
                             };
                         } else {
-                            inner_data->on_fulfill = [next_data](const typename raw_result_type::value_type& inner_value) {
+                            inner_data->on_fulfill = [next_data](const typename raw_result_type::value_type &inner_value) {
                                 next_data->state = PromiseState::Fulfilled;
                                 detail::ValueHelper<next_type>::store_value(next_data->value, inner_value);
                                 if (next_data->on_fulfill) {
@@ -666,7 +727,7 @@ public:
                                 }
                             };
                         }
-                        
+
                         inner_data->on_reject = [next_data](std::exception_ptr error) {
                             next_data->state = PromiseState::Rejected;
                             next_data->value = error;
@@ -732,13 +793,17 @@ public:
 
     template<typename Func>
     auto catch_error(Func &&on_rejected) {
-        using result_type = decltype(on_rejected(std::declval<std::exception_ptr>()));
-        using promise_type = typename std::conditional<
-            std::is_void<result_type>::value,
-            EventPromise<void>,
-            EventPromise<result_type>>::type;
+        using raw_result_type = decltype(on_rejected(std::declval<std::exception_ptr>()));
 
-        promise_type next_promise(data_->event_loop);
+        // If callback returns a Promise, use its value_type; otherwise use the raw result type
+        using result_type = typename value_type_or_self<raw_result_type>::type;
+
+        using next_type = typename std::conditional<
+            std::is_void<result_type>::value,
+            void,
+            result_type>::type;
+
+        EventPromise<next_type> next_promise(data_->event_loop);
 
         // Create copies of variables to capture (for C++17 compatibility)
         auto next_data = next_promise.data_;
@@ -754,17 +819,77 @@ public:
         auto setup_rejection = [next_data, rejected_func](std::exception_ptr error) {
             try {
                 if constexpr (std::is_void<result_type>::value) {
+                    // void型を返す場合
                     rejected_func(error);
                     next_data->state = PromiseState::Fulfilled;
                     if (next_data->on_fulfill) {
                         next_data->on_fulfill();
                     }
+                } else if constexpr (is_event_promise<raw_result_type>::value) {
+                    // Promise型を返す場合はフラット化
+                    auto inner_promise = rejected_func(error);
+
+                    // 内部Promiseの状態に応じた処理
+                    if (inner_promise.data_->state == PromiseState::Fulfilled) {
+                        if constexpr (std::is_void<typename raw_result_type::value_type>::value) {
+                            // 内部Promiseがvoidを解決する場合
+                            next_data->state = PromiseState::Fulfilled;
+                            if (next_data->on_fulfill) {
+                                next_data->on_fulfill();
+                            }
+                        } else {
+                            // 内部Promiseが値を解決する場合
+                            next_data->state = PromiseState::Fulfilled;
+                            detail::ValueHelper<next_type>::store_value(
+                                next_data->value,
+                                std::get<typename raw_result_type::value_type>(inner_promise.data_->value));
+                            if (next_data->on_fulfill) {
+                                next_data->on_fulfill(std::get<next_type>(next_data->value));
+                            }
+                        }
+                    } else if (inner_promise.data_->state == PromiseState::Rejected) {
+                        // 内部Promiseの拒否を伝播
+                        next_data->state = PromiseState::Rejected;
+                        next_data->value = std::get<std::exception_ptr>(inner_promise.data_->value);
+                        if (next_data->on_reject) {
+                            next_data->on_reject(std::get<std::exception_ptr>(next_data->value));
+                        }
+                    } else {
+                        // 内部Promiseがまだ解決されていない場合はコールバックを設定
+                        auto inner_data = inner_promise.data_;
+
+                        if constexpr (std::is_void<typename raw_result_type::value_type>::value) {
+                            inner_data->on_fulfill = [next_data]() {
+                                next_data->state = PromiseState::Fulfilled;
+                                if (next_data->on_fulfill) {
+                                    next_data->on_fulfill();
+                                }
+                            };
+                        } else {
+                            inner_data->on_fulfill = [next_data](const typename raw_result_type::value_type &inner_value) {
+                                next_data->state = PromiseState::Fulfilled;
+                                detail::ValueHelper<next_type>::store_value(next_data->value, inner_value);
+                                if (next_data->on_fulfill) {
+                                    next_data->on_fulfill(std::get<next_type>(next_data->value));
+                                }
+                            };
+                        }
+
+                        inner_data->on_reject = [next_data](std::exception_ptr inner_error) {
+                            next_data->state = PromiseState::Rejected;
+                            next_data->value = inner_error;
+                            if (next_data->on_reject) {
+                                next_data->on_reject(std::get<std::exception_ptr>(next_data->value));
+                            }
+                        };
+                    }
                 } else {
+                    // 通常の値を返す場合
                     auto recovery_value = rejected_func(error);
                     next_data->state = PromiseState::Fulfilled;
-                    next_data->value = std::move(recovery_value);
+                    detail::ValueHelper<next_type>::store_value(next_data->value, std::move(recovery_value));
                     if (next_data->on_fulfill) {
-                        next_data->on_fulfill(std::get<result_type>(next_data->value));
+                        next_data->on_fulfill(std::get<next_type>(next_data->value));
                     }
                 }
             } catch (...) {
@@ -905,66 +1030,18 @@ public:
     /**
      * @brief Create delayed execution Promise
      */
-    template<typename Func>
-    auto delay(std::chrono::milliseconds duration, Func &&func) {
-        using result_type = decltype(func());
-
-        auto captured_func = std::forward<Func>(func);
-
-        if constexpr (std::is_void<result_type>::value) {
-            return create_void([this, duration, captured_func](auto resolve, auto reject) {
-                event_loop_.schedule([resolve, reject, captured_func]() {
-                    try {
-                        captured_func();
-                        // Safe because resolve uses data_ which is a shared_ptr
-                        resolve();
-                    } catch (...) {
-                        reject(std::current_exception());
-                    }
-                },
-                                     duration);
-            });
-        } else {
-            return create<result_type>([this, duration, captured_func](auto resolve, auto reject) {
-                event_loop_.schedule([resolve, reject, captured_func]() {
-                    try {
-                        resolve(captured_func());
-                    } catch (...) {
-                        reject(std::current_exception());
-                    }
-                },
-                                     duration);
-            });
-        }
-    }
-
-    /**
-     * @brief Wrap function result in Promise
-     */
-    template<typename Func>
-    auto call(Func &&func) {
-        using result_type = decltype(func());
-
-        auto captured_func = std::forward<Func>(func);
-
-        if constexpr (std::is_void<result_type>::value) {
-            return create_void([captured_func](auto resolve, auto reject) {
+    auto delay(std::chrono::milliseconds duration) {
+        return create_void([this, duration](auto resolve, auto reject) {
+            event_loop_.schedule([resolve, reject]() {
                 try {
-                    captured_func();
                     resolve();
+
                 } catch (...) {
                     reject(std::current_exception());
                 }
-            });
-        } else {
-            return create<result_type>([captured_func](auto resolve, auto reject) {
-                try {
-                    resolve(captured_func());
-                } catch (...) {
-                    reject(std::current_exception());
-                }
-            });
-        }
+            },
+                                 duration);
+        });
     }
 
 private:
