@@ -16,6 +16,21 @@ namespace nodec {
 namespace math {
 
 /**
+ * @brief Fast absolute value implementation
+ *
+ * A simple, efficient replacement for std::abs that avoids function call overhead.
+ * This implementation uses a basic conditional expression which most compilers
+ * can optimize effectively, particularly for branchless execution.
+ *
+ * @param x The value to get the absolute value of
+ * @return The absolute value of x
+ */
+template<typename T>
+constexpr inline T abs(T x) {
+    return x < 0 ? -x : x;
+}
+
+/**
  * @note
  *   <https://cpprefjp.github.io/lang/cpp14/variable_templates.html>
  */
@@ -83,7 +98,7 @@ inline T dot(const Vector4<T> &a, const Vector4<T> &b) {
 
 /**
  * @brief Calculate cross product.
- * 
+ *
  * @note This equation is same on left-handed and right-handed coordinate system.
  */
 template<typename T>
@@ -91,8 +106,7 @@ inline Vector3<T> cross(const Vector3<T> &a, const Vector3<T> &b) {
     return {
         a.y * b.z - a.z * b.y,
         a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
+        a.x * b.y - a.y * b.x};
 }
 
 template<typename T>
@@ -135,8 +149,8 @@ bool approx_equal(T a, T b,
     // For comparison with infinities.
     if (a == b) return true;
     // Clamp the value with max for handing infinity.
-    const float norm = (std::min)((std::max)(std::abs(a), std::abs(b)), (std::numeric_limits<T>::max)());
-    return std::abs(a - b) <= (std::max)(rel_tol * norm, abs_tol);
+    const float norm = (std::min)((std::max)(abs(a), abs(b)), (std::numeric_limits<T>::max)());
+    return abs(a - b) <= (std::max)(rel_tol * norm, abs_tol);
 }
 
 template<typename T,

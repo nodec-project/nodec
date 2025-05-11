@@ -89,7 +89,7 @@ inline float distance(const Plane &plane, const Vector3f &point) {
 
 inline bool intersects(const Plane &plane, const BoundingBox &bounds) {
     // Compute the projection interval radius of b onto L(t) = b.c + t * p.n
-    const float r = bounds.extents.x * std::abs(plane.normal.x) + bounds.extents.y * std::abs(plane.normal.y) + bounds.extents.z * std::abs(plane.normal.z);
+    const float r = bounds.extents.x * math::abs(plane.normal.x) + bounds.extents.y * math::abs(plane.normal.y) + bounds.extents.z * math::abs(plane.normal.z);
     return -r <= distance(plane, bounds.center);
 }
 
@@ -100,17 +100,17 @@ inline bool intersects(const Frustum &frustum, const BoundingBox &bounds, const 
     const Vector3f up = Vector3f(bounds_local_to_world.m[4], bounds_local_to_world.m[5], bounds_local_to_world.m[6]) * bounds.extents.y;
     const Vector3f forward = Vector3f(bounds_local_to_world.m[8], bounds_local_to_world.m[9], bounds_local_to_world.m[10]) * bounds.extents.z;
 
-    const float new_ii = std::abs(math::dot(Vector3f(1.f, 0.f, 0.f), right))
-                         + std::abs(math::dot(Vector3f(1.f, 0.f, 0.f), up))
-                         + std::abs(math::dot(Vector3f(1.f, 0.f, 0.f), forward));
+    const float new_ii = math::abs(math::dot(Vector3f(1.f, 0.f, 0.f), right))
+                         + math::abs(math::dot(Vector3f(1.f, 0.f, 0.f), up))
+                         + math::abs(math::dot(Vector3f(1.f, 0.f, 0.f), forward));
 
-    const float new_ij = std::abs(math::dot(Vector3f(0.f, 1.f, 0.f), right))
-                         + std::abs(math::dot(Vector3f(0.f, 1.f, 0.f), up))
-                         + std::abs(math::dot(Vector3f(0.f, 1.f, 0.f), forward));
+    const float new_ij = math::abs(math::dot(Vector3f(0.f, 1.f, 0.f), right))
+                         + math::abs(math::dot(Vector3f(0.f, 1.f, 0.f), up))
+                         + math::abs(math::dot(Vector3f(0.f, 1.f, 0.f), forward));
 
-    const float new_ik = std::abs(math::dot(Vector3f(0.f, 0.f, 1.f), right))
-                         + std::abs(math::dot(Vector3f(0.f, 0.f, 1.f), up))
-                         + std::abs(math::dot(Vector3f(0.f, 0.f, 1.f), forward));
+    const float new_ik = math::abs(math::dot(Vector3f(0.f, 0.f, 1.f), right))
+                         + math::abs(math::dot(Vector3f(0.f, 0.f, 1.f), up))
+                         + math::abs(math::dot(Vector3f(0.f, 0.f, 1.f), forward));
 
     const BoundingBox global_bounds(Vector3f(global_center.x, global_center.y, global_center.z), Vector3f(new_ii, new_ij, new_ik));
 
