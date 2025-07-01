@@ -16,6 +16,14 @@ add_basic_test("nodec__asyncio__event_loop" asyncio/event_loop.cpp)
 add_basic_test("nodec__asyncio__event_promise" asyncio/event_promise.cpp)
 add_basic_test("nodec__flags" flags/flags.cpp)
 add_basic_test("nodec__formatter" formatter/formatter.cpp)
+add_basic_test("nodec__formatter_benchmark" formatter/formatter_benchmark.cpp)
+add_basic_test("nodec__formatter_detailed_benchmark" formatter/formatter_detailed_benchmark.cpp)
+add_basic_test("nodec__formatter_vector3_benchmark" formatter/formatter_vector3_benchmark.cpp)
+add_basic_test("nodec__formatter_ostringstream_compat" formatter/formatter_ostringstream_compat.cpp)
+add_basic_test("nodec__ostringstream_verification" formatter/ostringstream_verification.cpp)
+add_basic_test("nodec__hex_debug" formatter/hex_debug.cpp)
+add_basic_test("nodec__complex_format_debug" formatter/complex_format_debug.cpp)
+add_basic_test("nodec__optimized_ostringstream_test" formatter/optimized_ostringstream_test.cpp)
 add_basic_test("nodec__gfx" gfx/gfx.cpp)
 add_basic_test("nodec__logging__logging" logging/logging.cpp)
 add_basic_test("nodec__logging_bench" logging/bench.cpp)
@@ -33,6 +41,18 @@ add_basic_test("nodec__type_info" type_info/type_info.cpp)
 add_basic_test("nodec__unicode" unicode/unicode.cpp)
 add_basic_test("nodec__utility" utility/utility.cpp)
 add_basic_test("nodec__vector" vector/vector.cpp)
+
+# Debug test for optimized ostringstream
+add_basic_test("nodec__debug_test" formatter/debug_test.cpp)
+
+# Constructor debug test  
+add_basic_test("nodec__constructor_debug" formatter/constructor_debug.cpp)
+
+# OpenMode examples test  
+add_basic_test("nodec__openmode_examples" formatter/openmode_examples.cpp)
+
+# Vector3 debug test  
+add_basic_test("nodec__vector3_debug" formatter/vector3_debug.cpp)
 
 target_compile_definitions(
     nodec__unicode PRIVATE
