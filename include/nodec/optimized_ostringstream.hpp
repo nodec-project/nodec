@@ -1,10 +1,9 @@
 #ifndef NODEC__OPTIMIZED_OSTRINGSTREAM_HPP_
 #define NODEC__OPTIMIZED_OSTRINGSTREAM_HPP_
 
-#include <memory>
-#include <nodec/macros.hpp>
 #include <sstream>
 #include <string>
+#include <string_view>
 
 namespace nodec {
 
@@ -17,6 +16,7 @@ class basic_reserved_stringbuf : public std::basic_streambuf<CharT, Traits> {
 public:
     using base_type = std::basic_streambuf<CharT, Traits>;
     using string_type = std::basic_string<CharT, Traits>;
+    using string_view_type = std::basic_string_view<CharT, Traits>;
     using size_type = typename string_type::size_type;
     using int_type = typename Traits::int_type;
     using char_type = CharT;
@@ -25,40 +25,32 @@ public:
     using off_type = typename Traits::off_type;
 
     // デフォルトコンストラクタ
-    basic_reserved_stringbuf()
-        : mode_(std::ios_base::out), buffer_(), reserved_capacity_(0) {
-        init_put_area();
-    }
+    basic_reserved_stringbuf() = default;
 
     // 事前リザーブ付きコンストラクタ
-    explicit basic_reserved_stringbuf(size_type reserve_size)
-        : mode_(std::ios_base::out), buffer_(), reserved_capacity_(reserve_size) {
-        buffer_.reserve(reserve_size);
-        init_put_area();
+    explicit basic_reserved_stringbuf(size_type reserve_size) {
+        if (reserve_size > 0) {
+            ensure_capacity(reserve_size);
+        }
     }
 
     // 初期文字列 + 事前リザーブ付きコンストラクタ
     basic_reserved_stringbuf(const string_type &initial_str, size_type reserve_size)
-        : mode_(std::ios_base::out), buffer_(initial_str), reserved_capacity_(reserve_size) {
-        ensure_capacity(std::max(reserve_size, initial_str.size()));
-        init_put_area();
+        : buffer_(initial_str) {
+        if (reserve_size > initial_str.size()) {
+            ensure_capacity(reserve_size);
+        }
     }
 
     // ムーブコンストラクタ
     basic_reserved_stringbuf(basic_reserved_stringbuf &&other) noexcept
-        : base_type(std::move(other)), mode_(other.mode_), buffer_(std::move(other.buffer_)),
-          reserved_capacity_(other.reserved_capacity_) {
-        init_put_area();
-    }
+        : base_type(std::move(other)), buffer_(std::move(other.buffer_)) {}
 
     // ムーブ代入演算子
     basic_reserved_stringbuf &operator=(basic_reserved_stringbuf &&other) noexcept {
         if (this != &other) {
             base_type::operator=(std::move(other));
-            mode_ = other.mode_;
             buffer_ = std::move(other.buffer_);
-            reserved_capacity_ = other.reserved_capacity_;
-            init_put_area();
         }
         return *this;
     }
@@ -71,26 +63,33 @@ public:
         return buffer_;
     }
 
+    // 文字列ビュー取得（コピーなし）
+    string_view_type view() const {
+        return string_view_type(buffer_.data(), buffer_.size());
+    }
+
     // 文字列設定
     void str(const string_type &s) {
         buffer_ = s;
-        init_put_area();
     }
 
     void str(string_type &&s) {
         buffer_ = std::move(s);
-        init_put_area();
     }
 
     // 事前リザーブ機能
     void reserve(size_type new_capacity) {
-        reserved_capacity_ = new_capacity;
         ensure_capacity(new_capacity);
     }
 
-    // 容量・サイズ情報（リザーブされた容量も考慮）
+    // 内容をクリア（容量は保持）
+    void clear() {
+        buffer_.clear();
+    }
+
+    // 容量・サイズ情報
     size_type capacity() const {
-        return std::max(buffer_.capacity(), reserved_capacity_);
+        return buffer_.capacity();
     }
 
     size_type size() const {
@@ -98,105 +97,51 @@ public:
     }
 
 protected:
-    // オーバーフロー処理（高度に最適化）
+    // より効率的なオーバーフロー処理
     int_type overflow(int_type c = Traits::eof()) override {
-        if (!(mode_ & std::ios_base::out)) {
-            return Traits::eof();
-        }
-
         if (!Traits::eq_int_type(c, Traits::eof())) {
-            // 文字を直接buffer_に追加
-            try {
+            // バッファに余裕があるかチェック
+            if (buffer_.size() < buffer_.capacity()) {
                 buffer_.push_back(Traits::to_char_type(c));
-                return c;
-            } catch (...) {
-                return Traits::eof();
+            } else {
+                // 容量不足時は少し多めに確保
+                buffer_.reserve(buffer_.capacity() == 0 ? 16 : buffer_.capacity() * 2);
+                buffer_.push_back(Traits::to_char_type(c));
             }
+            return c;
         }
         return Traits::not_eof(c);
     }
 
-    // バルク書き込み最適化
+    // バルク書き込み最適化（より積極的な事前確保）
     std::streamsize xsputn(const char_type *s, std::streamsize count) override {
-        if (!(mode_ & std::ios_base::out) || count <= 0) {
+        if (count <= 0) {
             return 0;
         }
-
-        try {
-            buffer_.append(s, static_cast<size_type>(count));
-            return count;
-        } catch (...) {
-            return 0;
+        
+        // 必要な容量を事前に確保
+        size_type needed = buffer_.size() + static_cast<size_type>(count);
+        if (needed > buffer_.capacity()) {
+            buffer_.reserve(needed);
         }
+        
+        buffer_.append(s, static_cast<size_type>(count));
+        return count;
     }
 
-    // 同期処理
+    // 同期処理（何もしない - 直接書き込み済み）
     int sync() override {
-        // 既にbuffer_に直接書き込んでいるので何もしない
         return 0;
     }
 
-    // シーク処理
-    pos_type seekoff(off_type off, std::ios_base::seekdir way,
-                     std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) override {
-        if (!(mode_ & which)) {
-            return pos_type(off_type(-1));
-        }
-
-        off_type newoff;
-        switch (way) {
-        case std::ios_base::beg:
-            newoff = off;
-            break;
-        case std::ios_base::cur:
-            newoff = static_cast<off_type>(buffer_.size()) + off;
-            break;
-        case std::ios_base::end:
-            newoff = static_cast<off_type>(buffer_.size()) + off;
-            break;
-        default:
-            return pos_type(off_type(-1));
-        }
-
-        if (newoff < 0 || static_cast<size_type>(newoff) > buffer_.size()) {
-            return pos_type(off_type(-1));
-        }
-
-        buffer_.resize(static_cast<size_type>(newoff));
-        return pos_type(newoff);
-    }
-
-    pos_type seekpos(pos_type pos, std::ios_base::openmode which = std::ios_base::in | std::ios_base::out) override {
-        return seekoff(off_type(pos), std::ios_base::beg, which);
-    }
-
 private:
-    std::ios_base::openmode mode_;
     string_type buffer_;
-    size_type reserved_capacity_;
 
-    // 容量確保の内部メソッド（SSOを考慮）
+    // 効率的な容量確保（シンプル版）
     void ensure_capacity(size_type capacity) {
-        if (capacity > 0) {
-            // 実際の容量を確保（SSOを回避）
-            if (capacity > 15) { // SSOの閾値を超える場合
-                string_type temp(capacity, CharT{});
-                temp.clear();
-                if (temp.capacity() >= capacity) {
-                    // 既存のコンテンツをコピー
-                    temp = buffer_;
-                    buffer_ = std::move(temp);
-                }
-            }
+        if (capacity > buffer_.capacity()) {
+            buffer_.reserve(capacity);
         }
-    }
-
-    // Put areaの初期化（ダミー - 実際の書き込みはoverflow/xsputnで処理）
-    void init_put_area() {
-        // streambufの要求を満たすためのダミー設定
-        // 実際の書き込みはoverflowとxsputnで直接buffer_に行う
-        char_type dummy{};
-        base_type::setp(&dummy, &dummy);
     }
 
     // コピーは禁止、ムーブのみ許可
@@ -216,6 +161,7 @@ class basic_optimized_ostringstream : public std::basic_ostream<CharT, Traits> {
 public:
     using base_type = std::basic_ostream<CharT, Traits>;
     using string_type = std::basic_string<CharT, Traits>;
+    using string_view_type = std::basic_string_view<CharT, Traits>;
     using size_type = typename string_type::size_type;
     using stringbuf_type = basic_reserved_stringbuf<CharT, Traits>;
 
@@ -264,6 +210,11 @@ public:
         return buffer_.str();
     }
 
+    // 文字列ビュー取得（コピーなし - 高性能）
+    string_view_type view() const {
+        return buffer_.view();
+    }
+
     // 文字列設定
     void str(const string_type &s) {
         buffer_.str(s);
@@ -287,9 +238,9 @@ public:
         return buffer_.size();
     }
 
-    // clear機能（内容をクリアして再利用）
+    // clear機能（内容をクリアして再利用 - 容量は保持）
     void clear_content() {
-        buffer_.str(string_type());
+        buffer_.clear(); // stringbufの内容をクリア（容量保持）
         base_type::clear(); // ストリームの状態もクリア
     }
 

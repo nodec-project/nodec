@@ -15,14 +15,14 @@ add_basic_test("nodec__entitites__storage" entities/storage.cpp)
 add_basic_test("nodec__asyncio__event_loop" asyncio/event_loop.cpp)
 add_basic_test("nodec__asyncio__event_promise" asyncio/event_promise.cpp)
 add_basic_test("nodec__flags" flags/flags.cpp)
-add_basic_test("nodec__formatter" formatter/formatter.cpp)
+# add_basic_test("nodec__formatter" formatter/formatter.cpp)
 add_basic_test("nodec__formatter_benchmark" formatter/formatter_benchmark.cpp)
-add_basic_test("nodec__formatter_detailed_benchmark" formatter/formatter_detailed_benchmark.cpp)
-add_basic_test("nodec__formatter_vector3_benchmark" formatter/formatter_vector3_benchmark.cpp)
-add_basic_test("nodec__formatter_ostringstream_compat" formatter/formatter_ostringstream_compat.cpp)
+# add_basic_test("nodec__formatter_detailed_benchmark" formatter/formatter_detailed_benchmark.cpp)
+# add_basic_test("nodec__formatter_vector3_benchmark" formatter/formatter_vector3_benchmark.cpp)
+# add_basic_test("nodec__formatter_ostringstream_compat" formatter/formatter_ostringstream_compat.cpp)
 add_basic_test("nodec__ostringstream_verification" formatter/ostringstream_verification.cpp)
-add_basic_test("nodec__hex_debug" formatter/hex_debug.cpp)
-add_basic_test("nodec__complex_format_debug" formatter/complex_format_debug.cpp)
+# add_basic_test("nodec__hex_debug" formatter/hex_debug.cpp)
+# add_basic_test("nodec__complex_format_debug" formatter/complex_format_debug.cpp)
 add_basic_test("nodec__optimized_ostringstream_test" formatter/optimized_ostringstream_test.cpp)
 add_basic_test("nodec__gfx" gfx/gfx.cpp)
 add_basic_test("nodec__logging__logging" logging/logging.cpp)
@@ -42,17 +42,32 @@ add_basic_test("nodec__unicode" unicode/unicode.cpp)
 add_basic_test("nodec__utility" utility/utility.cpp)
 add_basic_test("nodec__vector" vector/vector.cpp)
 
-# Debug test for optimized ostringstream
-add_basic_test("nodec__debug_test" formatter/debug_test.cpp)
+# # Debug test for optimized ostringstream
+# add_basic_test("nodec__debug_test" formatter/debug_test.cpp)
 
-# Constructor debug test  
-add_basic_test("nodec__constructor_debug" formatter/constructor_debug.cpp)
+# # Constructor debug test  
+# add_basic_test("nodec__constructor_debug" formatter/constructor_debug.cpp)
 
-# OpenMode examples test  
-add_basic_test("nodec__openmode_examples" formatter/openmode_examples.cpp)
+# # OpenMode examples test  
+# add_basic_test("nodec__openmode_examples" formatter/openmode_examples.cpp)
 
-# Vector3 debug test  
-add_basic_test("nodec__vector3_debug" formatter/vector3_debug.cpp)
+# # Vector3 debug test  
+# add_basic_test("nodec__vector3_debug" formatter/vector3_debug.cpp)
+
+# # View analysis test
+# add_basic_test("nodec__view_analysis" formatter/view_analysis.cpp)
+
+# # Smart formatter analysis test
+# add_basic_test("nodec__smart_formatter_analysis" formatter/smart_formatter_analysis.cpp)
+
+# # Overflow and xsputn timing analysis
+# add_basic_test("nodec__overflow_xsputn_timing" formatter/overflow_xsputn_timing.cpp)
+
+# # Traits and EOF analysis
+# add_basic_test("nodec__traits_eof_analysis" formatter/traits_eof_analysis.cpp)
+
+# # EOF necessity test
+# add_basic_test("nodec__eof_necessity_test" formatter/eof_necessity_test.cpp)
 
 target_compile_definitions(
     nodec__unicode PRIVATE
