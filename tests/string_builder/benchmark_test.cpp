@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iomanip>
 
+#include <nodec/string_builder.hpp>
 #include <nodec/formatter.hpp>
 
 // ベンチマーク測定用のヘルパークラス
@@ -34,11 +35,11 @@ TEST_CASE("Benchmark - Simple Concatenation") {
 
     std::cout << "\n--- Simple Concatenation Test ---" << std::endl;
 
-    // nodec::FormatterLegacyのベンチマーク
+    // nodec::Formatterのベンチマーク
     {
-        BenchmarkTimer timer("nodec::FormatterLegacy - Simple concatenation");
+        BenchmarkTimer timer("nodec::Formatter - Simple concatenation");
         for (int i = 0; i < iterations; ++i) {
-            std::string result = nodec::FormatterLegacy() << "Hello" << " " << "World" << i;
+            std::string result = nodec::Formatter() << "Hello" << " " << "World" << i;
             // 結果を使用して最適化を防ぐ
             volatile auto len = result.length();
             (void)len;
@@ -92,11 +93,11 @@ TEST_CASE("Benchmark - Numeric Formatting") {
 
     std::cout << "\n--- Numeric Formatting Test ---" << std::endl;
 
-    // nodec::FormatterLegacyのベンチマーク
+    // nodec::Formatterのベンチマーク
     {
-        BenchmarkTimer timer("nodec::FormatterLegacy - Numeric formatting");
+        BenchmarkTimer timer("nodec::Formatter - Numeric formatting");
         for (int i = 0; i < iterations; ++i) {
-            std::string result = nodec::FormatterLegacy() << "Number: " << i
+            std::string result = nodec::Formatter() << "Number: " << i
                                                           << ", Float: " << (i * 3.14)
                                                           << ", Hex: " << std::hex << i;
             volatile auto len = result.length();
@@ -137,11 +138,11 @@ TEST_CASE("Benchmark - Long Chain") {
 
     std::cout << "\n--- Long Chain Test ---" << std::endl;
 
-    // nodec::FormatterLegacyのベンチマーク - 長いチェーン
+    // nodec::Formatterのベンチマーク - 長いチェーン
     {
-        BenchmarkTimer timer("nodec::FormatterLegacy - Long chain");
+        BenchmarkTimer timer("nodec::Formatter - Long chain");
         for (int i = 0; i < iterations; ++i) {
-            std::string result = nodec::FormatterLegacy() << "Start: " << i
+            std::string result = nodec::Formatter() << "Start: " << i
                                                           << ", Value1: " << (i * 2)
                                                           << ", Value2: " << (i * 3.5)
                                                           << ", Value3: " << (i % 100)

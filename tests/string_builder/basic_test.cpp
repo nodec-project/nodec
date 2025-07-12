@@ -1,10 +1,10 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-#include <nodec/formatter.hpp>
+#include <nodec/string_builder.hpp>
 #include <nodec/vector3.hpp>
 
-TEST_CASE("Testing Formatter - Basic Types") {
+TEST_CASE("Testing StringBuilder - Basic Types") {
     // 文字列連結
     {
         std::string result;

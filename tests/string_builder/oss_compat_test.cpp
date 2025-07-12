@@ -2,8 +2,9 @@
 #include <doctest.h>
 
 #include <iomanip>
-#include <nodec/formatter.hpp>
 #include <sstream>
+
+#include <nodec/string_builder.hpp>
 
 TEST_CASE("StringBuilderStream - Enhanced Manipulator Support") {
     // setw テスト
