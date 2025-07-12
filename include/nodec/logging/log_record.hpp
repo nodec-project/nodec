@@ -3,7 +3,7 @@
 
 #include <chrono>
 #include <cstddef>
-#include <string>
+#include <string_view>
 
 #include "level.hpp"
 
@@ -12,14 +12,18 @@ namespace logging {
 
 struct LogRecord {
 public:
-    LogRecord(std::chrono::system_clock::time_point time, const std::string &name, Level level, const std::string &message, const char *file, std::size_t line)
+    LogRecord(std::chrono::system_clock::time_point time,
+              std::string_view name,
+              Level level,
+              std::string_view message,
+              std::string_view file, std::size_t line)
         : time(time), name(name), level(level), message(message), file(file), line(line) {}
 
     const std::chrono::system_clock::time_point time;
-    const std::string &name;
+    std::string_view name;
     const Level level;
-    const std::string &message;
-    const char *file;
+    std::string_view message;
+    std::string_view file;
     const std::size_t line;
 };
 

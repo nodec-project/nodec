@@ -8,28 +8,28 @@ TEST_CASE("Testing StringBuilder - Basic Types") {
     // 文字列連結
     {
         std::string result;
-        nodec::StringBuilderStream(result) << "Hello" << " " << "World";
+        nodec::StringBuilder(result) << "Hello" << " " << "World";
         CHECK(result == "Hello World");
     }
 
     // 整数
     {
         std::string result;
-        nodec::StringBuilderStream(result) << "Number: " << 42;
+        nodec::StringBuilder(result) << "Number: " << 42;
         CHECK(result == "Number: 42");
     }
 
     // 浮動小数点
     {
         std::string result;
-        nodec::StringBuilderStream(result) << "Float: " << 3.14;
+        nodec::StringBuilder(result) << "Float: " << 3.14;
         CHECK(result == "Float: 3.14");
     }
 
     // 文字
     {
         std::string result;
-        nodec::StringBuilderStream(result) << 'A' << 'B' << 'C';
+        nodec::StringBuilder(result) << 'A' << 'B' << 'C';
         CHECK(result == "ABC");
     }
 }

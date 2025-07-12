@@ -61,10 +61,10 @@ TEST_CASE("Benchmark - Simple Concatenation") {
 
     // nodec::StringBuilderStreamのベンチマーク
     {
-        BenchmarkTimer timer("StringBuilderStream - Simple concatenation");
+        BenchmarkTimer timer("StringBuilder - Simple concatenation");
         for (int i = 0; i < iterations; ++i) {
             std::string result;
-            nodec::StringBuilderStream builder(result);
+            nodec::StringBuilder builder(result);
 
             builder << "Hello" << " " << "World" << i;
             // 結果を使用して最適化を防ぐ
@@ -107,10 +107,10 @@ TEST_CASE("Benchmark - Numeric Formatting") {
 
     // nodec::FormatterStreamのベンチマーク
     {
-        BenchmarkTimer timer("StringBuilderStream - Numeric formatting");
+        BenchmarkTimer timer("StringBuilder - Numeric formatting");
         for (int i = 0; i < iterations; ++i) {
             std::string result;
-            nodec::StringBuilderStream builder(result);
+            nodec::StringBuilder builder(result);
             builder << "Number: " << i << ", Float: " << (i * 3.14) << ", Hex: " << std::hex << i;
             volatile auto len = result.length();
             (void)len;
@@ -156,10 +156,10 @@ TEST_CASE("Benchmark - Long Chain") {
 
     // StringBuilderStreamのベンチマーク
     {
-        BenchmarkTimer timer("StringBuilderStream - Long chain");
+        BenchmarkTimer timer("StringBuilder - Long chain");
         for (int i = 0; i < iterations; ++i) {
             std::string result;
-            nodec::StringBuilderStream builder(result);
+            nodec::StringBuilder builder(result);
             builder << "Start: " << i
                     << ", Value1: " << (i * 2)
                     << ", Value2: " << (i * 3.5)

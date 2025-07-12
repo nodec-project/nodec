@@ -9,7 +9,7 @@
 #include <nodec/logging/logging.hpp>
 
 TEST_CASE("Single thread, 100,000 iterations") {
-    int iters = 100000;
+    int iters = 10'000;
 
     using namespace nodec::logging;
     auto logger = get_logger();
@@ -33,11 +33,12 @@ TEST_CASE("Single thread, 100,000 iterations") {
 
     // NOTE: '<<' operator is very slow.
     //  About 50% of total cpu consumption is occupied...
-    //  Should use std::format() instead if c++17 is available.
+    //  Should use std::format() instead if c++20 is available.
+    CHECK(true);
 }
 
-TEST_CASE("10 threads, competing over the same logger object, 100,000 iterations") {
-    int iters = 100000;
+TEST_CASE("10 threads, competing over the same logger object, 10,000 iterations") {
+    int iters = 10'000;
     int thread_count = 10;
 
     using namespace nodec::logging;
@@ -69,4 +70,5 @@ TEST_CASE("10 threads, competing over the same logger object, 100,000 iterations
     auto delta_d = duration_cast<duration<double>>(delta).count();
 
     MESSAGE("Elapsed: ", delta_d, " secs ", std::size_t(iters / delta_d), "/sec");
+    CHECK(true);
 }

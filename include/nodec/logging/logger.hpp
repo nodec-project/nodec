@@ -10,6 +10,7 @@
 #include "../macros.hpp"
 #include "../optional.hpp"
 #include "../signals/signal.hpp"
+#include "../string_builder.hpp"
 #include "log_record.hpp"
 
 namespace nodec {
@@ -67,15 +68,15 @@ private:
     class LogStream {
     public:
         LogStream(Logger &logger, Level level, const char *file, std::size_t line)
-            : logger_(logger), level_(level), file_(file), line_(line) {}
+            : logger_(logger), level_(level), file_(file), line_(line), builder_(message) {}
 
         ~LogStream() {
-            logger_.log(level_, stream_.str(), file_, line_);
+            logger_.log(level_, message, file_, line_);
         }
 
         template<typename T>
         LogStream &operator<<(const T &value) {
-            stream_ << value;
+            builder_ << value;
             return *this;
         }
 
@@ -84,7 +85,8 @@ private:
         Level level_;
         const char *file_;
         std::size_t line_;
-        std::ostringstream stream_;
+        std::string message;
+        StringBuilder builder_;
     };
 
 public:

@@ -3,6 +3,7 @@
 
 #include <sstream>
 
+#include "../../string_builder.hpp"
 #include "../log_record.hpp"
 
 namespace nodec {
@@ -11,40 +12,44 @@ namespace formatters {
 
 struct SimpleFormatter {
     std::string operator()(const LogRecord &record) {
-        std::ostringstream oss;
+        std::string text;
+        StringBuilder builder(text);
+
+        // std::ostringstream builder;
 
         switch (record.level) {
         case nodec::logging::Level::Unset:
-            oss << "[UNSET]";
+            builder << "[UNSET]";
             break;
         case nodec::logging::Level::Debug:
-            oss << "[DEBUG]";
+            builder << "[DEBUG]";
             break;
         case nodec::logging::Level::Info:
-            oss << "[INFO] ";
+            builder << "[INFO] ";
             break;
         case nodec::logging::Level::Warn:
-            oss << "[WARN] ";
+            builder << "[WARN] ";
             break;
         case nodec::logging::Level::Error:
-            oss << "[ERROR]";
+            builder << "[ERROR]";
             break;
         case nodec::logging::Level::Fatal:
-            oss << "[FATAL]";
+            builder << "[FATAL]";
             break;
         default:
-            oss << "[???]  ";
+            builder << "[???]  ";
             break;
         }
 
         if (!record.name.empty()) {
-            oss << " [" << record.name << "]";
+            builder << " [" << record.name << "]";
         }
 
-        oss << " - " << record.message << "\n";
-        oss << "(" << record.file << " line " << record.line << ")\n";
+        builder << " - " << record.message << "\n";
+        builder << "(" << record.file << " line " << record.line << ")\n";
 
-        return oss.str();
+        return std::move(text);
+        // return builder.str();
     }
 };
 
