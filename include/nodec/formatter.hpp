@@ -8,19 +8,6 @@
 
 namespace nodec {
 
-/*
- * The Text Formatter
- *
- * if you use C++20, consider to use std::format.
- *   * <https://en.cppreference.com/w/cpp/utility/format>
- *
- * It is designed for easy use of text format even though under C++20.
- *
- * Implementation refs:
- *   * <https://stackoverflow.com/questions/12261915/how-to-throw-stdexceptions-with-variable-messages>
- *
- */
-
 class Formatter {
 public:
     Formatter() noexcept {}
@@ -57,7 +44,8 @@ public:
     }
 
     operator std::string() noexcept {
-        stream_ << "\n" << std::dec
+        stream_ << "\n"
+                << std::dec
                 << "[File] " << file_ << "\n"
                 << "[Line] " << line_;
         return stream_.str();

@@ -15,10 +15,17 @@ add_basic_test("nodec__entitites__storage" entities/storage.cpp)
 add_basic_test("nodec__asyncio__event_loop" asyncio/event_loop.cpp)
 add_basic_test("nodec__asyncio__event_promise" asyncio/event_promise.cpp)
 add_basic_test("nodec__flags" flags/flags.cpp)
-add_basic_test("nodec__formatter" formatter/formatter.cpp)
+
+add_basic_test("nodec__string_builder__basic_test" string_builder/basic_test.cpp)
+add_basic_test("nodec__string_builder__benchmark_test" string_builder/benchmark_test.cpp)
+add_basic_test("nodec__string_builder__oss_compat_test" string_builder/oss_compat_test.cpp)
+
 add_basic_test("nodec__gfx" gfx/gfx.cpp)
-add_basic_test("nodec__logging__logging" logging/logging.cpp)
-add_basic_test("nodec__logging_bench" logging/bench.cpp)
+
+add_basic_test("nodec__logging__logger_test" logging/logger_test.cpp)
+add_basic_test("nodec__logging__bench_test" logging/bench_test.cpp)
+add_basic_test("nodec__logging__simple_formatter_test" logging/simple_formatter_test.cpp)
+
 add_basic_test("nodec__math" math/math.cpp)
 add_basic_test("nodec__matrix4x4" matrix4x4/matrix4x4.cpp)
 add_basic_test("nodec__observers" observers/observers.cpp)
