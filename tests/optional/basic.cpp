@@ -1,14 +1,14 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include <doctest.h>
 
-//#include <optional>
+// #include <optional>
 
 #include <nodec/optional.hpp>
 
 #include <array>
+#include <memory>
 #include <string>
 #include <vector>
-
 
 TEST_CASE("testing optional constructor") {
     // https://cpprefjp.github.io/reference/optional/optional/op_constructor.html
@@ -20,18 +20,18 @@ TEST_CASE("testing optional constructor") {
     {
         class Test {
         public:
-            Test(int a, int b) 
-            : a{a}, b{b} {}
+            Test(int a, int b)
+                : a{a}, b{b} {}
 
             Test(Test &&) = default;
-            //Test(Test &&other)
-            //    : a{std::move(other.a)}, b{std::move(other.b)} {}
+            // Test(Test &&other)
+            //     : a{std::move(other.a)}, b{std::move(other.b)} {}
 
             int a;
             int b;
         };
 
-        nodec::optional<Test> a = Test{0 ,1};
+        nodec::optional<Test> a = Test{0, 1};
         nodec::optional<Test> b = std::move(a);
 
         CHECK(b.value().a == 0);
@@ -68,9 +68,9 @@ TEST_CASE("testing optional constructor") {
         nodec::optional<std::array<int, 5>> int_array;
         nodec::optional<int[5]> native_int_array;
     }
-    
+
     {
-        nodec::optional<const char*> a = "Hello";
+        nodec::optional<const char *> a = "Hello";
         nodec::optional<std::string> b = a;
 
         CHECK(b.value() == "Hello");
@@ -144,7 +144,6 @@ TEST_CASE("testing optional operator*") {
     CHECK(*p == 42);
 }
 
-
 TEST_CASE("testing optional operator->") {
     nodec::optional<std::string> p = "Hello";
 
@@ -152,7 +151,6 @@ TEST_CASE("testing optional operator->") {
 
     CHECK(p->size() == 5);
 }
-
 
 TEST_CASE("testing optional operator=") {
     {

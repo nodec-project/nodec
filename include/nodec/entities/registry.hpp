@@ -27,9 +27,7 @@ class BasicRegistry {
     struct PoolData {
         std::unique_ptr<BaseStorage<Entity>> pool;
 
-        // XXX: Avoid to name member the same as their type.
-        // https://stackoverflow.com/questions/34450095/variable-with-same-name-as-type-which-compiler-is-right
-        const type_info *type_info;
+        const type_info *component_type;
     };
 
 public:
@@ -69,7 +67,7 @@ private:
         if (!pool_data.pool) {
             pool_data.pool.reset(new Storage<Component>());
             pool_data.pool->bind_registry(const_cast<BasicRegistry *>(this));
-            pool_data.type_info = &type_id<Component>();
+            pool_data.component_type = &type_id<Component>();
         }
 
         return static_cast<Storage<Component> *>(pools[index].pool.get());
@@ -390,7 +388,7 @@ public:
      * The signature of the function should be equivalent to the following:
      *
      * @code{.cpp}
-     * void(const type_info&, void* component);
+     * void(const component_type&, void* component);
      * @endcode
      */
     template<typename Func>
@@ -402,7 +400,7 @@ public:
             auto component = pool_data.pool->try_get_opaque(entity);
             if (!component) continue;
 
-            func(*pool_data.type_info, component);
+            func(*pool_data.component_type, component);
         }
     }
 
