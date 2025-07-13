@@ -1,6 +1,8 @@
 #ifndef NODEC__GFX__GFX_HPP_
 #define NODEC__GFX__GFX_HPP_
 
+#include <cmath>
+
 #include "../math/math.hpp"
 
 namespace nodec {

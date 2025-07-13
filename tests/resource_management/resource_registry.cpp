@@ -4,6 +4,7 @@
 #include <nodec/resource_management/resource_registry.hpp>
 
 #include <future>
+#include <thread>
 
 class TestResource {
 public:
@@ -32,7 +33,7 @@ TEST_CASE("testing the load functions.") {
             });
             return future;
         });
-    
+
     {
         auto resource = registry.get_resource_direct<TestResource>("resource_direct");
         CHECK(resource);
