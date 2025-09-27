@@ -54,7 +54,7 @@ inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
     Quaternionf result;
 
     if (scale > 0.0f) {
-        sqrt = std::sqrtf(scale + 1.0f);
+        sqrt = std::sqrt(scale + 1.0f);
         result.w = sqrt * 0.5f;
         sqrt = 0.5f / sqrt;
 
@@ -62,7 +62,7 @@ inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
         result.y = (matrix.m13 - matrix.m31) * sqrt;
         result.z = (matrix.m21 - matrix.m12) * sqrt;
     } else if ((matrix.m11 >= matrix.m22) && (matrix.m11 >= matrix.m33)) {
-        sqrt = std::sqrtf(1.0f + matrix.m11 - matrix.m22 - matrix.m33);
+        sqrt = std::sqrt(1.0f + matrix.m11 - matrix.m22 - matrix.m33);
         half = 0.5f / sqrt;
 
         result.x = 0.5f * sqrt;
@@ -70,7 +70,7 @@ inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
         result.z = (matrix.m31 + matrix.m13) * half;
         result.w = (matrix.m32 - matrix.m23) * half;
     } else if (matrix.m22 > matrix.m33) {
-        sqrt = std::sqrtf(1.0f + matrix.m22 - matrix.m11 - matrix.m33);
+        sqrt = std::sqrt(1.0f + matrix.m22 - matrix.m11 - matrix.m33);
         half = 0.5f / sqrt;
 
         result.x = (matrix.m12 + matrix.m21) * half;
@@ -78,7 +78,7 @@ inline Quaternionf quaternion_from_rotation_matrix(const Matrix4x4f &matrix) {
         result.z = (matrix.m23 + matrix.m32) * half;
         result.w = (matrix.m13 - matrix.m31) * half;
     } else {
-        sqrt = std::sqrtf(1.0f + matrix.m33 - matrix.m11 - matrix.m22);
+        sqrt = std::sqrt(1.0f + matrix.m33 - matrix.m11 - matrix.m22);
         half = 0.5f / sqrt;
 
         result.x = (matrix.m13 + matrix.m31) * half;
@@ -139,9 +139,9 @@ inline bool decompose_trs(const Matrix4x4f &trs, Vector3f &translation, Quaterni
     float ys = (trs.m12 * trs.m22 * trs.m32 * trs.m42) < 0.f ? -1.f : 1.f;
     float zs = (trs.m13 * trs.m23 * trs.m33 * trs.m43) < 0.f ? -1.f : 1.f;
 
-    scale.x = xs * std::sqrtf(trs.m11 * trs.m11 + trs.m21 * trs.m21 + trs.m31 * trs.m31);
-    scale.y = ys * std::sqrtf(trs.m12 * trs.m12 + trs.m22 * trs.m22 + trs.m32 * trs.m32);
-    scale.z = zs * std::sqrtf(trs.m13 * trs.m13 + trs.m23 * trs.m23 + trs.m33 * trs.m33);
+    scale.x = xs * std::sqrt(trs.m11 * trs.m11 + trs.m21 * trs.m21 + trs.m31 * trs.m31);
+    scale.y = ys * std::sqrt(trs.m12 * trs.m12 + trs.m22 * trs.m22 + trs.m32 * trs.m32);
+    scale.z = zs * std::sqrt(trs.m13 * trs.m13 + trs.m23 * trs.m23 + trs.m33 * trs.m33);
 
     if (scale.x == 0.f || scale.y == 0.f || scale.z == 0.f) {
         rotation = Quaternionf::identity;

@@ -547,7 +547,7 @@ public:
                    captured_fn();
                    return value;
                })
-            .template catch_error([captured_fn](std::exception_ptr err) {
+            .catch_error([captured_fn](std::exception_ptr err) {
                 captured_fn();
                 std::rethrow_exception(err);
             });
@@ -936,7 +936,7 @@ public:
         return then([captured_fn]() {
                    captured_fn();
                })
-            .template catch_error([captured_fn](std::exception_ptr err) {
+            .catch_error([captured_fn](std::exception_ptr err) {
                 captured_fn();
                 std::rethrow_exception(err);
             });
