@@ -11,8 +11,7 @@ class Flags;
 template<class E>
 class FlagsIterator {
 public:
-    using Flags = Flags<E>;
-    using impl_type = typename Flags::impl_type;
+    using impl_type = typename Flags<E>::impl_type;
 
     using difference_type = std::ptrdiff_t;
     using value_type = E;

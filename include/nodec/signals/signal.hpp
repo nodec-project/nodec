@@ -127,7 +127,7 @@ class Signal;
 template<typename... Args>
 class Signal<void(Args...)> final {
 public:
-    using SignalInterface = SignalInterface<void(Args...)>;
+    using Interface = SignalInterface<void(Args...)>;
 
     Signal() {}
     ~Signal() {}
@@ -141,7 +141,7 @@ public:
         return *this;
     }
 
-    SignalInterface signal_interface() {
+    SignalInterface<void(Args...)> signal_interface() {
         return {impl_};
     }
 
