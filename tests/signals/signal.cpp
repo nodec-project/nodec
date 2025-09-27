@@ -4,6 +4,14 @@
 #include <nodec/signals/scoped_block.hpp>
 #include <nodec/signals/signal.hpp>
 
+TEST_CASE("testing SignalInterface type match") {
+    using namespace nodec::signals;
+
+    using TestSignal = Signal<void(int)>;
+
+    static_assert(std::is_same_v<typename TestSignal::Interface, SignalInterface<void(int)>>);
+}
+
 namespace global_func_test {
 
 int global_count = 0;
