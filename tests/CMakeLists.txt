@@ -10,6 +10,7 @@ endfunction(add_basic_test)
 
 add_basic_test("nodec__array_view" array_view/array_view.cpp)
 add_basic_test("nodec__containers__sparse_table" containers/sparse_table.cpp)
+add_basic_test("nodec__containers__paged_array" containers/paged_array.cpp)
 add_basic_test("nodec__entitites__registry" entities/registry.cpp)
 add_basic_test("nodec__entitites__storage" entities/storage.cpp)
 add_basic_test("nodec__asyncio__event_loop" asyncio/event_loop.cpp)
