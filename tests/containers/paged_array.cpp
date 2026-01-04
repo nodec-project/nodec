@@ -3,6 +3,7 @@
 
 #include <nodec/containers/paged_array.hpp>
 
+#include <limits>
 #include <string>
 
 using namespace nodec::containers;
@@ -259,5 +260,98 @@ TEST_CASE("Testing move semantics") {
 
         CHECK(arr2[0] == 42);
         CHECK(arr2[1024] == 100);
+    }
+}
+
+TEST_CASE("Testing fill_value") {
+    constexpr size_t INVALID = std::numeric_limits<size_t>::max();
+
+    SUBCASE("constructor with fill_value") {
+        BasicPagedArray<size_t, 1024> arr(INVALID);
+
+        // Allocate a page by accessing an element
+        arr[0] = 42;
+
+        // Element 0 was explicitly set
+        CHECK(arr[0] == 42);
+
+        // Other elements in the same page should have fill_value
+        auto *ptr = arr.try_get(1);
+        REQUIRE(ptr != nullptr);
+        CHECK(*ptr == INVALID);
+
+        auto *ptr2 = arr.try_get(500);
+        REQUIRE(ptr2 != nullptr);
+        CHECK(*ptr2 == INVALID);
+    }
+
+    SUBCASE("new pages initialized with fill_value") {
+        BasicPagedArray<size_t, 1024> arr(INVALID);
+
+        // Access different pages
+        arr[0] = 100;     // page 0
+        arr[1024] = 200;  // page 1
+        arr[2048] = 300;  // page 2
+
+        // Check explicitly set values
+        CHECK(arr[0] == 100);
+        CHECK(arr[1024] == 200);
+        CHECK(arr[2048] == 300);
+
+        // Check fill_value in each page
+        CHECK(*arr.try_get(1) == INVALID);
+        CHECK(*arr.try_get(1025) == INVALID);
+        CHECK(*arr.try_get(2049) == INVALID);
+    }
+
+    SUBCASE("sentinel value pattern for sparse mapping") {
+        // Simulates entity storage sparse array usage
+        BasicPagedArray<size_t, 1024> sparse_array(INVALID);
+
+        // "Add" some entities
+        sparse_array[100] = 0;   // entity 100 -> packed index 0
+        sparse_array[5000] = 1;  // entity 5000 -> packed index 1
+        sparse_array[200] = 2;   // entity 200 -> packed index 2
+
+        // Check valid entries
+        auto check_valid = [&](size_t index) {
+            auto *ptr = sparse_array.try_get(index);
+            return ptr != nullptr && *ptr != INVALID;
+        };
+
+        CHECK(check_valid(100));
+        CHECK(check_valid(5000));
+        CHECK(check_valid(200));
+
+        // Check invalid entries (same page but not set)
+        CHECK_FALSE(check_valid(101));
+        CHECK_FALSE(check_valid(5001));
+
+        // "Remove" an entity by setting to INVALID
+        sparse_array[100] = INVALID;
+        CHECK_FALSE(check_valid(100));
+    }
+
+    SUBCASE("move preserves fill_value") {
+        BasicPagedArray<size_t, 1024> arr1(INVALID);
+        arr1[0] = 42;
+
+        // Move construct
+        BasicPagedArray<size_t, 1024> arr2(std::move(arr1));
+        CHECK(arr2[0] == 42);
+
+        // New page in moved array should use same fill_value
+        arr2[1024] = 100;
+        CHECK(*arr2.try_get(1025) == INVALID);
+    }
+
+    SUBCASE("default fill_value is zero") {
+        BasicPagedArray<int, 1024> arr;  // no fill_value specified
+
+        arr[0] = 42;
+
+        // Other elements should be zero (default constructed)
+        CHECK(*arr.try_get(1) == 0);
+        CHECK(*arr.try_get(500) == 0);
     }
 }
