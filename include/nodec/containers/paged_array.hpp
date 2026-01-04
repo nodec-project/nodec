@@ -142,6 +142,7 @@ private:
 
     std::vector<page_pointer> pages_;
     Allocator allocator_;
+    value_type fill_value_{};
 
     /**
      * @brief Calculate page index from element index.
@@ -160,13 +161,12 @@ private:
     }
 
     /**
-     * @brief Allocate and default-construct a new page.
+     * @brief Allocate and construct a new page with fill_value_.
      */
     page_pointer allocate_page() {
         page_pointer page = alloc_traits::allocate(allocator_, PageSize);
-        // Use uninitialized_value_construct for batch construction
         for (size_type i = 0; i < PageSize; ++i) {
-            alloc_traits::construct(allocator_, page + i);
+            alloc_traits::construct(allocator_, page + i, fill_value_);
         }
         return page;
     }
@@ -188,10 +188,16 @@ public:
     // --- Constructors / Destructor ---
 
     BasicPagedArray() noexcept(noexcept(Allocator()))
-        : pages_{}, allocator_{} {}
+        : pages_{}, allocator_{}, fill_value_{} {}
+
+    explicit BasicPagedArray(const value_type &fill_value) noexcept(noexcept(Allocator()))
+        : pages_{}, allocator_{}, fill_value_{fill_value} {}
 
     explicit BasicPagedArray(const Allocator &alloc) noexcept
-        : pages_{}, allocator_{alloc} {}
+        : pages_{}, allocator_{alloc}, fill_value_{} {}
+
+    BasicPagedArray(const value_type &fill_value, const Allocator &alloc) noexcept
+        : pages_{}, allocator_{alloc}, fill_value_{fill_value} {}
 
     ~BasicPagedArray() {
         clear();
@@ -204,13 +210,15 @@ public:
     // Movable
     BasicPagedArray(BasicPagedArray &&other) noexcept
         : pages_{std::move(other.pages_)},
-          allocator_{std::move(other.allocator_)} {}
+          allocator_{std::move(other.allocator_)},
+          fill_value_{std::move(other.fill_value_)} {}
 
     BasicPagedArray &operator=(BasicPagedArray &&other) noexcept {
         if (this != &other) {
             clear();
             pages_ = std::move(other.pages_);
             allocator_ = std::move(other.allocator_);
+            fill_value_ = std::move(other.fill_value_);
         }
         return *this;
     }
