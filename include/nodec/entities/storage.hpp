@@ -1,7 +1,8 @@
 #ifndef NODEC__ENTITIES__STORAGE_HPP_
 #define NODEC__ENTITIES__STORAGE_HPP_
 
-#include "../containers/sparse_table.hpp"
+#include "../containers/paged_array.hpp"
+#include <limits>
 #include "../formatter.hpp"
 #include "../signals/signal.hpp"
 #include "../type_traits.hpp"
@@ -138,7 +139,7 @@ class BasicRegistry;
 template<typename Entity>
 class BaseStorage {
     using PackedContainer = std::vector<Entity>;
-    using SparseTable = containers::SparseTable<size_t>;
+    using SparseArray = containers::PagedArray<size_t>;
 
 public:
     using entity_type = Entity;
@@ -147,9 +148,12 @@ public:
     using const_iterator = internal::StorageIterator<PackedContainer>;
     using iterator = const_iterator;
 
+    /// Sentinel value indicating no mapping exists.
+    static constexpr size_t invalid_index = std::numeric_limits<size_t>::max();
+
 public:
-    BaseStorage(PackedContainer &packed, SparseTable &sparse_table)
-        : packed_{packed}, sparse_table_{sparse_table} {}
+    BaseStorage(PackedContainer &packed, SparseArray &sparse_array)
+        : packed_{packed}, sparse_array_{sparse_array} {}
 
     virtual ~BaseStorage() {}
 
@@ -187,8 +191,8 @@ public:
      */
     bool contains(const Entity entity) const {
         const auto entity_number = entity_traits_type::to_entity(entity);
-        auto *pos = sparse_table_.try_get(entity_number);
-        if (pos == nullptr) return false;
+        auto *pos = sparse_array_.try_get(entity_number);
+        if (pos == nullptr || *pos == invalid_index) return false;
 
         return packed_[*pos] == entity;
     }
@@ -217,7 +221,7 @@ private:
     PackedContainer &packed_;
 
     //! Conversion table from entity to packed index.
-    SparseTable &sparse_table_;
+    SparseArray &sparse_array_;
 
     BasicRegistry<Entity> *registry_;
 };
@@ -239,7 +243,8 @@ public:
 
 public:
     BasicStorage()
-        : Base{packed_, sparse_table_} {}
+        : Base{packed_, sparse_array_},
+          sparse_array_{Base::invalid_index} {}
 
     /**
      * @brief Assigns an entity to a storage and constructs its object.
@@ -254,15 +259,15 @@ public:
         const auto entity_number = Base::entity_traits_type::to_entity(entity);
 
         {
-            auto *pos = sparse_table_.try_get(entity_number);
-            if (pos != nullptr) {
+            auto *pos = sparse_array_.try_get(entity_number);
+            if (pos != nullptr && *pos != Base::invalid_index) {
                 assert(packed_[*pos] == entity);
                 return {instances_[*pos], false};
             }
         }
 
         auto pos = instances_.size();
-        sparse_table_[entity_number] = pos;
+        sparse_array_[entity_number] = pos;
         instances_.push_back({args...});
         packed_.emplace_back(entity);
 
@@ -272,8 +277,8 @@ public:
     }
 
     const value_type *try_get(const Entity entity) const {
-        const auto *pos = sparse_table_.try_get(Base::entity_traits_type::to_entity(entity));
-        if (!pos) return nullptr;
+        const auto *pos = sparse_array_.try_get(Base::entity_traits_type::to_entity(entity));
+        if (!pos || *pos == Base::invalid_index) return nullptr;
 
         assert(packed_[*pos] == entity);
 
@@ -285,8 +290,8 @@ public:
     }
 
     const value_type &get(const Entity entity) const {
-        const auto *pos = sparse_table_.try_get(Base::entity_traits_type::to_entity(entity));
-        assert(pos != nullptr);
+        const auto *pos = sparse_array_.try_get(Base::entity_traits_type::to_entity(entity));
+        assert(pos != nullptr && *pos != Base::invalid_index);
         assert(packed_[*pos] == entity);
 
         return instances_[*pos];
@@ -317,8 +322,8 @@ public:
         element_destroyed_(*this->registry(), entity); // cause structural changes.
 
         const auto entity_number = Base::entity_traits_type::to_entity(entity);
-        auto *pos = sparse_table_.try_get(entity_number);
-        assert(pos && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
+        auto *pos = sparse_array_.try_get(entity_number);
+        assert(pos && *pos != Base::invalid_index && "The entity to be deleted has already been deleted. Have you deleted the same entity again in the destroy signal?");
 
         // move the back of instances to the removed index.
         auto &other_entity = packed_.back();
@@ -329,8 +334,9 @@ public:
         instances_.pop_back();
 
         // Updates the location of other entity.
-        sparse_table_[Base::entity_traits_type::to_entity(other_entity)] = *pos;
-        sparse_table_.erase(entity_number);
+        sparse_array_[Base::entity_traits_type::to_entity(other_entity)] = *pos;
+        // Mark as invalid (sentinel value instead of erase)
+        sparse_array_[entity_number] = Base::invalid_index;
 
         return true;
     }
@@ -348,7 +354,7 @@ public:
     }
 
 private:
-    containers::SparseTable<size_t> sparse_table_;
+    containers::PagedArray<size_t> sparse_array_;
     std::vector<Entity> packed_;
     std::vector<Value> instances_;
 
