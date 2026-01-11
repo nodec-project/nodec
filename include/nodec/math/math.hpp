@@ -216,136 +216,54 @@ Quaternion<T> inv(const Quaternion<T> &q) {
 
 template<typename T>
 Matrix4x4<T> inv(const Matrix4x4<T> &mat, T *determinant = nullptr) {
-    // implementation notes:
-    //  * https://stackoverflow.com/questions/1148309/inverting-a-4x4-matrix
-
-    Matrix4x4<T> inverted;
+    // Optimized 4x4 matrix inverse using 2x2 sub-determinants
+    // This algorithm pre-computes 12 2x2 determinants and reuses them,
+    // reducing multiplications from ~144 to ~100.
     auto &m = mat.m;
 
-    inverted.m[0] = m[5] * m[10] * m[15]
-                    - m[5] * m[11] * m[14]
-                    - m[9] * m[6] * m[15]
-                    + m[9] * m[7] * m[14]
-                    + m[13] * m[6] * m[11]
-                    - m[13] * m[7] * m[10];
+    // Pre-compute 2x2 determinants from rows 0-1 (columns i,j)
+    const T b00 = m[0] * m[5] - m[1] * m[4];
+    const T b01 = m[0] * m[6] - m[2] * m[4];
+    const T b02 = m[0] * m[7] - m[3] * m[4];
+    const T b03 = m[1] * m[6] - m[2] * m[5];
+    const T b04 = m[1] * m[7] - m[3] * m[5];
+    const T b05 = m[2] * m[7] - m[3] * m[6];
 
-    inverted.m[4] = -m[4] * m[10] * m[15]
-                    + m[4] * m[11] * m[14]
-                    + m[8] * m[6] * m[15]
-                    - m[8] * m[7] * m[14]
-                    - m[12] * m[6] * m[11]
-                    + m[12] * m[7] * m[10];
+    // Pre-compute 2x2 determinants from rows 2-3 (columns i,j)
+    const T b06 = m[8] * m[13] - m[9] * m[12];
+    const T b07 = m[8] * m[14] - m[10] * m[12];
+    const T b08 = m[8] * m[15] - m[11] * m[12];
+    const T b09 = m[9] * m[14] - m[10] * m[13];
+    const T b10 = m[9] * m[15] - m[11] * m[13];
+    const T b11 = m[10] * m[15] - m[11] * m[14];
 
-    inverted.m[8] = m[4] * m[9] * m[15]
-                    - m[4] * m[11] * m[13]
-                    - m[8] * m[5] * m[15]
-                    + m[8] * m[7] * m[13]
-                    + m[12] * m[5] * m[11]
-                    - m[12] * m[7] * m[9];
-
-    inverted.m[12] = -m[4] * m[9] * m[14]
-                     + m[4] * m[10] * m[13]
-                     + m[8] * m[5] * m[14]
-                     - m[8] * m[6] * m[13]
-                     - m[12] * m[5] * m[10]
-                     + m[12] * m[6] * m[9];
-
-    inverted.m[1] = -m[1] * m[10] * m[15]
-                    + m[1] * m[11] * m[14]
-                    + m[9] * m[2] * m[15]
-                    - m[9] * m[3] * m[14]
-                    - m[13] * m[2] * m[11]
-                    + m[13] * m[3] * m[10];
-
-    inverted.m[5] = m[0] * m[10] * m[15]
-                    - m[0] * m[11] * m[14]
-                    - m[8] * m[2] * m[15]
-                    + m[8] * m[3] * m[14]
-                    + m[12] * m[2] * m[11]
-                    - m[12] * m[3] * m[10];
-
-    inverted.m[9] = -m[0] * m[9] * m[15]
-                    + m[0] * m[11] * m[13]
-                    + m[8] * m[1] * m[15]
-                    - m[8] * m[3] * m[13]
-                    - m[12] * m[1] * m[11]
-                    + m[12] * m[3] * m[9];
-
-    inverted.m[13] = m[0] * m[9] * m[14]
-                     - m[0] * m[10] * m[13]
-                     - m[8] * m[1] * m[14]
-                     + m[8] * m[2] * m[13]
-                     + m[12] * m[1] * m[10]
-                     - m[12] * m[2] * m[9];
-
-    inverted.m[2] = m[1] * m[6] * m[15]
-                    - m[1] * m[7] * m[14]
-                    - m[5] * m[2] * m[15]
-                    + m[5] * m[3] * m[14]
-                    + m[13] * m[2] * m[7]
-                    - m[13] * m[3] * m[6];
-
-    inverted.m[6] = -m[0] * m[6] * m[15]
-                    + m[0] * m[7] * m[14]
-                    + m[4] * m[2] * m[15]
-                    - m[4] * m[3] * m[14]
-                    - m[12] * m[2] * m[7]
-                    + m[12] * m[3] * m[6];
-
-    inverted.m[10] = m[0] * m[5] * m[15]
-                     - m[0] * m[7] * m[13]
-                     - m[4] * m[1] * m[15]
-                     + m[4] * m[3] * m[13]
-                     + m[12] * m[1] * m[7]
-                     - m[12] * m[3] * m[5];
-
-    inverted.m[14] = -m[0] * m[5] * m[14]
-                     + m[0] * m[6] * m[13]
-                     + m[4] * m[1] * m[14]
-                     - m[4] * m[2] * m[13]
-                     - m[12] * m[1] * m[6]
-                     + m[12] * m[2] * m[5];
-
-    inverted.m[3] = -m[1] * m[6] * m[11]
-                    + m[1] * m[7] * m[10]
-                    + m[5] * m[2] * m[11]
-                    - m[5] * m[3] * m[10]
-                    - m[9] * m[2] * m[7]
-                    + m[9] * m[3] * m[6];
-
-    inverted.m[7] = m[0] * m[6] * m[11]
-                    - m[0] * m[7] * m[10]
-                    - m[4] * m[2] * m[11]
-                    + m[4] * m[3] * m[10]
-                    + m[8] * m[2] * m[7]
-                    - m[8] * m[3] * m[6];
-
-    inverted.m[11] = -m[0] * m[5] * m[11]
-                     + m[0] * m[7] * m[9]
-                     + m[4] * m[1] * m[11]
-                     - m[4] * m[3] * m[9]
-                     - m[8] * m[1] * m[7]
-                     + m[8] * m[3] * m[5];
-
-    inverted.m[15] = m[0] * m[5] * m[10]
-                     - m[0] * m[6] * m[9]
-                     - m[4] * m[1] * m[10]
-                     + m[4] * m[2] * m[9]
-                     + m[8] * m[1] * m[6]
-                     - m[8] * m[2] * m[5];
-
-    const auto det = m[0] * inverted.m[0]
-                     + m[1] * inverted.m[4]
-                     + m[2] * inverted.m[8]
-                     + m[3] * inverted.m[12];
+    // Compute determinant
+    const T det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
 
     if (determinant != nullptr) {
         *determinant = det;
     }
 
-    inverted *= 1 / det;
+    const T inv_det = T(1) / det;
 
-    return inverted;
+    // Compute inverse matrix elements
+    return {
+        (m[5] * b11 - m[6] * b10 + m[7] * b09) * inv_det,
+        (m[2] * b10 - m[1] * b11 - m[3] * b09) * inv_det,
+        (m[13] * b05 - m[14] * b04 + m[15] * b03) * inv_det,
+        (m[10] * b04 - m[9] * b05 - m[11] * b03) * inv_det,
+        (m[6] * b08 - m[4] * b11 - m[7] * b07) * inv_det,
+        (m[0] * b11 - m[2] * b08 + m[3] * b07) * inv_det,
+        (m[14] * b02 - m[12] * b05 - m[15] * b01) * inv_det,
+        (m[8] * b05 - m[10] * b02 + m[11] * b01) * inv_det,
+        (m[4] * b10 - m[5] * b08 + m[7] * b06) * inv_det,
+        (m[1] * b08 - m[0] * b10 - m[3] * b06) * inv_det,
+        (m[12] * b04 - m[13] * b02 + m[15] * b00) * inv_det,
+        (m[9] * b02 - m[8] * b04 - m[11] * b00) * inv_det,
+        (m[5] * b07 - m[4] * b09 - m[6] * b06) * inv_det,
+        (m[0] * b09 - m[1] * b07 + m[2] * b06) * inv_det,
+        (m[13] * b01 - m[12] * b03 - m[14] * b00) * inv_det,
+        (m[8] * b03 - m[9] * b01 + m[10] * b00) * inv_det};
 }
 
 } // namespace math
