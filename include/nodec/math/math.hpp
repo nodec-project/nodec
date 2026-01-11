@@ -219,23 +219,26 @@ Matrix4x4<T> inv(const Matrix4x4<T> &mat, T *determinant = nullptr) {
     // Optimized 4x4 matrix inverse using 2x2 sub-determinants
     // This algorithm pre-computes 12 2x2 determinants and reuses them,
     // reducing multiplications from ~144 to ~100.
+    //
+    // Matrix4x4 is column-major: m[col*4 + row]
+    // m[0-3] = column 0 (m11,m21,m31,m41), m[4-7] = column 1, etc.
     auto &m = mat.m;
 
-    // Pre-compute 2x2 determinants from rows 0-1 (columns i,j)
-    const T b00 = m[0] * m[5] - m[1] * m[4];
-    const T b01 = m[0] * m[6] - m[2] * m[4];
-    const T b02 = m[0] * m[7] - m[3] * m[4];
-    const T b03 = m[1] * m[6] - m[2] * m[5];
-    const T b04 = m[1] * m[7] - m[3] * m[5];
-    const T b05 = m[2] * m[7] - m[3] * m[6];
+    // Pre-compute 2x2 determinants from rows 0-1
+    const T b00 = m[0] * m[5] - m[4] * m[1];   // m11*m22 - m12*m21
+    const T b01 = m[0] * m[9] - m[8] * m[1];   // m11*m23 - m13*m21
+    const T b02 = m[0] * m[13] - m[12] * m[1]; // m11*m24 - m14*m21
+    const T b03 = m[4] * m[9] - m[8] * m[5];   // m12*m23 - m13*m22
+    const T b04 = m[4] * m[13] - m[12] * m[5]; // m12*m24 - m14*m22
+    const T b05 = m[8] * m[13] - m[12] * m[9]; // m13*m24 - m14*m23
 
-    // Pre-compute 2x2 determinants from rows 2-3 (columns i,j)
-    const T b06 = m[8] * m[13] - m[9] * m[12];
-    const T b07 = m[8] * m[14] - m[10] * m[12];
-    const T b08 = m[8] * m[15] - m[11] * m[12];
-    const T b09 = m[9] * m[14] - m[10] * m[13];
-    const T b10 = m[9] * m[15] - m[11] * m[13];
-    const T b11 = m[10] * m[15] - m[11] * m[14];
+    // Pre-compute 2x2 determinants from rows 2-3
+    const T b06 = m[2] * m[7] - m[6] * m[3];     // m31*m42 - m32*m41
+    const T b07 = m[2] * m[11] - m[10] * m[3];   // m31*m43 - m33*m41
+    const T b08 = m[2] * m[15] - m[14] * m[3];   // m31*m44 - m34*m41
+    const T b09 = m[6] * m[11] - m[10] * m[7];   // m32*m43 - m33*m42
+    const T b10 = m[6] * m[15] - m[14] * m[7];   // m32*m44 - m34*m42
+    const T b11 = m[10] * m[15] - m[14] * m[11]; // m33*m44 - m34*m43
 
     // Compute determinant
     const T det = b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
@@ -246,24 +249,24 @@ Matrix4x4<T> inv(const Matrix4x4<T> &mat, T *determinant = nullptr) {
 
     const T inv_det = T(1) / det;
 
-    // Compute inverse matrix elements
+    // Compute inverse matrix elements (column-major output)
     return {
-        (m[5] * b11 - m[6] * b10 + m[7] * b09) * inv_det,
-        (m[2] * b10 - m[1] * b11 - m[3] * b09) * inv_det,
-        (m[13] * b05 - m[14] * b04 + m[15] * b03) * inv_det,
-        (m[10] * b04 - m[9] * b05 - m[11] * b03) * inv_det,
-        (m[6] * b08 - m[4] * b11 - m[7] * b07) * inv_det,
-        (m[0] * b11 - m[2] * b08 + m[3] * b07) * inv_det,
-        (m[14] * b02 - m[12] * b05 - m[15] * b01) * inv_det,
-        (m[8] * b05 - m[10] * b02 + m[11] * b01) * inv_det,
-        (m[4] * b10 - m[5] * b08 + m[7] * b06) * inv_det,
-        (m[1] * b08 - m[0] * b10 - m[3] * b06) * inv_det,
-        (m[12] * b04 - m[13] * b02 + m[15] * b00) * inv_det,
-        (m[9] * b02 - m[8] * b04 - m[11] * b00) * inv_det,
-        (m[5] * b07 - m[4] * b09 - m[6] * b06) * inv_det,
-        (m[0] * b09 - m[1] * b07 + m[2] * b06) * inv_det,
-        (m[13] * b01 - m[12] * b03 - m[14] * b00) * inv_det,
-        (m[8] * b03 - m[9] * b01 + m[10] * b00) * inv_det};
+        (m[5] * b11 - m[9] * b10 + m[13] * b09) * inv_det,   // inv_m11
+        (m[8] * b10 - m[4] * b11 - m[12] * b09) * inv_det,   // inv_m12
+        (m[7] * b05 - m[11] * b04 + m[15] * b03) * inv_det,  // inv_m13
+        (m[10] * b04 - m[6] * b05 - m[14] * b03) * inv_det,  // inv_m14
+        (m[9] * b08 - m[1] * b11 - m[13] * b07) * inv_det,   // inv_m21
+        (m[0] * b11 - m[8] * b08 + m[12] * b07) * inv_det,   // inv_m22
+        (m[11] * b02 - m[3] * b05 - m[15] * b01) * inv_det,  // inv_m23
+        (m[2] * b05 - m[10] * b02 + m[14] * b01) * inv_det,  // inv_m24
+        (m[1] * b10 - m[5] * b08 + m[13] * b06) * inv_det,   // inv_m31
+        (m[4] * b08 - m[0] * b10 - m[12] * b06) * inv_det,   // inv_m32
+        (m[3] * b04 - m[7] * b02 + m[15] * b00) * inv_det,   // inv_m33
+        (m[6] * b02 - m[2] * b04 - m[14] * b00) * inv_det,   // inv_m34
+        (m[5] * b07 - m[1] * b09 - m[9] * b06) * inv_det,    // inv_m41
+        (m[0] * b09 - m[4] * b07 + m[8] * b06) * inv_det,    // inv_m42
+        (m[7] * b01 - m[3] * b03 - m[11] * b00) * inv_det,   // inv_m43
+        (m[2] * b03 - m[6] * b01 + m[10] * b00) * inv_det};  // inv_m44
 }
 
 } // namespace math
