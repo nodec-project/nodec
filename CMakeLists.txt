@@ -5,6 +5,7 @@ project(nodec LANGUAGES CXX)
 add_library(${PROJECT_NAME} STATIC
     src/nodec/unicode.cpp
 )
+set_target_properties(${PROJECT_NAME} PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_17)
 

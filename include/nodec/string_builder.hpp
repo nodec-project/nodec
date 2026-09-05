@@ -53,7 +53,7 @@ public:
     using size_type = typename string_type::size_type;
     using stringbuf_type = BasicStringBuilderStreamBuf;
 
-    BasicStringBuilder(string_type &dest): base_stream_(&buffer_), buffer_(dest) {}
+    BasicStringBuilder(string_type &dest): buffer_(dest), base_stream_(&buffer_) {}
 
     string_type str() const {
         return buffer_.str();
